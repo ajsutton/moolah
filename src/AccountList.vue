@@ -11,7 +11,7 @@
 			<v-list two-line>
 				<template v-for="account in accounts">
 					<v-list-item v-bind:key="account.id">
-						<v-list-tile account>
+						<v-list-tile ripple>
 							<v-list-tile-content>
 								<v-list-tile-title v-html="account.name"></v-list-tile-title>
 								<v-list-tile-sub-title v-html="account.balance"></v-list-tile-sub-title>
