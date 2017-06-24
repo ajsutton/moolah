@@ -5,14 +5,10 @@
 	<v-card>
 	        <v-toolbar class="cyan" light>
 	          <v-toolbar-side-icon light></v-toolbar-side-icon>
-	          <v-toolbar-title>Inbox</v-toolbar-title>
-	          <v-btn light icon>
-	            <v-icon>search</v-icon>
-	          </v-btn>
+	          <v-toolbar-title>Accounts</v-toolbar-title>
 	        </v-toolbar>
 	
 			<v-list two-line>
-			<v-subheader>Accounts</v-subheader>
 				<template v-for="item in accounts">
 					<v-list-item v-bind:key="item.id">
 						<v-list-tile-content>
@@ -21,18 +17,16 @@
 						</v-list-tile-content>
 					</v-list-item>
 				</template>
+				<v-list-item v-bind:key="networth">
+					<v-list-tile-content>
+						<v-list-tile-title>NetWorth</v-list-tile-title>
+						<v-list-tile-sub-title v-html="networth"></v-list-tile-sub-title>
+					</v-list-tile-content>
+				</v-list-item>
 			</v-list>
 	</v-card>
 	</v-flex>
 	</v-layout>
-		<ul>
-			<li v-for="account in accounts">
-			 {{ account.name}} - $ {{account.balance}}
-			</li>
-			<li>
-				NetWorth - $ {{networth}}
-			</li>
-		</ul>
 	</div>
 </template>
 
