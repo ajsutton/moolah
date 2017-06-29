@@ -1,53 +1,53 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-      <br>
-      <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+  <div>
+    <v-layout row>
+      <v-flex xs12>
+        <v-parallax src="/static/img/brisbane-large.jpg"> 
+          <v-layout column align-center justify-center>
+            <h1 class="white--text">Moolah</h1>
+            <h4 class="white--text">Track your pot of gold</h4>
+          </v-layout>
+        </v-parallax>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap class="mt-3">
+      <feature-panel icon="account_balance" headline="Businessy">
+        We've got a fancy looking icon and pretty pictures.<br>
+        Why wouldn't you love us?
+      </feature-panel>
+      <feature-panel icon="lock" headline="Private">
+        We never sell your personal information to anyone.<br>
+        Mostly because we wouldn't know who to sell it to.
+      </feature-panel>
+      <feature-panel icon="bug_report" headline="Buggy">
+        This is a crazy side project so it's almost certain to be buggy.<br>
+        But you'll probably be able to live with them.
+      </feature-panel>
+    </v-layout>
+
+    <v-layout row justify-center class="mt-5">
+        <a href="/api/googleauth"><img src="/static/img/auth/signin_google.png" width="191" height="46"></a>
+    </v-layout>
   </div>
 </template>
 
 <script>
+import FeaturePanel from './welcome/FeaturePanel';
+
 export default {
   name: 'hello',
   data () {
     return {
-      msg: 'Welcome to Moolah App'
     }
+  },
+  components: {
+    FeaturePanel
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+<style>
+  .parallax__image-container img {
+    filter: brightness(60%);
+  }
 </style>
