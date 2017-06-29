@@ -2,7 +2,7 @@
   <div>
     <v-layout row>
       <v-flex xs12>
-        <v-parallax src="/static/img/brisbane-large.jpg"> 
+        <v-parallax src="/static/img/brisbane-large.jpg">
           <v-layout column align-center justify-center>
             <h1 class="white--text">Moolah</h1>
             <h4 class="white--text">Track your pot of gold</h4>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import FeaturePanel from './welcome/FeaturePanel';
+import FeaturePanel from './FeaturePanel';
 
 export default {
   name: 'hello',

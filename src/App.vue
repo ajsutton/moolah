@@ -11,7 +11,7 @@
     </v-toolbar>
     <main>
       <v-container fluid>
-        <hello v-if="!loggedIn"></hello>
+        <welcome v-if="!loggedIn"></welcome>
         <router-view v-if="loggedIn"></router-view>
       </v-container>
     </main>
@@ -29,7 +29,7 @@
 <script>
   import AccountList from './AccountList';
   import LoginPanel from './LoginPanel';
-  import Hello from './components/Hello';
+  import Welcome from './components/welcome/Welcome';
   import Logout from './components/Logout';
   import client from './api/client';
 
@@ -48,7 +48,7 @@
     components: {
       AccountList,
       LoginPanel,
-      Hello,
+      Welcome,
       Logout
     },
     async created() {
