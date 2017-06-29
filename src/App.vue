@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer></v-navigation-drawer>
+    <main-navigation v-if="loggedIn" :profile="profile"></main-navigation>
     <v-toolbar light>
       <v-toolbar-title class="hidden-sm-and-down">Moolah</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import AccountList from './AccountList';
+  import MainNavigation from './components/MainNavigation.vue';
   import LoginPanel from './LoginPanel';
   import Welcome from './components/welcome/Welcome';
   import Logout from './components/Logout';
@@ -40,13 +40,15 @@
         loggedIn: false,
         userId: undefined,
         profile: {
-          givenName: undefined,
-          familyName: undefined,
+          userId: null,
+          givenName: null,
+          familyName: null,
+          picture: null,
         }
       }
     },
     components: {
-      AccountList,
+      MainNavigation,
       LoginPanel,
       Welcome,
       Logout
@@ -54,7 +56,6 @@
     async created() {
       const state = await client.userProfile();
       this.loggedIn = state.loggedIn;
-      this.userId = state.userId;
       this.profile = state.profile;
     }
   }
@@ -62,4 +63,27 @@
 
 <style lang="stylus">
   @import '../node_modules/vuetify/src/stylus/main.styl';
+
+  /* Work around issue where permanent clipped navigation drawer hides the content
+  https://github.com/vuetifyjs/vuetify/issues/748
+   */
+  .navigation-drawer
+  &--persistent, &--permanent
+    &.navigation-drawer--open:not(.navigation-drawer--is-mobile):not(.navigation-drawer--right)
+      &:not(.navigation-drawer--clipped)
+        ~ .toolbar
+          padding-left: 300px
+
+      ~ main,
+      ~ .footer:not(.footer--fixed):not(.footer--absolute)
+        padding-left: 300px
+
+    &.navigation-drawer--open.navigation-drawer--right
+      &:not(.navigation-drawer--clipped)
+        + .toolbar
+          padding-right: 300px
+
+      ~ main,
+      ~ .footer:not(.footer--fixed):not(.footer--absolute)
+        padding-right: 300px
 </style>

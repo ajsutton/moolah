@@ -1,14 +1,12 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
+import NotFound from '@/components/NotFound';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'Hello',
-    //   component: Hello
-    // }
-  ]
-})
+    {path: '*', component: NotFound},
+  ],
+});
