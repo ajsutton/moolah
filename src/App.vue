@@ -47,7 +47,6 @@ export default {
   },
   async created() {
     const state = await client.userProfile();
-    console.log(state);
     this.loggedIn = state.loggedIn;
     this.userId = state.userId;
     this.profile = state.profile;
