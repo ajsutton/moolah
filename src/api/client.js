@@ -6,6 +6,11 @@ function makeOptions(options = {}) {
 
 async function json(url, options = {}) {
   return fetch(url, makeOptions(options))
+    .then(response => {
+      if (!response.ok) {
+        throw response;
+      }
+    })
     .then(response => response.json());
 }
 

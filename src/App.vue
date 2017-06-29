@@ -10,9 +10,9 @@
       </v-toolbar-items>
     </v-toolbar>
     <main>
-      <v-container fluid>
-        <welcome v-if="!loggedIn"></welcome>
-        <router-view v-if="loggedIn"></router-view>
+      <welcome v-if="!loggedIn"></welcome>
+      <v-container fluid v-if="loggedIn">
+        <router-view></router-view>
       </v-container>
     </main>
     <v-footer>
