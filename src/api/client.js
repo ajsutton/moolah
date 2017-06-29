@@ -1,17 +1,24 @@
-function options(options = {}) {
-	return Object.assign({}, {
-		credentials: 'include',
-	}, options);
+function makeOptions(options = {}) {
+  return Object.assign({}, {
+    credentials: 'include',
+  }, options);
+}
+
+async function json(url, options = {}) {
+  return fetch(url, makeOptions(options))
+    .then(response => response.json());
 }
 
 export default {
-	async accounts() {
-		return fetch('/api/accounts/', options())
-	    .then(response => response.json());
-	},
+  async accounts() {
+    return json('/api/accounts/');
+  },
 
-	async userProfile() {
-		return fetch('/api/auth/', options())
-			.then(response => response.json());
-	},
-}
+  async userProfile() {
+    return json('/api/auth/');
+  },
+
+  async logout() {
+    return json('/api/auth/', {method: 'DELETE'});
+  },
+};
