@@ -45,7 +45,7 @@
     },
     methods: {
         create() {
-            client.createAccount({name: this.name, type: this.type, balance: this.balance})
+            client.createAccount({name: this.name, type: this.type, balance: Math.round(this.balance * 100)})
               .then(() => this.dialog = false)
               .catch(error => this.errorMessage = error.message || error);
         }
