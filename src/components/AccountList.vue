@@ -2,7 +2,7 @@
   <v-list class="pt-0" dense>
     <v-divider></v-divider>
     <v-list-item v-for="account in accounts" :key="account.id">
-      <v-list-tile avatar ripple>
+      <v-list-tile avatar ripple :href="accountLink(account)" :router="true">
         <v-list-tile-action>
           <v-icon light>{{ icon(account.type) }}</v-icon>
         </v-list-tile-action>
@@ -16,7 +16,7 @@
     </v-list-item>
 
     <v-list-item>
-      <v-list-tile avatar ripple>
+      <v-list-tile avatar ripple href="/" :router="true">
         <v-list-tile-action>
           <v-icon light>trending_up</v-icon>
         </v-list-tile-action>
@@ -55,6 +55,9 @@
           default:
             return 'account_balance';
         }
+      },
+      accountLink(account) {
+        return `/account/${encodeURIComponent(account.id)}/`;
       }
     },
     filters: {

@@ -3,7 +3,7 @@
     <v-navigation-drawer persistent clipped v-model="showMainNav" v-if="loggedIn">
       <v-list class="pa-0">
         <v-list-item>
-          <v-list-tile avatar tag="div">
+          <v-list-tile avatar>
             <v-list-tile-avatar v-if="profile.picture">
               <img :src="profile.picture"/>
             </v-list-tile-avatar>
