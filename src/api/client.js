@@ -5,18 +5,27 @@ function makeOptions(options = {}) {
 }
 
 async function json(url, options = {}) {
-  return fetch(url, makeOptions(options))
-    .then(response => {
-      if (!response.ok) {
-        throw response;
-      }
-    })
-    .then(response => response.json());
+  const response = await fetch(url, makeOptions(options));
+  if (response.ok) {
+    return response.json();
+  } else {
+    let errorResponse;
+    try {
+      errorResponse = await response.json();
+    } catch (error) {
+      errorResponse = 'An unknown error occurred.';
+    }
+    throw errorResponse;
+  }
 }
 
 export default {
   async accounts() {
     return json('/api/accounts/');
+  },
+
+  async createAccount(account) {
+    return json('/api/accounts/', {method: 'POST', body: JSON.stringify(account)});
   },
 
   async userProfile() {

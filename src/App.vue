@@ -1,8 +1,26 @@
 <template>
   <v-app>
-    <main-navigation v-if="loggedIn" :profile="profile"></main-navigation>
+    <v-navigation-drawer persistent clipped v-model="showMainNav" v-if="loggedIn">
+      <v-list class="pa-0">
+        <v-list-item>
+          <v-list-tile avatar tag="div">
+            <v-list-tile-avatar v-if="profile.picture">
+              <img :src="profile.picture"/>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>{{profile.givenName}} {{profile.familyName}}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <create-account></create-account>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list-item>
+      </v-list>
+      <account-list></account-list>
+    </v-navigation-drawer>
     <v-toolbar light>
-      <v-toolbar-title class="hidden-sm-and-down">Moolah</v-toolbar-title>
+      <v-toolbar-side-icon light v-if="loggedIn" @click.native.stop="showMainNav = !showMainNav"></v-toolbar-side-icon>
+      <v-toolbar-title class="hidden-sm-and-down" v-if="loggedIn">Moolah</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-toolbar-item ripple v-if="!loggedIn" href="/api/googleauth">Sign in</v-toolbar-item>
@@ -21,13 +39,14 @@
            href="https://www.flickr.com/photos/tfpc/8626221286/in/photolist-e9gD4d-quxKNs-ojD7vn-oLTTjf-bhu5VR-ooVMzE-stE5Hy-UHvTs5-cjKs7Q-qtZFwc-on9mWD-fy7Wfq-974AH9-nZYchC-nqxyve-d4cqn1-Vot94w-oqAd7p-reacHf-pN74aF-e9X8Gr-roWWAp-Vtb3iX-q13JJE-8j3xrm-qc4tA4-mxPSUi-omprtS-i4EEEk-rKzLGe-TQTbpq-ejkdJi-mfQ4eZ-cAivyE-n2EDm-p1Qcqo-gNM15i-S8jsyY-jvyQyz-gYBgNG-prbC1E-hgpcdc-fMWVLT-fwKmbh-fdoGLG-NZiXrx-bQHfND-ouwqpR-cvAj4Y-iHVNN5">Toby Charlton-Taylor</a>.
       </div>
       <v-spacer></v-spacer>
-      <div>© {{ new Date().getFullYear() }}</div>
+      <div><a class="white--text" href="https://moolah.rocks/">Moolah.rocks</a></div>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-  import MainNavigation from './components/MainNavigation.vue';
+  import AccountList from '@/components/AccountList';
+  import CreateAccount from '@/components/CreateAccount';
   import LoginPanel from './LoginPanel';
   import Welcome from './components/welcome/Welcome';
   import Logout from './components/Logout';
@@ -44,11 +63,13 @@
           givenName: null,
           familyName: null,
           picture: null,
-        }
+        },
+        showMainNav: true,
       }
     },
     components: {
-      MainNavigation,
+      AccountList,
+      CreateAccount,
       LoginPanel,
       Welcome,
       Logout
