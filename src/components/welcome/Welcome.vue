@@ -23,7 +23,7 @@
       </v-layout>
 
       <v-layout row justify-center class="mt-5">
-        <a href="/api/googleauth"><img src="/static/img/auth/signin_google.png" width="191" height="46"></a>
+        <a href="/api/googleauth"><img src="../../assets/auth/signin_google.png" width="191" height="46"></a>
       </v-layout>
     </v-container>
   </div>
