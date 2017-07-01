@@ -96,7 +96,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       },
       {
         from: path.resolve(__dirname, '../.htaccess'),
-        to: '.htaccess'
+        to: ''
       }
     ]),
   ]
