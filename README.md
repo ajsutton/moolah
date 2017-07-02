@@ -1,8 +1,8 @@
-# moolah
+# Moolah
 
-> Adrian's little project
+> Web front-end for a [Moolah server](https://github.com/ajsutton/moolah-server).
 
-## Build Setup
+## Development Setup
 
 ``` bash
 # install dependencies
@@ -10,7 +10,11 @@ npm install
 
 # serve with hot reload at localhost:8080
 npm run dev
+```
 
+The dev server expects an instance of moolah-server to be listening on http://localhost:3000/ to proxy API requests to. See the [Moolah server README](https://github.com/ajsutton/moolah-server) for instructions.
+
+``` bash
 # build for production with minification
 npm run build
 
