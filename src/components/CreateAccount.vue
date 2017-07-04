@@ -9,8 +9,8 @@
         <v-alert error :value="true">{{errorMessage}}</v-alert>
       </template>
         <v-card-text>
-          <v-text-field label="Name" v-model="name" name="name" :error="hasError('name')" :rules="errorsAsRules('name')" v-validate="'required'"></v-text-field>
-          <v-text-field label="Initial Balance" type="number" v-model="balance" name="balance" :error="hasError('balance')" :rules="errorsAsRules('balance')" v-validate="'decimal:2'"></v-text-field>
+          <v-text-field label="Name" v-model="name" name="name" :rules="errorsAsRules('name')" v-validate="'required'"></v-text-field>
+          <v-text-field label="Initial Balance" type="number" v-model="balance" name="balance" :rules="errorsAsRules('balance')" v-validate="'decimal:2'"></v-text-field>
           <v-select
             label="Account Type"
             required
@@ -46,9 +46,6 @@
     },
 
     methods: {
-      hasError(name) {
-        return this.verrors.has(name);
-      },
       errorsAsRules(name) {
         return [()=>this.verrors.has(name) ? this.verrors.first(name) : true];
       },
