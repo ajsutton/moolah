@@ -12,8 +12,8 @@
       </template>
       <v-card-row>
         <v-card-text>
-          <v-text-field label="Name" v-model="name" required></v-text-field>
-          <v-text-field label="Initial Balance" type="number" v-model="balance" required></v-text-field>
+          <v-text-field label="Name" v-model="name" name="name" :error="hasError('name')" :rules="errorsAsRules('name')" v-validate="'required'"></v-text-field>
+          <v-text-field label="Initial Balance" type="number" v-model="balance" name="balance" :error="hasError('balance')" :rules="errorsAsRules('balance')" v-validate="'decimal:2'"></v-text-field>
           <v-select
             label="Account Type"
             required
@@ -41,14 +41,31 @@
         balance: 0,
         dialog: false,
         errorMessage: null,
+
+        rules: {
+          name: [],
+          email: []
+        },
       };
     },
+    computed: {
+    },
+    
     methods: {
-        create() {
-            client.createAccount({name: this.name, type: this.type, balance: Math.round(this.balance * 100)})
-              .then(() => this.dialog = false)
-              .catch(error => this.errorMessage = error.message || error);
+      hasError(name) {
+        return this.verrors.has(name);
+      },
+      errorsAsRules(name) {
+        return [()=>this.verrors.has(name) ? this.verrors.first(name) : true];
+      },
+      async create() {
+        const valid = await this.$validator.validateAll();
+        if (valid) {
+          client.createAccount({name: this.name, type: this.type, balance: Math.round(this.balance * 100)})
+            .then(() => this.dialog = false)
+            .catch(error => this.errorMessage = error.message || error);
         }
-    }
+      },
+    },
   }
 </script>
