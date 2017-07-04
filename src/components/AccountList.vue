@@ -1,8 +1,7 @@
 <template>
     <v-list class="pt-0" dense>
         <v-divider></v-divider>
-        <v-list-item v-for="account in accounts" :key="account.id">
-            <v-list-tile avatar ripple :href="accountLink(account)" :router="true">
+            <v-list-tile avatar ripple :href="accountLink(account)" :router="true"  v-for="account in accounts" :key="account.id">
                 <v-list-tile-action>
                     <v-icon light>{{ icon(account.type) }}</v-icon>
                 </v-list-tile-action>
@@ -13,21 +12,18 @@
                     <monetary-amount :value="account.balance"></monetary-amount>
                 </v-list-tile-action>
             </v-list-tile>
-        </v-list-item>
         <v-divider></v-divider>
-        <v-list-item>
-            <v-list-tile avatar ripple href="/" :router="true">
-                <v-list-tile-action>
-                    <v-icon light>trending_up</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title>Net Worth</v-list-tile-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                    <monetary-amount :value="networth"></monetary-amount>
-                </v-list-tile-action>
-            </v-list-tile>
-        </v-list-item>
+        <v-list-tile avatar ripple href="/" :router="true">
+            <v-list-tile-action>
+                <v-icon light>trending_up</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+                <v-list-tile-title>Net Worth</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+                <monetary-amount :value="networth"></monetary-amount>
+            </v-list-tile-action>
+        </v-list-tile>
     </v-list>
 </template>
 

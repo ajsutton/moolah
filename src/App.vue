@@ -2,7 +2,6 @@
   <v-app>
     <v-navigation-drawer persistent clipped v-model="showMainNav" v-if="loggedIn">
       <v-list class="pa-0">
-        <v-list-item>
           <v-list-tile avatar>
             <v-list-tile-avatar v-if="profile.picture">
               <img :src="profile.picture"/>
@@ -14,7 +13,6 @@
               <create-account></create-account>
             </v-list-tile-action>
           </v-list-tile>
-        </v-list-item>
       </v-list>
       <account-list></account-list>
     </v-navigation-drawer>
@@ -23,7 +21,7 @@
       <v-toolbar-title class="hidden-sm-and-down" v-if="loggedIn">Moolah</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-toolbar-item ripple v-if="!loggedIn" href="/api/googleauth">Sign in</v-toolbar-item>
+        <v-btn flat ripple v-if="!loggedIn" href="/api/googleauth">Sign in</v-btn>
         <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
       </v-toolbar-items>
     </v-toolbar>
@@ -47,7 +45,6 @@
 <script>
   import AccountList from '@/components/AccountList';
   import CreateAccount from '@/components/CreateAccount';
-  import LoginPanel from './LoginPanel';
   import Welcome from './components/welcome/Welcome';
   import Logout from './components/Logout';
   import client from './api/client';
@@ -70,7 +67,6 @@
     components: {
       AccountList,
       CreateAccount,
-      LoginPanel,
       Welcome,
       Logout
     },

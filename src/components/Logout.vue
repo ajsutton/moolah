@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar-item ripple v-on:click.prevent.native="logout">Log out</v-toolbar-item>
+  <v-btn flat ripple v-on:click.prevent.native="logout">Log out</v-btn>
 </template>
 
 <script>
