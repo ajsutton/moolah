@@ -1,5 +1,5 @@
 <template>
-  <v-btn flat ripple v-on:click.prevent.native="logout">Log out</v-btn>
+  <v-btn flat dark ripple v-on:click.prevent.native="logout">Log out</v-btn>
 </template>
 
 <script>

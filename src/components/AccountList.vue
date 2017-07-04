@@ -3,7 +3,7 @@
         <v-divider></v-divider>
             <v-list-tile avatar ripple :href="accountLink(account)" :router="true"  v-for="account in accounts" :key="account.id">
                 <v-list-tile-action>
-                    <v-icon light>{{ icon(account.type) }}</v-icon>
+                    <v-icon dark>{{ icon(account.type) }}</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
                     <v-list-tile-title>{{ account.name }}</v-list-tile-title>
@@ -15,7 +15,7 @@
         <v-divider></v-divider>
         <v-list-tile avatar ripple href="/" :router="true">
             <v-list-tile-action>
-                <v-icon light>trending_up</v-icon>
+                <v-icon dark>trending_up</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
                 <v-list-tile-title>Net Worth</v-list-tile-title>
