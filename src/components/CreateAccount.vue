@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog">
+  <v-dialog v-model="dialog" persistent>
     <v-btn dark icon slot="activator">
       <v-icon title="Add account">add</v-icon>
     </v-btn>
@@ -9,8 +9,8 @@
         <v-alert error :value="true">{{errorMessage}}</v-alert>
       </template>
         <v-card-text>
-          <v-text-field label="Name" v-model="name" name="name" :rules="errorsAsRules('name')" v-validate="'required'"></v-text-field>
-          <v-text-field label="Initial Balance" type="number" v-model="balance" name="balance" :rules="errorsAsRules('balance')" v-validate="'decimal:2'"></v-text-field>
+          <v-text-field label="Name" v-model="name" name="name" :rules="nameRules" required v-validate="'required'"></v-text-field>
+          <v-text-field label="Initial Balance" type="number" v-model="balance" name="balance" :rules="balanceRules" v-validate="'decimal:2'"></v-text-field>
           <v-select
             label="Account Type"
             required
@@ -19,8 +19,11 @@
           ></v-select>
           <small>*indicates required field</small>
         </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
         <v-btn class="blue--text darken-1" flat @click.native="dialog = false">Close</v-btn>
         <v-btn class="blue--text darken-1" flat @click.native="create">Create</v-btn>
+        </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -43,15 +46,20 @@
       };
     },
     computed: {
+        nameRules() {
+            return this.errorsAsRules('name');
+        },
+        balanceRules() {
+            return this.errorsAsRules('balance');
+        }
     },
 
     methods: {
       errorsAsRules(name) {
-        return [()=>this.verrors.has(name) ? this.verrors.first(name) : true];
+        return [this.verrors.has(name) ? this.verrors.first(name) : true];
       },
       async create() {
-        const valid = await this.$validator.validateAll();
-        if (valid) {
+          if (await this.$validator.validateAll()) {
           client.createAccount({name: this.name, type: this.type, balance: Math.round(this.balance * 100)})
             .then(() => this.dialog = false)
             .catch(error => this.errorMessage = error.message || error);
