@@ -28,9 +28,9 @@
 </template>
 
 <script>
-    import { mapState, mapGetters } from 'vuex';
+    import { mapState, mapGetters, mapActions } from 'vuex';
     import client from '@/api/client';
-    import {LOAD_ACCOUNTS} from '@/store/actions';
+    import {loadAccountsAction} from '../store/actions';
     import MonetaryAmount from '@/components/util/MonetaryAmount';
     export default {
         name: "AccountList",
@@ -39,8 +39,8 @@
             }
         },
         computed: {
-            ...mapState(['accounts']),
-            ...mapGetters(['networth']),
+            ...mapState('accounts', ['accounts']),
+            ...mapGetters('accounts', ['networth']),
         },
         methods: {
             icon(type) {
@@ -55,10 +55,11 @@
             },
             accountLink(account) {
                 return `/account/${encodeURIComponent(account.id)}/`;
-            }
+            },
+            ...mapActions('accounts', [loadAccountsAction])
         },
         created () {
-            this.$store.dispatch(LOAD_ACCOUNTS);
+            this[loadAccountsAction]();
         },
         components: {
             MonetaryAmount

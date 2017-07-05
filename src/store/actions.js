@@ -1,2 +1,2 @@
-export const LOAD_ACCOUNTS = 'LOAD_ACCOUNTS';
-export const CREATE_ACCOUNT = 'CREATE_ACCOUNT';
+export const loadAccountsAction = 'LOAD_ACCOUNTS';
+export const createAccountAction = 'CREATE_ACCOUNT';

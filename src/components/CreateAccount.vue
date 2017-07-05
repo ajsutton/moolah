@@ -30,7 +30,7 @@
 
 <script>
   import client from '@/api/client';
-  import {CREATE_ACCOUNT} from '@/store/actions';
+  import {createAccountAction} from '../store/actions';
   export default {
     data() {
       return {
@@ -63,7 +63,7 @@
           if (await this.$validator.validateAll()) {
               const account = {name: this.name, type: this.type, balance: Math.round(this.balance * 100)};
               try {
-                  await this.$store.dispatch(CREATE_ACCOUNT, account);
+                  await this.$store.dispatch(createAccountAction, account);
                   this.dialog = false;
               } catch (error) {
                   this.dialog = true;
