@@ -44,8 +44,8 @@
 </template>
 
 <script>
-    import AccountList from '@/components/AccountList';
-    import CreateAccount from '@/components/CreateAccount';
+    import AccountList from './components/AccountList';
+    import CreateAccount from './components/CreateAccount';
     import Welcome from './components/welcome/Welcome';
     import Logout from './components/Logout';
     import client from './api/client';

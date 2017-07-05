@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import client from '@/api/client';
+  import client from '../api/client';
   import {createAccountAction} from '../store/actions';
   export default {
     data() {

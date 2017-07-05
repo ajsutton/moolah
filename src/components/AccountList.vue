@@ -29,9 +29,9 @@
 
 <script>
     import { mapState, mapGetters, mapActions } from 'vuex';
-    import client from '@/api/client';
+    import client from '../api/client';
     import {loadAccountsAction} from '../store/actions';
-    import MonetaryAmount from '@/components/util/MonetaryAmount';
+    import MonetaryAmount from './util/MonetaryAmount';
     export default {
         name: "AccountList",
         data () {
