@@ -22,12 +22,12 @@ describe('accountsStore', function() {
         const account1 = {name: 'Account1', type: 'bank', balance: 2300};
         const expectedAccounts = [account1];
         client.accounts.resolves({accounts: expectedAccounts});
-        testAction(
+        await testAction(
             accountsStore.actions[loadAccountsAction],
             null,
             {accounts: []},
             [
-                { type: setAccounts, payload: expectedAccounts}
+                { type: setAccounts, payload: expectedAccounts},
             ]
         );
     });

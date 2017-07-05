@@ -1,31 +1,23 @@
-export default (action, payload, state, expectedMutations) => new Promise((resolve, reject) => {
+export default async (action, payload, state, expectedMutations) => {
     let count = 0;
 
     // mock commit
     const commit = (type, payload) => {
         const mutation = expectedMutations[count];
-
-        try {
-            expect(mutation.type).to.equal(type);
-            if (payload) {
-                expect(mutation.payload).to.deep.equal(payload);
-            }
-        } catch (error) {
-            reject(error);
+        if (mutation === undefined) {
+            throw new Error("Additional unexpected commit: " + type + " - " + JSON.stringify(payload));
+        }
+        expect(mutation.type).to.equal(type);
+        if (payload) {
+            expect(mutation.payload).to.deep.equal(payload);
         }
 
         count++;
-        if (count >= expectedMutations.length) {
-            resolve();
-        }
     };
 
     // call the action with mocked store and arguments
-    action({commit, state}, payload);
+    await action({commit, state}, payload);
 
     // check if no mutations should have been dispatched
-    if (expectedMutations.length === 0) {
-        expect(count).to.equal(0);
-        resolve();
-    }
-});
+    expect(count).to.equal(expectedMutations.length);
+};
