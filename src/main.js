@@ -12,12 +12,12 @@ Vue.use(Vuetify);
 
 Vue.use(VeeValidate, {
   errorBagName: 'verrors', // change if property conflicts.
-  fieldsBagName: 'fields', 
-  delay: 0, 
-  locale: 'en', 
-  dictionary: null, 
-  strict: true, 
-  enableAutoClasses: false, 
+  fieldsBagName: 'fields',
+  delay: 0,
+  locale: 'en',
+  dictionary: null,
+  strict: true,
+  enableAutoClasses: false,
   classNames: {
     touched: 'touched', // the control has been blurred
     untouched: 'untouched', // the control hasn't been blurred

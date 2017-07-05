@@ -49,6 +49,7 @@
     import Welcome from './components/welcome/Welcome';
     import Logout from './components/Logout';
     import client from './api/client';
+    import store from './store/store';
 
     export default {
         name: 'app',
@@ -65,6 +66,7 @@
                 showMainNav: true,
             }
         },
+        store,
         components: {
             AccountList,
             CreateAccount,

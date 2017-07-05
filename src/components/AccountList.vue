@@ -28,19 +28,19 @@
 </template>
 
 <script>
+    import { mapState, mapGetters } from 'vuex';
     import client from '@/api/client';
+    import {LOAD_ACCOUNTS} from '@/store/actions';
     import MonetaryAmount from '@/components/util/MonetaryAmount';
     export default {
         name: "AccountList",
         data () {
             return {
-                accounts: []
             }
         },
         computed: {
-            networth () {
-                return this.accounts.reduce((networth, account) => networth + account.balance, 0);
-            }
+            ...mapState(['accounts']),
+            ...mapGetters(['networth']),
         },
         methods: {
             icon(type) {
@@ -58,7 +58,7 @@
             }
         },
         created () {
-            client.accounts().then(response => this.accounts = response.accounts)
+            this.$store.dispatch(LOAD_ACCOUNTS);
         },
         components: {
             MonetaryAmount
