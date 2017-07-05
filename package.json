@@ -13,6 +13,7 @@
     "test": "npm run unit"
   },
   "dependencies": {
+    "style-loader": "^0.18.2",
     "vee-validate": "^2.0.0-rc.6",
     "vue": "^2.3.3",
     "vue-router": "^2.7.0",
