@@ -1,6 +1,6 @@
 import {setAccounts} from './mutations';
 import {loadAccountsAction, createAccountAction} from './actions';
-import client from '@/api/client';
+import client from '../api/client';
 
 export default {
     namespaced: true,
