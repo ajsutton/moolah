@@ -1,10 +1,8 @@
 import sinon from 'sinon';
 import {assert} from 'chai';
-import {loadAccountsAction, createAccountAction} from '../../../../src/store/actions';
-import {setAccounts, addAccount, removeAccount, setAccountId} from '../../../../src/store/mutations';
+import {mutations, actions} from '../../../../src/store/accountsStore';
 import accountsStoreLoader from 'inject-loader!../../../../src/store/accountsStore';
 import testAction from './testAction';
-
 
 describe('accountsStore', function() {
     let client;
@@ -24,11 +22,11 @@ describe('accountsStore', function() {
         const expectedAccounts = [account1];
         client.accounts.resolves({accounts: expectedAccounts});
         await testAction(
-            accountsStore.actions[loadAccountsAction],
+            accountsStore.actions[actions.loadAccounts],
             null,
             {accounts: []},
             [
-                {type: setAccounts, payload: expectedAccounts},
+                {type: mutations.setAccounts, payload: expectedAccounts},
             ],
         );
     });
@@ -37,12 +35,12 @@ describe('accountsStore', function() {
         const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
         client.createAccount.resolves({id: 'assigned-id', ...newAccount});
         await testAction(
-            accountsStore.actions[createAccountAction],
+            accountsStore.actions[actions.createAccount],
             newAccount,
             {accounts: [{id: 'existing'}]},
             [
-                {type: addAccount, payload: {id: 'new-account', ...newAccount}},
-                {type: setAccountId, payload: {currentId: 'new-account', newId: 'assigned-id'}},
+                {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
+                {type: mutations.setAccountId, payload: {currentId: 'new-account', newId: 'assigned-id'}},
             ],
         );
     });
@@ -52,12 +50,12 @@ describe('accountsStore', function() {
         const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
         client.createAccount.rejects('Fetch failed');
         await testAction(
-            accountsStore.actions[createAccountAction],
+            accountsStore.actions[actions.createAccount],
             newAccount,
             {accounts: [{id: 'existing'}]},
             [
-                {type: addAccount, payload: {id: 'new-account', ...newAccount}},
-                {type: removeAccount, payload: {id: 'new-account', ...newAccount}},
+                {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
+                {type: mutations.removeAccount, payload: {id: 'new-account', ...newAccount}},
             ],
             true,
         );
@@ -66,26 +64,26 @@ describe('accountsStore', function() {
     it('should replace accounts', function() {
         const state = {accounts: [{name: '1'}, {name: '2'}]};
         const newAccounts = [{name: '3'}];
-        accountsStore.mutations[setAccounts](state, newAccounts);
+        accountsStore.mutations[mutations.setAccounts](state, newAccounts);
         assert.deepEqual(state.accounts, newAccounts);
     });
 
     it('should add an account to start of list', function() {
         const state = {accounts: [{name: '1'}, {name: '2'}]};
         const newAccount = {name: '3'};
-        accountsStore.mutations[addAccount](state, newAccount);
+        accountsStore.mutations[mutations.addAccount](state, newAccount);
         assert.deepEqual(state.accounts, [{name: '3'}, {name: '1'}, {name: '2'}]);
     });
 
     it('should remove accounts based on ID', function() {
         const state = {accounts: [{id: '1', name: 'old name'}, {id: '2', name: 'name2'}]};
-        accountsStore.mutations[removeAccount](state, {id: '1', name: 'new name'});
+        accountsStore.mutations[mutations.removeAccount](state, {id: '1', name: 'new name'});
         assert.deepEqual(state.accounts, [{id: '2', name: 'name2'}]);
     });
 
     it('should update an account id', function() {
         const state = {accounts: [{id: '1', name: 'old name'}, {id: '2', name: 'name2'}]};
-        accountsStore.mutations[setAccountId](state, {currentId: '2', newId: '3'});
+        accountsStore.mutations[mutations.setAccountId](state, {currentId: '2', newId: '3'});
         assert.deepEqual(state.accounts, [{id: '1', name: 'old name'}, {id: '3', name: 'name2'}]);
     });
 });

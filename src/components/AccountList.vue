@@ -30,7 +30,7 @@
 <script>
     import { mapState, mapGetters, mapActions } from 'vuex';
     import client from '../api/client';
-    import {loadAccountsAction} from '../store/actions';
+    import {actions} from '../store/accountsStore';
     import MonetaryAmount from './util/MonetaryAmount';
     export default {
         name: "AccountList",
@@ -56,10 +56,10 @@
             accountLink(account) {
                 return `/account/${encodeURIComponent(account.id)}/`;
             },
-            ...mapActions('accounts', [loadAccountsAction])
+            ...mapActions('accounts', [actions.loadAccounts])
         },
         created () {
-            this[loadAccountsAction]();
+            this[actions.loadAccounts]();
         },
         components: {
             MonetaryAmount

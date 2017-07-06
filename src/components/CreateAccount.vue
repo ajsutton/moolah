@@ -31,7 +31,7 @@
 <script>
   import { mapActions } from 'vuex';
   import client from '../api/client';
-  import {createAccountAction} from '../store/actions';
+  import {actions} from '../store/accountsStore';
   export default {
     data() {
       return {
@@ -64,7 +64,7 @@
           if (await this.$validator.validateAll()) {
               const account = {name: this.name, type: this.type, balance: Math.round(this.balance * 100)};
               try {
-                  await this[createAccountAction](account);
+                  await this[actions.createAccount](account);
                   this.dialog = false;
               } catch (error) {
                   this.dialog = true;
@@ -72,7 +72,7 @@
               }
         }
       },
-        ...mapActions('accounts', [createAccountAction])
+        ...mapActions('accounts', [actions.createAccount])
     },
   }
 </script>

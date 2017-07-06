@@ -1,6 +1,16 @@
-import {setAccounts, addAccount, removeAccount, setAccountId} from './mutations';
-import {loadAccountsAction, createAccountAction} from './actions';
 import client from '../api/client';
+
+export const mutations = {
+    setAccounts: 'SET_ACCOUNTS',
+    addAccount: 'ADD_ACCOUNT',
+    removeAccount: 'REMOVE_ACCOUNT',
+    setAccountId: 'SET_ACCOUNT_ID',
+};
+
+export const actions = {
+    loadAccounts: 'LOAD_ACCOUNTS',
+    createAccount: 'CREATE_ACCOUNT',
+};
 
 export default {
     namespaced: true,
@@ -12,41 +22,41 @@ export default {
             return accountId => {
                 const account = state.accounts.find(account => account.id === accountId);
                 return account ? account.name : 'Unknown';
-            }
+            };
         },
         networth(state) {
             return state.accounts.reduce((networth, account) => networth + account.balance, 0);
         },
     },
     mutations: {
-        [setAccounts](state, accounts) {
+        [mutations.setAccounts](state, accounts) {
             state.accounts = accounts;
         },
-        [addAccount](state, account) {
+        [mutations.addAccount](state, account) {
             state.accounts.unshift(account);
         },
-        [removeAccount](state, account) {
+        [mutations.removeAccount](state, account) {
             state.accounts = state.accounts.filter(existingAccount => existingAccount.id !== account.id);
         },
-        [setAccountId](state, args) {
+        [mutations.setAccountId](state, args) {
             state.accounts.find(account => account.id === args.currentId).id = args.newId;
         },
     },
     actions: {
-        async [loadAccountsAction]({commit}) {
+        async [actions.loadAccounts]({commit}) {
             const response = await client.accounts();
-            commit(setAccounts, response.accounts);
+            commit(mutations.setAccounts, response.accounts);
         },
 
-        async [createAccountAction]({commit}, account) {
+        async [actions.createAccount]({commit}, account) {
             const id = 'new-account';
             const accountToAdd = {id, ...account};
-            commit(addAccount, accountToAdd);
+            commit(mutations.addAccount, accountToAdd);
             try {
                 const createdAccount = await client.createAccount(account);
-                commit(setAccountId, {currentId: 'new-account', newId: createdAccount.id});
+                commit(mutations.setAccountId, {currentId: 'new-account', newId: createdAccount.id});
             } catch (error) {
-                commit(removeAccount, accountToAdd);
+                commit(mutations.removeAccount, accountToAdd);
                 throw error;
             }
         },
