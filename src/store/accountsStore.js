@@ -1,4 +1,4 @@
-import {setAccounts} from './mutations';
+import {setAccounts, addAccount, removeAccount, setAccountId} from './mutations';
 import {loadAccountsAction, createAccountAction} from './actions';
 import client from '../api/client';
 
@@ -16,6 +16,15 @@ export default {
         [setAccounts](state, accounts) {
             state.accounts = accounts;
         },
+        [addAccount](state, account) {
+            state.accounts.unshift(account);
+        },
+        [removeAccount](state, account) {
+            state.accounts = state.accounts.filter(existingAccount => existingAccount.id !== account.id);
+        },
+        [setAccountId](state, args) {
+            state.accounts.find(account => account.id === args.currentId).id = args.newId;
+        },
     },
     actions: {
         async [loadAccountsAction]({commit}) {
@@ -23,13 +32,14 @@ export default {
             commit(setAccounts, response.accounts);
         },
 
-        async [createAccountAction]({commit, state}, account) {
-            const originalAccounts = state.accounts;
-            commit(setAccounts, [account].concat(state.accounts));
+        async [createAccountAction]({commit}, account) {
+            const id = 'newAccount-' + Math.random();
+            commit(addAccount, {id, ...account});
             try {
-                await client.createAccount(account);
+                const createdAccount = await client.createAccount(account);
+                commit(setAccountId, {currentId: 'new-account', newId: createdAccount.id});
             } catch (error) {
-                commit(setAccounts, originalAccounts);
+                commit(removeAccount, account);
                 throw error;
             }
         },
