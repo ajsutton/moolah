@@ -8,6 +8,12 @@ export default {
         accounts: [],
     },
     getters: {
+        accountName(state) {
+            return accountId => {
+                const account = state.accounts.find(account => account.id === accountId);
+                return account ? account.name : 'Unknown';
+            }
+        },
         networth(state) {
             return state.accounts.reduce((networth, account) => networth + account.balance, 0);
         },
