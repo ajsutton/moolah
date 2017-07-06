@@ -14,44 +14,42 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
     import client from '../../api/client';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
+    import {actions as transactionActions} from '../../store/transactionStore';
+    import {actions as stateActions} from '../../store/store';
 
     export default {
         props: ['accountId'],
         data() {
             return {
-                transactions: [],
             };
         },
         computed: {
             title() {
                 return this.accountName(this.accountId);
             },
-            ...mapGetters('accounts', ['accountName'])
+            ...mapGetters(['selectedAccountId']),
+            ...mapGetters('accounts', ['accountName']),
+            ...mapState('transactions', ['transactions']),
         },
 
         created() {
-            this.loadTransactions(this.accountId);
+            this.selectAccount(this.accountId);
         },
 
         watch: {
             accountId(newAccountId) {
-                this.loadTransactions(newAccountId);
+                this.selectAccount(newAccountId);
             }
         },
 
         methods: {
-            async loadTransactions(accountId) {
-                this.transactions = [];
-                const response = await client.transactions(accountId);
-                let currentBalance = response.priorBalance;
-                this.transactions = response.transactions.map(transaction => {
-                    currentBalance += transaction.amount;
-                    return {...transaction, balance: currentBalance};
-                });
-            }
+            async selectAccount(accountId) {
+                this[stateActions.selectAccount](accountId);
+            },
+            ...mapActions([stateActions.selectAccount]),
         },
 
         filters: {
