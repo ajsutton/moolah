@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import {assert} from 'chai';
-import {loadAccountsAction} from '../../../../src/store/actions';
+import {loadAccountsAction, createAccountAction} from '../../../../src/store/actions';
 import {setAccounts, addAccount, removeAccount, setAccountId} from '../../../../src/store/mutations';
 import accountsStoreLoader from 'inject-loader!../../../../src/store/accountsStore';
 import testAction from './testAction';
@@ -12,6 +12,7 @@ describe('accountsStore', function() {
     beforeEach(function() {
         client = {
             accounts: sinon.stub(),
+            createAccount: sinon.stub(),
         };
         accountsStore = accountsStoreLoader({
             '../api/client': client,
@@ -29,6 +30,36 @@ describe('accountsStore', function() {
             [
                 {type: setAccounts, payload: expectedAccounts},
             ],
+        );
+    });
+
+    it('should create a new account', async function() {
+        const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
+        client.createAccount.resolves({id: 'assigned-id', ...newAccount});
+        await testAction(
+            accountsStore.actions[createAccountAction],
+            newAccount,
+            {accounts: [{id: 'existing'}]},
+            [
+                {type: addAccount, payload: {id: 'new-account', ...newAccount}},
+                {type: setAccountId, payload: {currentId: 'new-account', newId: 'assigned-id'}},
+            ],
+        );
+    });
+
+    it('should remove account again if create fails', async function() {
+
+        const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
+        client.createAccount.rejects('Fetch failed');
+        await testAction(
+            accountsStore.actions[createAccountAction],
+            newAccount,
+            {accounts: [{id: 'existing'}]},
+            [
+                {type: addAccount, payload: {id: 'new-account', ...newAccount}},
+                {type: removeAccount, payload: {id: 'new-account', ...newAccount}},
+            ],
+            true,
         );
     });
 

@@ -1,4 +1,4 @@
-export default async (action, payload, state, expectedMutations) => {
+export default async (action, payload, state, expectedMutations, ignoreFailures = false) => {
     let count = 0;
 
     // mock commit
@@ -16,7 +16,13 @@ export default async (action, payload, state, expectedMutations) => {
     };
 
     // call the action with mocked store and arguments
-    await action({commit, state}, payload);
+    try {
+        await action({commit, state}, payload);
+    } catch (error) {
+        if (!ignoreFailures) {
+            throw error;
+        }
+    }
 
     // check if no mutations should have been dispatched
     expect(count).to.equal(expectedMutations.length);

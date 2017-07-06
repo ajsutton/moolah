@@ -33,13 +33,14 @@ export default {
         },
 
         async [createAccountAction]({commit}, account) {
-            const id = 'newAccount-' + Math.random();
-            commit(addAccount, {id, ...account});
+            const id = 'new-account';
+            const accountToAdd = {id, ...account};
+            commit(addAccount, accountToAdd);
             try {
                 const createdAccount = await client.createAccount(account);
                 commit(setAccountId, {currentId: 'new-account', newId: createdAccount.id});
             } catch (error) {
-                commit(removeAccount, account);
+                commit(removeAccount, accountToAdd);
                 throw error;
             }
         },
