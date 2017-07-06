@@ -29,6 +29,7 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex';
   import client from '../api/client';
   import {createAccountAction} from '../store/actions';
   export default {
@@ -63,7 +64,7 @@
           if (await this.$validator.validateAll()) {
               const account = {name: this.name, type: this.type, balance: Math.round(this.balance * 100)};
               try {
-                  await this.$store.dispatch(createAccountAction, account);
+                  await this[createAccountAction](account);
                   this.dialog = false;
               } catch (error) {
                   this.dialog = true;
@@ -71,6 +72,7 @@
               }
         }
       },
+        ...mapActions('accounts', [createAccountAction])
     },
   }
 </script>
