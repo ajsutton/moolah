@@ -44,6 +44,7 @@
 
         methods: {
             async loadTransactions(accountId) {
+                this.transactions = [];
                 const response = await client.transactions(accountId);
                 let currentBalance = response.priorBalance;
                 this.transactions = response.transactions.map(transaction => {
