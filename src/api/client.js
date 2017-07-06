@@ -28,8 +28,8 @@ export default {
         return json('/api/accounts/', {method: 'POST', body: JSON.stringify(account)});
     },
 
-    async transactions(accountId, offset = 0, limit = 500) {
-        return json(`/api/transactions/?account=${encodeURIComponent(accountId)}`)
+    async transactions(accountId, offset = 0, pageSize = 500) {
+        return json(`/api/transactions/?account=${encodeURIComponent(accountId)}&offset=${offset}&pageSize=${pageSize}`)
     },
 
     async userProfile() {
