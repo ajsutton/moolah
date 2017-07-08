@@ -1,6 +1,19 @@
 <template>
     <v-list two-line subheader>
-        <v-subheader>{{title}}</v-subheader>
+        <v-btn
+                fab
+                small
+                class="cyan accent-2"
+                bottom
+                right
+                fixed
+                @click.native.stop="addTransaction"
+        >
+            <v-icon>add</v-icon>
+        </v-btn>
+        <v-subheader style="position:relative">
+            {{title}}
+        </v-subheader>
         <v-list-tile v-for="transaction in transactions" :key="transaction.id">
             <v-list-tile-content>
                 <v-list-tile-title>{{transaction | transactionTitle}}</v-list-tile-title>
@@ -23,8 +36,7 @@
     export default {
         props: ['accountId'],
         data() {
-            return {
-            };
+            return {};
         },
         computed: {
             title() {
@@ -49,7 +61,11 @@
             async selectAccount(accountId) {
                 this[stateActions.selectAccount](accountId);
             },
+            addTransaction() {
+                this[transactionActions.addTransaction]();
+            },
             ...mapActions([stateActions.selectAccount]),
+            ...mapActions('transactions', [transactionActions.addTransaction]),
         },
 
         filters: {
