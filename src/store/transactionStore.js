@@ -1,4 +1,5 @@
 import client from '../api/client';
+import updateBalance from './updateBalance';
 
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
@@ -24,11 +25,8 @@ export default {
                 return;
             }
             const response = await client.transactions(rootState.selectedAccountId);
-            let currentBalance = response.priorBalance;
-            const transactions = response.transactions.map(transaction => {
-                currentBalance += transaction.amount;
-                return {...transaction, balance: currentBalance};
-            });
+            const transactions = response.transactions;
+            updateBalance(transactions);
             commit(mutations.setTransactions, transactions);
         },
     },
