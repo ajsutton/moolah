@@ -16,6 +16,11 @@ export default {
     state: {
         transactions: [],
     },
+    getters: {
+        selectedTransaction(state, getters, rootState) {
+            return state.transactions.find(transaction => transaction.id === rootState.selectedTransactionId);
+        },
+    },
     mutations: {
         [mutations.setTransactions](state, transactions) {
             state.transactions = transactions;
@@ -24,8 +29,7 @@ export default {
         [mutations.addTransaction](state, transaction) {
             state.transactions.unshift(transaction);
             updateBalance(state.transactions, 0);
-        }
-
+        },
     },
     actions: {
         async [actions.loadTransactions]({commit, rootState}) {

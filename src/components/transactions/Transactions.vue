@@ -1,49 +1,59 @@
 <template>
-    <v-list two-line subheader>
-        <v-btn
-                fab
-                small
-                class="cyan accent-2"
-                bottom
-                right
-                fixed
-                @click.native.stop="addTransaction"
-        >
-            <v-icon>add</v-icon>
-        </v-btn>
-        <v-subheader style="position:relative">
-            {{title}}
-        </v-subheader>
-        <v-list-tile v-for="transaction in transactions" :key="transaction.id">
-            <v-list-tile-content>
-                <v-list-tile-title>{{transaction | transactionTitle}}</v-list-tile-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-                <monetary-amount :value="transaction.amount"></monetary-amount>
-                <monetary-amount :value="transaction.balance"></monetary-amount>
-            </v-list-tile-action>
-        </v-list-tile>
-    </v-list>
+    <v-layout>
+        <v-flex :class="{md8: selectedTransaction}">
+            <v-list two-line subheader>
+                <v-btn
+                        fab
+                        small
+                        class="cyan accent-2"
+                        bottom
+                        right
+                        fixed
+                        @click.native.stop="addTransaction"
+                >
+                    <v-icon>add</v-icon>
+                </v-btn>
+                <v-subheader style="position:relative">
+                    {{title}}
+                </v-subheader>
+                <v-list-tile v-for="transaction in transactions" :key="transaction.id" @click.native.stop="editTransaction(transaction)">
+                    <v-list-tile-content>
+                        <v-list-tile-title>{{transaction | transactionTitle}}</v-list-tile-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                        <monetary-amount :value="transaction.amount"></monetary-amount>
+                        <monetary-amount :value="transaction.balance"></monetary-amount>
+                    </v-list-tile-action>
+                </v-list-tile>
+            </v-list>
+        </v-flex>
+        <v-flex md4 v-if="selectedTransaction">
+            <edit-transaction></edit-transaction>
+        </v-flex>
+    </v-layout>
 </template>
 
 <script>
+    import EditTransaction from './EditTransaction';
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
     import client from '../../api/client';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import {actions as transactionActions} from '../../store/transactionStore';
-    import {actions as stateActions} from '../../store/store';
+    import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
     export default {
         props: ['accountId'],
         data() {
-            return {};
+            return {
+            };
         },
         computed: {
             title() {
                 return this.accountName(this.accountId);
             },
-            ...mapGetters(['selectedAccountId']),
+            ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName']),
+            ...mapGetters('transactions', ['selectedTransaction']),
             ...mapState('transactions', ['transactions']),
         },
 
@@ -64,6 +74,9 @@
             addTransaction() {
                 this[transactionActions.addTransaction]();
             },
+            editTransaction(transaction) {
+                this.$store.commit(stateMutations.selectTransaction, transaction.id);
+            },
             ...mapActions([stateActions.selectAccount]),
             ...mapActions('transactions', [transactionActions.addTransaction]),
         },
@@ -79,7 +92,8 @@
         },
 
         components: {
-            MonetaryAmount
+            MonetaryAmount,
+            EditTransaction,
         }
     };
 </script>
