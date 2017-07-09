@@ -16,7 +16,7 @@
             </v-list>
             <account-list></account-list>
         </v-navigation-drawer>
-        <v-navigation-drawer persistent v-model="selectedTransaction" light right enable-resize-watcher overflow clipped>
+        <v-navigation-drawer persistent v-model="showRightNavPanel" light right enable-resize-watcher overflow clipped disable-route-watcher>
             <edit-transaction></edit-transaction>
         </v-navigation-drawer>
         <v-toolbar class="primary">
@@ -74,7 +74,7 @@
         },
         computed: {
             showRightNavPanel() {
-                return this.selectedTransaction && this.loggedIn;
+                return this.selectedTransaction !== undefined && this.loggedIn;
             },
             ...mapGetters('transactions', ['selectedTransaction']),
         },
