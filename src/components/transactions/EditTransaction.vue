@@ -1,6 +1,9 @@
 <template>
     <div>
         <v-text-field name="payee" label="Payee" v-model="payee"></v-text-field>
+        <v-date-picker v-model="date"></v-date-picker>
+        <v-text-field name="amount" label="Amount" v-model="amount"></v-text-field>
+        <v-text-field name="notes" label="Notes" v-model="notes"></v-text-field>
     </div>
 </template>
 <script>
@@ -26,6 +29,19 @@
                 transaction: 'selectedTransaction',
             }),
             payee: makeModelProperty('payee'),
+            notes: makeModelProperty('notes'),
+            date: makeModelProperty('date'),
+            amount: {
+                get() {
+                    return this.transaction ? this.transaction.amount / 100 : undefined;
+                },
+                set(value) {
+                    this.updateTransaction({
+                        id: this.transaction.id,
+                        patch: {amount: Math.round(value * 100)},
+                    });
+                },
+            },
         },
         methods: {
             ...mapActions('transactions', {
