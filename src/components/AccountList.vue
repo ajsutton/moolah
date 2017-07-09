@@ -1,7 +1,7 @@
 <template>
     <v-list class="pt-0" dense>
         <v-divider></v-divider>
-            <v-list-tile avatar ripple :href="accountLink(account)" :router="true"  v-for="account in accounts" :key="account.id">
+            <v-list-tile avatar ripple :to="accountLink(account)" v-for="account in accounts" :key="account.id">
                 <v-list-tile-action>
                     <v-icon dark>{{ icon(account.type) }}</v-icon>
                 </v-list-tile-action>
@@ -13,7 +13,7 @@
                 </v-list-tile-action>
             </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile avatar ripple href="/" :router="true">
+        <v-list-tile avatar ripple to="/">
             <v-list-tile-action>
                 <v-icon dark>trending_up</v-icon>
             </v-list-tile-action>
