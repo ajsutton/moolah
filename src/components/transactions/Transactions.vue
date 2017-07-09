@@ -14,22 +14,15 @@
         <v-subheader style="position:relative">
             {{title}}
         </v-subheader>
-        <v-list-tile v-for="transaction in transactions" :key="transaction.id"
-                     @click.native.stop="editTransaction(transaction)">
-            <v-list-tile-content>
-                <v-list-tile-title>{{transaction | transactionTitle}}</v-list-tile-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-                <monetary-amount :value="transaction.amount"></monetary-amount>
-                <monetary-amount :value="transaction.balance"></monetary-amount>
-            </v-list-tile-action>
-        </v-list-tile>
+        <transaction v-for="transaction in transactions" :key="transaction.id" :transaction="transaction">
+        </transaction>
     </v-list>
 </template>
 
 <script>
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
     import client from '../../api/client';
+    import Transaction from './Transaction.vue';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import {actions as transactionActions} from '../../store/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
@@ -84,6 +77,7 @@
 
         components: {
             MonetaryAmount,
+            Transaction,
         }
     };
 </script>

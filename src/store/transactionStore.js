@@ -51,7 +51,7 @@ export default {
         },
 
         async [actions.addTransaction]({commit}) {
-            const transaction = {id: 'new-transaction', amount: 0, date: moment().format('YYYY-MM-dd')};
+            const transaction = {id: 'new-transaction', payee: null, amount: 0, date: moment().format('YYYY-MM-dd')};
             commit(mutations.addTransaction, transaction);
         },
 
