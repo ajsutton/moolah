@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-text-field name="payee" label="Payee" v-model="payee"></v-text-field>
+        <v-text-field name="payee" label="Payee" v-model="raw.payee" :rules="rules.payee" @blur="blur('payee')"></v-text-field>
 
         <v-menu
           lazy
@@ -21,7 +21,7 @@
           </v-date-picker>
         </v-menu>
         <v-text-field name="amount" label="Amount" v-model="amount" :rules="rules.amount" @blur="blur('amount')"></v-text-field>
-        <v-text-field name="notes" label="Notes" v-model="notes" multiLine></v-text-field>
+        <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
     </div>
 </template>
 <script>
@@ -29,18 +29,25 @@
     import {actions as transactionActions} from '../../store/transactionStore';
     import {rules, isValid} from '../validation';
 
-    function makeModelProperty(propertyName) {
+    function makeModelProperty(propertyName, toDisplay = value=>value, fromDisplay = value=>value) {
         return {
             get() {
-                return this.transaction ? this.transaction[propertyName] : undefined;
+                if (this.raw[propertyName] === undefined) {
+                    return this.transaction ? toDisplay(this.transaction[propertyName]) : undefined;
+                } else {
+                    return this.raw[propertyName];
+                }
             },
             set(value) {
-                this.updateTransaction({
-                    id: this.transaction.id,
-                    patch: {[propertyName]: value},
-                });
-            }
-        }
+                this.raw[propertyName] = value;
+                if (isValid(value, this.rules[propertyName])) {
+                    this.updateTransaction({
+                        id: this.transaction.id,
+                        patch: {[propertyName]: fromDisplay(value)},
+                    });
+                }
+            },
+        };
     }
 
     export default {
@@ -48,7 +55,9 @@
             return {
                 dateMenu: false,
                 raw: {
-                    amount: undefined
+                    payee: undefined,
+                    amount: undefined,
+                    note: undefined,
                 },
                 rules
             };
