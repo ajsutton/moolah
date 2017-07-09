@@ -1,4 +1,4 @@
-export default async (action, options, expectedMutations, ignoreFailures = false) => {
+export default async (action, options = {state: {}}, expectedMutations) => {
     let count = 0;
 
     // mock commit
@@ -19,7 +19,7 @@ export default async (action, options, expectedMutations, ignoreFailures = false
     try {
         await action({commit, state: options.state, rootState: options.rootState}, options.payload);
     } catch (error) {
-        if (!ignoreFailures) {
+        if (!options.ignoreFailures) {
             throw error;
         }
     }

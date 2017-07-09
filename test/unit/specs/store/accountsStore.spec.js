@@ -55,12 +55,12 @@ describe('accountsStore', function() {
             {
                 payload: newAccount,
                 state: {accounts: [{id: 'existing'}]},
+                ignoreFailures: true,
             },
             [
                 {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
                 {type: mutations.removeAccount, payload: {id: 'new-account', ...newAccount}},
             ],
-            true,
         );
     });
 

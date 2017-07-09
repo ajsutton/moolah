@@ -11,6 +11,7 @@ export const mutations = {
     setTransactions: 'SET_TRANSACTIONS',
     addTransaction: 'ADD_TRANSACTION',
     updateTransaction: 'UPDATE_TRANSACTION',
+    removeTransaction: 'REMOVE_TRANSACTION',
 };
 
 export default {
@@ -32,12 +33,15 @@ export default {
             state.transactions.unshift(transaction);
             updateBalance(state.transactions, 0);
         },
-        [mutations.updateTransaction](state, changes) {
-            const transaction = state.transactions.find(transaction => transaction.id === changes.id);
+        [mutations.removeTransaction](state, transaction) {
+            state.transactions = state.transactions.filter(value => value.id !== transaction.id);
+        },
+        [mutations.updateTransaction](state, payload) {
+            const transaction = state.transactions.find(transaction => transaction.id === payload.id);
             if (transaction !== undefined) {
-                Object.assign(transaction, changes);
+                Object.assign(transaction, payload.patch);
             } else {
-                throw Error(`No transaction with ID ${changes.id}`);
+                throw Error(`No transaction with ID ${payload.id}`);
             }
         },
     },
@@ -51,13 +55,28 @@ export default {
             commit(mutations.setTransactions, response);
         },
 
-        async [actions.addTransaction]({commit}) {
-            const transaction = {id: 'new-transaction', payee: null, amount: 0, date: moment().format('YYYY-MM-dd')};
+        async [actions.addTransaction]({commit, rootState}) {
+            const transaction = {
+                id: 'new-transaction',
+                payee: null,
+                amount: 0,
+                date: moment().format('YYYY-MM-dd'),
+                notes: '',
+                accountId: rootState.selectedAccountId,
+                type: 'expense',
+            };
             commit(mutations.addTransaction, transaction);
+            try {
+                const serverTransaction = await client.createTransaction(transaction);
+                commit(mutations.updateTransaction, {id: transaction.id, patch: serverTransaction});
+            } catch (error) {
+                commit(mutations.removeTransaction, transaction);
+                throw error;
+            }
         },
 
         async [actions.updateTransaction]({commit}, changes) {
-            commit(mutations.updateTransaction, changes)
+            commit(mutations.updateTransaction, changes);
         },
     },
 };

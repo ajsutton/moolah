@@ -15,7 +15,7 @@
             set(value) {
                 this.updateTransaction({
                     id: this.transaction.id,
-                    [propertyName]: value,
+                    patch: {[propertyName]: value},
                 });
             }
         }

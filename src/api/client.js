@@ -32,6 +32,10 @@ export default {
         return json(`/api/transactions/?account=${encodeURIComponent(accountId)}&offset=${offset}&pageSize=${pageSize}`)
     },
 
+    async createTransaction(transaction) {
+        return json(`/api/transactions/`, {method: 'POST', body: JSON.stringify(transaction)});
+    },
+
     async userProfile() {
         return json('/api/auth/');
     },

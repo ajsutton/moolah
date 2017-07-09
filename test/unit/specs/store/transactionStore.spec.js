@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import moment from 'moment';
 import {assert} from 'chai';
 import {actions, mutations} from '../../../../src/store/transactionStore';
 import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';
@@ -10,6 +11,7 @@ describe('transactionStore', function() {
     beforeEach(function() {
         client = {
             transactions: sinon.stub(),
+            createTransaction: sinon.stub(),
         };
         transactionStore = transactionStoreLoader({
             '../api/client': client,
@@ -88,8 +90,10 @@ describe('transactionStore', function() {
                 const state = {transactions: [{id: 1, payee: '', notes: '', amount: 30, balance: 100}]};
                 transactionStore.mutations[mutations.updateTransaction](state, {
                     id: 1,
-                    payee: 'Georgina',
-                    notes: 'My notes',
+                    patch: {
+                        payee: 'Georgina',
+                        notes: 'My notes',
+                    },
                 });
                 assert.deepEqual(state, {
                     transactions: [{id: 1, payee: 'Georgina', notes: 'My notes', amount: 30, balance: 100}],
@@ -141,6 +145,48 @@ describe('transactionStore', function() {
                     },
                     [
                         {type: mutations.setTransactions, payload: response},
+                    ],
+                );
+            });
+        });
+
+        describe('addTransaction', function() {
+            let newTransaction;
+            let serverTransaction;
+            beforeEach(function() {
+                newTransaction = {
+                    id: 'new-transaction',
+                    payee: null,
+                    amount: 0,
+                    date: moment().format('YYYY-MM-dd'),
+                    notes: '',
+                    accountId: 'account-1',
+                    type: 'expense',
+                };
+                serverTransaction = Object.assign({}, newTransaction, {id: 'assigned-id'});
+            });
+
+            it('should add new transaction and notify server', async function() {
+                client.createTransaction.withArgs(newTransaction).resolves(serverTransaction);
+                await testAction(
+                    transactionStore.actions[actions.addTransaction],
+                    {state: {}, rootState: {selectedAccountId: 'account-1'}},
+                    [
+                        {type: mutations.addTransaction, payload: newTransaction},
+                        {type: mutations.updateTransaction, payload: {id: 'new-transaction', patch: serverTransaction}},
+                    ],
+                );
+                sinon.assert.calledWith(client.createTransaction, newTransaction);
+            });
+
+            it('should remove transaction again if create fails', async function() {
+                client.createTransaction.withArgs(newTransaction).rejects('Invalid transaction');
+                await testAction(
+                    transactionStore.actions[actions.addTransaction],
+                    {state: {}, rootState: {selectedAccountId: 'account-1'}, ignoreFailures: true},
+                    [
+                        {type: mutations.addTransaction, payload: newTransaction},
+                        {type: mutations.removeTransaction, payload: newTransaction},
                     ],
                 );
             });
