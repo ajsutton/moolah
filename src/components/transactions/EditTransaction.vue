@@ -21,7 +21,7 @@
           </v-date-picker>
         </v-menu>
         <v-text-field name="amount" label="Amount" v-model="amount"></v-text-field>
-        <v-text-field name="notes" label="Notes" v-model="notes"></v-text-field>
+        <v-text-field name="notes" label="Notes" v-model="notes" multiLine></v-text-field>
     </div>
 </template>
 <script>
@@ -56,7 +56,7 @@
             date: makeModelProperty('date'),
             amount: {
                 get() {
-                    return this.transaction ? this.transaction.amount / 100 : undefined;
+                    return this.transaction ? (this.transaction.amount / 100).toFixed(2) : undefined;
                 },
                 set(value) {
                     this.updateTransaction({
