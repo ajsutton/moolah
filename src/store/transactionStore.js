@@ -5,10 +5,12 @@ import moment from 'moment';
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
     addTransaction: 'ADD_TRANSACTION',
+    updateTransaction: 'UPDATE_TRANSACTION',
 };
 export const mutations = {
     setTransactions: 'SET_TRANSACTIONS',
     addTransaction: 'ADD_TRANSACTION',
+    updateTransaction: 'UPDATE_TRANSACTION',
 };
 
 export default {
@@ -30,6 +32,12 @@ export default {
             state.transactions.unshift(transaction);
             updateBalance(state.transactions, 0);
         },
+        [mutations.updateTransaction](state, changes) {
+            const transaction = state.transactions.find(transaction => transaction.id === changes.id);
+            if (transaction !== undefined) {
+                Object.assign(transaction, changes);
+            }
+        },
     },
     actions: {
         async [actions.loadTransactions]({commit, rootState}) {
@@ -43,8 +51,12 @@ export default {
         },
 
         async [actions.addTransaction]({commit}) {
-            const transaction = { id: 'new-transaction', amount: 0, date: moment().format('YYYY-MM-dd')};
+            const transaction = {id: 'new-transaction', amount: 0, date: moment().format('YYYY-MM-dd')};
             commit(mutations.addTransaction, transaction);
+        },
+
+        async [actions.updateTransaction]({commit}, changes) {
+            commit(mutations.updateTransaction, changes)
         },
     },
 };

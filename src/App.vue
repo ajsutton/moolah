@@ -1,6 +1,6 @@
 <template>
     <v-app light>
-        <v-navigation-drawer persistent clipped enable-resize-watcher v-model="showMainNav" v-if="loggedIn" dark>
+        <v-navigation-drawer persistent clipped enable-resize-watcher disable-route-watcher v-model="showMainNav" v-if="loggedIn" dark>
             <v-list class="pa-0">
                 <v-list-tile avatar>
                     <v-list-tile-avatar v-if="profile.picture">
