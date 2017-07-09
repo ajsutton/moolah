@@ -24,6 +24,13 @@ describe('Balance Updater', function() {
         assert.deepEqual(transactions, expected);
     });
 
+    it('should use priorBalance when updating from the first transaction', function() {
+        const transactions = transactionsWithAmounts(20, -30, 50, 10);
+        updateBalance(transactions, transactions.length - 1, 100);
+        const expected = addBalances(transactions, 150, 130, 160, 110);
+        assert.deepEqual(transactions, expected);
+    });
+
     function transactionsWithAmounts(...amounts) {
         return amounts.map(amount => ({amount}));
     }

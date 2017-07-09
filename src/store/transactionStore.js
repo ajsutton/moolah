@@ -18,6 +18,7 @@ export default {
     namespaced: true,
     state: {
         transactions: [],
+        priorBalance: 0,
     },
     getters: {
         selectedTransaction(state, getters, rootState) {
@@ -27,14 +28,17 @@ export default {
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
             state.transactions = transactionsResponse.transactions;
-            updateBalance(state.transactions, undefined, transactionsResponse.priorBalance);
+            state.priorBalance = transactionsResponse.priorBalance;
+            updateBalance(state.transactions, undefined, state.priorBalance);
         },
         [mutations.addTransaction](state, transaction) {
             state.transactions.unshift(transaction);
-            updateBalance(state.transactions, 0);
+            updateBalance(state.transactions, 0, state.priorBalance);
         },
         [mutations.removeTransaction](state, transaction) {
+            const transactionIndex = state.transactions.findIndex(value => value.id === transaction.id) - 1;
             state.transactions = state.transactions.filter(value => value.id !== transaction.id);
+            updateBalance(state.transactions, transactionIndex, state.priorBalance);
         },
         [mutations.updateTransaction](state, payload) {
             const transaction = state.transactions.find(transaction => transaction.id === payload.id);

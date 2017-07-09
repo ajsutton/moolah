@@ -7,7 +7,7 @@ export default function updateBalances(transactions, updateFrom, priorBalance = 
         balance = priorBalance;
     } else {
         start = updateFrom;
-        balance = transactions[start + 1].balance;
+        balance = start + 1 < transactions.length ? transactions[start + 1].balance : priorBalance;
     }
     for (let i = start; i >= 0; i--) {
         balance += transactions[i].amount;

@@ -57,7 +57,10 @@ describe('transactionStore', function() {
     describe('Mutations', function() {
         describe('setTransactions', function() {
             it('should calculate balances', function() {
-                const state = {transactions: []};
+                const state = {
+                    transactions: [],
+                    priorBalance: 0
+                };
                 transactionStore.mutations[mutations.setTransactions](state, {
                     transactions: [{id: 2, amount: 50}, {id: 1, amount: 25}],
                     priorBalance: 30,
@@ -65,6 +68,7 @@ describe('transactionStore', function() {
 
                 assert.deepEqual(state, {
                     transactions: [{id: 2, amount: 50, balance: 105}, {id: 1, amount: 25, balance: 55}],
+                    priorBalance: 30,
                 });
             });
         });
@@ -113,6 +117,32 @@ describe('transactionStore', function() {
             it('should update balances when amount changes');
             it('should maintain sort order and balances when date is made more recent');
             it('should maintain sort order and balances when date is made less recent');
+        });
+
+        describe('removeTransaction', function() {
+            it('should remove the transaction', function() {
+                const state = {transactions: [{id: 1}]};
+                transactionStore.mutations[mutations.removeTransaction](state, {id: 1});
+                assert.deepEqual(state, {transactions:[]});
+            });
+
+            it('should update balances after the removed transaction', function() {
+                const state = {transactions: [{id: 3, amount: 10, balance: 50}, {id: 2, amount: 30, balance: 40}, {id: 1, amount: 10, balance: 10}]};
+                transactionStore.mutations[mutations.removeTransaction](state, {id: 2});
+                assert.deepEqual(state, {transactions:[{id: 3, amount: 10, balance: 20}, {id: 1, amount: 10, balance: 10}]});
+            });
+
+            it('should update balances using prior balance when the first transaction is removed', function() {
+                const state = {
+                    transactions: [{id: 3, amount: 10, balance: 50}, {id: 2, amount: 30, balance: 40}, {id: 1, amount: 10, balance: 10}],
+                    priorBalance: 70
+                };
+                transactionStore.mutations[mutations.removeTransaction](state, {id: 1});
+                assert.deepEqual(state, {
+                    transactions:[{id: 3, amount: 10, balance: 110}, {id: 2, amount: 30, balance: 100}],
+                    priorBalance: 70,
+                });
+            });
         });
     });
 
