@@ -14,6 +14,10 @@ export const mutations = {
     removeTransaction: 'REMOVE_TRANSACTION',
 };
 
+const findTransaction = (state, transactionId)  => {
+    return state.transactions.find(transaction => transaction.id === transactionId);
+};
+
 export default {
     namespaced: true,
     state: {
@@ -22,7 +26,7 @@ export default {
     },
     getters: {
         selectedTransaction(state, getters, rootState) {
-            return state.transactions.find(transaction => transaction.id === rootState.selectedTransactionId);
+            return findTransaction(state, rootState.selectedTransactionId);
         },
     },
     mutations: {
@@ -41,7 +45,7 @@ export default {
             updateBalance(state.transactions, transactionIndex, state.priorBalance);
         },
         [mutations.updateTransaction](state, payload) {
-            const transaction = state.transactions.find(transaction => transaction.id === payload.id);
+            const transaction = findTransaction(state, payload.id);
             if (transaction !== undefined) {
                 Object.assign(transaction, payload.patch);
             } else {
@@ -60,18 +64,18 @@ export default {
         },
 
         async [actions.addTransaction]({commit, rootState}) {
-            const transaction = {
-                id: 'new-transaction',
-                payee: null,
+            const initialProperties = {
                 amount: 0,
-                date: moment().format('YYYY-MM-dd'),
+                date: moment().format('YYYY-MM-DD'),
                 notes: '',
+                payee: '',
                 accountId: rootState.selectedAccountId,
                 type: 'expense',
             };
+            const transaction = Object.assign({id: 'new-transaction'}, initialProperties);
             commit(mutations.addTransaction, transaction);
             try {
-                const serverTransaction = await client.createTransaction(transaction);
+                const serverTransaction = await client.createTransaction(initialProperties);
                 commit(mutations.updateTransaction, {id: transaction.id, patch: serverTransaction});
             } catch (error) {
                 commit(mutations.removeTransaction, transaction);
@@ -79,8 +83,18 @@ export default {
             }
         },
 
-        async [actions.updateTransaction]({commit}, changes) {
+        async [actions.updateTransaction]({commit, state}, changes) {
+            const transactionId = changes.id;
+            const patch = changes.patch;
+            const transaction = Object.assign({}, findTransaction(state, transactionId));
+            const modifiedTransaction = Object.assign({}, transaction, patch);
             commit(mutations.updateTransaction, changes);
+            try {
+                await client.updateTransaction(modifiedTransaction);
+            } catch (error) {
+                commit(mutations.updateTransaction, {id: transactionId, patch: transaction});
+                throw error;
+            }
         },
     },
 };

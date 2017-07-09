@@ -36,6 +36,10 @@ export default {
         return json(`/api/transactions/`, {method: 'POST', body: JSON.stringify(transaction)});
     },
 
+    async updateTransaction(transaction) {
+        return json(`/api/transactions/${encodeURIComponent(transaction.id)}/`, {method: 'PUT', body: JSON.stringify(transaction)});
+    },
+
     async userProfile() {
         return json('/api/auth/');
     },

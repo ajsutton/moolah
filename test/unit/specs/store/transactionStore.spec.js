@@ -12,6 +12,7 @@ describe('transactionStore', function() {
         client = {
             transactions: sinon.stub(),
             createTransaction: sinon.stub(),
+            updateTransaction: sinon.stub(),
         };
         transactionStore = transactionStoreLoader({
             '../api/client': client,
@@ -182,22 +183,23 @@ describe('transactionStore', function() {
 
         describe('addTransaction', function() {
             let newTransaction;
+            let initialTransactionProperties;
             let serverTransaction;
             beforeEach(function() {
-                newTransaction = {
-                    id: 'new-transaction',
-                    payee: null,
+                initialTransactionProperties = {
+                    payee: '',
                     amount: 0,
-                    date: moment().format('YYYY-MM-dd'),
+                    date: moment().format('YYYY-MM-DD'),
                     notes: '',
                     accountId: 'account-1',
                     type: 'expense',
                 };
-                serverTransaction = Object.assign({}, newTransaction, {id: 'assigned-id'});
+                newTransaction = Object.assign({id: 'new-transaction'}, initialTransactionProperties);
+                serverTransaction = Object.assign({}, initialTransactionProperties, {id: 'assigned-id'});
             });
 
             it('should add new transaction and notify server', async function() {
-                client.createTransaction.withArgs(newTransaction).resolves(serverTransaction);
+                client.createTransaction.withArgs(initialTransactionProperties).resolves(serverTransaction);
                 await testAction(
                     transactionStore.actions[actions.addTransaction],
                     {state: {}, rootState: {selectedAccountId: 'account-1'}},
@@ -206,11 +208,11 @@ describe('transactionStore', function() {
                         {type: mutations.updateTransaction, payload: {id: 'new-transaction', patch: serverTransaction}},
                     ],
                 );
-                sinon.assert.calledWith(client.createTransaction, newTransaction);
+                sinon.assert.calledWith(client.createTransaction, initialTransactionProperties);
             });
 
             it('should remove transaction again if create fails', async function() {
-                client.createTransaction.withArgs(newTransaction).rejects('Invalid transaction');
+                client.createTransaction.rejects('Invalid transaction');
                 await testAction(
                     transactionStore.actions[actions.addTransaction],
                     {state: {}, rootState: {selectedAccountId: 'account-1'}, ignoreFailures: true},
@@ -218,6 +220,38 @@ describe('transactionStore', function() {
                         {type: mutations.addTransaction, payload: newTransaction},
                         {type: mutations.removeTransaction, payload: newTransaction},
                     ],
+                );
+            });
+        });
+
+        describe('updateTransaction', function() {
+            it('should modify transaction', async function() {
+                const transaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13'};
+                const patch = {payee: 'Payee2', notes: 'Notes'};
+                const modifiedTransaction = Object.assign({}, transaction, patch);
+                client.updateTransaction.withArgs(modifiedTransaction).resolves(modifiedTransaction);
+                await testAction(
+                    transactionStore.actions[actions.updateTransaction],
+                    {state: {transactions: [transaction], priorBalance: 100}, payload: {id: 1, patch}},
+                    [
+                        {type: mutations.updateTransaction, payload: {id: 1, patch}}
+                    ]
+                );
+                sinon.assert.calledWith(client.updateTransaction, modifiedTransaction);
+            });
+
+            it('should rollback transaction if server rejects change', async function() {
+                const transaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13'};
+                const patch = {payee: 'Payee2', notes: 'Notes'};
+                const modifiedTransaction = Object.assign({}, transaction, patch);
+                client.updateTransaction.rejects('Server says no');
+                await testAction(
+                    transactionStore.actions[actions.updateTransaction],
+                    {state: {transactions: [transaction], priorBalance: 100}, payload: {id: 1, patch}, ignoreFailures: true},
+                    [
+                        {type: mutations.updateTransaction, payload: {id: 1, patch}},
+                        {type: mutations.updateTransaction, payload: {id: 1, patch: transaction}},
+                    ]
                 );
             });
         });
