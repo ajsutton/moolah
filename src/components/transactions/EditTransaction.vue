@@ -20,7 +20,7 @@
           <v-date-picker v-model="date" no-title scrollable actions>
           </v-date-picker>
         </v-menu>
-        <v-text-field name="amount" label="Amount" v-model="amount"></v-text-field>
+        <v-text-field name="amount" label="Amount" v-model="amount" :rules="rules.amount" @blur="blur('amount')"></v-text-field>
         <v-text-field name="notes" label="Notes" v-model="notes" multiLine></v-text-field>
     </div>
 </template>
@@ -41,10 +41,27 @@
             }
         }
     }
+
+    function isValid(value, rules) {
+        return rules.every(rule => rule(value) === true);   
+    }
+
     export default {
         data() {
             return {
                 dateMenu: false,
+                raw: {
+                    amount: undefined
+                },
+                rules: {
+                    amount: [
+                        value => {
+                            const result = !isNaN(parseFloat(value)) || 'Must be a number';
+                            console.log(value, result);
+                            return result;
+                        }
+                    ]
+                }
             };
         },
         computed: {
@@ -56,17 +73,29 @@
             date: makeModelProperty('date'),
             amount: {
                 get() {
-                    return this.transaction ? (this.transaction.amount / 100).toFixed(2) : undefined;
+                    if (this.raw.amount === undefined) {
+                        return this.transaction ? (this.transaction.amount / 100).toFixed(2) : undefined;
+                    } else {
+                        return this.raw.amount;
+                    }
                 },
                 set(value) {
-                    this.updateTransaction({
-                        id: this.transaction.id,
-                        patch: {amount: Math.round(value * 100)},
-                    });
+                    this.raw.amount = value;
+                    if (isValid(value, this.rules.amount)) {
+                        this.updateTransaction({
+                            id: this.transaction.id,
+                            patch: {amount: Math.round(value * 100)},
+                        });
+                    }
                 },
             },
         },
         methods: {
+            blur(property) {
+                if (isValid(this.raw[property], this.rules[property])) {
+                    this.raw[property] = undefined;
+                }
+            },
             ...mapActions('transactions', {
                 updateTransaction: transactionActions.updateTransaction
             })
