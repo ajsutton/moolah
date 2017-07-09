@@ -1,7 +1,25 @@
 <template>
     <div>
         <v-text-field name="payee" label="Payee" v-model="payee"></v-text-field>
-        <v-date-picker v-model="date"></v-date-picker>
+
+        <v-menu
+          lazy
+          :close-on-content-click="true"
+          v-model="dateMenu"
+          offset-y
+          full-width
+          :nudge-left="40"
+          max-width="290px"
+        >
+          <v-text-field
+            slot="activator"
+            label="Date"
+            v-model="date"
+            readonly
+          ></v-text-field>
+          <v-date-picker v-model="date" no-title scrollable actions>
+          </v-date-picker>
+        </v-menu>
         <v-text-field name="amount" label="Amount" v-model="amount"></v-text-field>
         <v-text-field name="notes" label="Notes" v-model="notes"></v-text-field>
     </div>
@@ -24,6 +42,11 @@
         }
     }
     export default {
+        data() {
+            return {
+                dateMenu: false,
+            };
+        },
         computed: {
             ...mapGetters('transactions', {
                 transaction: 'selectedTransaction',
