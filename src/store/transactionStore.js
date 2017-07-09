@@ -24,9 +24,9 @@ export default {
         },
     },
     mutations: {
-        [mutations.setTransactions](state, transactions) {
-            state.transactions = transactions;
-            updateBalance(state.transactions);
+        [mutations.setTransactions](state, transactionsResponse) {
+            state.transactions = transactionsResponse.transactions;
+            updateBalance(state.transactions, undefined, transactionsResponse.priorBalance);
         },
         [mutations.addTransaction](state, transaction) {
             state.transactions.unshift(transaction);
@@ -36,6 +36,8 @@ export default {
             const transaction = state.transactions.find(transaction => transaction.id === changes.id);
             if (transaction !== undefined) {
                 Object.assign(transaction, changes);
+            } else {
+                throw Error(`No transaction with ID ${changes.id}`);
             }
         },
     },
@@ -46,8 +48,7 @@ export default {
                 return;
             }
             const response = await client.transactions(rootState.selectedAccountId);
-            const transactions = response.transactions;
-            commit(mutations.setTransactions, transactions);
+            commit(mutations.setTransactions, response);
         },
 
         async [actions.addTransaction]({commit}) {

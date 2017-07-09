@@ -23,8 +23,7 @@ describe('accountsStore', function() {
         client.accounts.resolves({accounts: expectedAccounts});
         await testAction(
             accountsStore.actions[actions.loadAccounts],
-            null,
-            {accounts: []},
+            {state: {accounts: []}},
             [
                 {type: mutations.setAccounts, payload: expectedAccounts},
             ],
@@ -36,8 +35,10 @@ describe('accountsStore', function() {
         client.createAccount.resolves({id: 'assigned-id', ...newAccount});
         await testAction(
             accountsStore.actions[actions.createAccount],
-            newAccount,
-            {accounts: [{id: 'existing'}]},
+            {
+                payload: newAccount,
+                state: {accounts: [{id: 'existing'}]},
+            },
             [
                 {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
                 {type: mutations.setAccountId, payload: {currentId: 'new-account', newId: 'assigned-id'}},
@@ -51,8 +52,10 @@ describe('accountsStore', function() {
         client.createAccount.rejects('Fetch failed');
         await testAction(
             accountsStore.actions[actions.createAccount],
-            newAccount,
-            {accounts: [{id: 'existing'}]},
+            {
+                payload: newAccount,
+                state: {accounts: [{id: 'existing'}]},
+            },
             [
                 {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
                 {type: mutations.removeAccount, payload: {id: 'new-account', ...newAccount}},

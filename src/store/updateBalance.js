@@ -1,10 +1,10 @@
-export default function updateBalances(transactions, updateFrom)
+export default function updateBalances(transactions, updateFrom, priorBalance = 0)
 {
     let start;
     let balance;
     if (updateFrom === undefined) {
         start = transactions.length - 1;
-        balance = 0;
+        balance = priorBalance;
     } else {
         start = updateFrom;
         balance = transactions[start + 1].balance;
