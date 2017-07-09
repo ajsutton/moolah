@@ -27,6 +27,7 @@
 <script>
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
     import {actions as transactionActions} from '../../store/transactionStore';
+    import {rules, isValid} from '../validation';
 
     function makeModelProperty(propertyName) {
         return {
@@ -42,10 +43,6 @@
         }
     }
 
-    function isValid(value, rules) {
-        return rules.every(rule => rule(value) === true);   
-    }
-
     export default {
         data() {
             return {
@@ -53,15 +50,7 @@
                 raw: {
                     amount: undefined
                 },
-                rules: {
-                    amount: [
-                        value => {
-                            const result = !isNaN(parseFloat(value)) || 'Must be a number';
-                            console.log(value, result);
-                            return result;
-                        }
-                    ]
-                }
+                rules
             };
         },
         computed: {
