@@ -13,7 +13,7 @@
     "test": "npm run unit"
   },
   "dependencies": {
-    "binarysearch": "^1.0.0",
+    "binary-search": "^1.3.2",
     "moment": "^2.18.1",
     "vee-validate": "^2.0.0-rc.6",
     "vue": "^2.3.3",

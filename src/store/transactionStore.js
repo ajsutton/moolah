@@ -1,7 +1,7 @@
 import client from '../api/client';
 import updateBalance from './updateBalance';
 import moment from 'moment';
-import bs from 'binarysearch';
+import search from 'binary-search';
 
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
@@ -20,18 +20,27 @@ const findTransaction = (state, transactionId)  => {
 };
 
 const findTransactionIndex = (state, transactionId) => state.transactions.findIndex(transaction => transaction.id === transactionId);
-const dateComparator = (transaction1, transaction2) => {
-    let result;
+const transactionComparator = (transaction1, transaction2) => {
     if (transaction1.date < transaction2.date) {
-        result = 1;
+        return 1;
     } else if (transaction1.date > transaction2.date) {
-        result = -1;
+        return -1;
+    } else if (transaction1.id < transaction2.id) {
+        return -1;
+    } else if (transaction1.id > transaction2.id) {
+        return 1; 
     } else {
-        result = 0;
+        return 0;
     }
-    return result;
 };
 
+const findInsertIndex = (state, transaction) => {
+    let insertIndex = search(state.transactions, transaction, transactionComparator);
+    if (insertIndex < 0) {
+        insertIndex = -insertIndex - 1;
+    }
+    return insertIndex;
+}
 export function ensureAllFieldsPresent(transaction) {
     ['amount', 'date', 'notes', 'payee', 'accountId', 'type', 'balance'].forEach(key => {
         if (!transaction.hasOwnProperty(key)) {
@@ -60,7 +69,8 @@ export default {
             state.priorBalance = transactionsResponse.priorBalance;
         },
         [mutations.addTransaction](state, transaction) {
-            const insertIndex = bs.insert(state.transactions, ensureAllFieldsPresent(transaction), dateComparator);
+            const insertIndex = findInsertIndex(state, transaction);
+            state.transactions.splice(insertIndex, 0, ensureAllFieldsPresent(transaction));
             updateBalance(state.transactions, insertIndex, state.priorBalance);
         },
         [mutations.removeTransaction](state, transaction) {
@@ -72,9 +82,17 @@ export default {
             const index = findTransactionIndex(state, payload.id);
             const transaction = state.transactions[index];
             if (transaction !== undefined) {
-                Object.assign(transaction, payload.patch);
-                if (payload.patch.amount !== undefined) {
+                if (payload.patch.date !== undefined) {
+                    state.transactions.splice(index, 1);
+                    Object.assign(transaction, payload.patch);
+                    let insertIndex = findInsertIndex(state, transaction);
+                    state.transactions.splice(insertIndex, 0, transaction)
+                    updateBalance(state.transactions, Math.max(index, insertIndex), state.priorBalance);
+                } else if (payload.patch.amount !== undefined) {
+                    Object.assign(transaction, payload.patch);
                     updateBalance(state.transactions, index, state.priorBalance);
+                } else {
+                    Object.assign(transaction, payload.patch);
                 }
             } else {
                 throw Error(`No transaction with ID ${payload.id}`);
