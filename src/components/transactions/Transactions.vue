@@ -1,12 +1,12 @@
 <template>
-    <v-list two-line subheader>
+    <v-list two-line subheader style="position: relative" class="mt-2">
         <v-btn
                 fab
                 small
-                class="cyan accent-2"
-                bottom
+                class="accent"
+                top
                 right
-                fixed
+                absolute
                 @click.native.stop="addTransaction"
         >
             <v-icon>add</v-icon>

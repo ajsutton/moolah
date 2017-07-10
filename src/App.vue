@@ -95,5 +95,17 @@
 </script>
 
 <style lang="stylus">
+    @import '../node_modules/vuetify/src/stylus/settings/_colors'
+
+    $theme := {
+        primary: $blue.darken-2
+        accent: $pink.accent-2
+        secondary: $grey.darken-3
+        info: $blue.base
+        warning: $amber.base
+        error: $red.base
+        success: $green.base
+    }
+
     @import '../node_modules/vuetify/src/stylus/main'
 </style>
