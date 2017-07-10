@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pl-2 pr-2">
         <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="blur('payee')"></v-text-field>
 
         <v-menu
