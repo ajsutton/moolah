@@ -18,6 +18,8 @@ const findTransaction = (state, transactionId)  => {
     return state.transactions.find(transaction => transaction.id === transactionId);
 };
 
+const findTransactionIndex = (state, transactionId) => state.transactions.findIndex(transaction => transaction.id === transactionId);
+
 export default {
     namespaced: true,
     state: {
@@ -31,9 +33,9 @@ export default {
     },
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
+            updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance);
             state.transactions = transactionsResponse.transactions;
             state.priorBalance = transactionsResponse.priorBalance;
-            updateBalance(state.transactions, undefined, state.priorBalance);
         },
         [mutations.addTransaction](state, transaction) {
             state.transactions.unshift(transaction);
@@ -45,9 +47,14 @@ export default {
             updateBalance(state.transactions, transactionIndex, state.priorBalance);
         },
         [mutations.updateTransaction](state, payload) {
-            const transaction = findTransaction(state, payload.id);
+            const index = findTransactionIndex(state, payload.id);
+            const transaction = state.transactions[index];
             if (transaction !== undefined) {
                 Object.assign(transaction, payload.patch);
+                if (payload.patch.amount !== undefined) {
+                    console.log("Updating from", index);
+                    updateBalance(state.transactions, index, state.priorBalance);
+                }
             } else {
                 throw Error(`No transaction with ID ${payload.id}`);
             }

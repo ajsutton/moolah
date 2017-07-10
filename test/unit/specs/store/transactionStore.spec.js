@@ -1,9 +1,11 @@
 import sinon from 'sinon';
 import moment from 'moment';
-import {assert} from 'chai';
+import {assert, config as chaiConfig} from 'chai';
 import {actions, mutations} from '../../../../src/store/transactionStore';
 import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';
 import testAction from './testAction';
+
+chaiConfig.truncateThreshold = 0;
 
 describe('transactionStore', function() {
     let client;
@@ -115,7 +117,19 @@ describe('transactionStore', function() {
                 assert.fail('Should have thrown an error');
             });
 
-            it('should update balances when amount changes');
+            it('should update balances when amount changes', function() {
+                const state = {transactions: [{id: 1, amount: 30, balance: 100}, {id: 2, amount: 20, balance: 70}], priorBalance: 50};
+                transactionStore.mutations[mutations.updateTransaction](state, {
+                    id: 2,
+                    patch: {
+                        amount: -10,
+                    },
+                });
+                assert.deepEqual(state, {
+                    transactions: [{id: 1, amount: 30, balance: 70}, {id: 2, amount: -10, balance: 40}], priorBalance: 50
+                });
+            });
+
             it('should maintain sort order and balances when date is made more recent');
             it('should maintain sort order and balances when date is made less recent');
         });
