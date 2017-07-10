@@ -16,7 +16,7 @@ module.exports = function(config) {
         browserNoActivityTimeout: 60000, //default 10000
         browsers: ['PhantomJS'],
         frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim', 'babel-polyfill'],
-        reporters: ['spec'],
+        reporters: ['mocha'],
         files: ['./index.js'],
         preprocessors: {
             './index.js': ['webpack', 'sourcemap'],
