@@ -1,11 +1,13 @@
 import sinon from 'sinon';
 import moment from 'moment';
 import {assert, config as chaiConfig} from 'chai';
-import {actions, mutations} from '../../../../src/store/transactionStore';
+import {actions, mutations, ensureAllFieldsPresent} from '../../../../src/store/transactionStore';
 import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';
 import testAction from './testAction';
 
 chaiConfig.truncateThreshold = 0;
+
+const expandFields = transactions => transactions.map(ensureAllFieldsPresent)
 
 describe('transactionStore', function() {
     let client;
@@ -70,7 +72,7 @@ describe('transactionStore', function() {
                 });
 
                 assert.deepEqual(state, {
-                    transactions: [{id: 2, amount: 50, balance: 105}, {id: 1, amount: 25, balance: 55}],
+                    transactions: expandFields([{id: 2, amount: 50, balance: 105}, {id: 1, amount: 25, balance: 55}]),
                     priorBalance: 30,
                 });
             });
@@ -78,40 +80,40 @@ describe('transactionStore', function() {
 
         describe('addTransaction', function() {
             it('should keep transactions sorted by date when inserting at start', function() {
-                const state = {transactions: [{id: 2, amount: 10, date: '2017-07-02', balance: 60}, {id: 1, amount: 50, date: '2017-07-01', balance: 50}], priorBalance: 0};
+                const state = {transactions: expandFields([{id: 2, amount: 10, date: '2017-07-02', balance: 60}, {id: 1, amount: 50, date: '2017-07-01', balance: 50}]), priorBalance: 0};
                 transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 25, date: '2017-07-03'});
                 assert.deepEqual(state, {
-                    transactions: [
+                    transactions: expandFields([
                         {id: 3, amount: 25, date: '2017-07-03', balance: 85},
                         {id: 2, amount: 10, date: '2017-07-02', balance: 60},
                         {id: 1, amount: 50, date: '2017-07-01', balance: 50},
-                    ],
+                    ]),
                     priorBalance: 0,
                 });
             });
 
             it('should keep transactions sorted by date when inserting in middle', function() {
-                const state = {transactions: [{id: 2, amount: 10, date: '2017-07-03', balance: 70}, {id: 1, amount: 50, date: '2017-07-01', balance: 50}], priorBalance: 0};
+                const state = {transactions: expandFields([{id: 2, amount: 10, date: '2017-07-03', balance: 70}, {id: 1, amount: 50, date: '2017-07-01', balance: 50}]), priorBalance: 0};
                 transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 25, date: '2017-07-02'});
                 assert.deepEqual(state, {
-                    transactions: [
+                    transactions: expandFields([
                         {id: 2, amount: 10, date: '2017-07-03', balance: 85},
                         {id: 3, amount: 25, date: '2017-07-02', balance: 75},
                         {id: 1, amount: 50, date: '2017-07-01', balance: 50},
-                    ],
+                    ]),
                     priorBalance: 0,
                 });
             });
 
             it('should keep transactions sorted by date when inserting at end', function() {
-                const state = {transactions: [{id: 2, amount: 10, date: '2017-07-03', balance: 70}, {id: 1, amount: 50, date: '2017-07-02', balance: 50}], priorBalance: 0};
+                const state = {transactions: expandFields([{id: 2, amount: 10, date: '2017-07-03', balance: 70}, {id: 1, amount: 50, date: '2017-07-02', balance: 50}]), priorBalance: 0};
                 transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 25, date: '2017-07-01'});
                 assert.deepEqual(state, {
-                    transactions: [
+                    transactions: expandFields([
                         {id: 2, amount: 10, date: '2017-07-03', balance: 85},
                         {id: 1, amount: 50, date: '2017-07-02', balance: 75},
                         {id: 3, amount: 25, date: '2017-07-01', balance: 25},
-                    ],
+                    ]),
                     priorBalance: 0,
                 });
             });

@@ -32,6 +32,15 @@ const dateComparator = (transaction1, transaction2) => {
     return result;
 };
 
+export function ensureAllFieldsPresent(transaction) {
+    ['amount', 'date', 'notes', 'payee', 'accountId', 'type', 'balance'].forEach(key => {
+        if (!transaction.hasOwnProperty(key)) {
+            transaction[key] = undefined;
+        }
+    });
+    return transaction;
+}
+
 export default {
     namespaced: true,
     state: {
@@ -45,12 +54,13 @@ export default {
     },
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
+            transactionsResponse.transactions.forEach(ensureAllFieldsPresent);
             updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance);
             state.transactions = transactionsResponse.transactions;
             state.priorBalance = transactionsResponse.priorBalance;
         },
         [mutations.addTransaction](state, transaction) {
-            const insertIndex = bs.insert(state.transactions, transaction, dateComparator);
+            const insertIndex = bs.insert(state.transactions, ensureAllFieldsPresent(transaction), dateComparator);
             updateBalance(state.transactions, insertIndex, state.priorBalance);
         },
         [mutations.removeTransaction](state, transaction) {
