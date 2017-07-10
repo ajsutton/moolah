@@ -62,7 +62,7 @@ describe('transactionStore', function() {
             it('should calculate balances', function() {
                 const state = {
                     transactions: [],
-                    priorBalance: 0
+                    priorBalance: 0,
                 };
                 transactionStore.mutations[mutations.setTransactions](state, {
                     transactions: [{id: 2, amount: 50}, {id: 1, amount: 25}],
@@ -77,19 +77,44 @@ describe('transactionStore', function() {
         });
 
         describe('addTransaction', function() {
-            it('should add transaction at start of list', function() {
-                const state = {transactions: [{id: 2, balance: 20}, {id: 1, balance: 10}]};
-                transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 50, payee: 'Georgina'});
+            it('should keep transactions sorted by date when inserting at start', function() {
+                const state = {transactions: [{id: 2, amount: 10, date: '2017-07-02', balance: 60}, {id: 1, amount: 50, date: '2017-07-01', balance: 50}], priorBalance: 0};
+                transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 25, date: '2017-07-03'});
                 assert.deepEqual(state, {
                     transactions: [
-                        {id: 3, amount: 50, payee: 'Georgina', balance: 70},
-                        {id: 2, balance: 20},
-                        {id: 1, balance: 10},
+                        {id: 3, amount: 25, date: '2017-07-03', balance: 85},
+                        {id: 2, amount: 10, date: '2017-07-02', balance: 60},
+                        {id: 1, amount: 50, date: '2017-07-01', balance: 50},
                     ],
+                    priorBalance: 0,
                 });
             });
 
-            it('should sort transactions by date');
+            it('should keep transactions sorted by date when inserting in middle', function() {
+                const state = {transactions: [{id: 2, amount: 10, date: '2017-07-03', balance: 70}, {id: 1, amount: 50, date: '2017-07-01', balance: 50}], priorBalance: 0};
+                transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 25, date: '2017-07-02'});
+                assert.deepEqual(state, {
+                    transactions: [
+                        {id: 2, amount: 10, date: '2017-07-03', balance: 85},
+                        {id: 3, amount: 25, date: '2017-07-02', balance: 75},
+                        {id: 1, amount: 50, date: '2017-07-01', balance: 50},
+                    ],
+                    priorBalance: 0,
+                });
+            });
+
+            it('should keep transactions sorted by date when inserting at end', function() {
+                const state = {transactions: [{id: 2, amount: 10, date: '2017-07-03', balance: 70}, {id: 1, amount: 50, date: '2017-07-02', balance: 50}], priorBalance: 0};
+                transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 25, date: '2017-07-01'});
+                assert.deepEqual(state, {
+                    transactions: [
+                        {id: 2, amount: 10, date: '2017-07-03', balance: 85},
+                        {id: 1, amount: 50, date: '2017-07-02', balance: 75},
+                        {id: 3, amount: 25, date: '2017-07-01', balance: 25},
+                    ],
+                    priorBalance: 0,
+                });
+            });
         });
 
         describe('updateTransaction', function() {
@@ -126,7 +151,7 @@ describe('transactionStore', function() {
                     },
                 });
                 assert.deepEqual(state, {
-                    transactions: [{id: 1, amount: 30, balance: 70}, {id: 2, amount: -10, balance: 40}], priorBalance: 50
+                    transactions: [{id: 1, amount: 30, balance: 70}, {id: 2, amount: -10, balance: 40}], priorBalance: 50,
                 });
             });
 
@@ -138,23 +163,23 @@ describe('transactionStore', function() {
             it('should remove the transaction', function() {
                 const state = {transactions: [{id: 1}]};
                 transactionStore.mutations[mutations.removeTransaction](state, {id: 1});
-                assert.deepEqual(state, {transactions:[]});
+                assert.deepEqual(state, {transactions: []});
             });
 
             it('should update balances after the removed transaction', function() {
                 const state = {transactions: [{id: 3, amount: 10, balance: 50}, {id: 2, amount: 30, balance: 40}, {id: 1, amount: 10, balance: 10}]};
                 transactionStore.mutations[mutations.removeTransaction](state, {id: 2});
-                assert.deepEqual(state, {transactions:[{id: 3, amount: 10, balance: 20}, {id: 1, amount: 10, balance: 10}]});
+                assert.deepEqual(state, {transactions: [{id: 3, amount: 10, balance: 20}, {id: 1, amount: 10, balance: 10}]});
             });
 
             it('should update balances using prior balance when the first transaction is removed', function() {
                 const state = {
                     transactions: [{id: 3, amount: 10, balance: 50}, {id: 2, amount: 30, balance: 40}, {id: 1, amount: 10, balance: 10}],
-                    priorBalance: 70
+                    priorBalance: 70,
                 };
                 transactionStore.mutations[mutations.removeTransaction](state, {id: 1});
                 assert.deepEqual(state, {
-                    transactions:[{id: 3, amount: 10, balance: 110}, {id: 2, amount: 30, balance: 100}],
+                    transactions: [{id: 3, amount: 10, balance: 110}, {id: 2, amount: 30, balance: 100}],
                     priorBalance: 70,
                 });
             });
@@ -248,8 +273,8 @@ describe('transactionStore', function() {
                     transactionStore.actions[actions.updateTransaction],
                     {state: {transactions: [transaction], priorBalance: 100}, payload: {id: 1, patch}},
                     [
-                        {type: mutations.updateTransaction, payload: {id: 1, patch}}
-                    ]
+                        {type: mutations.updateTransaction, payload: {id: 1, patch}},
+                    ],
                 );
                 sinon.assert.calledWith(client.updateTransaction, modifiedTransaction);
             });
@@ -265,7 +290,7 @@ describe('transactionStore', function() {
                     [
                         {type: mutations.updateTransaction, payload: {id: 1, patch}},
                         {type: mutations.updateTransaction, payload: {id: 1, patch: transaction}},
-                    ]
+                    ],
                 );
             });
         });

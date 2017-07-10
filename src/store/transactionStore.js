@@ -1,6 +1,7 @@
 import client from '../api/client';
 import updateBalance from './updateBalance';
 import moment from 'moment';
+import bs from 'binarysearch';
 
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
@@ -19,6 +20,17 @@ const findTransaction = (state, transactionId)  => {
 };
 
 const findTransactionIndex = (state, transactionId) => state.transactions.findIndex(transaction => transaction.id === transactionId);
+const dateComparator = (transaction1, transaction2) => {
+    let result;
+    if (transaction1.date < transaction2.date) {
+        result = 1;
+    } else if (transaction1.date > transaction2.date) {
+        result = -1;
+    } else {
+        result = 0;
+    }
+    return result;
+};
 
 export default {
     namespaced: true,
@@ -38,8 +50,8 @@ export default {
             state.priorBalance = transactionsResponse.priorBalance;
         },
         [mutations.addTransaction](state, transaction) {
-            state.transactions.unshift(transaction);
-            updateBalance(state.transactions, 0, state.priorBalance);
+            const insertIndex = bs.insert(state.transactions, transaction, dateComparator);
+            updateBalance(state.transactions, insertIndex, state.priorBalance);
         },
         [mutations.removeTransaction](state, transaction) {
             const transactionIndex = state.transactions.findIndex(value => value.id === transaction.id) - 1;
