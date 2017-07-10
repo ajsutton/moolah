@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-text-field name="payee" label="Payee" v-model="raw.payee" :rules="rules.payee" @blur="blur('payee')"></v-text-field>
+        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="blur('payee')"></v-text-field>
 
         <v-menu
           lazy
