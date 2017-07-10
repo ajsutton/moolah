@@ -52,7 +52,6 @@ export default {
             if (transaction !== undefined) {
                 Object.assign(transaction, payload.patch);
                 if (payload.patch.amount !== undefined) {
-                    console.log("Updating from", index);
                     updateBalance(state.transactions, index, state.priorBalance);
                 }
             } else {
