@@ -58,6 +58,7 @@
                     payee: undefined,
                     amount: undefined,
                     note: undefined,
+                    date: undefined,
                 },
                 rules
             };
@@ -68,7 +69,17 @@
             }),
             payee: makeModelProperty('payee'),
             notes: makeModelProperty('notes'),
-            date: makeModelProperty('date'),
+            date: {
+                get() {
+                    return this.transaction ? this.transaction.date : undefined;
+                },
+                set(value) {
+                    this.updateTransaction({
+                        id: this.transaction.id,
+                        patch: {date: value},
+                    });
+                },
+            },
             amount: {
                 get() {
                     if (this.raw.amount === undefined) {
