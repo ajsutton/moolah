@@ -9,7 +9,6 @@
             </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
-        <v-card-text>
             <v-list two-line style="position: relative">
                 <template v-for="transaction in transactions">
                     <transaction :transaction="transaction" :key="transaction.id">
@@ -17,7 +16,6 @@
                     <v-divider></v-divider>
                 </template>
             </v-list>
-        </v-card-text>
     </v-card>
 </template>
 
