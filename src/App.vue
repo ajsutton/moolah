@@ -19,7 +19,7 @@
         <v-navigation-drawer v-model="showRightNavPanel" light right permanent enable-resize-watcher overflow clipped disable-route-watcher v-if="showRightNavPanel">
             <edit-transaction></edit-transaction>
         </v-navigation-drawer>
-        <v-toolbar class="primary">
+        <v-toolbar class="primary" fixed>
             <v-toolbar-side-icon dark v-if="loggedIn"
                                  @click.native.stop="showMainNav = !showMainNav"></v-toolbar-side-icon>
             <v-toolbar-title class="hidden-sm-and-down white--text" v-if="loggedIn">Moolah</v-toolbar-title>
