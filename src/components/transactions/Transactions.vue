@@ -1,21 +1,16 @@
 <template>
-    <v-card class="mt-2">
-        <v-card-title>
-            <div class="headline">{{title}}</div>
-        </v-card-title>
-        <v-card-text>
-            <v-btn
-                    fab
-                    small
-                    class="accent"
-                    top
-                    right
-                    absolute
-                    @click.native.stop="addTransaction"
-            >
+    <v-card>
+        <v-toolbar card class="white" prominent>
+            <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon
+                   @click.native.stop="addTransaction">
                 <v-icon>add</v-icon>
             </v-btn>
-            <v-list two-line style="position: relative" class="mt-2">
+        </v-toolbar>
+        <v-divider></v-divider>
+        <v-card-text>
+            <v-list two-line style="position: relative">
                 <template v-for="transaction in transactions">
                     <transaction :transaction="transaction" :key="transaction.id">
                     </transaction>
