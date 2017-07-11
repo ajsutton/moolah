@@ -1,6 +1,6 @@
 <template>
     <div class="pl-2 pr-2">
-        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="blur('payee')"></v-text-field>
+        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="blur('payee')" v-if="!isOpeningBalance"></v-text-field>
 
         <v-menu
                 lazy
@@ -23,6 +23,7 @@
         <v-text-field name="amount" label="Amount" v-model="amount" :rules="rules.amount" @blur="blur('amount')"></v-text-field>
         <v-select
                 label="Type"
+                v-if="!isOpeningBalance"
                 v-model="type"
                 :items="[{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}]"
         ></v-select>
@@ -68,6 +69,9 @@
             };
         },
         computed: {
+            isOpeningBalance() {
+                return this.transaction && this.transaction.type === 'openingBalance';
+            },
             ...mapGetters('transactions', {
                 transaction: 'selectedTransaction',
             }),
@@ -95,24 +99,7 @@
                     });
                 },
             },
-            amount: {
-                get() {
-                    if (this.raw.amount === undefined) {
-                        return this.transaction ? (this.transaction.amount / 100).toFixed(2) : undefined;
-                    } else {
-                        return this.raw.amount;
-                    }
-                },
-                set(value) {
-                    this.raw.amount = value;
-                    if (isValid(value, this.rules.amount)) {
-                        this.updateTransaction({
-                            id: this.transaction.id,
-                            patch: {amount: Math.round(value * 100)},
-                        });
-                    }
-                },
-            },
+            amount: makeModelProperty('amount', amount => (amount / 100).toFixed(2), value => Math.round(value * 100)),
         },
         methods: {
             blur(property) {
