@@ -30,8 +30,8 @@
 
 <script>
   import { mapActions } from 'vuex';
-  import client from '../api/client';
-  import {actions} from '../store/accountsStore';
+  import client from '../../api/client';
+  import {actions} from '../../store/accountsStore';
   export default {
     data() {
       return {

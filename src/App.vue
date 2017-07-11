@@ -49,9 +49,9 @@
 <script>
     import {mapGetters} from 'vuex';
     import {actions as transactionActions} from './store/transactionStore';
-    import AccountList from './components/AccountList';
+    import AccountList from './components/accounts/AccountList';
     import EditTransaction from './components/transactions/EditTransaction';
-    import CreateAccount from './components/CreateAccount';
+    import CreateAccount from './components/accounts/CreateAccount';
     import Welcome from './components/welcome/Welcome';
     import Logout from './components/Logout';
     import client from './api/client';
