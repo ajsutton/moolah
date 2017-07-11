@@ -39,7 +39,7 @@
         return {
             get() {
                 if (this.raw[propertyName] === undefined) {
-                    return this.transaction ? toDisplay(this.transaction[propertyName]) : undefined;
+                    return this.transaction ? toDisplay(this.transaction[propertyName], this.transaction) : undefined;
                 } else {
                     return this.raw[propertyName];
                 }
@@ -49,11 +49,15 @@
                 if (isValid(value, this.rules[propertyName])) {
                     this.updateTransaction({
                         id: this.transaction.id,
-                        patch: {[propertyName]: fromDisplay(value)},
+                        patch: {[propertyName]: fromDisplay(value, this.transaction)},
                     });
                 }
             },
         };
+    }
+
+    function typeMultiplier(transaction) {
+        return transaction.type === 'expense' ? -1 : 1;
     }
 
     export default {
@@ -99,7 +103,10 @@
                     });
                 },
             },
-            amount: makeModelProperty('amount', amount => (amount / 100).toFixed(2), value => Math.round(value * 100)),
+            amount: makeModelProperty('amount',
+                (amount, transaction) => (typeMultiplier(transaction) * amount / 100).toFixed(2),
+                (value, transaction) => typeMultiplier(transaction) * Math.round(value * 100)),
+
         },
         methods: {
             blur(property) {
