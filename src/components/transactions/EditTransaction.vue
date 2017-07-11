@@ -97,10 +97,15 @@
                     return this.transaction ? this.transaction.type : undefined;
                 },
                 set(value) {
-                    this.updateTransaction({
-                        id: this.transaction.id,
-                        patch: {type: value},
-                    });
+                    if (value !== this.transaction.type) {
+                        this.updateTransaction({
+                            id: this.transaction.id,
+                            patch: {
+                                type: value,
+                                amount: this.transaction.amount * -1
+                            },
+                        });
+                    }
                 },
             },
             amount: makeModelProperty('amount',
