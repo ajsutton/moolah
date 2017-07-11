@@ -16,7 +16,7 @@
             </v-list>
             <account-list></account-list>
         </v-navigation-drawer>
-        <v-navigation-drawer persistent v-model="showRightNavPanel" light right enable-resize-watcher overflow clipped disable-route-watcher>
+        <v-navigation-drawer persistent v-model="showRightNavPanel" light right enable-resize-watcher overflow clipped disable-route-watcher v-if="showRightNavPanel">
             <edit-transaction></edit-transaction>
         </v-navigation-drawer>
         <v-toolbar class="primary">
