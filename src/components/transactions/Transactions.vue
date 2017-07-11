@@ -1,22 +1,29 @@
 <template>
-    <v-list two-line subheader style="position: relative" class="mt-2">
-        <v-btn
-                fab
-                small
-                class="accent"
-                top
-                right
-                absolute
-                @click.native.stop="addTransaction"
-        >
-            <v-icon>add</v-icon>
-        </v-btn>
-        <v-subheader style="position:relative">
-            {{title}}
-        </v-subheader>
-        <transaction v-for="transaction in transactions" :key="transaction.id" :transaction="transaction">
-        </transaction>
-    </v-list>
+    <v-card>
+        <v-card-title>
+            <div class="headline">{{title}}</div>
+        </v-card-title>
+        <v-card-text>
+            <v-btn
+                    fab
+                    small
+                    class="accent"
+                    top
+                    right
+                    absolute
+                    @click.native.stop="addTransaction"
+            >
+                <v-icon>add</v-icon>
+            </v-btn>
+            <v-list two-line style="position: relative" class="mt-2">
+                <template v-for="transaction in transactions">
+                    <transaction :transaction="transaction" :key="transaction.id">
+                    </transaction>
+                    <v-divider></v-divider>
+                </template>
+            </v-list>
+        </v-card-text>
+    </v-card>
 </template>
 
 <script>

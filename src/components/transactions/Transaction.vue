@@ -1,5 +1,5 @@
 <template>
-    <v-list-tile @click.native.stop="editTransaction(transaction)">
+    <v-list-tile @click.native.stop="editTransaction(transaction)" v-model="selected" ripple>
         <v-list-tile-content>
             <v-list-tile-title>{{transactionTitle}}</v-list-tile-title>
         </v-list-tile-content>
@@ -29,7 +29,11 @@
                 } else {
                     return this.transaction.payee;
                 }
-            }
+            },
+            selected() {
+                return this.transaction === this.selectedTransaction;
+            },
+            ...mapGetters('transactions', ['selectedTransaction']),
         },
 
         methods: {
