@@ -3,24 +3,29 @@
         <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="blur('payee')"></v-text-field>
 
         <v-menu
-          lazy
-          :close-on-content-click="true"
-          v-model="dateMenu"
-          offset-y
-          full-width
-          :nudge-left="40"
-          max-width="290px"
+                lazy
+                :close-on-content-click="true"
+                v-model="dateMenu"
+                offset-y
+                full-width
+                :nudge-left="40"
+                max-width="290px"
         >
-          <v-text-field
-            slot="activator"
-            label="Date"
-            v-model="date"
-            readonly
-          ></v-text-field>
-          <v-date-picker v-model="date" no-title scrollable actions>
-          </v-date-picker>
+            <v-text-field
+                    slot="activator"
+                    label="Date"
+                    v-model="date"
+                    readonly
+            ></v-text-field>
+            <v-date-picker v-model="date" no-title scrollable actions>
+            </v-date-picker>
         </v-menu>
         <v-text-field name="amount" label="Amount" v-model="amount" :rules="rules.amount" @blur="blur('amount')"></v-text-field>
+        <v-select
+                label="Type"
+                v-model="type"
+                :items="[{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}]"
+        ></v-select>
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
     </div>
 </template>
@@ -29,7 +34,7 @@
     import {actions as transactionActions} from '../../store/transactionStore';
     import {rules, isValid} from '../validation';
 
-    function makeModelProperty(propertyName, toDisplay = value=>value, fromDisplay = value=>value) {
+    function makeModelProperty(propertyName, toDisplay = value => value, fromDisplay = value => value) {
         return {
             get() {
                 if (this.raw[propertyName] === undefined) {
@@ -58,7 +63,6 @@
                     payee: undefined,
                     amount: undefined,
                     note: undefined,
-                    date: undefined,
                 },
                 rules
             };
@@ -77,6 +81,17 @@
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch: {date: value},
+                    });
+                },
+            },
+            type: {
+                get() {
+                    return this.transaction ? this.transaction.type : undefined;
+                },
+                set(value) {
+                    this.updateTransaction({
+                        id: this.transaction.id,
+                        patch: {type: value},
                     });
                 },
             },

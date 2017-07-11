@@ -15,7 +15,7 @@ export const mutations = {
     removeTransaction: 'REMOVE_TRANSACTION',
 };
 
-const findTransaction = (state, transactionId)  => {
+const findTransaction = (state, transactionId) => {
     return state.transactions.find(transaction => transaction.id === transactionId);
 };
 
@@ -28,7 +28,7 @@ const transactionComparator = (transaction1, transaction2) => {
     } else if (transaction1.id < transaction2.id) {
         return -1;
     } else if (transaction1.id > transaction2.id) {
-        return 1; 
+        return 1;
     } else {
         return 0;
     }
@@ -40,7 +40,8 @@ const findInsertIndex = (state, transaction) => {
         insertIndex = -insertIndex - 1;
     }
     return insertIndex;
-}
+};
+
 export function ensureAllFieldsPresent(transaction) {
     ['amount', 'date', 'notes', 'payee', 'accountId', 'type', 'balance'].forEach(key => {
         if (!transaction.hasOwnProperty(key)) {
@@ -86,7 +87,7 @@ export default {
                     state.transactions.splice(index, 1);
                     Object.assign(transaction, payload.patch);
                     let insertIndex = findInsertIndex(state, transaction);
-                    state.transactions.splice(insertIndex, 0, transaction)
+                    state.transactions.splice(insertIndex, 0, transaction);
                     updateBalance(state.transactions, Math.max(index, insertIndex), state.priorBalance);
                 } else if (payload.patch.amount !== undefined) {
                     Object.assign(transaction, payload.patch);
