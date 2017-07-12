@@ -1,8 +1,8 @@
 {
   "name": "moolah",
   "version": "1.0.0",
-  "description": "Adrian's little project",
-  "author": "Brett",
+  "description": "Web UI for Moolah",
+  "author": "Adrian Sutton",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
