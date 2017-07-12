@@ -15,6 +15,7 @@ export const mutations = {
 };
 
 export default new Vuex.Store({
+    strict: process.env.NODE_ENV !== 'production',
     state: {
         selectedAccountId: null,
         selectedTransactionId: null,
