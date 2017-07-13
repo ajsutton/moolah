@@ -46,6 +46,7 @@
     "inject-loader": "^3.0.0",
     "karma": "^1.4.1",
     "karma-babel-polyfill": "^0.0.5",
+    "karma-clear-screen-reporter": "^1.0.0",
     "karma-coverage": "^1.1.1",
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.3",
