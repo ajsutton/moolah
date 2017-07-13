@@ -10,6 +10,7 @@ export const mutations = {
 export const actions = {
     loadAccounts: 'LOAD_ACCOUNTS',
     createAccount: 'CREATE_ACCOUNT',
+    updateAccount: 'UPDATE_ACCOUNT',
 };
 
 export default {
@@ -60,5 +61,16 @@ export default {
                 throw error;
             }
         },
+
+        async [actions.updateAccount]({commit, state}, changes) {
+            const originalAccount = Object.assign({}, state.accounts.find(account => account.id === changes.id));
+            commit(mutations.updateAccount, changes);
+            try {
+                await client.updateAccount(Object.assign({}, originalAccount, changes.patch));
+            } catch (error) {
+                commit(mutations.updateAccount, {id: changes.id, patch: originalAccount});
+                throw error;
+            }
+        }
     },
 };

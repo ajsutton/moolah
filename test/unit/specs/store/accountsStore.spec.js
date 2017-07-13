@@ -11,6 +11,7 @@ describe('accountsStore', function() {
         client = {
             accounts: sinon.stub(),
             createAccount: sinon.stub(),
+            updateAccount: sinon.stub(),
         };
         accountsStore = accountsStoreLoader({
             '../api/client': client,
@@ -31,38 +32,78 @@ describe('accountsStore', function() {
             );
         });
 
-        it('should create a new account', async function() {
-            const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
-            client.createAccount.resolves({id: 'assigned-id', ...newAccount});
-            await testAction(
-                accountsStore.actions[actions.createAccount],
-                {
-                    payload: newAccount,
-                    state: {accounts: [{id: 'existing'}]},
-                },
-                [
-                    {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
-                    {type: mutations.updateAccount, payload: {id: 'new-account', patch: {id: 'assigned-id'}}},
-                ],
-            );
+        describe('Create Account', function() {
+            it('should create a new account', async function() {
+                const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
+                client.createAccount.resolves({id: 'assigned-id', ...newAccount});
+                await testAction(
+                    accountsStore.actions[actions.createAccount],
+                    {
+                        payload: newAccount,
+                        state: {accounts: [{id: 'existing'}]},
+                    },
+                    [
+                        {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
+                        {type: mutations.updateAccount, payload: {id: 'new-account', patch: {id: 'assigned-id'}}},
+                    ],
+                );
+            });
+
+            it('should remove account again if create fails', async function() {
+
+                const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
+                client.createAccount.rejects('Fetch failed');
+                await testAction(
+                    accountsStore.actions[actions.createAccount],
+                    {
+                        payload: newAccount,
+                        state: {accounts: [{id: 'existing'}]},
+                        ignoreFailures: true,
+                    },
+                    [
+                        {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
+                        {type: mutations.removeAccount, payload: {id: 'new-account', ...newAccount}},
+                    ],
+                );
+            });
         });
 
-        it('should remove account again if create fails', async function() {
+        describe('Update Account', function() {
+            it('should update account and notify server', async function() {
+                const originalAccount = {id: 'abc', name: 'Old Name', type: 'bank', position: 1};
+                const modifiedAccount = {id: 'abc', name: 'New Name', type: 'cc', position: 3};
+                client.updateAccount.resolves(modifiedAccount);
+                await testAction(
+                    accountsStore.actions[actions.updateAccount],
+                    {
+                        payload: {id: 'abc', patch: modifiedAccount},
+                        state: {accounts: [originalAccount]},
+                    },
+                    [
+                        {type: mutations.updateAccount, payload: {id: 'abc', patch: modifiedAccount}},
+                    ],
+                );
+                sinon.assert.calledWith(client.updateAccount, modifiedAccount);
+            });
 
-            const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
-            client.createAccount.rejects('Fetch failed');
-            await testAction(
-                accountsStore.actions[actions.createAccount],
-                {
-                    payload: newAccount,
-                    state: {accounts: [{id: 'existing'}]},
-                    ignoreFailures: true,
-                },
-                [
-                    {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
-                    {type: mutations.removeAccount, payload: {id: 'new-account', ...newAccount}},
-                ],
-            );
+            it('should rollback change if server rejects it', async function() {
+                const originalAccount = {id: 'abc', name: 'Old Name', type: 'bank', position: 1};
+                const modifiedAccount = {id: 'abc', name: 'New Name', type: 'cc', position: 3};
+                client.updateAccount.rejects('Fetch failed');
+                await testAction(
+                    accountsStore.actions[actions.updateAccount],
+                    {
+                        payload: {id: 'abc', patch: modifiedAccount},
+                        state: {accounts: [originalAccount]},
+                        ignoreFailures: true,
+                    },
+                    [
+                        {type: mutations.updateAccount, payload: {id: 'abc', patch: modifiedAccount}},
+                        {type: mutations.updateAccount, payload: {id: 'abc', patch: originalAccount}},
+                    ],
+                );
+                sinon.assert.calledWith(client.updateAccount, modifiedAccount);
+            });
         });
     });
 

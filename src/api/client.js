@@ -28,6 +28,10 @@ export default {
         return json('/api/accounts/', {method: 'POST', body: JSON.stringify(account)});
     },
 
+    async updateAccount(account) {
+        return json(`/api/accounts/${encodeURIComponent(account.id)}/`, {method: 'PUT', body: JSON.stringify(account)});
+    },
+
     async transactions(accountId, offset = 0, pageSize = 500) {
         return json(`/api/transactions/?account=${encodeURIComponent(accountId)}&offset=${offset}&pageSize=${pageSize}`)
     },
