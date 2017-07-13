@@ -42,7 +42,7 @@ describe('accountsStore', function() {
                 },
                 [
                     {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
-                    {type: mutations.setAccountId, payload: {currentId: 'new-account', newId: 'assigned-id'}},
+                    {type: mutations.updateAccount, payload: {id: 'new-account', patch: {id: 'assigned-id'}}},
                 ],
             );
         });
@@ -88,9 +88,16 @@ describe('accountsStore', function() {
         });
 
         it('should update an account id', function() {
-            const state = {accounts: [{id: '1', name: 'old name'}, {id: '2', name: 'name2'}]};
-            accountsStore.mutations[mutations.setAccountId](state, {currentId: '2', newId: '3'});
-            assert.deepEqual(state.accounts, [{id: '1', name: 'old name'}, {id: '3', name: 'name2'}]);
+            const state = {accounts: [{id: '1', name: 'old name', type: 'bank'}, {id: '2', name: 'name2', type: 'bank'}]};
+            accountsStore.mutations[mutations.updateAccount](state, {
+                id: '2',
+                patch: {
+                    id: '3',
+                    name: 'new name',
+                    type: 'cc',
+                },
+            });
+            assert.deepEqual(state.accounts, [{id: '1', name: 'old name', type: 'bank'}, {id: '3', name: 'new name', type: 'cc'}]);
         });
     });
 });

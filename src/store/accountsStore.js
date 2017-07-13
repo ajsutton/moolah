@@ -4,7 +4,7 @@ export const mutations = {
     setAccounts: 'SET_ACCOUNTS',
     addAccount: 'ADD_ACCOUNT',
     removeAccount: 'REMOVE_ACCOUNT',
-    setAccountId: 'SET_ACCOUNT_ID',
+    updateAccount: 'UPDATE_ACCOUNT',
 };
 
 export const actions = {
@@ -38,8 +38,8 @@ export default {
         [mutations.removeAccount](state, account) {
             state.accounts = state.accounts.filter(existingAccount => existingAccount.id !== account.id);
         },
-        [mutations.setAccountId](state, args) {
-            state.accounts.find(account => account.id === args.currentId).id = args.newId;
+        [mutations.updateAccount](state, changes) {
+            Object.assign(state.accounts.find(account => account.id === changes.id), changes.patch);
         },
     },
     actions: {
@@ -54,7 +54,7 @@ export default {
             commit(mutations.addAccount, accountToAdd);
             try {
                 const createdAccount = await client.createAccount(account);
-                commit(mutations.setAccountId, {currentId: 'new-account', newId: createdAccount.id});
+                commit(mutations.updateAccount, {id: 'new-account', patch: {id: createdAccount.id}});
             } catch (error) {
                 commit(mutations.removeAccount, accountToAdd);
                 throw error;
