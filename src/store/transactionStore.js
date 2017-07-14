@@ -1,6 +1,6 @@
 import client from '../api/client';
 import updateBalance from './updateBalance';
-import moment from 'moment';
+import {format} from 'date-fns';
 import search from 'binary-search';
 
 export const actions = {
@@ -113,7 +113,7 @@ export default {
         async [actions.addTransaction]({commit, rootState}) {
             const initialProperties = {
                 amount: 0,
-                date: moment().format('YYYY-MM-DD'),
+                date: format(new Date(), 'YYYY-MM-DD'),
                 notes: '',
                 payee: '',
                 accountId: rootState.selectedAccountId,

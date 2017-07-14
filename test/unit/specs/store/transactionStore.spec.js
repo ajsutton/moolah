@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import moment from 'moment';
+import {format} from 'date-fns';
 import {assert, config as chaiConfig} from 'chai';
 import {actions, mutations, ensureAllFieldsPresent} from '../../../../src/store/transactionStore';
 import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';
@@ -254,7 +254,7 @@ describe('transactionStore', function() {
                 initialTransactionProperties = {
                     payee: '',
                     amount: 0,
-                    date: moment().format('YYYY-MM-DD'),
+                    date: format(new Date(), 'YYYY-MM-DD'),
                     notes: '',
                     accountId: 'account-1',
                     type: 'expense',
