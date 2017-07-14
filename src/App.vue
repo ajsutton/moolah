@@ -10,7 +10,7 @@
                         <v-list-tile-title>{{profile.givenName}} {{profile.familyName}}</v-list-tile-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
-                        <create-account></create-account>
+                        <create-account dark></create-account>
                     </v-list-tile-action>
                 </v-list-tile>
             </v-list>

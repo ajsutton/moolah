@@ -3,6 +3,7 @@
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
             <v-spacer></v-spacer>
+            <create-account :account="selectedAccount"></create-account>
             <v-btn icon
                    @click.native.stop="addTransaction">
                 <v-icon>add</v-icon>
@@ -24,6 +25,7 @@
     import client from '../../api/client';
     import Transaction from './Transaction.vue';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
+    import CreateAccount from '../accounts/CreateAccount.vue';
     import {actions as transactionActions} from '../../store/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
@@ -37,7 +39,7 @@
                 return this.accountName(this.accountId);
             },
             ...mapState(['selectedAccountId']),
-            ...mapGetters('accounts', ['accountName']),
+            ...mapGetters('accounts', ['accountName', 'selectedAccount']),
             ...mapState('transactions', ['transactions']),
         },
 
@@ -78,6 +80,7 @@
         components: {
             MonetaryAmount,
             Transaction,
+            CreateAccount,
         }
     };
 </script>

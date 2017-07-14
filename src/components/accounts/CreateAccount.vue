@@ -1,10 +1,10 @@
 <template>
     <v-dialog v-model="dialog" persistent>
-        <v-btn dark icon slot="activator">
-            <v-icon title="Add account">add</v-icon>
+        <v-btn :dark="dark" icon slot="activator">
+            <v-icon :title="title">{{icon}}</v-icon>
         </v-btn>
         <v-card>
-            <v-card-title>Create Account</v-card-title>
+            <v-card-title>{{title}}</v-card-title>
             <template v-if="errorMessage != null">
                 <v-alert error :value="true">{{errorMessage}}</v-alert>
             </template>
@@ -22,7 +22,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn class="blue--text darken-1" flat @click.native="dialog = false">Close</v-btn>
-                <v-btn class="blue--text darken-1" flat @click.native="create">Create</v-btn>
+                <v-btn class="blue--text darken-1" flat @click.native="submit">{{action}}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -35,6 +35,7 @@
     import {rules, isValid} from '../validation';
 
     export default {
+        props: ['account', 'dark'],
         data() {
             return {
                 name: 'Unnamed account',
@@ -49,13 +50,38 @@
                 },
             };
         },
+        computed: {
+            title() {
+                return this.account ? 'Edit Account' : 'Create Account'
+            },
+            icon() {
+                return this.account ? 'edit' : 'add';
+            },
+            action() {
+                return this.account ? 'Save' : 'Create';
+            }
+        },
+
+        created() {
+            this.syncFromAccount(this.account);
+        },
+
+        watch: {
+            account(newAccount) {
+                this.syncFromAccount(newAccount);
+            }
+        },
 
         methods: {
-            async create() {
+            async submit() {
+                const action = this.account 
+                    ? account => this[actions.updateAccount]({id: this.account.id, patch: account}) 
+                    : account => this[actions.createAccount](account);
+                
                 if (isValid(this.name, this.rules.name) && isValid(this.balance, this.rules.balance)) {
                     const account = {name: this.name, type: this.type, balance: Math.round(this.balance * 100)};
                     try {
-                        await this[actions.createAccount](account);
+                        await action(account);
                         this.dialog = false;
                     } catch (error) {
                         this.dialog = true;
@@ -63,7 +89,19 @@
                     }
                 }
             },
-            ...mapActions('accounts', [actions.createAccount])
+            syncFromAccount(newAccount) {
+                if (newAccount) {
+                    this.balance = newAccount.balance;
+                    this.type = newAccount.type;
+                    this.name = newAccount.name;
+                } else {
+                    this.balance = 0;
+                    this.type = 'bank';
+                    this.name = 'Unnamed account';
+                }
+                this.errorMessage = null;
+            },
+            ...mapActions('accounts', [actions.createAccount, actions.updateAccount])
         },
     }
 </script>

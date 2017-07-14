@@ -25,6 +25,9 @@ export default {
                 return account ? account.name : 'Unknown';
             };
         },
+        selectedAccount(state, getters, rootState) {
+            return state.accounts.find(account => account.id === rootState.selectedAccountId);
+        },
         networth(state) {
             return state.accounts.reduce((networth, account) => networth + account.balance, 0);
         },
