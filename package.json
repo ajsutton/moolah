@@ -75,7 +75,6 @@
     "vue-template-compiler": "^2.3.3",
     "webpack": "^3.1.0",
     "webpack-bundle-analyzer": "^2.2.1",
-    "webpack-date-fns-externals": "^1.0.2",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.18.2",
     "webpack-merge": "^4.1.0"

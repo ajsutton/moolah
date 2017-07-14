@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import {format} from 'date-fns';
+import format from 'date-fns/format'
 import {assert, config as chaiConfig} from 'chai';
 import {actions, mutations, ensureAllFieldsPresent} from '../../../../src/store/transactionStore';
 import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';

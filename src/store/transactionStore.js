@@ -1,6 +1,6 @@
 import client from '../api/client';
 import updateBalance from './updateBalance';
-import {format} from 'date-fns';
+import format from 'date-fns/format'
 import search from 'binary-search';
 
 export const actions = {
