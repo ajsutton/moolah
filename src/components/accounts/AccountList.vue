@@ -1,17 +1,8 @@
 <template>
     <v-list class="pt-0" dense>
         <v-divider></v-divider>
-            <v-list-tile avatar ripple :to="accountLink(account)" v-for="account in accounts" :key="account.id">
-                <v-list-tile-action>
-                    <v-icon dark>{{ icon(account.type) }}</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ account.name }}</v-list-tile-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                    <monetary-amount :value="account.balance"></monetary-amount>
-                </v-list-tile-action>
-            </v-list-tile>
+            <account-list-item :account="account" v-for="account in accounts" :key="account.id">
+            </account-list-item>
         <v-divider></v-divider>
         <v-list-tile avatar ripple to="/">
             <v-list-tile-action>
@@ -32,6 +23,7 @@
     import client from '../../api/client';
     import {actions} from '../../store/accountsStore';
     import MonetaryAmount from '../util/MonetaryAmount';
+    import AccountListItem from './AccountListItem.vue';
     export default {
         name: "AccountList",
         data () {
@@ -43,26 +35,14 @@
             ...mapGetters('accounts', ['networth']),
         },
         methods: {
-            icon(type) {
-                switch (type) {
-                    case 'cc':
-                        return 'credit_card';
-                    case 'asset':
-                        return 'home';
-                    default:
-                        return 'account_balance';
-                }
-            },
-            accountLink(account) {
-                return `/account/${encodeURIComponent(account.id)}/`;
-            },
             ...mapActions('accounts', [actions.loadAccounts])
         },
         created () {
             this[actions.loadAccounts]();
         },
         components: {
-            MonetaryAmount
+            MonetaryAmount,
+            AccountListItem
         }
     }
 </script>
