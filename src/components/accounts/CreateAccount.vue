@@ -10,7 +10,7 @@
             </template>
             <v-card-text>
                 <v-text-field label="Name" v-model="name" name="name" :rules="rules.name" required autofocus></v-text-field>
-                <v-text-field label="Initial Balance" type="number" v-model="balance" name="balance" :rules="rules.balance"></v-text-field>
+                <v-text-field label="Initial Balance" type="number" v-model="balance" name="balance" :rules="rules.balance" v-if="!editing"></v-text-field>
                 <v-select
                         label="Account Type"
                         required
@@ -52,13 +52,16 @@
         },
         computed: {
             title() {
-                return this.account ? 'Edit Account' : 'Create Account'
+                return this.editing ? 'Edit Account' : 'Create Account'
             },
             icon() {
-                return this.account ? 'edit' : 'add';
+                return this.editing ? 'edit' : 'add';
             },
             action() {
-                return this.account ? 'Save' : 'Create';
+                return this.editing ? 'Save' : 'Create';
+            },
+            editing() {
+                return !!this.account;
             }
         },
 
@@ -74,14 +77,13 @@
 
         methods: {
             async submit() {
-                const action = this.account 
-                    ? account => this[actions.updateAccount]({id: this.account.id, patch: account}) 
-                    : account => this[actions.createAccount](account);
-                
                 if (isValid(this.name, this.rules.name) && isValid(this.balance, this.rules.balance)) {
-                    const account = {name: this.name, type: this.type, balance: Math.round(this.balance * 100)};
                     try {
-                        await action(account);
+                        if (this.editing) {
+                            await this[actions.updateAccount]({id: this.account.id, patch: {name: this.name, type: this.type}});
+                        } else {
+                            await this[actions.createAccount]({name: this.name, type: this.type, balance: Math.round(this.balance * 100)});
+                        }
                         this.dialog = false;
                     } catch (error) {
                         this.dialog = true;
