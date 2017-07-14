@@ -3,6 +3,7 @@ import Vue from 'vue';
 import accountsModule from './accountsStore';
 import transactionsModule from './transactionStore';
 import {actions as transactionActions} from './transactionStore';
+import BalanceUpdatePlugin from './accountBalanceUpdatePlugin';
 
 Vue.use(Vuex);
 
@@ -14,7 +15,7 @@ export const mutations = {
     selectTransaction: 'SELECT_TRANSACTION',
 };
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production',
     state: {
         selectedAccountId: null,
@@ -38,4 +39,7 @@ export default new Vuex.Store({
         accounts: accountsModule,
         transactions: transactionsModule,
     },
+    plugins: [BalanceUpdatePlugin],
 });
+
+export default store;
