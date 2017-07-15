@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import format from 'date-fns/format'
+import format from 'date-fns/format';
 import {assert, config as chaiConfig} from 'chai';
 import {actions, mutations, ensureAllFieldsPresent} from '../../../../src/store/transactionStore';
 import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';
@@ -7,7 +7,7 @@ import testAction from './testAction';
 
 chaiConfig.truncateThreshold = 0;
 
-const expandFields = transactions => transactions.map(ensureAllFieldsPresent)
+const expandFields = transactions => transactions.map(ensureAllFieldsPresent);
 
 describe('transactionStore', function() {
     let client;
@@ -17,6 +17,7 @@ describe('transactionStore', function() {
             transactions: sinon.stub(),
             createTransaction: sinon.stub(),
             updateTransaction: sinon.stub(),
+            deleteTransaction: sinon.stub(),
         };
         transactionStore = transactionStoreLoader({
             '../api/client': client,
@@ -167,7 +168,7 @@ describe('transactionStore', function() {
                 });
                 assert.deepEqual(state, {
                     transactions: [{id: 2, amount: 20, date: '2017-07-04', balance: 100}, {id: 1, amount: 30, date: '2017-07-03', balance: 80}],
-                    priorBalance: 50
+                    priorBalance: 50,
                 });
             });
             it('should maintain sort order and balances when date is made less recent', function() {
@@ -180,7 +181,7 @@ describe('transactionStore', function() {
                 });
                 assert.deepEqual(state, {
                     transactions: [{id: 2, amount: 20, date: '2017-07-02', balance: 100}, {id: 1, amount: 30, date: '2017-07-01', balance: 80}],
-                    priorBalance: 50
+                    priorBalance: 50,
                 });
             });
         });
@@ -316,6 +317,38 @@ describe('transactionStore', function() {
                     [
                         {type: mutations.updateTransaction, payload: {id: 1, patch}},
                         {type: mutations.updateTransaction, payload: {id: 1, patch: transaction}},
+                    ],
+                );
+            });
+        });
+
+        describe('deleteTransaction', function() {
+            it('should remove the transaction', async function() {
+                const transaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13'};
+                client.deleteTransaction.withArgs(transaction).resolves();
+                await testAction(
+                    transactionStore.actions[actions.deleteTransaction],
+                    {state: {transactions: [transaction], priorBalance: 100}, payload: transaction},
+                    [
+                        {type: mutations.removeTransaction, payload: transaction},
+                    ],
+                );
+                sinon.assert.calledWith(client.deleteTransaction, transaction);
+            });
+
+            it('should re-add transaction if server rejects deletion', async function() {
+                const transaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13'};
+                client.deleteTransaction.withArgs(transaction).rejects();
+                await testAction(
+                    transactionStore.actions[actions.deleteTransaction],
+                    {
+                        state: {transactions: [transaction], priorBalance: 100},
+                        payload: transaction,
+                        ignoreFailures: true,
+                    },
+                    [
+                        {type: mutations.removeTransaction, payload: transaction},
+                        {type: mutations.addTransaction, payload: transaction},
                     ],
                 );
             });
