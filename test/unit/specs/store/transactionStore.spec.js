@@ -309,7 +309,6 @@ describe('transactionStore', function() {
             it('should rollback transaction if server rejects change', async function() {
                 const transaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13'};
                 const patch = {payee: 'Payee2', notes: 'Notes'};
-                const modifiedTransaction = Object.assign({}, transaction, patch);
                 client.updateTransaction.rejects('Server says no');
                 await testAction(
                     transactionStore.actions[actions.updateTransaction],
