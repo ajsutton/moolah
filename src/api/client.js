@@ -4,10 +4,10 @@ function makeOptions(options = {}) {
     }, options);
 }
 
-async function json(url, options = {}) {
+async function request(url, options = {}) {
     const response = await fetch(url, makeOptions(options));
     if (response.ok) {
-        return response.json();
+        return response;
     } else {
         let errorResponse;
         try {
@@ -17,6 +17,11 @@ async function json(url, options = {}) {
         }
         throw errorResponse;
     }
+}
+
+async function json(url, options = {}) {
+    const response = await(request(url, options));
+    return response.json();
 }
 
 export default {
@@ -42,6 +47,10 @@ export default {
 
     async updateTransaction(transaction) {
         return json(`/api/transactions/${encodeURIComponent(transaction.id)}/`, {method: 'PUT', body: JSON.stringify(transaction)});
+    },
+
+    async deleteTransaction(transaction) {
+        return request(`/api/transactions/${encodeURIComponent(transaction.id)}/`, {method: 'DELETE'});
     },
 
     async userProfile() {

@@ -7,6 +7,7 @@ export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
     addTransaction: 'ADD_TRANSACTION',
     updateTransaction: 'UPDATE_TRANSACTION',
+    deleteTransaction: 'DELETE_TRANSACTION',
 };
 export const mutations = {
     setTransactions: 'SET_TRANSACTIONS',
@@ -77,6 +78,7 @@ export default {
         [mutations.removeTransaction](state, transaction) {
             const transactionIndex = state.transactions.findIndex(value => value.id === transaction.id) - 1;
             state.transactions = state.transactions.filter(value => value.id !== transaction.id);
+            console.log(transactionIndex);
             updateBalance(state.transactions, transactionIndex, state.priorBalance);
         },
         [mutations.updateTransaction](state, payload) {
@@ -140,6 +142,16 @@ export default {
                 await client.updateTransaction(modifiedTransaction);
             } catch (error) {
                 commit(mutations.updateTransaction, {id: transactionId, patch: transaction});
+                throw error;
+            }
+        },
+
+        async [actions.deleteTransaction]({commit}, transaction) {
+            commit(mutations.removeTransaction, transaction);
+            try {
+                await client.deleteTransaction(transaction);
+            } catch (error) {
+                commit(mutations.addTransaction, transaction);
                 throw error;
             }
         },

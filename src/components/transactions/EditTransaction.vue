@@ -28,6 +28,10 @@
                 :items="[{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}]"
         ></v-select>
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
+
+        <div class="text-xs-right">
+            <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>
+        </div>
     </div>
 </template>
 <script>
@@ -120,7 +124,8 @@
                 }
             },
             ...mapActions('transactions', {
-                updateTransaction: transactionActions.updateTransaction
+                updateTransaction: transactionActions.updateTransaction,
+                deleteTransaction: transactionActions.deleteTransaction,
             })
         }
     };
