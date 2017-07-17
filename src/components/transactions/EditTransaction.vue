@@ -64,7 +64,7 @@
     }
 
     function typeMultiplier(transaction) {
-        return transaction.type === 'expense' ? -1 : 1;
+        return transaction.type === 'income' ? 1 : -1;
     }
 
     export default {
@@ -117,7 +117,7 @@
                     return this.transaction ? this.transaction.type : undefined;
                 },
                 set(value) {
-                    if (value !== transaction.type) {
+                    if (value !== this.transaction.type) {
                         this.updateTransaction(createTypeChangePatch(this.transaction, value, this.accounts));
                     }
                 },
