@@ -78,7 +78,6 @@ export default {
         [mutations.removeTransaction](state, transaction) {
             const transactionIndex = state.transactions.findIndex(value => value.id === transaction.id) - 1;
             state.transactions = state.transactions.filter(value => value.id !== transaction.id);
-            console.log(transactionIndex);
             updateBalance(state.transactions, transactionIndex, state.priorBalance);
         },
         [mutations.updateTransaction](state, payload) {
@@ -105,7 +104,7 @@ export default {
     actions: {
         async [actions.loadTransactions]({commit, rootState}) {
             if (rootState.selectedAccountId === null) {
-                commit(mutations.setTransactions, []);
+                commit(mutations.setTransactions, {transactions: []});
                 return;
             }
             const response = await client.transactions(rootState.selectedAccountId);

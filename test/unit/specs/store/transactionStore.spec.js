@@ -216,6 +216,7 @@ describe('transactionStore', function() {
     describe('Actions', function() {
         describe('loadTransactions', function() {
             it('should set transactions to empty list when there is no selected account ID', async function() {
+                client.transactions.resolves({transactions: []});
                 await testAction(
                     transactionStore,
                     actions.loadTransactions,
@@ -224,7 +225,7 @@ describe('transactionStore', function() {
                         rootState: {selectedAccountId: null},
                     },
                     [
-                        {type: mutations.setTransactions, payload: []},
+                        {type: mutations.setTransactions, payload: {transactions: []}},
                     ],
                 );
             });
@@ -271,7 +272,7 @@ describe('transactionStore', function() {
                 await testAction(
                     transactionStore,
                     actions.addTransaction,
-                    {state: {}, rootState: {selectedAccountId: 'account-1'}},
+                    {state: {transactions: []}, rootState: {selectedAccountId: 'account-1'}},
                     [
                         {type: mutations.addTransaction, payload: newTransaction},
                         {type: mutations.updateTransaction, payload: {id: 'new-transaction', patch: serverTransaction}},
@@ -285,10 +286,10 @@ describe('transactionStore', function() {
                 await testAction(
                     transactionStore,
                     actions.addTransaction,
-                    {state: {}, rootState: {selectedAccountId: 'account-1'}, ignoreFailures: true},
+                    {state: {transactions: [], priorBalance: 0}, rootState: {selectedAccountId: 'account-1'}, ignoreFailures: true},
                     [
-                        {type: mutations.addTransaction, payload: newTransaction},
-                        {type: mutations.removeTransaction, payload: newTransaction},
+                        {type: mutations.addTransaction, payload: Object.assign({}, newTransaction)},
+                        {type: mutations.removeTransaction, payload: Object.assign(newTransaction, {balance: 0})},
                     ],
                 );
             });
@@ -311,7 +312,7 @@ describe('transactionStore', function() {
                 sinon.assert.calledWith(client.updateTransaction, modifiedTransaction);
             });
 
-            it('should rollback transaction if server rejects change', async function() {
+            it('should rollback transaction update if server rejects change', async function() {
                 const transaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13'};
                 const patch = {payee: 'Payee2', notes: 'Notes'};
                 client.updateTransaction.rejects('Server says no');
