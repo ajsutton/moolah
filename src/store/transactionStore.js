@@ -133,10 +133,9 @@ export default {
 
         async [actions.updateTransaction]({commit, state}, changes) {
             const transactionId = changes.id;
-            const patch = changes.patch;
             const transaction = Object.assign({}, findTransaction(state, transactionId));
-            const modifiedTransaction = Object.assign({}, transaction, patch);
             commit(mutations.updateTransaction, changes);
+            const modifiedTransaction = findTransaction(state, transactionId);
             try {
                 await client.updateTransaction(modifiedTransaction);
             } catch (error) {
