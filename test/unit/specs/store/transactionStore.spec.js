@@ -217,7 +217,8 @@ describe('transactionStore', function() {
         describe('loadTransactions', function() {
             it('should set transactions to empty list when there is no selected account ID', async function() {
                 await testAction(
-                    transactionStore.actions[actions.loadTransactions],
+                    transactionStore,
+                    actions.loadTransactions,
                     {
                         state: {transactions: [{id: 1}, {id: 2}]},
                         rootState: {selectedAccountId: null},
@@ -235,7 +236,8 @@ describe('transactionStore', function() {
                 };
                 client.transactions.withArgs('account-1').resolves(response);
                 await testAction(
-                    transactionStore.actions[actions.loadTransactions],
+                    transactionStore,
+                    actions.loadTransactions,
                     {
                         state: {transactions: [{id: 1}, {id: 2}]},
                         rootState: {selectedAccountId: 'account-1'},
@@ -267,7 +269,8 @@ describe('transactionStore', function() {
             it('should add new transaction and notify server', async function() {
                 client.createTransaction.withArgs(initialTransactionProperties).resolves(serverTransaction);
                 await testAction(
-                    transactionStore.actions[actions.addTransaction],
+                    transactionStore,
+                    actions.addTransaction,
                     {state: {}, rootState: {selectedAccountId: 'account-1'}},
                     [
                         {type: mutations.addTransaction, payload: newTransaction},
@@ -280,7 +283,8 @@ describe('transactionStore', function() {
             it('should remove transaction again if create fails', async function() {
                 client.createTransaction.rejects('Invalid transaction');
                 await testAction(
-                    transactionStore.actions[actions.addTransaction],
+                    transactionStore,
+                    actions.addTransaction,
                     {state: {}, rootState: {selectedAccountId: 'account-1'}, ignoreFailures: true},
                     [
                         {type: mutations.addTransaction, payload: newTransaction},
@@ -297,7 +301,8 @@ describe('transactionStore', function() {
                 const modifiedTransaction = Object.assign({}, transaction, patch);
                 client.updateTransaction.withArgs(modifiedTransaction).resolves(modifiedTransaction);
                 await testAction(
-                    transactionStore.actions[actions.updateTransaction],
+                    transactionStore,
+                    actions.updateTransaction,
                     {state: {transactions: [transaction], priorBalance: 100}, payload: {id: 1, patch}},
                     [
                         {type: mutations.updateTransaction, payload: {id: 1, patch}},
@@ -311,7 +316,8 @@ describe('transactionStore', function() {
                 const patch = {payee: 'Payee2', notes: 'Notes'};
                 client.updateTransaction.rejects('Server says no');
                 await testAction(
-                    transactionStore.actions[actions.updateTransaction],
+                    transactionStore,
+                    actions.updateTransaction,
                     {state: {transactions: [transaction], priorBalance: 100}, payload: {id: 1, patch}, ignoreFailures: true},
                     [
                         {type: mutations.updateTransaction, payload: {id: 1, patch}},
@@ -326,7 +332,8 @@ describe('transactionStore', function() {
                 const transaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13'};
                 client.deleteTransaction.withArgs(transaction).resolves();
                 await testAction(
-                    transactionStore.actions[actions.deleteTransaction],
+                    transactionStore,
+                    actions.deleteTransaction,
                     {state: {transactions: [transaction], priorBalance: 100}, payload: transaction},
                     [
                         {type: mutations.removeTransaction, payload: transaction},
@@ -339,7 +346,8 @@ describe('transactionStore', function() {
                 const transaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13'};
                 client.deleteTransaction.withArgs(transaction).rejects();
                 await testAction(
-                    transactionStore.actions[actions.deleteTransaction],
+                    transactionStore,
+                    actions.deleteTransaction,
                     {
                         state: {transactions: [transaction], priorBalance: 100},
                         payload: transaction,

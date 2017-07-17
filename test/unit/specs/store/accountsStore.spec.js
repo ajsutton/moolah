@@ -24,7 +24,8 @@ describe('accountsStore', function() {
             const expectedAccounts = [account1];
             client.accounts.resolves({accounts: expectedAccounts});
             await testAction(
-                accountsStore.actions[actions.loadAccounts],
+                accountsStore,
+                actions.loadAccounts,
                 {state: {accounts: []}},
                 [
                     {type: mutations.setAccounts, payload: expectedAccounts},
@@ -37,7 +38,8 @@ describe('accountsStore', function() {
                 const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
                 client.createAccount.resolves({id: 'assigned-id', ...newAccount});
                 await testAction(
-                    accountsStore.actions[actions.createAccount],
+                    accountsStore,
+                    actions.createAccount,
                     {
                         payload: newAccount,
                         state: {accounts: [{id: 'existing'}]},
@@ -54,7 +56,8 @@ describe('accountsStore', function() {
                 const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
                 client.createAccount.rejects('Fetch failed');
                 await testAction(
-                    accountsStore.actions[actions.createAccount],
+                    accountsStore,
+                    actions.createAccount,
                     {
                         payload: newAccount,
                         state: {accounts: [{id: 'existing'}]},
@@ -74,7 +77,8 @@ describe('accountsStore', function() {
                 const modifiedAccount = {id: 'abc', name: 'New Name', type: 'cc', position: 3};
                 client.updateAccount.resolves(modifiedAccount);
                 await testAction(
-                    accountsStore.actions[actions.updateAccount],
+                    accountsStore,
+                    actions.updateAccount,
                     {
                         payload: {id: 'abc', patch: modifiedAccount},
                         state: {accounts: [originalAccount]},
@@ -91,7 +95,8 @@ describe('accountsStore', function() {
                 const modifiedAccount = {id: 'abc', name: 'New Name', type: 'cc', position: 3};
                 client.updateAccount.rejects('Fetch failed');
                 await testAction(
-                    accountsStore.actions[actions.updateAccount],
+                    accountsStore,
+                    actions.updateAccount,
                     {
                         payload: {id: 'abc', patch: modifiedAccount},
                         state: {accounts: [originalAccount]},
