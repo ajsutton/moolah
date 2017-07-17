@@ -40,6 +40,7 @@
     import {actions as transactionActions} from '../../store/transactionStore';
     import {rules, isValid} from '../validation';
     import AccountSelector from '../accounts/AccountSelector.vue';
+    import createTypeChangePatch from './changeType';
 
     function makeModelProperty(propertyName, toDisplay = value => value, fromDisplay = value => value) {
         return {
@@ -116,20 +117,8 @@
                     return this.transaction ? this.transaction.type : undefined;
                 },
                 set(value) {
-                    if (value !== this.transaction.type) {
-                        const patch = {
-                            type: value,
-                            amount: this.transaction.amount * -1
-                        };
-                        if (value !== 'transfer') {
-                            patch.toAccountId = null;
-                        } else {
-                            patch.toAccountId = this.accounts.find(account => account.id !== this.transaction.accountId).id;
-                        }
-                        this.updateTransaction({
-                            id: this.transaction.id,
-                            patch: patch,
-                        });
+                    if (value !== transaction.type) {
+                        this.updateTransaction(createTypeChangePatch(this.transaction, value, this.accounts));
                     }
                 },
             },
