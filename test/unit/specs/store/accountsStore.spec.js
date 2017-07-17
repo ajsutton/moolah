@@ -90,7 +90,7 @@ describe('accountsStore', function() {
                 sinon.assert.calledWith(client.updateAccount, modifiedAccount);
             });
 
-            it('should rollback change if server rejects it', async function() {
+            it('should rollback account change if server rejects it', async function() {
                 const originalAccount = {id: 'abc', name: 'Old Name', type: 'bank', position: 1};
                 const modifiedAccount = {id: 'abc', name: 'New Name', type: 'cc', position: 3};
                 client.updateAccount.rejects('Fetch failed');
@@ -104,10 +104,9 @@ describe('accountsStore', function() {
                     },
                     [
                         {type: mutations.updateAccount, payload: {id: 'abc', patch: modifiedAccount}},
-                        {type: mutations.updateAccount, payload: {id: 'abc', patch: originalAccount}},
+                        {type: mutations.updateAccount, payload: {id: 'abc', patch: Object.assign({}, originalAccount)}},
                     ],
                 );
-                sinon.assert.calledWith(client.updateAccount, modifiedAccount);
             });
         });
     });

@@ -66,10 +66,11 @@ export default {
         },
 
         async [actions.updateAccount]({commit, state}, changes) {
-            const originalAccount = Object.assign({}, state.accounts.find(account => account.id === changes.id));
+            const account = state.accounts.find(account => account.id === changes.id);
+            const originalAccount = Object.assign({}, account);
             commit(mutations.updateAccount, changes);
             try {
-                await client.updateAccount(Object.assign({}, originalAccount, changes.patch));
+                await client.updateAccount(account);
             } catch (error) {
                 commit(mutations.updateAccount, {id: changes.id, patch: originalAccount});
                 throw error;
