@@ -25,7 +25,7 @@
                 label="Type"
                 v-if="!isOpeningBalance"
                 v-model="type"
-                :items="[{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}, {text: 'Transfer', value: 'transfer'}]"
+                :items="validTransactionTypes"
         ></v-select>
         <account-selector label="To Account" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
@@ -85,8 +85,18 @@
             ...mapGetters('transactions', {
                 transaction: 'selectedTransaction',
             }),
+            ...mapState('accounts', {
+                accounts: state => state.accounts,
+            }),
             accountId() {
                 return this.transaction ? this.transaction.accountId : undefined;
+            },
+            validTransactionTypes() {
+                const types = [{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}];
+                if (this.accounts.length > 1) {
+                    types.push({text: 'Transfer', value: 'transfer'});
+                }
+                return types;
             },
             payee: makeModelProperty('payee'),
             notes: makeModelProperty('notes'),
@@ -107,12 +117,18 @@
                 },
                 set(value) {
                     if (value !== this.transaction.type) {
+                        const patch = {
+                            type: value,
+                            amount: this.transaction.amount * -1
+                        };
+                        if (value !== 'transfer') {
+                            patch.toAccountId = null;
+                        } else {
+                            patch.toAccountId = this.accounts.find(account => account.id !== this.transaction.accountId).id;
+                        }
                         this.updateTransaction({
                             id: this.transaction.id,
-                            patch: {
-                                type: value,
-                                amount: this.transaction.amount * -1
-                            },
+                            patch: patch,
                         });
                     }
                 },
