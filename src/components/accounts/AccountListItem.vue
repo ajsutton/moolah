@@ -14,6 +14,8 @@
 
 <script>
     import MonetaryAmount from '../util/MonetaryAmount';
+    import iconForType from './accountIcon';
+
     export default {
         props: ['account'],
         computed: {
@@ -21,14 +23,7 @@
                 return `/account/${encodeURIComponent(this.account.id)}/`;
             },
             icon() {
-                switch (this.account.type) {
-                    case 'cc':
-                        return 'credit_card';
-                    case 'asset':
-                        return 'home';
-                    default:
-                        return 'account_balance';
-                }
+                return iconForType(this.account.type);
             },
         },
         components: {

@@ -25,8 +25,9 @@
                 label="Type"
                 v-if="!isOpeningBalance"
                 v-model="type"
-                :items="[{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}]"
+                :items="[{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}, {text: 'Transfer', value: 'transfer'}]"
         ></v-select>
+        <account-selector label="To Account" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
 
         <div class="text-xs-right">
@@ -38,6 +39,7 @@
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
     import {actions as transactionActions} from '../../store/transactionStore';
     import {rules, isValid} from '../validation';
+    import AccountSelector from '../accounts/AccountSelector.vue';
 
     function makeModelProperty(propertyName, toDisplay = value => value, fromDisplay = value => value) {
         return {
@@ -83,6 +85,9 @@
             ...mapGetters('transactions', {
                 transaction: 'selectedTransaction',
             }),
+            accountId() {
+                return this.transaction ? this.transaction.accountId : undefined;
+            },
             payee: makeModelProperty('payee'),
             notes: makeModelProperty('notes'),
             date: {
@@ -112,6 +117,20 @@
                     }
                 },
             },
+            toAccountId: {
+                get() {
+                    return this.transaction ? this.transaction.toAccountId : undefined;
+                },
+                set(value) {
+                    this.updateTransaction({
+                        id: this.transaction.id,
+                        patch: {
+                            type: 'transfer',
+                            toAccountId: value
+                        }
+                    });
+                },
+            },
             amount: makeModelProperty('amount',
                 (amount, transaction) => (typeMultiplier(transaction) * amount / 100).toFixed(2),
                 (value, transaction) => typeMultiplier(transaction) * Math.round(value * 100)),
@@ -127,6 +146,9 @@
                 updateTransaction: transactionActions.updateTransaction,
                 deleteTransaction: transactionActions.deleteTransaction,
             })
-        }
+        },
+        components: {
+            AccountSelector,
+        },
     };
 </script>
