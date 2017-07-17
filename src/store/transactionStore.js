@@ -43,6 +43,10 @@ const findInsertIndex = (state, transaction) => {
     return insertIndex;
 };
 
+function affectsBalance(patch) {
+    return patch.amount !== undefined;
+}
+
 export function ensureAllFieldsPresent(transaction) {
     ['amount', 'date', 'notes', 'payee', 'accountId', 'type', 'balance'].forEach(key => {
         if (!transaction.hasOwnProperty(key)) {
@@ -84,17 +88,20 @@ export default {
             const index = findTransactionIndex(state, payload.id);
             const transaction = state.transactions[index];
             if (transaction !== undefined) {
+                let updateBalanceFrom = -1;
                 if (payload.patch.date !== undefined) {
                     state.transactions.splice(index, 1);
-                    Object.assign(transaction, payload.patch);
+                }
+                Object.assign(transaction, payload.patch);
+                if (payload.patch.date !== undefined) {
                     let insertIndex = findInsertIndex(state, transaction);
                     state.transactions.splice(insertIndex, 0, transaction);
-                    updateBalance(state.transactions, Math.max(index, insertIndex), state.priorBalance);
-                } else if (payload.patch.amount !== undefined) {
-                    Object.assign(transaction, payload.patch);
-                    updateBalance(state.transactions, index, state.priorBalance);
-                } else {
-                    Object.assign(transaction, payload.patch);
+                    updateBalanceFrom = Math.max(index, insertIndex);
+                } else if (affectsBalance(payload.patch)) {
+                    updateBalanceFrom = index;
+                }
+                if (updateBalanceFrom !== -1) {
+                    updateBalance(state.transactions, updateBalanceFrom, state.priorBalance);
                 }
             } else {
                 throw Error(`No transaction with ID ${payload.id}`);

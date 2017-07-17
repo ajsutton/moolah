@@ -145,43 +145,48 @@ describe('transactionStore', function() {
                 assert.fail('Should have thrown an error');
             });
 
-            it('should update balances when amount changes', function() {
-                const state = {transactions: [{id: 1, amount: 30, balance: 100}, {id: 2, amount: 20, balance: 70}], priorBalance: 50};
-                transactionStore.mutations[mutations.updateTransaction](state, {
-                    id: 2,
-                    patch: {
-                        amount: -10,
-                    },
-                });
-                assert.deepEqual(state, {
-                    transactions: [{id: 1, amount: 30, balance: 70}, {id: 2, amount: -10, balance: 40}], priorBalance: 50,
+            describe('Amount Changes', function() {
+                it('should update balances when amount changes', function() {
+                    const state = {transactions: [{id: 1, amount: 30, balance: 100}, {id: 2, amount: 20, balance: 70}], priorBalance: 50};
+                    transactionStore.mutations[mutations.updateTransaction](state, {
+                        id: 2,
+                        patch: {
+                            amount: -10,
+                        },
+                    });
+                    assert.deepEqual(state, {
+                        transactions: [{id: 1, amount: 30, balance: 70}, {id: 2, amount: -10, balance: 40}], priorBalance: 50,
+                    });
                 });
             });
 
-            it('should maintain sort order and balances when date is made more recent', function() {
-                const state = {transactions: [{id: 1, amount: 30, date: '2017-07-03', balance: 100}, {id: 2, amount: 20, date: '2017-07-02', balance: 70}], priorBalance: 50};
-                transactionStore.mutations[mutations.updateTransaction](state, {
-                    id: 2,
-                    patch: {
-                        date: '2017-07-04',
-                    },
+            describe('Date Changes', function() {
+                it('should maintain sort order and balances when date is made more recent', function() {
+                    const state = {transactions: [{id: 1, amount: 30, date: '2017-07-03', balance: 100}, {id: 2, amount: 20, date: '2017-07-02', balance: 70}], priorBalance: 50};
+                    transactionStore.mutations[mutations.updateTransaction](state, {
+                        id: 2,
+                        patch: {
+                            date: '2017-07-04',
+                        },
+                    });
+                    assert.deepEqual(state, {
+                        transactions: [{id: 2, amount: 20, date: '2017-07-04', balance: 100}, {id: 1, amount: 30, date: '2017-07-03', balance: 80}],
+                        priorBalance: 50,
+                    });
                 });
-                assert.deepEqual(state, {
-                    transactions: [{id: 2, amount: 20, date: '2017-07-04', balance: 100}, {id: 1, amount: 30, date: '2017-07-03', balance: 80}],
-                    priorBalance: 50,
-                });
-            });
-            it('should maintain sort order and balances when date is made less recent', function() {
-                const state = {transactions: [{id: 1, amount: 30, date: '2017-07-03', balance: 100}, {id: 2, amount: 20, date: '2017-07-02', balance: 70}], priorBalance: 50};
-                transactionStore.mutations[mutations.updateTransaction](state, {
-                    id: 1,
-                    patch: {
-                        date: '2017-07-01',
-                    },
-                });
-                assert.deepEqual(state, {
-                    transactions: [{id: 2, amount: 20, date: '2017-07-02', balance: 100}, {id: 1, amount: 30, date: '2017-07-01', balance: 80}],
-                    priorBalance: 50,
+
+                it('should maintain sort order and balances when date is made less recent', function() {
+                    const state = {transactions: [{id: 1, amount: 30, date: '2017-07-03', balance: 100}, {id: 2, amount: 20, date: '2017-07-02', balance: 70}], priorBalance: 50};
+                    transactionStore.mutations[mutations.updateTransaction](state, {
+                        id: 1,
+                        patch: {
+                            date: '2017-07-01',
+                        },
+                    });
+                    assert.deepEqual(state, {
+                        transactions: [{id: 2, amount: 20, date: '2017-07-02', balance: 100}, {id: 1, amount: 30, date: '2017-07-01', balance: 80}],
+                        priorBalance: 50,
+                    });
                 });
             });
         });
