@@ -11,6 +11,7 @@ export const actions = {
     loadAccounts: 'LOAD_ACCOUNTS',
     createAccount: 'CREATE_ACCOUNT',
     updateAccount: 'UPDATE_ACCOUNT',
+    adjustBalance: 'ADJUST_BALANCE',
 };
 
 export default {
@@ -75,6 +76,11 @@ export default {
                 commit(mutations.updateAccount, {id: changes.id, patch: originalAccount});
                 throw error;
             }
-        }
+        },
+
+        async [actions.adjustBalance]({state, dispatch}, changes) {
+            const account = state.accounts.find(account => account.id === changes.accountId);
+            dispatch(actions.updateAccount, {id: account.id, patch: {balance: account.balance + changes.amount}});
+        },
     },
 };

@@ -1,5 +1,6 @@
 import client from '../api/client';
 import updateBalance from './updateBalance';
+import {actions as accountActions} from './accountsStore';
 import format from 'date-fns/format'
 import search from 'binary-search';
 
@@ -138,13 +139,23 @@ export default {
             }
         },
 
-        async [actions.updateTransaction]({commit, state}, changes) {
+        async [actions.updateTransaction]({commit, state, dispatch}, changes) {
             const transactionId = changes.id;
             const transaction = Object.assign({}, findTransaction(state, transactionId));
             commit(mutations.updateTransaction, changes);
             const modifiedTransaction = findTransaction(state, transactionId);
             try {
                 await client.updateTransaction(modifiedTransaction);
+                if (modifiedTransaction.type === 'transfer' && transaction.type !== 'transfer') {
+                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: modifiedTransaction.toAccountId, amount: -modifiedTransaction.amount}, {root: true});
+                } else if (modifiedTransaction.type !== 'transfer' && transaction.type === 'transfer') {
+                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: transaction.toAccountId, amount: transaction.amount}, {root: true});
+                } else if (transaction.type === 'transfer' && changes.patch.toAccountId !== undefined) {
+                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: transaction.toAccountId, amount: transaction.amount}, {root: true});
+                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: modifiedTransaction.toAccountId, amount: -modifiedTransaction.amount}, {root: true});
+                } else if (transaction.type === 'transfer' && changes.patch.amount !== undefined) {
+                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: transaction.toAccountId, amount: -(modifiedTransaction.amount - transaction.amount)}, {root: true});
+                }
             } catch (error) {
                 commit(mutations.updateTransaction, {id: transactionId, patch: transaction});
                 throw error;

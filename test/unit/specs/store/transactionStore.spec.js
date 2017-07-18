@@ -2,6 +2,7 @@ import sinon from 'sinon';
 import format from 'date-fns/format';
 import {assert, config as chaiConfig} from 'chai';
 import {actions, mutations, ensureAllFieldsPresent} from '../../../../src/store/transactionStore';
+import {actions as accountActions} from '../../../../src/store/accountsStore';
 import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';
 import testAction from './testAction';
 
@@ -331,6 +332,69 @@ describe('transactionStore', function() {
                         {type: mutations.updateTransaction, payload: {id: 1, patch: transaction}},
                     ],
                 );
+            });
+
+            [
+                {
+                    name: 'becomes a transfer',
+                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'expense', balance: 100, date: '2016-07-13'},
+                    patch: {type: 'transfer', toAccountId: 'account-2'},
+                    adjustBalance: [{accountId: 'account-2', amount: 10}],
+                },
+                {
+                    name: 'stops being a transfer',
+                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    patch: {type: 'expense'},
+                    adjustBalance: [{accountId: 'account-2', amount: -10}],
+                },
+                {
+                    name: 'stops being a transfer and changes amount',
+                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    patch: {type: 'income', amount: 10},
+                    adjustBalance: [{accountId: 'account-2', amount: -10}],
+                },
+                {
+                    name: 'changes amount',
+                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    patch: {amount: -30},
+                    adjustBalance: [{accountId: 'account-2', amount: 20}],
+                },
+                {
+                    name: 'changes amount when not a transfer',
+                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'expense', balance: 100, date: '2016-07-13'},
+                    patch: {amount: -30},
+                    adjustBalance: [],
+                },
+                {
+                    name: 'changes destination account',
+                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    patch: {toAccountId: 'account-3'},
+                    adjustBalance: [{accountId: 'account-2', amount: -10}, {accountId: 'account-3', amount: 10}],
+                },
+                {
+                    name: 'changes destination account and amount',
+                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    patch: {toAccountId: 'account-3', amount: -30},
+                    adjustBalance: [{accountId: 'account-2', amount: -10}, {accountId: 'account-3', amount: 30}],
+                },
+            ].forEach(scenario => {
+                it(`should update balance of other account when a transaction ${scenario.name}`, async function() {
+                    const transaction = scenario.transaction;
+                    const patch = scenario.patch;
+                    const modifiedTransaction = Object.assign({}, transaction, patch);
+                    client.updateTransaction.withArgs(modifiedTransaction).resolves(modifiedTransaction);
+                    const dispatch = sinon.spy();
+                    await testAction(
+                        transactionStore,
+                        actions.updateTransaction,
+                        {state: {transactions: [transaction], priorBalance: 100}, dispatch, payload: {id: 1, patch}},
+                        [
+                            {type: mutations.updateTransaction, payload: {id: 1, patch}},
+                        ],
+                    );
+                    scenario.adjustBalance.forEach(param => sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, param, {root: true}));
+                    sinon.assert.callCount(dispatch, scenario.adjustBalance.length);
+                });
             });
         });
 
