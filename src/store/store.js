@@ -2,6 +2,7 @@ import Vuex from 'vuex';
 import Vue from 'vue';
 import accountsModule from './accountsStore';
 import transactionsModule from './transactionStore';
+import categoryModule from './categoryStore';
 import {actions as transactionActions} from './transactionStore';
 import BalanceUpdatePlugin from './accountBalanceUpdatePlugin';
 
@@ -38,6 +39,7 @@ const store = new Vuex.Store({
     modules: {
         accounts: accountsModule,
         transactions: transactionsModule,
+        categories: categoryModule,
     },
     plugins: [BalanceUpdatePlugin],
 });
