@@ -110,8 +110,8 @@ export default {
     },
     actions: {
         async [actions.loadTransactions]({commit, rootState}) {
+            commit(mutations.setTransactions, {transactions: [], priorBalance: 0});
             if (rootState.selectedAccountId === null) {
-                commit(mutations.setTransactions, {transactions: []});
                 return;
             }
             const response = await client.transactions(rootState.selectedAccountId);

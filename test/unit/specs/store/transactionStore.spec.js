@@ -230,7 +230,7 @@ describe('transactionStore', function() {
                         rootState: {selectedAccountId: null},
                     },
                     [
-                        {type: mutations.setTransactions, payload: {transactions: []}},
+                        {type: mutations.setTransactions, payload: {transactions: [], priorBalance: 0}},
                     ],
                 );
             });
@@ -249,6 +249,7 @@ describe('transactionStore', function() {
                         rootState: {selectedAccountId: 'account-1'},
                     },
                     [
+                        {type: mutations.setTransactions, payload: {transactions: [], priorBalance: 0}},
                         {type: mutations.setTransactions, payload: response},
                     ],
                 );
