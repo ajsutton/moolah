@@ -1,20 +1,22 @@
 <template>
     <v-app light>
-        <v-navigation-drawer persistent clipped enable-resize-watcher disable-route-watcher v-model="showMainNav" v-if="loggedIn" dark>
-            <v-list class="pa-0">
-                <v-list-tile avatar>
-                    <v-list-tile-avatar v-if="profile.picture">
-                        <img :src="profile.picture"/>
-                    </v-list-tile-avatar>
-                    <v-list-tile-content>
-                        <v-list-tile-title>{{profile.givenName}} {{profile.familyName}}</v-list-tile-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                        <create-account dark></create-account>
-                    </v-list-tile-action>
-                </v-list-tile>
-            </v-list>
-            <account-list></account-list>
+        <v-navigation-drawer persistent clipped enable-resize-watcher disable-route-watcher v-model="showMainNav" dark>
+            <template v-if="loggedIn">
+                <v-list class="pa-0">
+                    <v-list-tile avatar>
+                        <v-list-tile-avatar v-if="profile.picture">
+                            <img :src="profile.picture"/>
+                        </v-list-tile-avatar>
+                        <v-list-tile-content>
+                            <v-list-tile-title>{{profile.givenName}} {{profile.familyName}}</v-list-tile-title>
+                        </v-list-tile-content>
+                        <v-list-tile-action>
+                            <create-account dark></create-account>
+                        </v-list-tile-action>
+                    </v-list-tile>
+                </v-list>
+                <account-list></account-list>
+            </template>
         </v-navigation-drawer>
         <v-navigation-drawer v-model="showRightNavPanel" light right permanent enable-resize-watcher overflow clipped disable-route-watcher v-if="showRightNavPanel">
             <edit-transaction></edit-transaction>
@@ -69,10 +71,18 @@
                     familyName: null,
                     picture: null,
                 },
-                showMainNav: true,
+                mainNavToggle: true,
             }
         },
         computed: {
+            showMainNav: {
+                get() {
+                    return this.mainNavToggle && this.loggedIn;
+                },
+                set(value) {
+                    this.mainNavToggle = value;
+                },
+            },
             showRightNavPanel() {
                 return this.selectedTransaction !== undefined && this.loggedIn;
             },
