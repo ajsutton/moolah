@@ -10,7 +10,7 @@
             </template>
             <v-card-text>
                 <v-text-field label="Name" v-model="name" name="name" :rules="rules.name" required autofocus></v-text-field>
-                <v-text-field label="Initial Balance" type="number" v-model="balance" name="balance" :rules="rules.balance" v-if="!editing"></v-text-field>
+                <v-text-field label="Initial Balance" prefix="$" type="number" v-model="balance" name="balance" :rules="rules.balance" v-if="!editing"></v-text-field>
                 <v-select
                         label="Account Type"
                         required

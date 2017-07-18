@@ -20,7 +20,7 @@
             <v-date-picker v-model="date" no-title scrollable actions>
             </v-date-picker>
         </v-menu>
-        <v-text-field name="amount" label="Amount" v-model="amount" :rules="rules.amount" @blur="blur('amount')"></v-text-field>
+        <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="blur('amount')"></v-text-field>
         <v-select
                 label="Type"
                 v-if="!isOpeningBalance"
