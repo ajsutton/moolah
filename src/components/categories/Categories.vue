@@ -9,11 +9,8 @@
             </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
-            <v-list style="position: relative">
-                <template v-for="category in categories">
-                    <category :category="category"></category>
-                    <v-divider></v-divider>
-                </template>
+            <v-list>
+                <category v-for="category in categories" :category="category" :key="category.id"></category>
             </v-list>
     </v-card>
 </template>
