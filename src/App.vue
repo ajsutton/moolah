@@ -16,6 +16,16 @@
                     </v-list-tile>
                 </v-list>
                 <account-list></account-list>
+                <v-list>
+                    <v-list-tile avatar ripple to="/categories/">
+                        <v-list-tile-action>
+                            <v-icon dark>list</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Categories</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </v-list>
             </template>
         </v-navigation-drawer>
         <v-navigation-drawer v-model="showRightNavPanel" light right permanent enable-resize-watcher overflow clipped disable-route-watcher v-if="showRightNavPanel">
@@ -49,7 +59,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapActions} from 'vuex';
     import {actions as transactionActions} from './store/transactionStore';
     import AccountList from './components/accounts/AccountList';
     import EditTransaction from './components/transactions/EditTransaction';
@@ -58,6 +68,7 @@
     import Logout from './components/Logout';
     import client from './api/client';
     import store from './store/store';
+    import {actions as categoryActions} from './store/categoryStore';
 
     export default {
         name: 'app',
@@ -88,6 +99,9 @@
             },
             ...mapGetters('transactions', ['selectedTransaction']),
         },
+        methods: {
+            ...mapActions('categories', [categoryActions.loadCategories]),
+        },
         store,
         components: {
             AccountList,
@@ -98,6 +112,9 @@
         },
         async created() {
             const state = await client.userProfile();
+            if (state.loggedIn) {
+                await this[categoryActions.loadCategories]();
+            }
             this.loggedIn = state.loggedIn;
             this.profile = state.profile;
         }

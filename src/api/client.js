@@ -54,7 +54,7 @@ export default {
     },
 
     async categories() {
-        return request('/api/categories/');
+        return json('/api/categories/');
     },
 
     async createCategory(category) {

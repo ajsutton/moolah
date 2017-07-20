@@ -45,7 +45,6 @@ const insertCategory = (categories, categoriesById, category) => {
     if (insertIndex < 0) {
         insertIndex = -insertIndex - 1;
     }
-    console.log(insertIndex);
     insertInto.splice(insertIndex, 0, category);
 };
 
@@ -87,7 +86,6 @@ export default {
                 currentList.splice(currentList, 1);
             }
             Object.assign(category, changes.patch);
-            console.log(state.categories, category);
             if (parentChanged) {
                 insertCategory(state.categories, state.categoriesById, category);
             }
