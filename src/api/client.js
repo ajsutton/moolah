@@ -38,7 +38,7 @@ export default {
     },
 
     async transactions(accountId, offset = 0, pageSize = 500) {
-        return json(`/api/transactions/?account=${encodeURIComponent(accountId)}&offset=${offset}&pageSize=${pageSize}`)
+        return json(`/api/transactions/?account=${encodeURIComponent(accountId)}&offset=${offset}&pageSize=${pageSize}`);
     },
 
     async createTransaction(transaction) {
@@ -51,6 +51,14 @@ export default {
 
     async deleteTransaction(transaction) {
         return request(`/api/transactions/${encodeURIComponent(transaction.id)}/`, {method: 'DELETE'});
+    },
+
+    async categories() {
+        return request('/api/categories/');
+    },
+
+    async createCategory(category) {
+        return json('/api/categories/', {method: 'POST', body: JSON.stringify(category)});
     },
 
     async userProfile() {
