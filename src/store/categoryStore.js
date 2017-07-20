@@ -17,9 +17,9 @@ const categoryFields = {id: null, name: null, parentId: null, children: []};
 
 const categoryComparator = (category1, category2) => {
     if (category1.name < category2.name) {
-        return 1;
-    } else if (category1.name > category2.name) {
         return -1;
+    } else if (category1.name > category2.name) {
+        return 1;
     } else if (category1.id < category2.id) {
         return -1;
     } else if (category1.id > category2.id) {
@@ -41,7 +41,11 @@ const ensureAllFieldsPresent = category => {
 const insertCategory = (categories, categoriesById, category) => {
     ensureAllFieldsPresent(category);
     const insertInto = category.parentId !== null ? categoriesById[category.parentId].children : categories;
-    const insertIndex = search(insertInto, category, categoryComparator);
+    let insertIndex = search(insertInto, category, categoryComparator);
+    if (insertIndex < 0) {
+        insertIndex = -insertIndex - 1;
+    }
+    console.log(insertIndex);
     insertInto.splice(insertIndex, 0, category);
 };
 
@@ -80,9 +84,10 @@ export default {
             if (parentChanged) {
                 const currentList = category.parentId === null ? state.categories : state.categoriesById[category.parentId].children;
                 const index = search(currentList, category, categoryComparator);
-                currentList.splice(index, 1);
+                currentList.splice(currentList, 1);
             }
             Object.assign(category, changes.patch);
+            console.log(state.categories, category);
             if (parentChanged) {
                 insertCategory(state.categories, state.categoriesById, category);
             }

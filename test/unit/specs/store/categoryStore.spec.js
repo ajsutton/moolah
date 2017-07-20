@@ -79,8 +79,22 @@ describe('Category Store', function() {
                 assert.deepEqual(state, createState(Object.assign({}, categoryB, {children: [categoryA]})));
             });
 
-            it('should move category to top level');
-            it('should move category to a different parent');
+            it('should move category to top level', function() {
+                const categoryA = makeCategory({name: 'A'});
+                const categoryB = makeCategory({name: 'B', parentId: categoryA.id});
+                const state = createState(Object.assign({}, categoryA, {children: [categoryB]}));
+                categoryStore.mutations[mutations.updateCategory](state, {id: categoryB.id, patch: {parentId: null}});
+                assert.deepEqual(state, createState(categoryA, Object.assign({}, categoryB, {parentId: null})));
+            });
+
+            it('should move category to a different parent', function() {
+                const categoryA = makeCategory({name: 'A'});
+                const categoryB = makeCategory({name: 'B'});
+                const categoryC = makeCategory({name: 'C', parentId: categoryA.id});
+                const state = createState(Object.assign({}, categoryA, {children: [categoryC]}), categoryB);
+                categoryStore.mutations[mutations.updateCategory](state, {id: categoryC.id, patch: {parentId: categoryB.id}});
+                assert.deepEqual(state, createState(categoryA, Object.assign({}, categoryB, {children: [categoryC]})));
+            });
         });
     });
 
