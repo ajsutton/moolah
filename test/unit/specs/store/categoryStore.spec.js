@@ -139,6 +139,25 @@ describe('Category Store', function() {
                     ],
                 );
             });
+
+            it('should create child category', async function() {
+
+                const categoryA = makeCategory({name: 'A'});
+                const categoryB = makeCategory({name: 'B', parentId: categoryA.id});
+                client.createCategory.withArgs({name: 'B', parentId: categoryA.id}).resolves(categoryB);
+                await testAction(
+                    categoryStore,
+                    actions.addCategory,
+                    {
+                        state: createState(categoryA),
+                        payload: {name: 'B', parentId: categoryA.id},
+                    },
+                    [
+                        {type: mutations.addCategory, payload: {id: 'new-category', name: 'B', parentId: categoryA.id}},
+                        {type: mutations.updateCategory, payload: {id: 'new-category', patch: categoryB}},
+                    ],
+                );
+            });
         });
     });
 
