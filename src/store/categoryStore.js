@@ -13,7 +13,7 @@ export const mutations = {
     updateCategory: 'UPDATE_CATEGORY',
 };
 
-const categoryFields = {id: null, name: null, parentId: null, children: []};
+const categoryFields = () => ({id: null, name: null, parentId: null, children: []});
 
 const categoryComparator = (category1, category2) => {
     if (category1.name < category2.name) {
@@ -30,7 +30,7 @@ const categoryComparator = (category1, category2) => {
 };
 
 const ensureAllFieldsPresent = category => {
-    Object.entries(categoryFields).forEach(([field, defaultValue]) => {
+    Object.entries(categoryFields()).forEach(([field, defaultValue]) => {
         if (!category.hasOwnProperty(field)) {
             category[field] = defaultValue;
         }
