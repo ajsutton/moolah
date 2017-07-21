@@ -29,7 +29,7 @@
             </template>
         </v-navigation-drawer>
         <v-navigation-drawer v-model="showRightNavPanel" light right permanent enable-resize-watcher overflow clipped disable-route-watcher v-if="showRightNavPanel">
-            <edit-transaction></edit-transaction>
+            <edit-transaction v-if="showRightNavPanel"></edit-transaction>
         </v-navigation-drawer>
         <v-toolbar class="primary" fixed>
             <v-toolbar-side-icon dark v-if="loggedIn"
@@ -40,6 +40,7 @@
                 <v-btn flat dark ripple v-if="!loggedIn" tag="a" href="/api/googleauth">Sign in</v-btn>
                 <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
             </v-toolbar-items>
+            <v-toolbar-side-icon @click.native.prevent="closeRightNav" dark :disabled="!showRightNavPanel"></v-toolbar-side-icon>
         </v-toolbar>
         <main>
             <welcome v-if="!loggedIn"></welcome>
@@ -59,8 +60,9 @@
 </template>
 
 <script>
-    import {mapGetters, mapActions} from 'vuex';
+    import {mapGetters, mapActions, mapMutations} from 'vuex';
     import {actions as transactionActions} from './store/transactionStore';
+    import {mutations} from './store/store';
     import AccountList from './components/accounts/AccountList';
     import EditTransaction from './components/transactions/EditTransaction';
     import CreateAccount from './components/accounts/CreateAccount';
@@ -100,7 +102,11 @@
             ...mapGetters('transactions', ['selectedTransaction']),
         },
         methods: {
+            closeRightNav() {
+                this[mutations.selectTransaction]();
+            },
             ...mapActions('categories', [categoryActions.loadCategories]),
+            ...mapMutations([mutations.selectTransaction]),
         },
         store,
         components: {
