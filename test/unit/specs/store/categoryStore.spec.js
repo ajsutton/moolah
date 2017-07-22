@@ -97,7 +97,23 @@ describe('Category Store', function() {
                 assert.deepEqual(state, createState(categoryA, Object.assign({}, categoryB, {children: [categoryC]})));
             });
 
-            it('should maintain alphabetical order when name changes');
+            it('should maintain sort order when moving category to a different parent', function() {
+                const categoryA = makeCategory({name: 'A'});
+                const categoryB = makeCategory({name: 'B'});
+                const categoryC = makeCategory({name: 'C', parentId: categoryA.id});
+                const state = createState(Object.assign({}, categoryA, {children: [categoryC]}), categoryB);
+                categoryStore.mutations[mutations.updateCategory](state, {id: categoryB.id, patch: {parentId: categoryA.id}});
+                assert.deepEqual(state, createState(Object.assign({}, categoryA, {children: [categoryB, categoryC]})));
+            });
+
+            it('should maintain alphabetical order when name changes', function() {
+                const categoryA = makeCategory({name: 'A'});
+                const categoryB = makeCategory({name: 'B'});
+                const categoryC = makeCategory({name: 'C'});
+                const state = createState(categoryA, categoryB, categoryC);
+                categoryStore.mutations[mutations.updateCategory](state, {id: categoryB.id, patch: {name: 'G'}});
+                assert.deepEqual(state, createState(categoryA, categoryC, Object.assign({}, categoryB, {name: 'G'})));
+            });
         });
     });
 

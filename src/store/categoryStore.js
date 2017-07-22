@@ -96,16 +96,11 @@ export default {
                 Vue.delete(state.categoriesById, category.id);
                 Vue.set(state.categoriesById, changes.patch.id, category);
             }
-            const parentChanged = changes.patch.parentId !== undefined && changes.patch.parentId !== category.parentId;
-            if (parentChanged) {
-                const currentList = category.parentId === null ? state.categories : state.categoriesById[category.parentId].children;
-                const index = search(currentList, category, categoryComparator);
-                currentList.splice(currentList, 1);
-            }
+            const currentList = category.parentId === null ? state.categories : state.categoriesById[category.parentId].children;
+            const index = search(currentList, category, categoryComparator);
+            currentList.splice(index, 1);
             Object.assign(category, changes.patch);
-            if (parentChanged) {
-                insertCategory(state.categories, state.categoriesById, category);
-            }
+            insertCategory(state.categories, state.categoriesById, category);
         },
     },
 
