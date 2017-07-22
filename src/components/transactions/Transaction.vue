@@ -1,5 +1,8 @@
 <template>
     <v-list-tile @click.native.stop="editTransaction(transaction)" v-model="selected" ripple>
+        <v-list-tile-action>
+            {{formattedDate}}
+        </v-list-tile-action>
         <v-list-tile-content>
             <v-list-tile-title>{{transactionTitle}}</v-list-tile-title>
             <v-list-tile-sub-title>{{ categoryName }}</v-list-tile-sub-title>
@@ -17,6 +20,7 @@
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import {actions as transactionActions} from '../../store/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
+    import format from 'date-fns/format'
 
     export default {
         props: ['transaction'],
@@ -42,6 +46,9 @@
             },
             selected() {
                 return this.transaction === this.selectedTransaction;
+            },
+            formattedDate() {
+                return format(this.transaction.date, 'DD MMM YYYY');
             },
             ...mapGetters('transactions', ['selectedTransaction']),
             ...mapGetters('categories', ['getCategoryName']),
