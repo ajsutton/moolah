@@ -177,7 +177,23 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should remove new category when server rejects creation');
+            it('should remove new category when server rejects creation', async function() {
+                const categoryA = makeCategory({name: 'A'});
+                client.createCategory.withArgs({name: 'B', parentId: categoryA.id}).rejects('Failed');
+                await testAction(
+                    categoryStore,
+                    actions.addCategory,
+                    {
+                        state: createState(categoryA),
+                        payload: {name: 'B', parentId: categoryA.id},
+                        ignoreFailures: true,
+                    },
+                    [
+                        {type: mutations.addCategory, payload: {id: 'new-category', name: 'B', parentId: categoryA.id}},
+                        {type: mutations.removeCategory, payload: {id: 'new-category', name: 'B', parentId: categoryA.id, children: []}},
+                    ],
+                );
+            });
         });
 
         describe('updateCategory', function() {

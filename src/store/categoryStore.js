@@ -12,6 +12,7 @@ export const mutations = {
     addCategory: 'ADD_CATEGORY',
     setCategories: 'SET_CATEGORIES',
     updateCategory: 'UPDATE_CATEGORY',
+    removeCategory: 'REMOVE_CATEGORY',
 };
 
 const categoryFields = () => ({id: null, name: null, parentId: null, children: []});
@@ -102,6 +103,12 @@ export default {
             Object.assign(category, changes.patch);
             insertCategory(state.categories, state.categoriesById, category);
         },
+
+        [mutations.removeCategory](state, category) {
+            const currentList = category.parentId === null ? state.categories : state.categoriesById[category.parentId].children;
+            const index = search(currentList, category, categoryComparator);
+            currentList.splice(index, 1);
+        },
     },
 
     actions: {
@@ -113,8 +120,13 @@ export default {
         async [actions.addCategory]({commit}, category) {
             const newCategory = Object.assign({id: 'new-category'}, category);
             commit(mutations.addCategory, newCategory);
-            const createdCategory = await client.createCategory(category);
-            commit(mutations.updateCategory, {id: newCategory.id, patch: createdCategory});
+            try {
+                const createdCategory = await client.createCategory(category);
+                commit(mutations.updateCategory, {id: newCategory.id, patch: createdCategory});
+            } catch (error) {
+                commit(mutations.removeCategory, newCategory);
+                throw error;
+            }
         },
 
         async [actions.updateCategory]({commit, state}, changes) {
