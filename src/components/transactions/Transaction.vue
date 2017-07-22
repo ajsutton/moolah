@@ -25,10 +25,16 @@
         },
         computed: {
             transactionTitle() {
-                if (this.transaction.type === 'openingBalance') {
-                    return 'Opening Balance';
-                } else {
-                    return this.transaction.payee;
+                switch (this.transaction.type) {
+                    case 'openingBalance':
+                        return 'Opening Balance';
+                    case 'transfer':
+                        const accountName = this.accountName(this.transaction.toAccountId);
+                        const direction = this.transaction.amount >= 0 ? 'from' : 'to';
+                        const transferDescription = `Transfer ${direction} ${accountName}`;
+                        return this.transaction.payee ? `${this.transaction.payee} (${transferDescription})` : transferDescription;
+                    default:
+                        return this.transaction.payee;
                 }
             },
             categoryName() {
@@ -39,6 +45,7 @@
             },
             ...mapGetters('transactions', ['selectedTransaction']),
             ...mapGetters('categories', ['getCategoryName']),
+            ...mapGetters('accounts', ['accountName']),
         },
 
         methods: {

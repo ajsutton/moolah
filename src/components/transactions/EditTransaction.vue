@@ -32,7 +32,7 @@
 
         <category-selector v-model="category"></category-selector>
 
-        <account-selector label="To Account" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
+        <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
 
         <div class="text-xs-right">
@@ -70,7 +70,7 @@
     }
 
     function typeMultiplier(transaction) {
-        return transaction.type === 'income' ? 1 : -1;
+        return transaction.type === 'expense' ? -1 : 1;
     }
 
     export default {
@@ -89,6 +89,9 @@
         computed: {
             isOpeningBalance() {
                 return this.transaction && this.transaction.type === 'openingBalance';
+            },
+            toAccountLabel() {
+                return this.transaction.amount < 0 ? 'To Account' : 'From Account';
             },
             ...mapGetters('transactions', {
                 transaction: 'selectedTransaction',
