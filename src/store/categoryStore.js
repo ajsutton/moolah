@@ -70,6 +70,18 @@ export default {
         getCategory(state) {
             return (categoryId) => state.categoriesById[categoryId];
         },
+
+        getCategoryName(state) {
+            return (categoryId) => {
+                let category = state.categoriesById[categoryId];
+                const names = [category.name];
+                while (category.parentId !== null) {
+                    category = state.categoriesById[category.parentId];
+                    names.unshift(category.name);
+                }
+                return names.join(':');
+            }
+        }
     },
 
     mutations: {

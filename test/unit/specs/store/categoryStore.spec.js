@@ -19,6 +19,26 @@ describe('Category Store', function() {
         }).default;
     });
 
+    describe('Getters', function() {
+        it('should get catgory by id', function() {
+            const categoryA = makeCategory();
+            const categoryB = makeCategory();
+            const state = createState(categoryA, categoryB);
+            assert.deepEqual(categoryStore.getters.getCategory(state)(categoryA.id), categoryA);
+            assert.deepEqual(categoryStore.getters.getCategory(state)(categoryB.id), categoryB);
+        });
+
+        it('should get category full name', function() {
+            const categoryA = makeCategory({name: 'Parent'});
+            const categoryB = makeCategory({name: 'SubCategory', parentId: categoryA.id});
+            const categoryC = makeCategory({name: 'Leaf', parentId: categoryB.id});
+            const state = createState(Object.assign({}, categoryA, {children: [Object.assign({}, categoryB, {children: [categoryC]})]}));
+            assert.deepEqual(categoryStore.getters.getCategoryName(state)(categoryA.id), 'Parent');
+            assert.deepEqual(categoryStore.getters.getCategoryName(state)(categoryB.id), 'Parent:SubCategory');
+            assert.deepEqual(categoryStore.getters.getCategoryName(state)(categoryC.id), 'Parent:SubCategory:Leaf');
+        });
+    });
+
     describe('Mutations', function() {
         describe('addCategory', function() {
             it('should add category', function() {

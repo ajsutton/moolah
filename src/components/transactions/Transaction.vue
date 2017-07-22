@@ -32,13 +32,13 @@
                 }
             },
             categoryName() {
-                return this.transaction.categoryId ? this.getCategory(this.transaction.categoryId).name : '';
+                return this.transaction.categoryId ? this.getCategoryName(this.transaction.categoryId) : '';
             },
             selected() {
                 return this.transaction === this.selectedTransaction;
             },
             ...mapGetters('transactions', ['selectedTransaction']),
-            ...mapGetters('categories', ['getCategory']),
+            ...mapGetters('categories', ['getCategoryName']),
         },
 
         methods: {
