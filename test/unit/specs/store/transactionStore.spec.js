@@ -269,6 +269,7 @@ describe('transactionStore', function() {
                     notes: '',
                     accountId: 'account-1',
                     type: 'expense',
+                    categoryId: null,
                 };
                 newTransaction = Object.assign({id: 'new-transaction'}, initialTransactionProperties);
                 serverTransaction = Object.assign({}, initialTransactionProperties, {id: 'assigned-id'});

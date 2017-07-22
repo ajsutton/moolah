@@ -1,6 +1,11 @@
 <template>
     <div class="pl-2 pr-2">
-        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="blur('payee')" v-if="!isOpeningBalance"></v-text-field>
+        <v-select
+                label="Type"
+                v-if="!isOpeningBalance"
+                v-model="type"
+                :items="validTransactionTypes"
+        ></v-select>
 
         <v-menu
                 lazy
@@ -21,13 +26,12 @@
             <v-date-picker v-model="date" no-title scrollable actions>
             </v-date-picker>
         </v-menu>
+
+        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="blur('payee')" v-if="!isOpeningBalance"></v-text-field>
         <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="blur('amount')"></v-text-field>
-        <v-select
-                label="Type"
-                v-if="!isOpeningBalance"
-                v-model="type"
-                :items="validTransactionTypes"
-        ></v-select>
+
+        <category-selector v-model="category"></category-selector>
+
         <account-selector label="To Account" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
 
@@ -42,6 +46,7 @@
     import {rules, isValid} from '../validation';
     import AccountSelector from '../accounts/AccountSelector.vue';
     import createTypeChangePatch from './changeType';
+    import CategorySelector from '../categories/CategorySelector.vue';
 
     function makeModelProperty(propertyName, toDisplay = value => value, fromDisplay = value => value) {
         return {
@@ -76,6 +81,7 @@
                     payee: undefined,
                     amount: undefined,
                     note: undefined,
+                    categoryId: undefined,
                 },
                 rules
             };
@@ -137,6 +143,7 @@
                     });
                 },
             },
+            category: makeModelProperty('categoryId'),
             amount: makeModelProperty('amount',
                 (amount, transaction) => (typeMultiplier(transaction) * amount / 100).toFixed(2),
                 (value, transaction) => typeMultiplier(transaction) * Math.round(value * 100)),
@@ -151,10 +158,16 @@
             ...mapActions('transactions', {
                 updateTransaction: transactionActions.updateTransaction,
                 deleteTransaction: transactionActions.deleteTransaction,
-            })
+            }),
+        },
+        watch: {
+            transaction(value) {
+                Object.keys(this.raw).forEach(key => this.raw[key] = undefined);
+            },
         },
         components: {
             AccountSelector,
+            CategorySelector,
         },
     };
 </script>

@@ -49,7 +49,7 @@ function affectsBalance(patch) {
 }
 
 export function ensureAllFieldsPresent(transaction) {
-    ['amount', 'date', 'notes', 'payee', 'accountId', 'type', 'balance'].forEach(key => {
+    ['amount', 'date', 'notes', 'payee', 'accountId', 'type', 'balance', 'categoryId'].forEach(key => {
         if (!transaction.hasOwnProperty(key)) {
             transaction[key] = undefined;
         }
@@ -127,6 +127,7 @@ export default {
                 payee: '',
                 accountId: rootState.selectedAccountId,
                 type: 'expense',
+                categoryId: null,
             };
             const transaction = Object.assign({id: 'new-transaction'}, initialProperties);
             commit(mutations.addTransaction, transaction);
