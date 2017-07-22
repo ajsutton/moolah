@@ -87,6 +87,9 @@
             };
         },
         computed: {
+            transactionId() {
+                return this.transaction.id;
+            },
             isOpeningBalance() {
                 return this.transaction && this.transaction.type === 'openingBalance';
             },
@@ -164,7 +167,7 @@
             }),
         },
         watch: {
-            transaction(value) {
+            transactionId(value) {
                 Object.keys(this.raw).forEach(key => this.raw[key] = undefined);
             },
         },
