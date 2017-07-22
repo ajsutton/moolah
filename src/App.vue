@@ -28,8 +28,12 @@
                 </v-list>
             </template>
         </v-navigation-drawer>
-        <v-navigation-drawer v-model="showRightNavPanel" light right permanent enable-resize-watcher overflow clipped disable-route-watcher v-if="showRightNavPanel">
-            <edit-transaction v-if="showRightNavPanel"></edit-transaction>
+        <v-navigation-drawer v-model="showRightNavPanel" class="transparent" floating light right enable-resize-watcher persistent clipped disable-route-watcher>
+            <v-card class="ma-3">
+                <v-card-text>
+                    <edit-transaction v-if="hasTransaction"></edit-transaction>
+                </v-card-text>
+            </v-card>
         </v-navigation-drawer>
         <v-toolbar class="primary" fixed>
             <v-toolbar-side-icon dark v-if="loggedIn"
@@ -40,7 +44,7 @@
                 <v-btn flat dark ripple v-if="!loggedIn" tag="a" href="/api/googleauth">Sign in</v-btn>
                 <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
             </v-toolbar-items>
-            <v-toolbar-side-icon @click.native.prevent="closeRightNav" dark :disabled="!showRightNavPanel"></v-toolbar-side-icon>
+            <v-toolbar-side-icon @click.native.prevent="toggleRightNav" dark :disabled="!hasTransaction"></v-toolbar-side-icon>
         </v-toolbar>
         <main>
             <welcome v-if="!loggedIn"></welcome>
@@ -60,7 +64,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapActions, mapMutations} from 'vuex';
+    import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
     import {actions as transactionActions} from './store/transactionStore';
     import {mutations} from './store/store';
     import AccountList from './components/accounts/AccountList';
@@ -97,13 +101,17 @@
                 },
             },
             showRightNavPanel() {
+                return this.hasTransaction && this.rightNavToggle;
+            },
+            hasTransaction() {
                 return this.selectedTransaction !== undefined && this.loggedIn;
             },
             ...mapGetters('transactions', ['selectedTransaction']),
+            ...mapState({ rightNavToggle: 'showEditTransactionPanel'})
         },
         methods: {
-            closeRightNav() {
-                this[mutations.selectTransaction]();
+            toggleRightNav() {
+                this.$store.commit(mutations.showEditTransactionPanel, !this.rightNavToggle);
             },
             ...mapActions('categories', [categoryActions.loadCategories]),
             ...mapMutations([mutations.selectTransaction]),

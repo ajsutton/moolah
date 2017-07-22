@@ -14,6 +14,7 @@ export const actions = {
 export const mutations = {
     selectAccount: 'SELECT_ACCOUNT',
     selectTransaction: 'SELECT_TRANSACTION',
+    showEditTransactionPanel: 'SHOW_EDIT_TRANSACTION_PANEL',
 };
 
 const store = new Vuex.Store({
@@ -21,6 +22,7 @@ const store = new Vuex.Store({
     state: {
         selectedAccountId: null,
         selectedTransactionId: null,
+        showEditTransactionPanel: false,
     },
     mutations: {
         [mutations.selectAccount](state, selectedAccountId) {
@@ -28,6 +30,10 @@ const store = new Vuex.Store({
         },
         [mutations.selectTransaction](state, selectedTransactionId) {
             state.selectedTransactionId = selectedTransactionId;
+            state.showEditTransactionPanel = true;
+        },
+        [mutations.showEditTransactionPanel](state, newValue) {
+            state.showEditTransactionPanel = newValue;
         },
     },
     actions: {
