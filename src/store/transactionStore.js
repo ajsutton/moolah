@@ -3,6 +3,7 @@ import updateBalance from './updateBalance';
 import {actions as accountActions} from './accountsStore';
 import format from 'date-fns/format'
 import search from 'binary-search';
+import Vue from 'vue';
 
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
@@ -18,10 +19,17 @@ export const mutations = {
 };
 
 const findTransaction = (state, transactionId) => {
-    return state.transactions.find(transaction => transaction.id === transactionId);
+    return state.transactionsById[transactionId];
 };
 
-const findTransactionIndex = (state, transactionId) => state.transactions.findIndex(transaction => transaction.id === transactionId);
+const findTransactionIndex = (state, transaction) => {
+    let insertIndex = search(state.transactions, transaction, transactionComparator);
+    if (insertIndex < 0) {
+        throw new Error(`Unknown transaction ${transaction.id}`);
+    }
+    return insertIndex;
+};
+    //state.transactions.findIndex(transaction => transaction.id === transactionId);
 const transactionComparator = (transaction1, transaction2) => {
     if (transaction1.date < transaction2.date) {
         return 1;
@@ -62,6 +70,7 @@ export default {
     state: {
         transactions: [],
         priorBalance: 0,
+        transactionsById: {},
     },
     getters: {
         selectedTransaction(state, getters, rootState) {
@@ -70,30 +79,39 @@ export default {
     },
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
-            transactionsResponse.transactions.forEach(ensureAllFieldsPresent);
+            const transactionsById = {}
+            transactionsResponse.transactions.forEach(transaction => {
+                ensureAllFieldsPresent(transaction);
+                transactionsById[transaction.id] = transaction;
+            });
             updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance);
             state.transactions = transactionsResponse.transactions;
             state.priorBalance = transactionsResponse.priorBalance;
+            state.transactionsById = transactionsById;
         },
         [mutations.addTransaction](state, transaction) {
             const insertIndex = findInsertIndex(state, transaction);
             state.transactions.splice(insertIndex, 0, ensureAllFieldsPresent(transaction));
             updateBalance(state.transactions, insertIndex, state.priorBalance);
+            Vue.set(state.transactionsById, transaction.id, transaction);
         },
         [mutations.removeTransaction](state, transaction) {
-            const transactionIndex = state.transactions.findIndex(value => value.id === transaction.id) - 1;
-            state.transactions = state.transactions.filter(value => value.id !== transaction.id);
-            updateBalance(state.transactions, transactionIndex, state.priorBalance);
+            const transactionIndex = findTransactionIndex(state, transaction);
+            state.transactions.splice(transactionIndex, 1);
+            updateBalance(state.transactions, transactionIndex - 1, state.priorBalance);
+            Vue.delete(state.transactionsById, transaction.id);
         },
         [mutations.updateTransaction](state, payload) {
-            const index = findTransactionIndex(state, payload.id);
-            const transaction = state.transactions[index];
+            const transaction = findTransaction(state, payload.id);
             if (transaction !== undefined) {
+                const index = findTransactionIndex(state, transaction);
                 let updateBalanceFrom = -1;
+                Vue.delete(state.transactionsById, transaction.id);
                 if (payload.patch.date !== undefined) {
                     state.transactions.splice(index, 1);
                 }
                 Object.assign(transaction, payload.patch);
+                Vue.set(state.transactionsById, transaction.id, transaction);
                 if (payload.patch.date !== undefined) {
                     let insertIndex = findInsertIndex(state, transaction);
                     state.transactions.splice(insertIndex, 0, transaction);
