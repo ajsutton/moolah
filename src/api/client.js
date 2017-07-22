@@ -61,6 +61,10 @@ export default {
         return json('/api/categories/', {method: 'POST', body: JSON.stringify(category)});
     },
 
+    async updateCategory(category) {
+        return json(`/api/categories/${encodeURIComponent(category.id)}/`, {method: 'PUT', body: JSON.stringify(category)});
+    },
+
     async userProfile() {
         return json('/api/auth/');
     },

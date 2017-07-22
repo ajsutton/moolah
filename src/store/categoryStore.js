@@ -5,6 +5,7 @@ import Vue from 'vue';
 export const actions = {
     loadCategories: 'LOAD_CATEGORIES',
     addCategory: 'ADD_CATEGORY',
+    updateCategory: 'UPDATE_CATEGORY',
 };
 
 export const mutations = {
@@ -29,6 +30,15 @@ const categoryComparator = (category1, category2) => {
     }
 };
 
+const apiCategory = category => {
+    const api = {};
+    Object.keys(categoryFields())
+        .filter(fieldName => category.hasOwnProperty(fieldName))
+        .filter(fieldName => fieldName !== 'children')
+        .forEach(fieldName => api[fieldName] = category[fieldName]);
+    return api;
+};
+
 const ensureAllFieldsPresent = category => {
     Object.entries(categoryFields()).forEach(([field, defaultValue]) => {
         if (!category.hasOwnProperty(field)) {
@@ -39,7 +49,6 @@ const ensureAllFieldsPresent = category => {
 };
 
 const insertCategory = (categories, categoriesById, category) => {
-    ensureAllFieldsPresent(category);
     const insertInto = category.parentId !== null ? categoriesById[category.parentId].children : categories;
     let insertIndex = search(insertInto, category, categoryComparator);
     if (insertIndex < 0) {
@@ -56,8 +65,15 @@ export default {
         categoriesById: {},
     },
 
+    getters: {
+        getCategory(state) {
+            return (categoryId) => state.categoriesById[categoryId];
+        },
+    },
+
     mutations: {
         [mutations.addCategory](state, category) {
+            ensureAllFieldsPresent(category);
             insertCategory(state.categories, state.categoriesById, category);
             Vue.set(state.categoriesById, category.id, category);
         },
@@ -66,6 +82,7 @@ export default {
             const categories = [];
             const categoriesById = {};
             newCategories.forEach(category => {
+                ensureAllFieldsPresent(category);
                 categoriesById[category.id] = category;
             });
             newCategories.forEach(category => insertCategory(categories, categoriesById, category));
@@ -89,7 +106,7 @@ export default {
             if (parentChanged) {
                 insertCategory(state.categories, state.categoriesById, category);
             }
-        }
+        },
     },
 
     actions: {
@@ -103,6 +120,11 @@ export default {
             commit(mutations.addCategory, newCategory);
             const createdCategory = await client.createCategory(category);
             commit(mutations.updateCategory, {id: newCategory.id, patch: createdCategory});
+        },
+
+        async [actions.updateCategory]({commit, state}, changes) {
+            commit(mutations.updateCategory, changes);
+            await client.updateCategory(apiCategory(state.categoriesById[changes.id]));
         },
     },
 };

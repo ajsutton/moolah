@@ -12,6 +12,7 @@ describe('Category Store', function() {
         client = {
             categories: sinon.stub(),
             createCategory: sinon.stub(),
+            updateCategory: sinon.stub(),
         };
         categoryStore = categoryStoreLoader({
             '../api/client': client,
@@ -95,6 +96,8 @@ describe('Category Store', function() {
                 categoryStore.mutations[mutations.updateCategory](state, {id: categoryC.id, patch: {parentId: categoryB.id}});
                 assert.deepEqual(state, createState(categoryA, Object.assign({}, categoryB, {children: [categoryC]})));
             });
+
+            it('should maintain alphabetical order when name changes');
         });
     });
 
@@ -141,7 +144,6 @@ describe('Category Store', function() {
             });
 
             it('should create child category', async function() {
-
                 const categoryA = makeCategory({name: 'A'});
                 const categoryB = makeCategory({name: 'B', parentId: categoryA.id});
                 client.createCategory.withArgs({name: 'B', parentId: categoryA.id}).resolves(categoryB);
@@ -158,6 +160,31 @@ describe('Category Store', function() {
                     ],
                 );
             });
+
+            it('should remove new category when server rejects creation');
+        });
+
+        describe('updateCategory', function() {
+            it('should update category and notify server', async function() {
+                const categoryA = makeCategory({name: 'A'});
+                const modifiedA = {id: categoryA.id, name: 'New Name', parentId: null};
+                const changes = {id: categoryA.id, patch: {name: 'New Name'}};
+                client.updateCategory.withArgs(modifiedA).resolves(modifiedA);
+                await testAction(
+                    categoryStore,
+                    actions.updateCategory,
+                    {
+                        state: createState(categoryA),
+                        payload: changes,
+                    },
+                    [
+                        {type: mutations.updateCategory, payload: changes},
+                    ],
+                );
+                sinon.assert.calledWith(client.updateCategory, modifiedA);
+            });
+
+            it('should rollback changes when server rejects creation');
         });
     });
 
