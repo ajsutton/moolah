@@ -28,7 +28,7 @@
                 </v-list>
             </template>
         </v-navigation-drawer>
-        <v-navigation-drawer v-model="showRightNavPanel" class="transparent" floating light right enable-resize-watcher persistent clipped disable-route-watcher>
+        <v-navigation-drawer :value="showRightNavPanel" class="transparent" floating light right enable-resize-watcher persistent clipped disable-route-watcher>
             <v-card class="ma-3">
                 <v-card-text>
                     <edit-transaction v-if="hasTransaction"></edit-transaction>
