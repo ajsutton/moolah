@@ -8,8 +8,9 @@
                 v-model="dateMenu"
                 offset-y
                 full-width
-                :nudge-left="40"
+                :nudge-right="40"
                 max-width="290px"
+                transition="scale-transition"
         >
             <v-text-field
                     slot="activator"
