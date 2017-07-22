@@ -130,8 +130,15 @@ export default {
         },
 
         async [actions.updateCategory]({commit, state}, changes) {
+            const category = state.categoriesById[changes.id];
+            const original = Object.assign({}, category);
             commit(mutations.updateCategory, changes);
-            await client.updateCategory(apiCategory(state.categoriesById[changes.id]));
+            try {
+                await client.updateCategory(apiCategory(state.categoriesById[changes.id]));
+            } catch (error) {
+                commit(mutations.updateCategory, {id: category.id, patch: original});
+                throw error;
+            }
         },
     },
 };

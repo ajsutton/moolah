@@ -216,7 +216,26 @@ describe('Category Store', function() {
                 sinon.assert.calledWith(client.updateCategory, modifiedA);
             });
 
-            it('should rollback changes when server rejects creation');
+            it('should rollback changes when server rejects creation', async function() {
+
+                const categoryA = makeCategory({name: 'A'});
+                const modifiedA = {id: categoryA.id, name: 'New Name', parentId: null};
+                const changes = {id: categoryA.id, patch: {name: 'New Name'}};
+                client.updateCategory.withArgs(modifiedA).rejects('Failed');
+                await testAction(
+                    categoryStore,
+                    actions.updateCategory,
+                    {
+                        state: createState(categoryA),
+                        payload: changes,
+                        ignoreFailures: true,
+                    },
+                    [
+                        {type: mutations.updateCategory, payload: changes},
+                        {type: mutations.updateCategory, payload: {id: categoryA.id, patch: categoryA}},
+                    ],
+                );
+            });
         });
     });
 
