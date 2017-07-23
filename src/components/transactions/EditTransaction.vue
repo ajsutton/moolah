@@ -6,6 +6,7 @@
                 v-model="type"
                 :items="validTransactionTypes"
         ></v-select>
+        <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
 
         <v-menu
                 lazy
@@ -32,7 +33,6 @@
 
         <category-selector v-model="category"></category-selector>
 
-        <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
 
         <div class="text-xs-right">
