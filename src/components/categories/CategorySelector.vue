@@ -5,7 +5,7 @@
             item-value="id"
             v-model="valueProxy"
             :label="label"
-            no-data-text="No categories available"
+            no-data-text="No matching categories"
             autocomplete
     ></v-select>
 </template>
