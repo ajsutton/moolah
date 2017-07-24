@@ -4,7 +4,7 @@
             <v-toolbar-title class="body-2 grey--text">Upcoming Transactions</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon
-                   @click.native.stop="addTransaction">
+                   @click.native.stop="addTransaction" :disabled="noAccounts">
                 <v-icon>add</v-icon>
             </v-btn>
         </v-toolbar>
@@ -33,7 +33,11 @@
             return {};
         },
         computed: {
+            noAccounts() {
+                return this.accounts.length === 0;
+            },
             ...mapState('transactions', ['transactions']),
+            ...mapState('accounts', ['accounts']),
         },
 
         created() {
