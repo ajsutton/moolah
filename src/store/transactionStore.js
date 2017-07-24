@@ -128,7 +128,7 @@ export default {
         },
     },
     actions: {
-        async [actions.loadTransactions]({commit, rootState}, searchOptions) {
+        async [actions.loadTransactions]({commit}, searchOptions) {
             commit(mutations.setTransactions, {transactions: [], priorBalance: 0});
             const response = await client.transactions(searchOptions);
             commit(mutations.setTransactions, response);

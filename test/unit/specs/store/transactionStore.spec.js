@@ -94,7 +94,7 @@ describe('transactionStore', function() {
         describe('addTransaction', function() {
             it('should keep transactions sorted by date when inserting at start', function() {
                 const state = addIdLookup({transactions: expandFields([
-                    {id: 2, amount: 10, date: '2017-07-02', balance: 60}, 
+                    {id: 2, amount: 10, date: '2017-07-02', balance: 60},
                     {id: 1, amount: 50, date: '2017-07-01', balance: 50}]), priorBalance: 0});
                 transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 25, date: '2017-07-03'});
                 assert.deepEqual(state, addIdLookup({
@@ -234,33 +234,18 @@ describe('transactionStore', function() {
 
     describe('Actions', function() {
         describe('loadTransactions', function() {
-            it('should set transactions to empty list when there is no selected account ID', async function() {
-                client.transactions.resolves({transactions: []});
-                await testAction(
-                    transactionStore,
-                    actions.loadTransactions,
-                    {
-                        state: {transactions: [{id: 1}, {id: 2}]},
-                        rootState: {selectedAccountId: null},
-                    },
-                    [
-                        {type: mutations.setTransactions, payload: {transactions: [], priorBalance: 0}},
-                    ],
-                );
-            });
-
             it('should load transactions from server', async function() {
                 const response = {
                     transactions: [{id: 3}, {id: 4}],
                     priorBalance: 12300,
                 };
-                client.transactions.withArgs('account-1').resolves(response);
+                client.transactions.withArgs({accountId: 'account-1'}).resolves(response);
                 await testAction(
                     transactionStore,
                     actions.loadTransactions,
                     {
                         state: {transactions: [{id: 1}, {id: 2}], transactionsById: {}},
-                        rootState: {selectedAccountId: 'account-1'},
+                        payload: {accountId: 'account-1'},
                     },
                     [
                         {type: mutations.setTransactions, payload: {transactions: [], priorBalance: 0}},
