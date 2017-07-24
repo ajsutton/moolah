@@ -128,25 +128,22 @@ export default {
         },
     },
     actions: {
-        async [actions.loadTransactions]({commit, rootState}) {
+        async [actions.loadTransactions]({commit, rootState}, searchOptions) {
             commit(mutations.setTransactions, {transactions: [], priorBalance: 0});
-            if (rootState.selectedAccountId === null) {
-                return;
-            }
-            const response = await client.transactions(rootState.selectedAccountId);
+            const response = await client.transactions(searchOptions);
             commit(mutations.setTransactions, response);
         },
 
-        async [actions.addTransaction]({commit, rootState}) {
-            const initialProperties = {
+        async [actions.addTransaction]({commit, rootState}, attributes = {}) {
+            const initialProperties = Object.assign({
                 amount: 0,
                 date: format(new Date(), 'YYYY-MM-DD'),
                 notes: '',
                 payee: '',
-                accountId: rootState.selectedAccountId,
+                accountId: rootState.selectedAccountId || rootState.accounts.accounts[0].id,
                 type: 'expense',
                 categoryId: null,
-            };
+            }, attributes);
             const transaction = Object.assign({id: 'new-transaction'}, initialProperties);
             commit(mutations.addTransaction, transaction);
             try {

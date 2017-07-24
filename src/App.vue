@@ -25,6 +25,14 @@
                             <v-list-tile-title>Categories</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
+                    <v-list-tile avatar ripple to="/upcoming/">
+                        <v-list-tile-action>
+                            <v-icon dark>list</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Upcoming</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
                 </v-list>
             </template>
         </v-navigation-drawer>

@@ -37,8 +37,12 @@ export default {
         return json(`/api/accounts/${encodeURIComponent(account.id)}/`, {method: 'PUT', body: JSON.stringify(account)});
     },
 
-    async transactions(accountId, offset = 0, pageSize = 100) {
-        return json(`/api/transactions/?account=${encodeURIComponent(accountId)}&offset=${offset}&pageSize=${pageSize}`);
+    async transactions(searchOptions, offset = 0, pageSize = 100) {
+        const options = [`offset=${offset}`, `pageSize=${pageSize}`];
+        Object.entries(searchOptions)
+            .filter(([key, value]) => value !== undefined && value !== null)
+            .forEach(([key, value]) => options.push(encodeURIComponent(key) + '=' + encodeURIComponent(value)));
+        return json(`/api/transactions/?${options.join('&')}`);
     },
 
     async createTransaction(transaction) {

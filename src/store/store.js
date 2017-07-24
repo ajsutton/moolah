@@ -10,6 +10,7 @@ Vue.use(Vuex);
 
 export const actions = {
     selectAccount: 'SELECT_ACCOUNT',
+    showUpcoming: 'SHOW_UPCOMING',
 };
 export const mutations = {
     selectAccount: 'SELECT_ACCOUNT',
@@ -39,8 +40,12 @@ const store = new Vuex.Store({
     actions: {
         [actions.selectAccount]({commit, dispatch}, accountId) {
             commit(mutations.selectAccount, accountId);
-            dispatch('transactions/' + transactionActions.loadTransactions, accountId);
+            dispatch('transactions/' + transactionActions.loadTransactions, {account: accountId, scheduled: false});
         },
+        [actions.showUpcoming]({commit, dispatch}, accountId) {
+            commit(mutations.selectAccount, null);
+            dispatch('transactions/' + transactionActions.loadTransactions, {account: null, scheduled: true});
+        }
     },
     modules: {
         accounts: accountsModule,

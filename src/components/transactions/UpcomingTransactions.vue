@@ -1,9 +1,8 @@
 <template>
     <v-card>
         <v-toolbar card class="white" prominent>
-            <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
+            <v-toolbar-title class="body-2 grey--text">Upcoming Transactions</v-toolbar-title>
             <v-spacer></v-spacer>
-            <create-account :account="selectedAccount"></create-account>
             <v-btn icon
                    @click.native.stop="addTransaction">
                 <v-icon>add</v-icon>
@@ -30,21 +29,15 @@
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
     export default {
-        props: ['accountId'],
         data() {
             return {};
         },
         computed: {
-            title() {
-                return this.accountName(this.accountId);
-            },
-            ...mapState(['selectedAccountId']),
-            ...mapGetters('accounts', ['accountName', 'selectedAccount']),
             ...mapState('transactions', ['transactions']),
         },
 
         created() {
-            this.selectAccount(this.accountId);
+            this[stateActions.showUpcoming]();
         },
 
         watch: {
@@ -54,16 +47,13 @@
         },
 
         methods: {
-            async selectAccount(accountId) {
-                this[stateActions.selectAccount](accountId);
-            },
             addTransaction() {
-                this[transactionActions.addTransaction]();
+                this[transactionActions.addTransaction]({recurEvery: 1, recurPeriod: 'MONTH'});
             },
             editTransaction(transaction) {
                 this.$store.commit(stateMutations.selectTransaction, transaction.id);
             },
-            ...mapActions([stateActions.selectAccount]),
+            ...mapActions([stateActions.showUpcoming]),
             ...mapActions('transactions', [transactionActions.addTransaction]),
         },
 
