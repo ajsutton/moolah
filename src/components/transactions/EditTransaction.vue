@@ -97,7 +97,7 @@
                 return types;
             },
             scheduled() {
-                return this.transaction.recurPeriod !== null;
+                return this.transaction.recurPeriod !== undefined;
             },
             payee: makeModelProperty('payee'),
             notes: makeModelProperty('notes'),
