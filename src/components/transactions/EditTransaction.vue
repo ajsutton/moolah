@@ -33,10 +33,13 @@
 
         <category-selector v-model="category"></category-selector>
 
+        <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
+
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
 
         <div class="text-xs-right">
             <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>
+            <v-btn v-if="scheduled">Pay</v-btn>
         </div>
     </div>
 </template>
@@ -47,27 +50,8 @@
     import AccountSelector from '../accounts/AccountSelector.vue';
     import createTypeChangePatch from './changeType';
     import CategorySelector from '../categories/CategorySelector.vue';
-
-    function makeModelProperty(propertyName, toDisplay = value => value, fromDisplay = value => value) {
-        return {
-            get() {
-                if (this.raw[propertyName] === undefined) {
-                    return this.transaction ? toDisplay(this.transaction[propertyName], this.transaction) : undefined;
-                } else {
-                    return this.raw[propertyName];
-                }
-            },
-            set(value) {
-                this.raw[propertyName] = value;
-                if (isValid(value, this.rules[propertyName])) {
-                    this.updateTransaction({
-                        id: this.transaction.id,
-                        patch: {[propertyName]: fromDisplay(value, this.transaction)},
-                    });
-                }
-            },
-        };
-    }
+    import Recurrence from './RecurranceControls.vue';
+    import {makeModelProperty, onBlur} from './modelProperty';
 
     function typeMultiplier(transaction) {
         return transaction.type === 'expense' ? -1 : 1;
@@ -111,6 +95,9 @@
                     types.push({text: 'Transfer', value: 'transfer'});
                 }
                 return types;
+            },
+            scheduled() {
+                return this.transaction.recurPeriod !== null;
             },
             payee: makeModelProperty('payee'),
             notes: makeModelProperty('notes'),
@@ -156,11 +143,7 @@
 
         },
         methods: {
-            blur(property) {
-                if (isValid(this.raw[property], this.rules[property])) {
-                    this.raw[property] = undefined;
-                }
-            },
+            onBlur,
             ...mapActions('transactions', {
                 updateTransaction: transactionActions.updateTransaction,
                 deleteTransaction: transactionActions.deleteTransaction,
@@ -174,6 +157,7 @@
         components: {
             AccountSelector,
             CategorySelector,
+            Recurrence,
         },
     };
 </script>

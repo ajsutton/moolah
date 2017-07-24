@@ -13,6 +13,10 @@ function maxDecimalPlaces(precision) {
     return value => validate(parseFloatStrict(value).toFixed(precision) == parseFloatStrict(value), `Enter a number wth up to ${precision} decimal places`);
 }
 
+function positiveInteger() {
+    return value => validate(parseFloatStrict(value).toFixed(0) == parseFloatStrict(value) && value > 0, `Enter a number above 0`)
+}
+
 function maxLength(length) {
     return value => validate(value === undefined || value.length < length, `Enter less than ${length} characters`);
 }
@@ -34,6 +38,9 @@ export const rules = {
     ],
     notes: [
         maxLength(10000)
+    ],
+    recurEvery: [
+        positiveInteger()
     ],
 };
 
