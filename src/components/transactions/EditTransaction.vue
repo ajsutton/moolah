@@ -150,7 +150,7 @@
             }),
         },
         watch: {
-            transactionId(value) {
+            transactionId() {
                 Object.keys(this.raw).forEach(key => this.raw[key] = undefined);
             },
         },
