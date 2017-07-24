@@ -28,14 +28,14 @@
             </v-date-picker>
         </v-menu>
 
-        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="blur('payee')" v-if="!isOpeningBalance"></v-text-field>
-        <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="blur('amount')"></v-text-field>
+        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-if="!isOpeningBalance"></v-text-field>
+        <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')"></v-text-field>
 
         <category-selector v-model="category"></category-selector>
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
-        <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="blur('notes')" multiLine></v-text-field>
+        <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')" multiLine></v-text-field>
 
         <div class="text-xs-right">
             <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>

@@ -1,20 +1,23 @@
 <template>
     <div>
-        <div class="section-heading">Repeat</div>
-
-        <v-select
-                label="Every"
-                v-model="recurPeriod"
-                :items="periodItems"
-        ></v-select>
-
-        <v-text-field
-                v-if="repeating"
-                label="Number"
-                type="number"
-                :rules="rules.recurEvery"
-                @blur="blur('recurEvery')"
-                v-model="recurEvery"></v-text-field>
+        <v-switch class="tight-input-group" label="Repeat" v-model="repeating" hide-details></v-switch>
+        <v-layout row v-if="repeating">
+            <v-flex xs4>
+                <v-text-field
+                        label="Every"
+                        type="number"
+                        :rules="rules.recurEvery"
+                        @blur="onBlur('recurEvery')"
+                        v-model="recurEvery"></v-text-field>
+            </v-flex>
+            <v-flex xs8>
+                <v-select
+                        single-line
+                        v-model="recurPeriod"
+                        :items="periodItems"
+                ></v-select>
+            </v-flex>
+        </v-layout>
     </div>
 </template>
 
@@ -29,11 +32,10 @@
         data() {
             return {
                 periodItems: [
-                    {text: 'Once', value: 'ONCE'},
-                    {text: 'Day', value: 'DAY'},
-                    {text: 'Week', value: 'WEEK'},
-                    {text: 'Month', value: 'MONTH'},
-                    {text: 'Year', value: 'YEAR'},
+                    {text: 'Days', value: 'DAY'},
+                    {text: 'Weeks', value: 'WEEK'},
+                    {text: 'Months', value: 'MONTH'},
+                    {text: 'Years', value: 'YEAR'},
                 ],
                 raw: {
                     recurPeriod: undefined,
@@ -46,8 +48,19 @@
             transactionId() {
                 return this.transaction.id;
             },
-            repeating() {
-                return this.transaction.recurPeriod !== 'ONCE';
+            repeating: {
+                get() {
+                    return this.transaction.recurPeriod !== 'ONCE';
+                },
+                set(value) {
+                    if (value) {
+                        this.updateTransaction({id: this.transactionId, patch: {recurPeriod: this.raw.recurPeriod || 'MONTH', recurEvery: this.raw.recurEvery || 1}});
+                    } else {
+                        this.raw.recurPeriod = this.transaction.recurPeriod;
+                        this.raw.recurEvery = this.transaction.recurEvery;
+                        this.updateTransaction({id: this.transactionId, patch: {recurPeriod: 'ONCE', recurEvery: null}});
+                    }
+                },
             },
             recurPeriod: {
                 get() {
@@ -74,11 +87,8 @@
     };
 </script>
 
-
-<style scoped lang="css">
-    .section-heading {
-        color: rgba(0, 0, 0, 0.54);
-        font-size: 16px;
-        line-height: 32px;
+<style scoped>
+    .tight-input-group {
+        margin-bottom: 0;
     }
 </style>
