@@ -15,6 +15,7 @@ const router = new Router({
     routes: [
         {path: '/', name: 'networth', component: NetWorth},
         {path: '/account/:accountId/', component: Transactions, props: true},
+        {path: '/transactions/', component: Transactions, props: true},
         {path: '/upcoming/', component: UpcomingTransactions },
         {path: '/categories/', component: Categories},
         {path: '*', component: NotFound},
