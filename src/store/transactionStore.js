@@ -1,15 +1,21 @@
 import client from '../api/client';
 import updateBalance from './updateBalance';
 import {actions as accountActions} from './accountsStore';
-import format from 'date-fns/format'
 import search from 'binary-search';
 import Vue from 'vue';
+import without from '../util/without';
+import {formatDate} from '../api/apiFormats';
+import addDays from 'date-fns/add_days';
+import addWeeks from 'date-fns/add_weeks';
+import addMonths from 'date-fns/add_months';
+import addYears from 'date-fns/add_years';
 
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
     addTransaction: 'ADD_TRANSACTION',
     updateTransaction: 'UPDATE_TRANSACTION',
     deleteTransaction: 'DELETE_TRANSACTION',
+    payTransaction: 'PAY_TRANSACTION',
 };
 export const mutations = {
     setTransactions: 'SET_TRANSACTIONS',
@@ -29,7 +35,7 @@ const findTransactionIndex = (state, transaction) => {
     }
     return insertIndex;
 };
-    //state.transactions.findIndex(transaction => transaction.id === transactionId);
+
 const transactionComparator = (transaction1, transaction2) => {
     if (transaction1.date < transaction2.date) {
         return 1;
@@ -65,6 +71,16 @@ export function ensureAllFieldsPresent(transaction) {
     return transaction;
 }
 
+const dateFunction = period => {
+    switch (period) {
+        case 'DAY': return addDays;
+        case 'WEEK': return addWeeks;
+        case 'MONTH': return addMonths;
+        case 'YEAR': return addYears;
+        default: throw new Error(`Unknown period: ${period}`);
+    }
+};
+
 export default {
     namespaced: true,
     state: {
@@ -79,7 +95,7 @@ export default {
     },
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
-            const transactionsById = {}
+            const transactionsById = {};
             transactionsResponse.transactions.forEach(transaction => {
                 ensureAllFieldsPresent(transaction);
                 transactionsById[transaction.id] = transaction;
@@ -137,7 +153,7 @@ export default {
         async [actions.addTransaction]({commit, rootState}, attributes = {}) {
             const initialProperties = Object.assign({
                 amount: 0,
-                date: format(new Date(), 'YYYY-MM-DD'),
+                date: formatDate(new Date()),
                 notes: '',
                 payee: '',
                 accountId: rootState.selectedAccountId || rootState.accounts.accounts[0].id,
@@ -185,6 +201,20 @@ export default {
             } catch (error) {
                 commit(mutations.addTransaction, transaction);
                 throw error;
+            }
+        },
+
+        async [actions.payTransaction]({commit, state}, payload) {
+            const transaction = findTransaction(state, payload.id);
+            const appliedTransaction = without(transaction, 'recurEvery', 'recurPeriod', 'balance', 'id');
+            await client.createTransaction(appliedTransaction);
+            if (transaction.recurPeriod === 'ONCE') {
+                commit(mutations.removeTransaction, transaction);
+                await client.deleteTransaction(transaction);
+            } else {
+                const nextDate = formatDate(dateFunction(transaction.recurPeriod)(transaction.date, transaction.recurEvery));
+                commit(mutations.updateTransaction, {id: transaction.id, patch: {date: nextDate}});
+                await client.updateTransaction(transaction);
             }
         },
     },

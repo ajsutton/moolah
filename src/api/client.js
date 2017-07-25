@@ -62,7 +62,11 @@ export default {
     },
 
     async createCategory(category) {
-        return json('/api/categories/', {method: 'POST', body: JSON.stringify(category)});
+        const data = {name: category.name};
+        if (category.parentId !== null) {
+            data.parentId = category.parentId;
+        }
+        return json('/api/categories/', {method: 'POST', body: JSON.stringify(data)});
     },
 
     async updateCategory(category) {

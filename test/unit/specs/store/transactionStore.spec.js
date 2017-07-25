@@ -430,5 +430,66 @@ describe('transactionStore', function() {
                 );
             });
         });
+
+        describe('payTransaction', function() {
+            it('should remove scheduled transaction if it is once off', async function() {
+                const scheduledTransaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13', recurPeriod: 'ONCE'};
+                client.deleteTransaction.withArgs(scheduledTransaction).resolves();
+                await testAction(
+                    transactionStore,
+                    actions.payTransaction,
+                    {
+                        state: addIdLookup({transactions: [scheduledTransaction], priorBalance: 100}),
+                        payload: scheduledTransaction,
+                        ignoreFailures: true,
+                    },
+                    [
+                        {type: mutations.removeTransaction, payload: scheduledTransaction},
+                    ],
+                );
+
+                sinon.assert.calledWith(client.deleteTransaction, scheduledTransaction);
+                sinon.assert.calledWith(client.createTransaction, {amount: 10, payee: 'Payee1', date: '2016-07-13'});
+            });
+
+            [
+                {description: 'repeating daily', scheduledDate: '2016-07-13', recurPeriod: 'DAY', recurEvery: 5, nextScheduledDate: '2016-07-18'},
+                {description: 'repeating weekly', scheduledDate: '2017-07-13', recurPeriod: 'WEEK', recurEvery: 6, nextScheduledDate: '2017-08-24'},
+                {description: 'repeating monthly', scheduledDate: '2016-10-13', recurPeriod: 'MONTH', recurEvery: 9, nextScheduledDate: '2017-07-13'},
+                {description: 'repeating monthly', scheduledDate: '2016-10-13', recurPeriod: 'YEAR', recurEvery: 4, nextScheduledDate: '2020-10-13'},
+            ].forEach(params => {
+                it(`should move date of scheduled transaction to next repeat when ${params.description}`, async function() {
+                    const scheduledDate = params.scheduledDate;
+                    const recurPeriod = params.recurPeriod;
+                    const recurEvery = params.recurEvery;
+                    const nextScheduledDate = params.nextScheduledDate;
+                    const scheduledTransaction = {id: 1, amount: 10, payee: 'Payee1', balance: 10, date: scheduledDate, recurPeriod, recurEvery};
+                    const modifiedTransaction = Object.assign({}, scheduledTransaction, {date: nextScheduledDate});
+                    client.updateTransaction.withArgs(scheduledTransaction).resolves(modifiedTransaction);
+                    client.createTransaction.resolves();
+                    await testAction(
+                        transactionStore,
+                        actions.payTransaction,
+                        {
+                            state: addIdLookup({transactions: [scheduledTransaction], priorBalance: 0}),
+                            payload: scheduledTransaction,
+                            ignoreFailures: true,
+                        },
+                        [
+                            {type: mutations.updateTransaction, payload: {id: scheduledTransaction.id, patch: {date: nextScheduledDate}}},
+                        ],
+                    );
+
+                    sinon.assert.calledWith(client.updateTransaction, modifiedTransaction);
+                    sinon.assert.calledWith(client.createTransaction, {amount: 10, payee: 'Payee1', date: scheduledDate});
+                });
+            });
+
+            it('should update balance of account');
+            it('should update balance of both accounts when transaction is a transfer');
+            it('should rollback deleting one off transaction if server rejects it');
+            it('should rollback paying transaction if server rejects it');
+            it('should rollback moving to next due date if server rejects it');
+        });
     });
 });

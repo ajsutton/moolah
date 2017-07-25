@@ -39,7 +39,7 @@
 
         <div class="text-xs-right">
             <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>
-            <v-btn v-if="scheduled">Pay</v-btn>
+            <v-btn v-if="scheduled" @click.native.prevent="pay(transaction)">Pay</v-btn>
         </div>
     </div>
 </template>
@@ -147,6 +147,7 @@
             ...mapActions('transactions', {
                 updateTransaction: transactionActions.updateTransaction,
                 deleteTransaction: transactionActions.deleteTransaction,
+                pay: transactionActions.payTransaction,
             }),
         },
         watch: {
