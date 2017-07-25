@@ -27,3 +27,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .analysis {
+        height: 50vh;
+    }
+</style>
