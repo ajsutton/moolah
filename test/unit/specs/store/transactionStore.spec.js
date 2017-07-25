@@ -93,9 +93,11 @@ describe('transactionStore', function() {
 
         describe('addTransaction', function() {
             it('should keep transactions sorted by date when inserting at start', function() {
-                const state = addIdLookup({transactions: expandFields([
-                    {id: 2, amount: 10, date: '2017-07-02', balance: 60},
-                    {id: 1, amount: 50, date: '2017-07-01', balance: 50}]), priorBalance: 0});
+                const state = addIdLookup({
+                    transactions: expandFields([
+                        {id: 2, amount: 10, date: '2017-07-02', balance: 60},
+                        {id: 1, amount: 50, date: '2017-07-01', balance: 50}]), priorBalance: 0,
+                });
                 transactionStore.mutations[mutations.addTransaction](state, {id: 3, amount: 25, date: '2017-07-03'});
                 assert.deepEqual(state, addIdLookup({
                     transactions: expandFields([
@@ -220,7 +222,12 @@ describe('transactionStore', function() {
 
             it('should update balances using prior balance when the first transaction is removed', function() {
                 const state = addIdLookup({
-                    transactions: expandFields([{id: 3, amount: 10, balance: 50, date: '2017-07-03'}, {id: 2, amount: 30, balance: 40, date: '2017-07-02'}, {id: 1, amount: 10, balance: 10, date: '2017-07-01'}]),
+                    transactions: expandFields([{id: 3, amount: 10, balance: 50, date: '2017-07-03'}, {id: 2, amount: 30, balance: 40, date: '2017-07-02'}, {
+                        id: 1,
+                        amount: 10,
+                        balance: 10,
+                        date: '2017-07-01',
+                    }]),
                     priorBalance: 70,
                 });
                 transactionStore.mutations[mutations.removeTransaction](state, ensureAllFieldsPresent({id: 1, amount: 10, balance: 10, date: '2017-07-01'}));
@@ -433,7 +440,7 @@ describe('transactionStore', function() {
 
         describe('payTransaction', function() {
             it('should remove scheduled transaction if it is once off', async function() {
-                const scheduledTransaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13', recurPeriod: 'ONCE'};
+                const scheduledTransaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13', recurPeriod: 'ONCE', accountId: 'account1'};
                 client.deleteTransaction.withArgs(scheduledTransaction).resolves();
                 await testAction(
                     transactionStore,
@@ -441,7 +448,7 @@ describe('transactionStore', function() {
                     {
                         state: addIdLookup({transactions: [scheduledTransaction], priorBalance: 100}),
                         payload: scheduledTransaction,
-                        ignoreFailures: true,
+                        dispatch: sinon.spy(),
                     },
                     [
                         {type: mutations.removeTransaction, payload: scheduledTransaction},
@@ -449,7 +456,7 @@ describe('transactionStore', function() {
                 );
 
                 sinon.assert.calledWith(client.deleteTransaction, scheduledTransaction);
-                sinon.assert.calledWith(client.createTransaction, {amount: 10, payee: 'Payee1', date: '2016-07-13'});
+                sinon.assert.calledWith(client.createTransaction, {amount: 10, payee: 'Payee1', date: '2016-07-13', accountId: 'account1'});
             });
 
             [
@@ -459,12 +466,17 @@ describe('transactionStore', function() {
                 {description: 'repeating monthly', scheduledDate: '2016-10-13', recurPeriod: 'YEAR', recurEvery: 4, nextScheduledDate: '2020-10-13'},
             ].forEach(params => {
                 it(`should move date of scheduled transaction to next repeat when ${params.description}`, async function() {
-                    const scheduledDate = params.scheduledDate;
-                    const recurPeriod = params.recurPeriod;
-                    const recurEvery = params.recurEvery;
-                    const nextScheduledDate = params.nextScheduledDate;
-                    const scheduledTransaction = {id: 1, amount: 10, payee: 'Payee1', balance: 10, date: scheduledDate, recurPeriod, recurEvery};
-                    const modifiedTransaction = Object.assign({}, scheduledTransaction, {date: nextScheduledDate});
+                    const scheduledTransaction = {
+                        id: 1,
+                        amount: 10,
+                        payee: 'Payee1',
+                        balance: 10,
+                        date: params.scheduledDate,
+                        recurPeriod: params.recurPeriod,
+                        recurEvery: params.recurEvery,
+                        accountId: 'account1',
+                    };
+                    const modifiedTransaction = Object.assign({}, scheduledTransaction, {date: params.nextScheduledDate});
                     client.updateTransaction.withArgs(scheduledTransaction).resolves(modifiedTransaction);
                     client.createTransaction.resolves();
                     await testAction(
@@ -473,20 +485,69 @@ describe('transactionStore', function() {
                         {
                             state: addIdLookup({transactions: [scheduledTransaction], priorBalance: 0}),
                             payload: scheduledTransaction,
-                            ignoreFailures: true,
+                            dispatch: sinon.spy(),
                         },
                         [
-                            {type: mutations.updateTransaction, payload: {id: scheduledTransaction.id, patch: {date: nextScheduledDate}}},
+                            {type: mutations.updateTransaction, payload: {id: scheduledTransaction.id, patch: {date: params.nextScheduledDate}}},
                         ],
                     );
 
                     sinon.assert.calledWith(client.updateTransaction, modifiedTransaction);
-                    sinon.assert.calledWith(client.createTransaction, {amount: 10, payee: 'Payee1', date: scheduledDate});
+                    sinon.assert.calledWith(client.createTransaction, {amount: 10, payee: 'Payee1', date: params.scheduledDate, accountId: 'account1'});
                 });
             });
 
-            it('should update balance of account');
-            it('should update balance of both accounts when transaction is a transfer');
+            it('should update balance of account', async function() {
+                const scheduledTransaction = {id: 1, amount: 10, payee: 'Payee1', balance: 100, date: '2016-07-13', recurPeriod: 'ONCE', accountId: 'account1'};
+                client.deleteTransaction.withArgs(scheduledTransaction).resolves();
+                const dispatch = sinon.spy();
+                await testAction(
+                    transactionStore,
+                    actions.payTransaction,
+                    {
+                        state: addIdLookup({transactions: [scheduledTransaction], priorBalance: 100}),
+                        payload: scheduledTransaction,
+                        dispatch
+                    },
+                    [
+                        {type: mutations.removeTransaction, payload: scheduledTransaction},
+                    ],
+                );
+
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true})
+            });
+
+            it('should update balance of both accounts when transaction is a transfer', async function() {
+                const scheduledTransaction = {
+                    id: 1,
+                    amount: 10,
+                    payee: 'Payee1',
+                    balance: 100,
+                    date: '2016-07-13',
+                    recurPeriod: 'ONCE',
+                    accountId: 'account1',
+                    type: 'transfer',
+                    toAccountId: 'account2',
+                };
+                client.deleteTransaction.withArgs(scheduledTransaction).resolves();
+                const dispatch = sinon.spy();
+                await testAction(
+                    transactionStore,
+                    actions.payTransaction,
+                    {
+                        state: addIdLookup({transactions: [scheduledTransaction], priorBalance: 100}),
+                        payload: scheduledTransaction,
+                        dispatch
+                    },
+                    [
+                        {type: mutations.removeTransaction, payload: scheduledTransaction},
+                    ],
+                );
+
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true})
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account2', amount: -scheduledTransaction.amount}, {root: true})
+            });
+
             it('should rollback deleting one off transaction if server rejects it');
             it('should rollback paying transaction if server rejects it');
             it('should rollback moving to next due date if server rejects it');

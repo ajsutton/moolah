@@ -81,6 +81,10 @@ const dateFunction = period => {
     }
 };
 
+const adjustAccountBalance = (dispatch, accountId, amount) => {
+    dispatch('accounts/' + accountActions.adjustBalance, {accountId: accountId, amount: amount}, {root: true});
+};
+
 export default {
     namespaced: true,
     state: {
@@ -179,14 +183,14 @@ export default {
             try {
                 await client.updateTransaction(modifiedTransaction);
                 if (modifiedTransaction.type === 'transfer' && transaction.type !== 'transfer') {
-                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: modifiedTransaction.toAccountId, amount: -modifiedTransaction.amount}, {root: true});
+                    adjustAccountBalance(dispatch, modifiedTransaction.toAccountId, -modifiedTransaction.amount);
                 } else if (modifiedTransaction.type !== 'transfer' && transaction.type === 'transfer') {
-                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: transaction.toAccountId, amount: transaction.amount}, {root: true});
+                    adjustAccountBalance(dispatch, modifiedTransaction.toAccountId, transaction.amount);
                 } else if (transaction.type === 'transfer' && changes.patch.toAccountId !== undefined) {
-                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: transaction.toAccountId, amount: transaction.amount}, {root: true});
-                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: modifiedTransaction.toAccountId, amount: -modifiedTransaction.amount}, {root: true});
+                    adjustAccountBalance(dispatch, transaction.toAccountId, transaction.amount);
+                    adjustAccountBalance(dispatch, modifiedTransaction.toAccountId, -modifiedTransaction.amount);
                 } else if (transaction.type === 'transfer' && changes.patch.amount !== undefined) {
-                    dispatch('accounts/' + accountActions.adjustBalance, {accountId: transaction.toAccountId, amount: -(modifiedTransaction.amount - transaction.amount)}, {root: true});
+                    adjustAccountBalance(dispatch, transaction.toAccountId, -(modifiedTransaction.amount - transaction.amount));
                 }
             } catch (error) {
                 commit(mutations.updateTransaction, {id: transactionId, patch: transaction});
@@ -204,10 +208,14 @@ export default {
             }
         },
 
-        async [actions.payTransaction]({commit, state}, payload) {
+        async [actions.payTransaction]({commit, state, dispatch}, payload) {
             const transaction = findTransaction(state, payload.id);
             const appliedTransaction = without(transaction, 'recurEvery', 'recurPeriod', 'balance', 'id');
             await client.createTransaction(appliedTransaction);
+            adjustAccountBalance(dispatch, appliedTransaction.accountId, appliedTransaction.amount);
+            if (appliedTransaction.type === 'transfer') {
+                adjustAccountBalance(dispatch, appliedTransaction.toAccountId, -appliedTransaction.amount);
+            }
             if (transaction.recurPeriod === 'ONCE') {
                 commit(mutations.removeTransaction, transaction);
                 await client.deleteTransaction(transaction);
