@@ -564,10 +564,6 @@ describe('transactionStore', function() {
                 sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true})
                 sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account2', amount: -scheduledTransaction.amount}, {root: true})
             });
-
-            it('should rollback deleting one off transaction if server rejects it');
-            it('should rollback paying transaction if server rejects it');
-            it('should rollback moving to next due date if server rejects it');
         });
     });
 });

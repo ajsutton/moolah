@@ -73,11 +73,16 @@ export function ensureAllFieldsPresent(transaction) {
 
 const dateFunction = period => {
     switch (period) {
-        case 'DAY': return addDays;
-        case 'WEEK': return addWeeks;
-        case 'MONTH': return addMonths;
-        case 'YEAR': return addYears;
-        default: throw new Error(`Unknown period: ${period}`);
+        case 'DAY':
+            return addDays;
+        case 'WEEK':
+            return addWeeks;
+        case 'MONTH':
+            return addMonths;
+        case 'YEAR':
+            return addYears;
+        default:
+            throw new Error(`Unknown period: ${period}`);
     }
 };
 
@@ -211,20 +216,28 @@ export default {
         },
 
         async [actions.payTransaction]({commit, state, dispatch}, payload) {
-            const transaction = findTransaction(state, payload.id);
-            const appliedTransaction = without(transaction, 'recurEvery', 'recurPeriod', 'balance', 'id');
-            await client.createTransaction(appliedTransaction);
-            adjustAccountBalance(dispatch, appliedTransaction.accountId, appliedTransaction.amount);
-            if (appliedTransaction.type === 'transfer') {
-                adjustAccountBalance(dispatch, appliedTransaction.toAccountId, -appliedTransaction.amount);
-            }
-            if (transaction.recurPeriod === 'ONCE') {
-                commit(mutations.removeTransaction, transaction);
-                await client.deleteTransaction(transaction);
-            } else {
-                const nextDate = formatDate(dateFunction(transaction.recurPeriod)(transaction.date, transaction.recurEvery));
-                commit(mutations.updateTransaction, {id: transaction.id, patch: {date: nextDate}});
-                await client.updateTransaction(transaction);
+            try {
+                const asyncOperations = [];
+                const transaction = findTransaction(state, payload.id);
+                const appliedTransaction = without(transaction, 'recurEvery', 'recurPeriod', 'balance', 'id');
+                adjustAccountBalance(dispatch, appliedTransaction.accountId, appliedTransaction.amount);
+                if (appliedTransaction.type === 'transfer') {
+                    adjustAccountBalance(dispatch, appliedTransaction.toAccountId, -appliedTransaction.amount);
+                }
+                asyncOperations.push(client.createTransaction(appliedTransaction));
+                if (transaction.recurPeriod === 'ONCE') {
+                    commit(mutations.removeTransaction, transaction);
+                    asyncOperations.push(client.deleteTransaction(transaction));
+                } else {
+                    const nextDate = formatDate(dateFunction(transaction.recurPeriod)(transaction.date, transaction.recurEvery));
+                    commit(mutations.updateTransaction, {id: transaction.id, patch: {date: nextDate}});
+                    asyncOperations.push(client.updateTransaction(transaction));
+                }
+                await Promise.all(asyncOperations);
+            } catch (error) {
+                dispatch(actions.loadTransactions, {scheduled: true});
+                dispatch('accounts/' + accountActions.loadAccounts, null, {root: true});
+                throw error;
             }
         },
     },
