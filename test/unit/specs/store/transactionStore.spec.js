@@ -340,6 +340,23 @@ describe('transactionStore', function() {
                 );
             });
 
+            it('should not update balance of toAccount when updating a scheduled transfer', async function() {
+                const transaction = {id: 1, amount: -10, payee: 'Payee1', type: 'expense', balance: 100, date: '2016-07-13', recurPeriod: 'ONCE'};
+                const patch = {type: 'transfer', toAccountId: 'account-2'};
+                const modifiedTransaction = Object.assign({}, transaction, patch);
+                client.updateTransaction.withArgs(modifiedTransaction).resolves(modifiedTransaction);
+                const dispatch = sinon.spy();
+                await testAction(
+                    transactionStore,
+                    actions.updateTransaction,
+                    {state: addIdLookup({transactions: [transaction], priorBalance: 100}), dispatch, payload: {id: 1, patch}},
+                    [
+                        {type: mutations.updateTransaction, payload: {id: 1, patch}},
+                    ],
+                );
+                sinon.assert.callCount(dispatch, 0);
+            });
+
             [
                 {
                     name: 'becomes a transfer',
