@@ -1,3 +1,5 @@
+import {formatDate} from './apiFormats';
+
 function makeOptions(options = {}) {
     return Object.assign({}, {
         credentials: 'include',
@@ -71,6 +73,10 @@ export default {
 
     async updateCategory(category) {
         return json(`/api/categories/${encodeURIComponent(category.id)}/`, {method: 'PUT', body: JSON.stringify(category)});
+    },
+
+    async incomeAndExpenseAnalsyis(afterDate, monthEnd) {
+        return json(`/api/analysis/incomeAndExpense/?after=${encodeURIComponent(formatDate(afterDate))}&monthEnd=${encodeURIComponent(monthEnd)}`);
     },
 
     async userProfile() {

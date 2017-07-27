@@ -11,7 +11,8 @@
                 </div>
             </v-flex>
             <v-flex md6>
-                <div class="categories">
+                <div class="incomeAndExpense">
+                    <income-and-expense-table></income-and-expense-table>
                 </div>
             </v-flex>
         </v-layout>
@@ -20,10 +21,12 @@
 
 <script>
     import UpcomingTransactions from '../transactions/UpcomingTransactions.vue';
+    import IncomeAndExpenseTable from './IncomeAndExpenseTable.vue';
 
     export default {
         components: {
-            UpcomingTransactions
+            UpcomingTransactions,
+            IncomeAndExpenseTable,
         }
     }
 </script>
