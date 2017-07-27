@@ -12,15 +12,16 @@
         >
             <template slot="items" scope="props">
                 <td>{{ props.item.end }}</td>
-                <td class="text-xs-right">{{ props.item.income }}</td>
-                <td class="text-xs-right">{{ props.item.expense }}</td>
-                <td class="text-xs-right">{{ props.item.profit }}</td>
+                <td class="text-xs-right"><monetary-amount :value="props.item.income"></monetary-amount></td>
+                <td class="text-xs-right"><monetary-amount :value="props.item.expense"></monetary-amount></td>
+                <td class="text-xs-right"><monetary-amount :value="props.item.profit"></monetary-amount></td>
             </template>
         </v-data-table>
     </v-card>
 </template>
 
 <script>
+    import MonetaryAmount from '../util/MonetaryAmount.vue';
     import client from '../../api/client';
     import addMonths from 'date-fns/add_months';
 
@@ -59,6 +60,10 @@
         async created() {
             const response = await client.incomeAndExpenseAnalsyis(addMonths(new Date(), -24), new Date().getDay());
             this.breakdown = response.incomeAndExpense;
+        },
+
+        components: {
+            MonetaryAmount
         }
     };
 </script>
