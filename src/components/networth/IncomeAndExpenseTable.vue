@@ -7,6 +7,8 @@
         <v-data-table
                 v-bind:headers="headers"
                 :items="breakdown"
+                :pagination.sync="pagination"
+                :total-items="breakdown.length"
                 hide-actions
                 class="elevation-1"
         >
@@ -55,10 +57,14 @@
                     },
                 ],
                 breakdown: [],
+                pagination: {
+                    sortBy: 'end',
+                    descending: true,
+                },
             };
         },
         async created() {
-            const response = await client.incomeAndExpenseAnalsyis(addMonths(new Date(), -24), new Date().getDay());
+            const response = await client.incomeAndExpenseAnalsyis(addMonths(new Date(), -5), new Date().getDay());
             this.breakdown = response.incomeAndExpense;
         },
 
