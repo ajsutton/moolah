@@ -3,6 +3,7 @@ import format from 'date-fns/format';
 import {assert, config as chaiConfig} from 'chai';
 import {actions, mutations, ensureAllFieldsPresent} from '../../../../src/store/transactionStore';
 import {actions as accountActions} from '../../../../src/store/accountsStore';
+import {actions as stateActions} from '../../../../src/store/store';
 import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';
 import testAction from './testAction';
 
@@ -282,16 +283,22 @@ describe('transactionStore', function() {
 
             it('should add new transaction and notify server', async function() {
                 client.createTransaction.withArgs(initialTransactionProperties).resolves(serverTransaction);
+                const dispatch = sinon.spy();
                 await testAction(
                     transactionStore,
                     actions.addTransaction,
-                    {state: {transactions: [], transactionsById: {}}, rootState: {selectedAccountId: 'account-1'}},
+                    {
+                        state: {transactions: [], transactionsById: {}},
+                        rootState: {selectedAccountId: 'account-1'},
+                        dispatch,
+                    },
                     [
                         {type: mutations.addTransaction, payload: newTransaction},
                         {type: mutations.updateTransaction, payload: {id: 'new-transaction', patch: serverTransaction}},
                     ],
                 );
                 sinon.assert.calledWith(client.createTransaction, initialTransactionProperties);
+                sinon.assert.calledWith(dispatch, stateActions.selectTransaction, serverTransaction.id, {root: true});
             });
 
             it('should remove transaction again if create fails', async function() {

@@ -159,7 +159,7 @@ export default {
             commit(mutations.setTransactions, response);
         },
 
-        async [actions.addTransaction]({commit, rootState}, attributes = {}) {
+        async [actions.addTransaction]({commit, rootState, dispatch}, attributes = {}) {
             const initialProperties = Object.assign({
                 amount: 0,
                 date: formatDate(new Date()),
@@ -174,6 +174,7 @@ export default {
             try {
                 const serverTransaction = await client.createTransaction(initialProperties);
                 commit(mutations.updateTransaction, {id: transaction.id, patch: serverTransaction});
+                dispatch('SELECT_TRANSACTION', transaction.id, {root: true});
             } catch (error) {
                 commit(mutations.removeTransaction, transaction);
                 throw error;
