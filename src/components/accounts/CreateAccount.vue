@@ -85,6 +85,7 @@
                             await this[actions.createAccount]({name: this.name, type: this.type, balance: Math.round(this.balance * 100)});
                         }
                         this.dialog = false;
+                        this.syncFromAccount(undefined);
                     } catch (error) {
                         this.dialog = true;
                         this.errorMessage = error.message || error;
