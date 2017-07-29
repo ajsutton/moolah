@@ -10,7 +10,7 @@
                 return this.value >= 0 ? 'green--text' : 'red--text';
             },
             amount() {
-                return '$' + (this.value / 100).toFixed(2);
+                return '$' + (this.value / 100).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
         },
     }
