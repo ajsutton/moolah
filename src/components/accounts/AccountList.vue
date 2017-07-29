@@ -4,7 +4,7 @@
             <account-list-item :account="account" v-for="account in accounts" :key="account.id">
             </account-list-item>
         <v-divider></v-divider>
-        <v-list-tile avatar ripple to="/">
+        <v-list-tile ripple to="/">
             <v-list-tile-action>
                 <v-icon dark>trending_up</v-icon>
             </v-list-tile-action>

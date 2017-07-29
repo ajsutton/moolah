@@ -1,5 +1,5 @@
 <template>
-    <v-list-tile avatar ripple :to="accountLink">
+    <v-list-tile ripple :to="accountLink">
         <v-list-tile-action>
             <v-icon dark>{{ icon }}</v-icon>
         </v-list-tile-action>
