@@ -11,6 +11,7 @@
                 :rows-per-page-items="[6, 12, 18, 24]"
                 rows-per-page-text="Months per page"
                 class="elevation-1"
+                :loading="loading"
         >
             <template slot="items" scope="props">
                 <td>
@@ -79,6 +80,7 @@
                     descending: true,
                     rowsPerPage: 12,
                 },
+                loading: true,
             };
         },
         async created() {
@@ -89,6 +91,7 @@
                 row.cumulativeSavings = cumulativeSavings;
                 return row;
             });
+            this.loading = false;
         },
 
         components: {
