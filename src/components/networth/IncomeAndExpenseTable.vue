@@ -64,7 +64,7 @@
             };
         },
         async created() {
-            const response = await client.incomeAndExpenseAnalsyis(addMonths(new Date(), -5), new Date().getDay());
+            const response = await client.incomeAndExpenseAnalsyis(addMonths(new Date(), -5), new Date().getDate());
             this.breakdown = response.incomeAndExpense;
         },
 
