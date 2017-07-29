@@ -374,42 +374,42 @@ describe('transactionStore', function() {
                 {
                     name: 'stops being a transfer',
                     transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
-                    patch: {type: 'expense'},
+                    patch: {type: 'expense', toAccountId: null},
                     adjustBalance: [{accountId: 'account-2', amount: -10}],
                 },
                 {
                     name: 'stops being a transfer and changes amount',
-                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
-                    patch: {type: 'income', amount: 10},
-                    adjustBalance: [{accountId: 'account-2', amount: -10}],
+                    transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    patch: {type: 'income', toAccountId: null, amount: 20},
+                    adjustBalance: [{accountId: 'account-1', amount: 30}, {accountId: 'account-2', amount: -10}],
                 },
                 {
                     name: 'changes amount',
-                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
                     patch: {amount: -30},
-                    adjustBalance: [{accountId: 'account-2', amount: 20}],
+                    adjustBalance: [{accountId: 'account-1', amount: -20}, {accountId: 'account-2', amount: 20}],
                 },
                 {
                     name: 'changes amount when not a transfer',
-                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'expense', balance: 100, date: '2016-07-13'},
+                    transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'expense', balance: 100, date: '2016-07-13'},
                     patch: {amount: -30},
-                    adjustBalance: [],
+                    adjustBalance: [{accountId: 'account-1', amount: -20}],
                 },
                 {
                     name: 'changes destination account',
-                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
                     patch: {toAccountId: 'account-3'},
                     adjustBalance: [{accountId: 'account-2', amount: -10}, {accountId: 'account-3', amount: 10}],
                 },
                 {
                     name: 'changes destination account and amount',
-                    transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
+                    transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
                     patch: {toAccountId: 'account-3', amount: -30},
-                    adjustBalance: [{accountId: 'account-2', amount: -10}, {accountId: 'account-3', amount: 30}],
+                    adjustBalance: [{accountId: 'account-1', amount: -20}, {accountId: 'account-2', amount: -10}, {accountId: 'account-3', amount: 30}],
                 },
             ].forEach(scenario => {
                 it(`should update balance of other account when a transaction ${scenario.name}`, async function() {
-                    const transaction = scenario.transaction;
+                    const transaction = ensureAllFieldsPresent(scenario.transaction);
                     const patch = scenario.patch;
                     const modifiedTransaction = Object.assign({}, transaction, patch);
                     client.updateTransaction.withArgs(modifiedTransaction).resolves(modifiedTransaction);

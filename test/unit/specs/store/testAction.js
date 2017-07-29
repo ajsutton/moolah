@@ -1,5 +1,6 @@
 const assert = require('chai').assert;
 const AssertionError = require('assertion-error');
+import sinon from 'sinon';
 
 export default async (module, action, options = {state: {}}, expectedMutations = []) => {
     let mutationsCalled = [];
@@ -23,7 +24,7 @@ export default async (module, action, options = {state: {}}, expectedMutations =
 
     // call the action with mocked store and arguments
     try {
-        await module.actions[action]({commit, state: state, rootState: rootState, dispatch: options.dispatch}, options.payload);
+        await module.actions[action]({commit, state: state, rootState: rootState, dispatch: options.dispatch || sinon.spy()}, options.payload);
     } catch (error) {
         if (!options.ignoreFailures || (error instanceof AssertionError)) {
             throw error;

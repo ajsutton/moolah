@@ -1,6 +1,5 @@
 import client from '../api/client';
 import updateBalance from './updateBalance';
-import {actions as accountActions} from './accountsStore';
 import search from 'binary-search';
 import Vue from 'vue';
 import without from '../util/without';
@@ -9,6 +8,7 @@ import addDays from 'date-fns/add_days';
 import addWeeks from 'date-fns/add_weeks';
 import addMonths from 'date-fns/add_months';
 import addYears from 'date-fns/add_years';
+import accountBalanceAdjuster from './accountBalanceAdjuster';
 
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
@@ -84,10 +84,6 @@ const dateFunction = period => {
         default:
             throw new Error(`Unknown period: ${period}`);
     }
-};
-
-const adjustAccountBalance = (dispatch, accountId, amount) => {
-    dispatch('accounts/' + accountActions.adjustBalance, {accountId: accountId, amount: amount}, {root: true});
 };
 
 export default {
@@ -171,12 +167,14 @@ export default {
             }, attributes);
             const transaction = Object.assign({id: 'new-transaction'}, initialProperties);
             commit(mutations.addTransaction, transaction);
+            accountBalanceAdjuster(dispatch, null, transaction);
             try {
                 const serverTransaction = await client.createTransaction(initialProperties);
                 commit(mutations.updateTransaction, {id: transaction.id, patch: serverTransaction});
                 dispatch('SELECT_TRANSACTION', transaction.id, {root: true});
             } catch (error) {
                 commit(mutations.removeTransaction, transaction);
+                accountBalanceAdjuster(dispatch, transaction, null);
                 throw error;
             }
         },
@@ -186,32 +184,24 @@ export default {
             const transaction = Object.assign({}, findTransaction(state, transactionId));
             commit(mutations.updateTransaction, changes);
             const modifiedTransaction = findTransaction(state, transactionId);
+            accountBalanceAdjuster(dispatch, transaction, modifiedTransaction);
             try {
                 await client.updateTransaction(modifiedTransaction);
-                if (transaction.recurPeriod === undefined) {
-                    if (modifiedTransaction.type === 'transfer' && transaction.type !== 'transfer') {
-                        adjustAccountBalance(dispatch, modifiedTransaction.toAccountId, -modifiedTransaction.amount);
-                    } else if (modifiedTransaction.type !== 'transfer' && transaction.type === 'transfer') {
-                        adjustAccountBalance(dispatch, modifiedTransaction.toAccountId, transaction.amount);
-                    } else if (transaction.type === 'transfer' && changes.patch.toAccountId !== undefined) {
-                        adjustAccountBalance(dispatch, transaction.toAccountId, transaction.amount);
-                        adjustAccountBalance(dispatch, modifiedTransaction.toAccountId, -modifiedTransaction.amount);
-                    } else if (transaction.type === 'transfer' && changes.patch.amount !== undefined) {
-                        adjustAccountBalance(dispatch, transaction.toAccountId, -(modifiedTransaction.amount - transaction.amount));
-                    }
-                }
             } catch (error) {
                 commit(mutations.updateTransaction, {id: transactionId, patch: transaction});
+                accountBalanceAdjuster(dispatch, modifiedTransaction, transaction);
                 throw error;
             }
         },
 
-        async [actions.deleteTransaction]({commit}, transaction) {
+        async [actions.deleteTransaction]({commit, dispatch}, transaction) {
             commit(mutations.removeTransaction, transaction);
+            accountBalanceAdjuster(dispatch, transaction, null);
             try {
                 await client.deleteTransaction(transaction);
             } catch (error) {
                 commit(mutations.addTransaction, transaction);
+                accountBalanceAdjuster(dispatch, null, transaction);
                 throw error;
             }
         },
@@ -221,10 +211,7 @@ export default {
                 const asyncOperations = [];
                 const transaction = findTransaction(state, payload.id);
                 const appliedTransaction = without(transaction, 'recurEvery', 'recurPeriod', 'balance', 'id');
-                adjustAccountBalance(dispatch, appliedTransaction.accountId, appliedTransaction.amount);
-                if (appliedTransaction.type === 'transfer') {
-                    adjustAccountBalance(dispatch, appliedTransaction.toAccountId, -appliedTransaction.amount);
-                }
+                accountBalanceAdjuster(dispatch, null, appliedTransaction);
                 asyncOperations.push(client.createTransaction(appliedTransaction));
                 if (transaction.recurPeriod === 'ONCE') {
                     commit(mutations.removeTransaction, transaction);
@@ -237,7 +224,7 @@ export default {
                 await Promise.all(asyncOperations);
             } catch (error) {
                 dispatch(actions.loadTransactions, {scheduled: true});
-                dispatch('accounts/' + accountActions.loadAccounts, null, {root: true});
+                accountBalanceAdjuster(dispatch, appliedTransaction, null);
                 throw error;
             }
         },
