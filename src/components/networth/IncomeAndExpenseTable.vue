@@ -8,7 +8,6 @@
                 v-bind:headers="headers"
                 :items="breakdown"
                 :pagination.sync="pagination"
-                :total-items="breakdown.length"
                 hide-actions
                 class="elevation-1"
         >
@@ -60,6 +59,7 @@
                 pagination: {
                     sortBy: 'end',
                     descending: true,
+                    rowsPerPage: 100,
                 },
             };
         },
