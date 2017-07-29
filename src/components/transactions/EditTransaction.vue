@@ -37,6 +37,8 @@
 
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')" multiLine></v-text-field>
 
+        <account-selector v-if="scheduled" label="Account" v-bind:value.sync="accountId"></account-selector>
+
         <div class="text-xs-right">
             <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>
             <v-btn v-if="scheduled" @click.native.prevent="pay(transaction)">Pay</v-btn>
@@ -86,8 +88,16 @@
             ...mapState('accounts', {
                 accounts: state => state.accounts,
             }),
-            accountId() {
-                return this.transaction ? this.transaction.accountId : undefined;
+            accountId: {
+                get() {
+                    return this.transaction ? this.transaction.accountId : undefined;
+                },
+                set(value) {
+                    this.updateTransaction({
+                        id: this.transaction.id,
+                        patch: {accountId: value},
+                    });
+                }
             },
             validTransactionTypes() {
                 const types = [{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}];
