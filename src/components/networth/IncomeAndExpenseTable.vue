@@ -44,7 +44,7 @@
             return {
                 headers: [
                     {
-                        text: 'Month End',
+                        text: 'Month',
                         align: 'left',
                         sortable: true,
                         value: 'end'
@@ -104,32 +104,26 @@
                 const endDate = parseDate(value.end);
                 const startMonth = getMonth(startDate);
                 const endMonth = getMonth(endDate);
-                return startMonth === endMonth ? format(startDate, 'MMM') : format(startDate, 'MMM') + '/' + format(endDate, 'MMM');
+                const includeYear = differenceInCalendarMonths(new Date(), endDate) + 1 > 12;
+                const monthLabel = startMonth === endMonth ? format(startDate, 'MMM') : format(startDate, 'MMM') + '/' + format(endDate, 'MMM');
+                const yearLabel = includeYear ? ' ' + format(endDate, 'YYYY') : '';
+                return monthLabel + yearLabel;
             },
             monthsAgo(value) {
-
+                const plural = value => value === 1 ? '' : 's';
                 const startDate = parseDate(value.start);
                 const endDate = parseDate(value.end);
                 const monthsAgo = differenceInCalendarMonths(new Date(), endDate) + 1;
-                return monthsAgo === 1 ? 'Last month' : monthsAgo + ' months ago';
+                if (monthsAgo === 1) {
+                    return 'Last\xa0month';
+                } else if (monthsAgo > 12) {
+                    const yearsAgo = Math.floor(monthsAgo / 12);
+                    const monthsAgoRemainer = monthsAgo % 12;
+                    return monthsAgoRemainer === 0 ? `${yearsAgo}\xa0year${plural(yearsAgo)}\xa0ago` : `${yearsAgo}\xa0year${plural(yearsAgo)}, ${monthsAgoRemainer}\xa0month${plural(monthsAgoRemainer)}\xa0ago`;
+                } else {
+                    return `${monthsAgo}\xa0months\xa0ago`;
+                }
             },
-            monthEnd(value) {
-                const startDate = parseDate(value.start);
-                const endDate = parseDate(value.end);
-                const startMonth = getMonth(startDate);
-                const endMonth = getMonth(endDate);
-                const monthName = startMonth === endMonth ? format(startDate, 'MMM') : format(startDate, 'MMM') + '/' + format(endDate, 'MMM');
-                const monthsAgo = differenceInCalendarMonths(new Date(), endDate) + 1;
-                const monthsAgoLabel = monthsAgo === 1 ? 'Last month' : monthsAgo + ' months ago';
-                return `${monthName} (${monthsAgoLabel})`;
-            }
         }
     };
 </script>
-
-<style scoped>
-    .month-name {
-        float: right;
-        color: #9e9e9e;
-    }
-</style>
