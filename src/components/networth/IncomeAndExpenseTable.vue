@@ -16,6 +16,7 @@
                 <td class="text-xs-right"><monetary-amount :value="props.item.income"></monetary-amount></td>
                 <td class="text-xs-right"><monetary-amount :value="props.item.expense"></monetary-amount></td>
                 <td class="text-xs-right"><monetary-amount :value="props.item.profit"></monetary-amount></td>
+                <td class="text-xs-right"><monetary-amount :value="props.item.cumulativeSavings"></monetary-amount></td>
             </template>
         </v-data-table>
     </v-card>
@@ -54,18 +55,29 @@
                         sortable: true,
                         value: 'profit',
                     },
+                    {
+                        text: 'Total Savings',
+                        align: 'right',
+                        sortable: true,
+                        value: 'cumulativeSavings',
+                    },
                 ],
                 breakdown: [],
                 pagination: {
                     sortBy: 'end',
                     descending: true,
-                    rowsPerPage: 100,
+                    rowsPerPage: -1,
                 },
             };
         },
         async created() {
-            const response = await client.incomeAndExpenseAnalsyis(addMonths(new Date(), -5), new Date().getDate());
-            this.breakdown = response.incomeAndExpense;
+            const response = await client.incomeAndExpenseAnalsyis(addMonths(new Date(), -12), new Date().getDate());
+            let cumulativeSavings = 0;
+            this.breakdown = response.incomeAndExpense.reverse().map(row => {
+                cumulativeSavings += row.profit;
+                row.cumulativeSavings = cumulativeSavings;
+                return row;
+            });
         },
 
         components: {
