@@ -1,9 +1,5 @@
 <template>
     <v-layout column>
-        <div class="analysis">
-            <h2>Analysis</h2>
-            <p>Let's pretend there's some really clever analysis here.</p>
-        </div>
         <v-layout row>
             <v-flex md6>
                 <div class="upcoming">
@@ -30,9 +26,3 @@
         }
     }
 </script>
-
-<style scoped>
-    .analysis {
-        height: 50vh;
-    }
-</style>
