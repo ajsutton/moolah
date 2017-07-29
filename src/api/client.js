@@ -75,8 +75,9 @@ export default {
         return json(`/api/categories/${encodeURIComponent(category.id)}/`, {method: 'PUT', body: JSON.stringify(category)});
     },
 
-    async incomeAndExpenseAnalsyis(afterDate, monthEnd) {
-        return json(`/api/analysis/incomeAndExpense/?after=${encodeURIComponent(formatDate(afterDate))}&monthEnd=${encodeURIComponent(monthEnd)}`);
+    async incomeAndExpenseAnalsyis(monthEnd, afterDate) {
+        const afterParam = afterDate ? `$after=${encodeURIComponent(formatDate(afterDate))}` : '';
+        return json(`/api/analysis/incomeAndExpense/?monthEnd=${encodeURIComponent(monthEnd)}${afterParam}`);
     },
 
     async userProfile() {
