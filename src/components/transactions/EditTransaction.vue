@@ -1,12 +1,7 @@
 <template>
     <div class="pl-2 pr-2">
-        <v-select
-                label="Type"
-                v-if="!isOpeningBalance"
-                v-model="type"
-                :items="validTransactionTypes"
-        ></v-select>
-        <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
+        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-if="!isOpeningBalance" ref="payee"></v-text-field>
+        <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')"></v-text-field>
 
         <v-menu
                 lazy
@@ -28,10 +23,15 @@
             </v-date-picker>
         </v-menu>
 
-        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-if="!isOpeningBalance"></v-text-field>
-        <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')"></v-text-field>
-
         <category-selector v-model="category"></category-selector>
+
+        <v-select
+                label="Type"
+                v-if="!isOpeningBalance"
+                v-model="type"
+                :items="validTransactionTypes"
+        ></v-select>
+        <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
@@ -163,7 +163,11 @@
         watch: {
             transactionId() {
                 Object.keys(this.raw).forEach(key => this.raw[key] = undefined);
+                this.$refs.payee.focus();
             },
+        },
+        mounted() {
+            this.$refs.payee.focus();
         },
         components: {
             AccountSelector,
