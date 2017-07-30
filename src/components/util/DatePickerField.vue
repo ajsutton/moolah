@@ -15,6 +15,8 @@
                 :value="value"
                 @input="onInput"
                 readonly
+                v-on:keyup.up="incrementDate"
+                v-on:keyup.down="decrementDate"
         ></v-text-field>
         <v-date-picker
                 :value="value"
@@ -25,6 +27,9 @@
 </template>
 
 <script>
+    import addDays from 'date-fns/add_days';
+    import {formatDate} from '../../api/apiFormats';
+
     export default {
         props: ['value'],
         data() {
@@ -36,6 +41,14 @@
         methods: {
             onInput(value) {
                 this.$emit('input', value);
+            },
+
+            incrementDate() {
+                this.$emit('input', formatDate(addDays(this.value, 1)));
+            },
+
+            decrementDate() {
+                this.$emit('input', formatDate(addDays(this.value, -1)));
             },
         },
     };
