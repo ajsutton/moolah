@@ -3,25 +3,7 @@
         <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-if="!isOpeningBalance" ref="payee"></v-text-field>
         <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')"></v-text-field>
 
-        <v-menu
-                lazy
-                :close-on-content-click="true"
-                v-model="dateMenu"
-                offset-y
-                full-width
-                :nudge-right="40"
-                max-width="290px"
-                transition="scale-transition"
-        >
-            <v-text-field
-                    slot="activator"
-                    label="Date"
-                    v-model="date"
-                    readonly
-            ></v-text-field>
-            <v-date-picker v-model="date" no-title scrollable actions>
-            </v-date-picker>
-        </v-menu>
+        <date-picker-field v-model="date"></date-picker-field>
 
         <category-selector v-model="category"></category-selector>
 
@@ -50,9 +32,10 @@
     import {actions as transactionActions} from '../../store/transactionStore';
     import {rules, isValid} from '../validation';
     import AccountSelector from '../accounts/AccountSelector.vue';
-    import createTypeChangePatch from './changeType';
     import CategorySelector from '../categories/CategorySelector.vue';
     import Recurrence from './RecurranceControls.vue';
+    import DatePickerField from '../util/DatePickerField.vue';
+    import createTypeChangePatch from './changeType';
     import {makeModelProperty, onBlur} from './modelProperty';
 
     function typeMultiplier(transaction) {
@@ -172,6 +155,7 @@
         components: {
             AccountSelector,
             CategorySelector,
+            DatePickerField,
             Recurrence,
         },
     };
