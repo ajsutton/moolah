@@ -29,7 +29,7 @@ const findTransaction = (state, transactionId) => {
 };
 
 const findTransactionIndex = (state, transaction) => {
-    let insertIndex = search(state.transactions, transaction, transactionComparator);
+    let insertIndex = search(state.transactions, transaction, reverseScheduledTransactionComparator);
     if (insertIndex < 0) {
         throw new Error(`Unknown transaction ${transaction.id}`);
     }
@@ -50,8 +50,13 @@ const transactionComparator = (transaction1, transaction2) => {
     }
 };
 
+const reverseScheduledTransactionComparator = (transaction1, transaction2) => {
+    const naturalOrder = transactionComparator(transaction1, transaction2);
+    return transaction1.recurPeriod || transaction2.recurPeriod ? -naturalOrder : naturalOrder;
+};
+
 const findInsertIndex = (state, transaction) => {
-    let insertIndex = search(state.transactions, transaction, transactionComparator);
+    let insertIndex = search(state.transactions, transaction, reverseScheduledTransactionComparator);
     if (insertIndex < 0) {
         insertIndex = -insertIndex - 1;
     }
@@ -128,12 +133,12 @@ export default {
                 const index = findTransactionIndex(state, transaction);
                 let updateBalanceFrom = -1;
                 Vue.delete(state.transactionsById, transaction.id);
-                if (payload.patch.date !== undefined) {
+                if (payload.patch.date !== undefined || payload.patch.id !== undefined) {
                     state.transactions.splice(index, 1);
                 }
                 Object.assign(transaction, payload.patch);
                 Vue.set(state.transactionsById, transaction.id, transaction);
-                if (payload.patch.date !== undefined) {
+                if (payload.patch.date !== undefined || payload.patch.id !== undefined) {
                     let insertIndex = findInsertIndex(state, transaction);
                     state.transactions.splice(insertIndex, 0, transaction);
                     updateBalanceFrom = Math.max(index, insertIndex);
@@ -152,6 +157,9 @@ export default {
         async [actions.loadTransactions]({commit}, searchOptions) {
             commit(mutations.setTransactions, {transactions: [], priorBalance: 0});
             const response = await client.transactions(searchOptions);
+            if (searchOptions.scheduled) {
+                response.transactions = response.transactions.reverse();
+            }
             commit(mutations.setTransactions, response);
         },
 
@@ -171,7 +179,7 @@ export default {
             try {
                 const serverTransaction = await client.createTransaction(initialProperties);
                 commit(mutations.updateTransaction, {id: transaction.id, patch: serverTransaction});
-                dispatch('SELECT_TRANSACTION', transaction.id, {root: true});
+                dispatch('SELECT_TRANSACTION', serverTransaction.id, {root: true});
             } catch (error) {
                 commit(mutations.removeTransaction, transaction);
                 accountBalanceAdjuster(dispatch, transaction, null);
