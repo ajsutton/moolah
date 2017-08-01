@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card :height="height" class="upcoming-transactions">
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">Upcoming Transactions</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -29,6 +29,11 @@
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
     export default {
+        props: {
+            height: {
+                'default': '',
+            }
+        },
         data() {
             return {};
         },
@@ -68,3 +73,9 @@
         }
     };
 </script>
+
+<style lang="scss">
+    .upcoming-transactions {
+        overflow-y: auto;
+    }
+</style>

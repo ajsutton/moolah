@@ -1,5 +1,5 @@
 <template>
-    <v-card class="income-expense-table">
+    <v-card class="income-expense-table" height="">
         <v-card-title class="white">Monthly Income and Expense </v-card-title>
         <v-data-table
                 v-bind:headers="headers"
@@ -138,8 +138,10 @@
     };
 </script>
 
-<style>
-    .income-expense-table .datatable__actions__select {
-        display: none;
+<style lang="scss">
+    .income-expense-table {
+        .datatable__actions__select {
+            display: none;
+        }
     }
 </style>

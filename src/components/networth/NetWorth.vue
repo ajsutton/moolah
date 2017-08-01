@@ -1,17 +1,11 @@
 <template>
-    <v-layout column>
-        <v-layout row-md column>
-            <v-flex md6>
-                <div class="upcoming mb-4">
-                    <upcoming-transactions></upcoming-transactions>
-                </div>
-            </v-flex>
-            <v-flex md6>
-                <div class="incomeAndExpense">
-                    <income-and-expense-table></income-and-expense-table>
-                </div>
-            </v-flex>
-        </v-layout>
+    <v-layout row-md column class="analysis">
+        <v-flex md6>
+            <upcoming-transactions height="100%"></upcoming-transactions>
+        </v-flex>
+        <v-flex md6>
+            <income-and-expense-table></income-and-expense-table>
+        </v-flex>
     </v-layout>
 </template>
 
@@ -26,3 +20,10 @@
         }
     }
 </script>
+
+<style lang="scss">
+    .analysis {
+        max-height: calc(100vh - 64px - 32px);
+        min-height: 741px;
+    }
+</style>
