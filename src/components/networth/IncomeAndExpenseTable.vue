@@ -1,18 +1,25 @@
 <template>
-    <v-card>
-        <v-toolbar card class="white" prominent>
-            <v-toolbar-title class="body-2 grey--text">Monthly Income and Expense</v-toolbar-title>
-        </v-toolbar>
-        <v-divider></v-divider>
+    <v-card class="income-expense-table">
+        <v-card-title class="white">Monthly Income and Expense </v-card-title>
         <v-data-table
                 v-bind:headers="headers"
                 :items="breakdown"
                 :pagination.sync="pagination"
                 :rows-per-page-items="[6, 12, 18, 24]"
                 rows-per-page-text="Months per page"
-                class="elevation-1"
                 :loading="loading"
         >
+            <template slot="headers" scope="props">
+                <tr>
+                    <th v-for="header in props.headers" :key="header.text"
+                        :class="['column sortable', header.classes, pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                        @click="changeSort(header.value)"
+                    >
+                        <v-icon>arrow_upward</v-icon>
+                        {{ header.text }}
+                    </th>
+                </tr>
+            </template>
             <template slot="items" scope="props">
                 <td>
                     <v-layout row-lg column>
@@ -21,10 +28,10 @@
                         <div class="grey--text">{{ props.item | monthName }}</div>
                     </v-layout>
                 </td>
-                <td class="text-xs-right"><monetary-amount :value="props.item.income"></monetary-amount></td>
-                <td class="text-xs-right"><monetary-amount :value="props.item.expense"></monetary-amount></td>
+                <td class="text-xs-right hidden-md-and-down"><monetary-amount :value="props.item.income"></monetary-amount></td>
+                <td class="text-xs-right hidden-md-and-down"><monetary-amount :value="props.item.expense"></monetary-amount></td>
                 <td class="text-xs-right"><monetary-amount :value="props.item.profit"></monetary-amount></td>
-                <td class="text-xs-right"><monetary-amount :value="props.item.cumulativeSavings"></monetary-amount></td>
+                <td class="text-xs-right hidden-sm-and-down"><monetary-amount :value="props.item.cumulativeSavings"></monetary-amount></td>
             </template>
         </v-data-table>
     </v-card>
@@ -47,19 +54,21 @@
                         text: 'Month',
                         align: 'left',
                         sortable: true,
-                        value: 'end'
+                        value: 'end',
                     },
                     {
                         text: 'Income',
                         align: 'right',
                         sortable: true,
                         value: 'income',
+                        classes: 'hidden-md-and-down',
                     },
                     {
                         text: 'Expense',
                         align: 'right',
                         sortable: true,
                         value: 'expense',
+                        classes: 'hidden-md-and-down',
                     },
                     {
                         text: 'Savings',
@@ -72,6 +81,7 @@
                         align: 'right',
                         sortable: true,
                         value: 'cumulativeSavings',
+                        classes: 'hidden-sm-and-down',
                     },
                 ],
                 breakdown: [],
@@ -127,3 +137,9 @@
         }
     };
 </script>
+
+<style>
+    .income-expense-table .datatable__actions__select {
+        display: none;
+    }
+</style>
