@@ -1,8 +1,8 @@
 <template>
     <v-layout column>
-        <v-layout row>
+        <v-layout row-md column>
             <v-flex md6>
-                <div class="upcoming">
+                <div class="upcoming mb-4">
                     <upcoming-transactions></upcoming-transactions>
                 </div>
             </v-flex>
