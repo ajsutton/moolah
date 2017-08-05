@@ -1,24 +1,33 @@
 <template>
-    <v-layout row-md column class="analysis">
-        <v-flex md6>
-            <upcoming-transactions height="100%"></upcoming-transactions>
+    <v-layout column class="analysis">
+        <v-flex xs12>
+            <net-worth-graph></net-worth-graph>
         </v-flex>
-        <v-flex md6>
-            <income-and-expense-table></income-and-expense-table>
+        <v-flex xs12>
+            <v-layout row-md column>
+                <v-flex md6>
+                    <upcoming-transactions height="100%"></upcoming-transactions>
+                </v-flex>
+                <v-flex md6>
+                    <income-and-expense-table></income-and-expense-table>
+                </v-flex>
+            </v-layout>
         </v-flex>
     </v-layout>
 </template>
 
 <script>
+    import NetWorthGraph from './NetWorthGraph.vue';
     import UpcomingTransactions from '../transactions/UpcomingTransactions.vue';
     import IncomeAndExpenseTable from './IncomeAndExpenseTable.vue';
 
     export default {
         components: {
+            NetWorthGraph,
             UpcomingTransactions,
             IncomeAndExpenseTable,
-        }
-    }
+        },
+    };
 </script>
 
 <style lang="scss">

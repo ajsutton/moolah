@@ -3,6 +3,8 @@
 </template>
 
 <script>
+    import formatMoney from './formatMoney';
+
     export default {
         props: ['value'],
         computed: {
@@ -10,7 +12,7 @@
                 return this.value >= 0 ? 'green--text' : 'red--text';
             },
             amount() {
-                return '$' + (this.value / 100).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                return formatMoney(this.value);
             }
         },
     }

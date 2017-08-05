@@ -76,8 +76,13 @@ export default {
     },
 
     async incomeAndExpenseAnalsyis(monthEnd, afterDate) {
-        const afterParam = afterDate ? `$after=${encodeURIComponent(formatDate(afterDate))}` : '';
+        const afterParam = afterDate ? `&after=${encodeURIComponent(formatDate(afterDate))}` : '';
         return json(`/api/analysis/incomeAndExpense/?monthEnd=${encodeURIComponent(monthEnd)}${afterParam}`);
+    },
+
+    async dailyBalances(afterDate) {
+        const afterParam = afterDate ? `?after=${encodeURIComponent(formatDate(afterDate))}` : '';
+        return json(`/api/analysis/dailyBalances/${afterParam}`);
     },
 
     async userProfile() {
