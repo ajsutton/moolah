@@ -10,7 +10,7 @@
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "unit-watch": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js",
-    "test": "npm run unit"
+    "test": "yarn run unit"
   },
   "dependencies": {
     "babili-webpack-plugin": "^0.1.2",
