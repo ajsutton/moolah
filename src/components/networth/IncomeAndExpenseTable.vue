@@ -1,6 +1,8 @@
 <template>
     <v-card class="income-expense-table" height="">
-        <v-card-title class="white">Monthly Income and Expense </v-card-title>
+        <v-toolbar card class="white" prominent>
+            <v-toolbar-title class="body-2 grey--text">Monthly Income and Expense</v-toolbar-title>
+        </v-toolbar>
         <v-data-table
                 v-bind:headers="headers"
                 :items="breakdown"

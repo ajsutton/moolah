@@ -1,6 +1,6 @@
 <template>
     <v-layout column class="analysis">
-        <v-flex xs12>
+        <v-flex xs12 class="mb-4">
             <net-worth-graph></net-worth-graph>
         </v-flex>
         <v-flex xs12>

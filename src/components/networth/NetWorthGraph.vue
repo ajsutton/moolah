@@ -1,78 +1,141 @@
 <template>
-    <div ref="chart">abcc</div>
+    <v-card>
+        <v-toolbar card class="white" prominent>
+            <v-toolbar-title class="body-2 grey--text">Net Worth</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+                <v-select label="History" :items="items" v-model="previousMonths"></v-select>
+            </v-toolbar-items>
+        </v-toolbar>
+        <div ref="chart" class="chart"></div>
+    </v-card>
 </template>
 
 <script>
     import c3 from 'c3';
     import client from '../../api/client';
     import formatMoney from '../util/formatMoney';
+    import addMonths from 'date-fns/add_months';
+    import {formatDate} from '../../api/apiFormats';
 
     export default {
+        data() {
+            return {
+                dailyBalances: [],
+                items: [
+                    {text: '1 Month', value: 1},
+                    {text: '3 Months', value: 3},
+                    {text: '6 Months', value: 6},
+                    {text: '9 Months', value: 9},
+                    {text: '1 Year', value: 12},
+                    {text: '2 Years', value: 24},
+                    {text: '3 Years', value: 36},
+                    {text: '4 Years', value: 48},
+                    {text: '5 Years', value: 60},
+                    {text: 'All', value: null},
+                ],
+                previousMonths: 6,
+            };
+        },
+        computed: {
+            graphData() {
+                return {
+                    type: 'step',
+                    json: this.dailyBalances,
+                    keys: {
+                        x: 'date',
+                        value: ['balance'],
+                    },
+                    colors: {
+                        'balance': 'green',
+                    },
+                };
+            },
+            afterDate() {
+                return this.previousMonths !== null ? formatDate(addMonths(new Date(), -this.previousMonths)) : undefined;
+            },
+        },
+        watch: {
+            previousMonths() {
+                this.update();
+            },
+        },
         methods: {
-            getArgs (balances) {
+            getArgs() {
                 return {
                     size: {
                         height: '25vh',
                     },
-                    data: {
-                        type: 'step',
-                        json: balances.dailyBalances,
-                        keys: {
-                            x: 'date',
-                            value: ['balance'],
-                        },
-                    },
+                    data: this.graphData,
                     axis: {
                         x: {
                             type: 'timeseries',
                             tick: {
                                 format: '%Y-%m-%d',
                                 culling: true,
+                                multiline: false,
                                 fit: true,
-                            }
+                            },
                         },
                         y: {
                             tick: {
-                                format: formatMoney
-                            }
+                                format: formatMoney,
+                            },
+                        },
+                    },
+                    line: {
+                        step: {
+                            type: 'step-after',
                         },
                     },
                     legend: {
                         show: false,
-                    }
+                    },
+                    grid: {
+                        y: {
+                            show: true,
+                        },
+                    },
                 };
             },
-            update: function update () {
-                const data = this.getData()
-                this.$chart.load(data)
-                this.$emit('update', data)
+            async update() {
+                const response = await client.dailyBalances(this.afterDate);
+                this.dailyBalances = response.dailyBalances;
+                this.$chart.load(this.graphData);
             },
-            transform: function transform (...args) {
-                this.$chart.transform(...args)
-            },
-            reload: function reload () {
-                this.$emit('reloading')
-                this.$chart.unload()
+            reload() {
+                this.$chart.unload();
                 this.$nextTick(() => {
-                    this.update()
-                })
-            }
+                    this.update();
+                });
+            },
         },
-        async mounted () {
-            const balances = await client.dailyBalances('2017-01-01');
-            const args = this.getArgs(balances)
+        async mounted() {
+            const response = await client.dailyBalances(this.afterDate);
+            this.dailyBalances = response.dailyBalances;
+            const args = this.getArgs();
             this.$chart = c3.generate({
                 bindto: this.$refs.chart,
                 ...args
-            })
-            this.$emit('init', args);
+            });
         },
-        beforeDestroy () {
-            this.$chart = this.$chart.destroy()
-        }
+        beforeDestroy() {
+            this.$chart = this.$chart.destroy();
+        },
     };
 </script>
 
 <style lang="scss">
     @import "~c3/c3.css";
+
+    .chart {
+        .c3-line {
+            stroke-width: 2px;
+        }
+
+        .c3-ygrid {
+            stroke-dasharray: none;
+            stroke: #ddd;
+        }
+    }
 </style>
