@@ -47,11 +47,11 @@
                         const transferDescription = `Transfer ${direction} ${accountName}`;
                         return this.transaction.payee ? `${this.transaction.payee} (${transferDescription})` : transferDescription;
                     default:
-                        return this.transaction.payee;
+                        return this.transaction.payee || '\xa0';
                 }
             },
             categoryName() {
-                return this.transaction.categoryId ? this.getCategoryName(this.transaction.categoryId) : '';
+                return this.transaction.categoryId ? this.getCategoryName(this.transaction.categoryId) : '\xa0';
             },
             selected() {
                 return this.transaction === this.selectedTransaction;
