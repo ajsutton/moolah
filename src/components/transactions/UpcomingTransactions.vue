@@ -10,7 +10,7 @@
         </v-toolbar>
         <v-list two-line style="position: relative">
             <template v-for="transaction in transactions">
-                <transaction :transaction="transaction" :key="transaction.id">
+                <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
                 </transaction>
                 <v-divider></v-divider>
             </template>
@@ -40,7 +40,7 @@
             noAccounts() {
                 return this.accounts.length === 0;
             },
-            ...mapState('transactions', ['transactions']),
+            ...mapState('scheduledTransactions', ['transactions']),
             ...mapState('accounts', ['accounts']),
         },
 
@@ -59,10 +59,10 @@
                 this[transactionActions.addTransaction]({recurEvery: 1, recurPeriod: 'MONTH'});
             },
             editTransaction(transaction) {
-                this.$store.commit(stateMutations.selectTransaction, transaction.id);
+                this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: true});
             },
             ...mapActions([stateActions.showUpcoming]),
-            ...mapActions('transactions', [transactionActions.addTransaction]),
+            ...mapActions('scheduledTransactions', [transactionActions.addTransaction]),
         },
 
         components: {

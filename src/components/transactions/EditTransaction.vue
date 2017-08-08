@@ -52,7 +52,7 @@
                     note: undefined,
                     categoryId: undefined,
                 },
-                rules
+                rules,
             };
         },
         computed: {
@@ -72,15 +72,15 @@
                 accounts: state => state.accounts,
             }),
             accountId: {
-                get() {
+                get () {
                     return this.transaction ? this.transaction.accountId : undefined;
                 },
-                set(value) {
+                set (value) {
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch: {accountId: value},
                     });
-                }
+                },
             },
             validTransactionTypes() {
                 const types = [{text: 'Expense', value: 'expense'}, {text: 'Income', value: 'income'}];
@@ -95,10 +95,10 @@
             payee: makeModelProperty('payee'),
             notes: makeModelProperty('notes'),
             date: {
-                get() {
+                get () {
                     return this.transaction ? this.transaction.date : undefined;
                 },
-                set(value) {
+                set (value) {
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch: {date: value},
@@ -106,26 +106,26 @@
                 },
             },
             type: {
-                get() {
+                get () {
                     return this.transaction ? this.transaction.type : undefined;
                 },
-                set(value) {
+                set (value) {
                     if (value !== this.transaction.type) {
                         this.updateTransaction(createTypeChangePatch(this.transaction, value, this.accounts));
                     }
                 },
             },
             toAccountId: {
-                get() {
+                get () {
                     return this.transaction ? this.transaction.toAccountId : undefined;
                 },
-                set(value) {
+                set (value) {
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch: {
                             type: 'transfer',
-                            toAccountId: value
-                        }
+                            toAccountId: value,
+                        },
                     });
                 },
             },
@@ -137,11 +137,13 @@
         },
         methods: {
             onBlur,
-            ...mapActions('transactions', {
+            ...mapActions({
                 updateTransaction: transactionActions.updateTransaction,
                 deleteTransaction: transactionActions.deleteTransaction,
-                pay: transactionActions.payTransaction,
             }),
+            ...mapActions('scheduledTransactions', {
+                pay: transactionActions.payTransaction,
+            })
         },
         watch: {
             transactionId() {

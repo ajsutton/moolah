@@ -23,19 +23,25 @@ const store = new Vuex.Store({
     state: {
         selectedAccountId: null,
         selectedTransactionId: null,
+        selectedScheduledTransaction: false,
         showEditTransactionPanel: false,
     },
     getters: {
+        selectedTransactionModule(state, getters) {
+            return state.selectedScheduledTransaction ? 'scheduledTransactions' : 'transactions'
+        },
         selectedTransaction(state, getters) {
-            return getters['transactions/selectedTransaction'];
+            const module = getters.selectedTransactionModule;
+            return getters[`${module}/selectedTransaction`];
         },
     },
     mutations: {
         [mutations.selectAccount](state, selectedAccountId) {
             state.selectedAccountId = selectedAccountId;
         },
-        [mutations.selectTransaction](state, selectedTransactionId) {
-            state.selectedTransactionId = selectedTransactionId;
+        [mutations.selectTransaction](state, data) {
+            state.selectedTransactionId = data && data.id;
+            state.selectedScheduledTransaction = data && data.scheduled;
             state.showEditTransactionPanel = true;
         },
         [mutations.showEditTransactionPanel](state, newValue) {
@@ -47,17 +53,24 @@ const store = new Vuex.Store({
             commit(mutations.selectAccount, accountId);
             dispatch('transactions/' + transactionActions.loadTransactions, {account: accountId, scheduled: false});
         },
-        [actions.showUpcoming]({commit, dispatch}, accountId) {
+        [actions.showUpcoming]({commit, dispatch}) {
             commit(mutations.selectAccount, null);
-            dispatch('transactions/' + transactionActions.loadTransactions, {account: null, scheduled: true});
+            dispatch('scheduledTransactions/' + transactionActions.loadTransactions, {account: null, scheduled: true});
         },
-        [actions.selectTransaction]({commit}, transactionId) {
-            commit(mutations.selectTransaction, transactionId);
+        [actions.selectTransaction]({commit}, data) {
+            commit(mutations.selectTransaction, data);
+        },
+        [transactionActions.updateTransaction]({dispatch, getters}, value) {
+            dispatch(getters.selectedTransactionModule + '/' + transactionActions.updateTransaction, value)
+        },
+        [transactionActions.deleteTransaction]({dispatch, getters}, value) {
+            dispatch(getters.selectedTransactionModule + '/' + transactionActions.deleteTransaction, value)
         },
     },
     modules: {
         accounts: accountsModule,
         transactions: transactionsModule,
+        scheduledTransactions: transactionsModule,
         categories: categoryModule,
     },
 });

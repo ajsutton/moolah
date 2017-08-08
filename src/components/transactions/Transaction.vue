@@ -70,7 +70,7 @@
 
         methods: {
             editTransaction(transaction) {
-                this.$store.commit(stateMutations.selectTransaction, transaction.id);
+                this.$emit('selected', transaction);
             },
         },
 

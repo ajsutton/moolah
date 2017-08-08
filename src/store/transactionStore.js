@@ -9,6 +9,7 @@ import addWeeks from 'date-fns/add_weeks';
 import addMonths from 'date-fns/add_months';
 import addYears from 'date-fns/add_years';
 import accountBalanceAdjuster from './accountBalanceAdjuster';
+import transactionComparator from './transactionComparator';
 
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
@@ -34,20 +35,6 @@ const findTransactionIndex = (state, transaction) => {
         throw new Error(`Unknown transaction ${transaction.id}`);
     }
     return insertIndex;
-};
-
-const transactionComparator = (transaction1, transaction2) => {
-    if (transaction1.date < transaction2.date) {
-        return 1;
-    } else if (transaction1.date > transaction2.date) {
-        return -1;
-    } else if (transaction1.id < transaction2.id) {
-        return -1;
-    } else if (transaction1.id > transaction2.id) {
-        return 1;
-    } else {
-        return 0;
-    }
 };
 
 const reverseScheduledTransactionComparator = (transaction1, transaction2) => {
@@ -93,10 +80,12 @@ const dateFunction = period => {
 
 export default {
     namespaced: true,
-    state: {
-        transactions: [],
-        priorBalance: 0,
-        transactionsById: {},
+    state() {
+        return {
+            transactions: [],
+            priorBalance: 0,
+            transactionsById: {},
+        };
     },
     getters: {
         selectedTransaction(state, getters, rootState) {

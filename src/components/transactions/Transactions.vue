@@ -12,7 +12,7 @@
         <v-divider></v-divider>
             <v-list two-line style="position: relative">
                 <template v-for="transaction in transactions">
-                    <transaction :transaction="transaction" :key="transaction.id">
+                    <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
                     </transaction>
                     <v-divider></v-divider>
                 </template>
@@ -61,7 +61,7 @@
                 this[transactionActions.addTransaction]();
             },
             editTransaction(transaction) {
-                this.$store.commit(stateMutations.selectTransaction, transaction.id);
+                this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: false});
             },
             ...mapActions([stateActions.selectAccount]),
             ...mapActions('transactions', [transactionActions.addTransaction]),

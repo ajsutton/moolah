@@ -75,7 +75,7 @@
         },
         methods: {
             onBlur,
-            ...mapActions('transactions', {
+            ...mapActions('scheduledTransactions', {
                 updateTransaction: transactionActions.updateTransaction,
             }),
         },
