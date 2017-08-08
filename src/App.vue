@@ -82,7 +82,7 @@
 <script>
     import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
     import {actions as transactionActions} from './store/transactionStore';
-    import {mutations} from './store/store';
+    import {mutations, actions as stateActions} from './store/store';
     import AccountList from './components/accounts/AccountList';
     import EditTransaction from './components/transactions/EditTransaction';
     import CreateAccount from './components/accounts/CreateAccount';
@@ -130,6 +130,7 @@
                 this.$store.commit(mutations.showEditTransactionPanel, !this.rightNavToggle);
             },
             ...mapActions('categories', [categoryActions.loadCategories]),
+            ...mapActions([stateActions.showUpcoming]),
             ...mapMutations([mutations.selectTransaction]),
         },
         store,
@@ -144,6 +145,7 @@
             const state = await client.userProfile();
             if (state.loggedIn) {
                 await this[categoryActions.loadCategories]();
+                this[stateActions.showUpcoming]();
             }
             this.loggedIn = state.loggedIn;
             this.profile = state.profile;

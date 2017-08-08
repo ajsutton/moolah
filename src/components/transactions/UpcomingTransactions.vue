@@ -44,10 +44,6 @@
             ...mapState('accounts', ['accounts']),
         },
 
-        created() {
-            this[stateActions.showUpcoming]();
-        },
-
         watch: {
             accountId(newAccountId) {
                 this.selectAccount(newAccountId);
