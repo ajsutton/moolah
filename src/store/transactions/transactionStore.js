@@ -150,7 +150,8 @@ export default {
             try {
                 const serverTransaction = await client.createTransaction(initialProperties);
                 commit(mutations.updateTransaction, {id: transaction.id, patch: serverTransaction});
-                dispatch('SELECT_TRANSACTION', serverTransaction.id, {root: true});
+                console.log(transaction.recurPeriod);
+                dispatch('SELECT_TRANSACTION', {id: serverTransaction.id, scheduled: transaction.recurPeriod !== undefined}, {root: true});
             } catch (error) {
                 commit(mutations.removeTransaction, transaction);
                 accountBalanceAdjuster(dispatch, transaction, null);

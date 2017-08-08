@@ -298,7 +298,7 @@ describe('transactionStore', function() {
                     ],
                 );
                 sinon.assert.calledWith(client.createTransaction, initialTransactionProperties);
-                sinon.assert.calledWith(dispatch, stateActions.selectTransaction, serverTransaction.id, {root: true});
+                sinon.assert.calledWith(dispatch, stateActions.selectTransaction, {id: serverTransaction.id, scheduled: false}, {root: true});
             });
 
             it('should remove transaction again if create fails', async function() {
