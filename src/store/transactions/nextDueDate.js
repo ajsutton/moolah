@@ -4,7 +4,7 @@ import addMonths from 'date-fns/add_months';
 import addYears from 'date-fns/add_years';
 import {formatDate} from '../../api/apiFormats';
 
-const dateFunction = period => {
+export const dateStepFunction = period => {
     switch (period) {
         case 'DAY':
             return addDays;
@@ -19,7 +19,6 @@ const dateFunction = period => {
     }
 };
 
-
 export default function nextDueDate(transaction) {
-    return formatDate(dateFunction(transaction.recurPeriod)(transaction.date, transaction.recurEvery))
+    return formatDate(dateStepFunction(transaction.recurPeriod)(transaction.date, transaction.recurEvery))
 }

@@ -17,6 +17,7 @@
     import formatMoney from '../util/formatMoney';
     import addMonths from 'date-fns/add_months';
     import {formatDate} from '../../api/apiFormats';
+    import extrapolateBalances from './netWorthGraphData';
 
     export default {
         data() {
@@ -40,14 +41,7 @@
         },
         computed: {
             extrapolatedBalances() {
-                if (this.dailyBalances.length === 0) {
-                    return this.dailyBalances;
-                }
-                const lastBalance = this.dailyBalances[this.dailyBalances.length - 1];
-                if (lastBalance.date !== this.today) {
-                    return Array.concat([], this.dailyBalances, [{date: this.today, balance: lastBalance.balance}]);
-                }
-                return this.dailyBalances;
+                return extrapolateBalances(this.dailyBalances, this.today);
             },
             graphData() {
                 return {
