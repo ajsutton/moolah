@@ -12,7 +12,7 @@
         </v-list-tile-content>
         <v-list-tile-action>
             <monetary-amount :value="transaction.amount"></monetary-amount>
-            <monetary-amount :value="transaction.balance"></monetary-amount>
+            <monetary-amount :value="transaction.balance" v-if="showBalance"></monetary-amount>
         </v-list-tile-action>
     </v-list-tile>
 </template>
@@ -23,11 +23,19 @@
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
-    import formatDate from 'date-fns/format'
-    import parseDate from 'date-fns/parse'
+    import formatDate from 'date-fns/format';
+    import parseDate from 'date-fns/parse';
 
     export default {
-        props: ['transaction'],
+        props: {
+            transaction: {
+                required: true,
+            },
+            showBalance: {
+                type: Boolean,
+                'default': true,
+            },
+        },
         computed: {
             transactionTitle() {
                 switch (this.transaction.type) {
@@ -73,6 +81,6 @@
 
         components: {
             MonetaryAmount,
-        }
+        },
     };
 </script>

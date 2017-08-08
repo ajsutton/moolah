@@ -10,7 +10,7 @@
         </v-toolbar>
         <v-list two-line>
             <template v-for="transaction in transactions">
-                <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
+                <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction" :showBalance="false">
                 </transaction>
                 <v-divider></v-divider>
             </template>
