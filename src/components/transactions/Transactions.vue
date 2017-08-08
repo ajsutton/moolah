@@ -12,7 +12,7 @@
             </template>
         </v-toolbar>
         <v-divider></v-divider>
-        <v-list two-line style="position: relative">
+        <v-list two-line>
             <template v-for="transaction in transactions">
                 <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
                 </transaction>
