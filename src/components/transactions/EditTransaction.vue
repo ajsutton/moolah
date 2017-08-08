@@ -65,7 +65,7 @@
             toAccountLabel() {
                 return this.transaction.amount < 0 ? 'To Account' : 'From Account';
             },
-            ...mapGetters('transactions', {
+            ...mapGetters({
                 transaction: 'selectedTransaction',
             }),
             ...mapState('accounts', {

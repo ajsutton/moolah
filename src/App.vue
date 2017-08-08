@@ -122,7 +122,7 @@
             hasTransaction() {
                 return this.selectedTransaction !== undefined && this.loggedIn;
             },
-            ...mapGetters('transactions', ['selectedTransaction']),
+            ...mapGetters(['selectedTransaction']),
             ...mapState({ rightNavToggle: 'showEditTransactionPanel'})
         },
         methods: {

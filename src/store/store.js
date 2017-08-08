@@ -25,6 +25,11 @@ const store = new Vuex.Store({
         selectedTransactionId: null,
         showEditTransactionPanel: false,
     },
+    getters: {
+        selectedTransaction(state, getters) {
+            return getters['transactions/selectedTransaction'];
+        },
+    },
     mutations: {
         [mutations.selectAccount](state, selectedAccountId) {
             state.selectedAccountId = selectedAccountId;

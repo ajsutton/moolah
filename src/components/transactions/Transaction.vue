@@ -63,7 +63,7 @@
             dateYear() {
                 return formatDate(this.parsedDate, 'YYYY');
             },
-            ...mapGetters('transactions', ['selectedTransaction']),
+            ...mapGetters(['selectedTransaction']),
             ...mapGetters('categories', ['getCategoryName']),
             ...mapGetters('accounts', ['accountName']),
         },
