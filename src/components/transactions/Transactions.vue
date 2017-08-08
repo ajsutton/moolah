@@ -10,13 +10,13 @@
             </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
-            <v-list two-line style="position: relative">
-                <template v-for="transaction in transactions">
-                    <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
-                    </transaction>
-                    <v-divider></v-divider>
-                </template>
-            </v-list>
+        <v-list two-line style="position: relative">
+            <template v-for="transaction in transactions">
+                <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
+                </transaction>
+                <v-divider></v-divider>
+            </template>
+        </v-list>
     </v-card>
 </template>
 
@@ -50,7 +50,7 @@
         watch: {
             accountId(newAccountId) {
                 this.selectAccount(newAccountId);
-            }
+            },
         },
 
         methods: {
@@ -71,6 +71,6 @@
             MonetaryAmount,
             Transaction,
             CreateAccount,
-        }
+        },
     };
 </script>

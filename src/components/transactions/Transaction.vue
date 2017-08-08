@@ -28,9 +28,6 @@
 
     export default {
         props: ['transaction'],
-        data() {
-            return {};
-        },
         computed: {
             transactionTitle() {
                 switch (this.transaction.type) {

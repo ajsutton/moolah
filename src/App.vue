@@ -163,7 +163,7 @@
 
     $theme := {
         primary: $blue.darken-2
-        accent: $pink.accent-2
+        accent: $orange.accent-2
         secondary: $grey.darken-3
         info: $blue.base
         warning: $amber.base
