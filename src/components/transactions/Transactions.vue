@@ -2,12 +2,14 @@
     <v-card>
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <create-account :account="selectedAccount"></create-account>
-            <v-btn icon
-                   @click.native.stop="addTransaction">
-                <v-icon>add</v-icon>
-            </v-btn>
+            <template v-if="selectedAccount">
+                <v-spacer></v-spacer>
+                <create-account :account="selectedAccount"></create-account>
+                <v-btn icon
+                       @click.native.stop="addTransaction">
+                    <v-icon>add</v-icon>
+                </v-btn>
+            </template>
         </v-toolbar>
         <v-divider></v-divider>
         <v-list two-line style="position: relative">
@@ -31,12 +33,9 @@
 
     export default {
         props: ['accountId'],
-        data() {
-            return {};
-        },
         computed: {
             title() {
-                return this.accountName(this.accountId);
+                return this.accountId === undefined ? 'All Transactions' : this.accountName(this.accountId);
             },
             ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
