@@ -1,4 +1,4 @@
-import updateBalance from '../../../../src/store/updateBalance';
+import updateBalance from '../../../../../src/store/transactions/updateBalance';
 import {assert} from 'chai';
 
 describe('Balance Updater', function() {

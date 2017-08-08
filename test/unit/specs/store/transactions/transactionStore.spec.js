@@ -1,11 +1,11 @@
 import sinon from 'sinon';
 import format from 'date-fns/format';
 import {assert, config as chaiConfig} from 'chai';
-import {actions, mutations, ensureAllFieldsPresent} from '../../../../src/store/transactionStore';
-import {actions as accountActions} from '../../../../src/store/accountsStore';
-import {actions as stateActions} from '../../../../src/store/store';
-import transactionStoreLoader from 'inject-loader!../../../../src/store/transactionStore';
-import testAction from './testAction';
+import {actions, ensureAllFieldsPresent, mutations} from '../../../../../src/store/transactions/transactionStore';
+import {actions as accountActions} from '../../../../../src/store/accountsStore';
+import {actions as stateActions} from '../../../../../src/store/store';
+import transactionStoreLoader from 'inject-loader!../../../../../src/store/transactions/transactionStore';
+import testAction from '../testAction';
 
 chaiConfig.truncateThreshold = 0;
 
@@ -27,7 +27,7 @@ describe('transactionStore', function() {
             deleteTransaction: sinon.stub(),
         };
         transactionStore = transactionStoreLoader({
-            '../api/client': client,
+            '../../api/client': client,
         }).default;
     });
 

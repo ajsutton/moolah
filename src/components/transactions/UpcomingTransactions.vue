@@ -24,7 +24,7 @@
     import Transaction from './Transaction.vue';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import CreateAccount from '../accounts/CreateAccount.vue';
-    import {actions as transactionActions} from '../../store/transactionStore';
+    import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
     export default {

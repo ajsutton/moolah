@@ -81,7 +81,7 @@
 
 <script>
     import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
-    import {actions as transactionActions} from './store/transactionStore';
+    import {actions as transactionActions} from './store/transactions/transactionStore';
     import {mutations, actions as stateActions} from './store/store';
     import AccountList from './components/accounts/AccountList';
     import EditTransaction from './components/transactions/EditTransaction';

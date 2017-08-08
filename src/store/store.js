@@ -1,9 +1,8 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
 import accountsModule from './accountsStore';
-import transactionsModule from './transactionStore';
+import transactionsModule, {actions as transactionActions} from './transactions/transactionStore';
 import categoryModule from './categoryStore';
-import {actions as transactionActions} from './transactionStore';
 
 Vue.use(Vuex);
 

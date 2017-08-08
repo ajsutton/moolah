@@ -23,7 +23,7 @@
 
 <script>
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
-    import {actions as transactionActions} from '../../store/transactionStore';
+    import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {rules, isValid} from '../validation';
     import {makeModelProperty, onBlur} from './modelProperty';
 

@@ -1,4 +1,4 @@
-import {actions} from './accountsStore';
+import {actions} from '../accountsStore';
 
 function addChange(changes, accountId, amount) {
     const currentChange = changes[accountId] || 0;

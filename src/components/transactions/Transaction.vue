@@ -21,7 +21,7 @@
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
     import client from '../../api/client';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
-    import {actions as transactionActions} from '../../store/transactionStore';
+    import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
     import formatDate from 'date-fns/format'
     import parseDate from 'date-fns/parse'

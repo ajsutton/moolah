@@ -29,7 +29,7 @@
 </template>
 <script>
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
-    import {actions as transactionActions} from '../../store/transactionStore';
+    import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {rules, isValid} from '../validation';
     import AccountSelector from '../accounts/AccountSelector.vue';
     import CategorySelector from '../categories/CategorySelector.vue';
