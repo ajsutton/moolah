@@ -4,10 +4,7 @@ import search from 'binary-search';
 import Vue from 'vue';
 import without from '../../util/without';
 import {formatDate} from '../../api/apiFormats';
-import addDays from 'date-fns/add_days';
-import addWeeks from 'date-fns/add_weeks';
-import addMonths from 'date-fns/add_months';
-import addYears from 'date-fns/add_years';
+import nextDueDate from './nextDueDate';
 import accountBalanceAdjuster from './accountBalanceAdjuster';
 import transactionComparator from './transactionComparator';
 
@@ -62,21 +59,6 @@ export function ensureAllFieldsPresent(transaction) {
     });
     return transaction;
 }
-
-const dateFunction = period => {
-    switch (period) {
-        case 'DAY':
-            return addDays;
-        case 'WEEK':
-            return addWeeks;
-        case 'MONTH':
-            return addMonths;
-        case 'YEAR':
-            return addYears;
-        default:
-            throw new Error(`Unknown period: ${period}`);
-    }
-};
 
 export default {
     namespaced: true,
@@ -214,7 +196,7 @@ export default {
                     commit(mutations.removeTransaction, transaction);
                     asyncOperations.push(client.deleteTransaction(transaction));
                 } else {
-                    const nextDate = formatDate(dateFunction(transaction.recurPeriod)(transaction.date, transaction.recurEvery));
+                    const nextDate = nextDueDate(transaction);
                     commit(mutations.updateTransaction, {id: transaction.id, patch: {date: nextDate}});
                     asyncOperations.push(client.updateTransaction(transaction));
                 }
