@@ -34,14 +34,25 @@
                     {text: '5 Years', value: 60},
                     {text: 'All', value: null},
                 ],
+                today: formatDate(new Date()),
                 previousMonths: 6,
             };
         },
         computed: {
+            extrapolatedBalances() {
+                if (this.dailyBalances.length === 0) {
+                    return this.dailyBalances;
+                }
+                const lastBalance = this.dailyBalances[this.dailyBalances.length - 1];
+                if (lastBalance.date !== this.today) {
+                    return Array.concat([], this.dailyBalances, [{date: this.today, balance: lastBalance.balance}]);
+                }
+                return this.dailyBalances;
+            },
             graphData() {
                 return {
                     type: 'step',
-                    json: this.dailyBalances,
+                    json: this.extrapolatedBalances,
                     keys: {
                         x: 'date',
                         value: ['balance'],
@@ -94,6 +105,11 @@
                     grid: {
                         y: {
                             show: true,
+                        },
+                        x: {
+                            lines: [
+                                {value: this.today, text: 'Today'},
+                            ],
                         },
                     },
                 };
