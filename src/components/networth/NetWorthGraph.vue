@@ -39,7 +39,7 @@
                 ],
                 today: formatDate(new Date()),
                 previousMonths: 6,
-                forecastMonths: 3,
+                forecastMonths: 1,
             };
         },
         computed: {
@@ -125,6 +125,7 @@
             async update() {
                 const response = await client.dailyBalances(this.afterDate, this.untilDate);
                 this.dailyBalances = response.dailyBalances;
+                this.scheduledBalances = response.scheduledBalances;
                 this.$chart.load(this.graphData);
             },
             reload() {
