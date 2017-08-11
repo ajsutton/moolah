@@ -86,7 +86,7 @@
                     ticks.push(formatDate(date));
                 }
                 return ticks;
-            }
+            },
         },
         watch: {
             previousMonths() {
@@ -108,7 +108,7 @@
                             type: 'timeseries',
                             tick: {
                                 format: '%Y-%m-%d',
-                                values: this.tickValues
+                                values: this.tickValues,
                             },
                         },
                         y: {
@@ -134,6 +134,11 @@
                                 {value: this.today, text: 'Today'},
                             ],
                         },
+                    },
+                    padding: {
+                        left: 100,
+                        right: 40,
+                        bottom: 10,
                     },
                 };
             },
@@ -169,6 +174,7 @@
 
 <style lang="scss">
     @import "~c3/c3.css";
+
     .networth-graph {
         .input-group--select {
             min-width: 10em;
@@ -177,6 +183,11 @@
     }
 
     .chart {
+        svg {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
         .c3-line {
             stroke-width: 2px;
         }
@@ -184,6 +195,9 @@
         .c3-ygrid {
             stroke-dasharray: none;
             stroke: #ddd;
+        }
+
+        .c3-axis-x-label {
         }
     }
 </style>
