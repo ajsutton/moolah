@@ -1,11 +1,11 @@
 <template>
-    <v-card>
+    <v-card class="networth-graph">
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">Net Worth</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <v-select label="History" :items="items" v-model="previousMonths"></v-select>
-                <v-select label="Forecast" :items="items" v-model="forecastMonths"></v-select>
+                <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
+                <v-select label="Forecast" :items="forecastItems" v-model="forecastMonths"></v-select>
             </v-toolbar-items>
         </v-toolbar>
         <div ref="chart" class="chart"></div>
@@ -20,23 +20,26 @@
     import {formatDate} from '../../api/apiFormats';
     import extrapolateBalances from './netWorthGraphData';
 
+    const items = nullLabel => [
+        {text: '1 Month', value: 1},
+        {text: '3 Months', value: 3},
+        {text: '6 Months', value: 6},
+        {text: '9 Months', value: 9},
+        {text: '1 Year', value: 12},
+        {text: '2 Years', value: 24},
+        {text: '3 Years', value: 36},
+        {text: '4 Years', value: 48},
+        {text: '5 Years', value: 60},
+        {text: nullLabel, value: nullLabel},
+    ];
+
     export default {
         data() {
             return {
                 dailyBalances: [],
                 scheduledBalances: [],
-                items: [
-                    {text: '1 Month', value: 1},
-                    {text: '3 Months', value: 3},
-                    {text: '6 Months', value: 6},
-                    {text: '9 Months', value: 9},
-                    {text: '1 Year', value: 12},
-                    {text: '2 Years', value: 24},
-                    {text: '3 Years', value: 36},
-                    {text: '4 Years', value: 48},
-                    {text: '5 Years', value: 60},
-                    {text: 'All', value: null},
-                ],
+                historyItems: items('All'),
+                forecastItems: items('None'),
                 today: formatDate(new Date()),
                 previousMonths: 6,
                 forecastMonths: 1,
@@ -65,11 +68,25 @@
                 };
             },
             afterDate() {
-                return this.previousMonths !== null ? formatDate(addMonths(new Date(), -this.previousMonths)) : undefined;
+                return this.previousMonths !== 'All' ? formatDate(addMonths(new Date(), -this.previousMonths)) : undefined;
             },
             untilDate() {
-                return this.forecastMonths !== null ? formatDate(addMonths(new Date(), this.forecastMonths)) : undefined;
+                return this.forecastMonths !== 'None' ? formatDate(addMonths(new Date(), this.forecastMonths)) : undefined;
             },
+            tickValues() {
+                let date = new Date();
+                const ticks = [formatDate(date)];
+                for (let i = 0; i < this.previousMonths; i++) {
+                    date = addMonths(date, -1);
+                    ticks.push(formatDate(date));
+                }
+                date = new Date();
+                for (let i = 0; i < this.forecastMonths; i++) {
+                    date = addMonths(date, 1);
+                    ticks.push(formatDate(date));
+                }
+                return ticks;
+            }
         },
         watch: {
             previousMonths() {
@@ -91,9 +108,7 @@
                             type: 'timeseries',
                             tick: {
                                 format: '%Y-%m-%d',
-                                culling: true,
-                                multiline: false,
-                                fit: true,
+                                values: this.tickValues
                             },
                         },
                         y: {
@@ -125,7 +140,8 @@
             async update() {
                 const response = await client.dailyBalances(this.afterDate, this.untilDate);
                 this.dailyBalances = response.dailyBalances;
-                this.scheduledBalances = response.scheduledBalances;
+                this.scheduledBalances = response.scheduledBalances || [];
+                this.$chart.internal.config.axis_x_tick_values = this.tickValues;
                 this.$chart.load(this.graphData);
             },
             reload() {
@@ -138,7 +154,7 @@
         async mounted() {
             const response = await client.dailyBalances(this.afterDate, this.untilDate);
             this.dailyBalances = response.dailyBalances;
-            this.scheduledBalances = response.scheduledBalances;
+            this.scheduledBalances = response.scheduledBalances || [];
             const args = this.getArgs();
             this.$chart = c3.generate({
                 bindto: this.$refs.chart,
@@ -153,6 +169,12 @@
 
 <style lang="scss">
     @import "~c3/c3.css";
+    .networth-graph {
+        .input-group--select {
+            min-width: 10em;
+            margin-left: 12px;
+        }
+    }
 
     .chart {
         .c3-line {
