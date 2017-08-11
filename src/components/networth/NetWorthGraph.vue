@@ -5,6 +5,7 @@
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-select label="History" :items="items" v-model="previousMonths"></v-select>
+                <v-select label="Forecast" :items="items" v-model="forecastMonths"></v-select>
             </v-toolbar-items>
         </v-toolbar>
         <div ref="chart" class="chart"></div>
@@ -23,6 +24,7 @@
         data() {
             return {
                 dailyBalances: [],
+                scheduledBalances: [],
                 items: [
                     {text: '1 Month', value: 1},
                     {text: '3 Months', value: 3},
@@ -37,11 +39,12 @@
                 ],
                 today: formatDate(new Date()),
                 previousMonths: 6,
+                forecastMonths: 3,
             };
         },
         computed: {
             extrapolatedBalances() {
-                return extrapolateBalances(this.dailyBalances, this.today);
+                return extrapolateBalances(this.dailyBalances, this.scheduledBalances, this.today, this.untilDate);
             },
             graphData() {
                 return {
@@ -49,19 +52,30 @@
                     json: this.extrapolatedBalances,
                     keys: {
                         x: 'date',
-                        value: ['balance'],
+                        value: ['balance', 'scheduled'],
+                    },
+                    names: {
+                        balance: 'Actual Net Worth',
+                        scheduled: 'Scheduled Net Worth',
                     },
                     colors: {
                         'balance': 'green',
+                        'scheduled': 'gray',
                     },
                 };
             },
             afterDate() {
                 return this.previousMonths !== null ? formatDate(addMonths(new Date(), -this.previousMonths)) : undefined;
             },
+            untilDate() {
+                return this.forecastMonths !== null ? formatDate(addMonths(new Date(), this.forecastMonths)) : undefined;
+            },
         },
         watch: {
             previousMonths() {
+                this.update();
+            },
+            forecastMonths() {
                 this.update();
             },
         },
@@ -109,7 +123,7 @@
                 };
             },
             async update() {
-                const response = await client.dailyBalances(this.afterDate);
+                const response = await client.dailyBalances(this.afterDate, this.untilDate);
                 this.dailyBalances = response.dailyBalances;
                 this.$chart.load(this.graphData);
             },
@@ -121,8 +135,9 @@
             },
         },
         async mounted() {
-            const response = await client.dailyBalances(this.afterDate);
+            const response = await client.dailyBalances(this.afterDate, this.untilDate);
             this.dailyBalances = response.dailyBalances;
+            this.scheduledBalances = response.scheduledBalances;
             const args = this.getArgs();
             this.$chart = c3.generate({
                 bindto: this.$refs.chart,

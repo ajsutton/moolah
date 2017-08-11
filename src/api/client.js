@@ -26,6 +26,13 @@ async function json(url, options = {}) {
     return response.json();
 }
 
+function asQueryParams(args) {
+    return Object.entries(args)
+        .filter(([key, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => encodeURIComponent(key) + '=' + encodeURIComponent(value))
+        .join('&');
+}
+
 export default {
     async accounts() {
         return json('/api/accounts/');
@@ -80,9 +87,9 @@ export default {
         return json(`/api/analysis/incomeAndExpense/?monthEnd=${encodeURIComponent(monthEnd)}${afterParam}`);
     },
 
-    async dailyBalances(afterDate) {
-        const afterParam = afterDate ? `?after=${encodeURIComponent(formatDate(afterDate))}` : '';
-        return json(`/api/analysis/dailyBalances/${afterParam}`);
+    async dailyBalances(afterDate, untilDate) {
+        const params = asQueryParams({after: formatDate(afterDate), forecastUntil: formatDate(untilDate)});
+        return json(`/api/analysis/dailyBalances/?${params}`);
     },
 
     async userProfile() {
