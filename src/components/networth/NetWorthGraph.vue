@@ -188,6 +188,10 @@
             font-size: inherit;
         }
 
+        * {
+            shape-rendering: geometricPrecision !important;
+        }
+
         .c3-line {
             stroke-width: 2px;
         }
