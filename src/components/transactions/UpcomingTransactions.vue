@@ -1,5 +1,5 @@
 <template>
-    <v-card :height="height" class="upcoming-transactions">
+    <v-card class="upcoming-transactions">
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">Upcoming Transactions</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -9,7 +9,7 @@
             </v-btn>
         </v-toolbar>
         <v-list two-line>
-            <template v-for="transaction in transactions">
+            <template v-for="transaction in transactionsToDisplay">
                 <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction" :showBalance="false">
                 </transaction>
                 <v-divider></v-divider>
@@ -26,11 +26,16 @@
     import CreateAccount from '../accounts/CreateAccount.vue';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
+    import differenceInCalendarDays from 'date-fns/difference_in_calendar_days';
 
     export default {
         props: {
             height: {
                 'default': '',
+            },
+            shortTerm: {
+                type: Boolean,
+                'default': false,
             },
         },
         data() {
@@ -39,6 +44,11 @@
         computed: {
             noAccounts() {
                 return this.accounts.length === 0;
+            },
+            transactionsToDisplay() {
+                return this.shortTerm
+                    ? this.transactions.filter(transaction => differenceInCalendarDays(transaction.date, new Date()) < 14)
+                    : this.transactions;
             },
             ...mapState('scheduledTransactions', ['transactions']),
             ...mapState('accounts', ['accounts']),

@@ -6,7 +6,7 @@
         <v-flex xs12>
             <v-layout row-md column>
                 <v-flex md6>
-                    <upcoming-transactions height="100%"></upcoming-transactions>
+                    <upcoming-transactions height="100%" :shortTerm="true"></upcoming-transactions>
                 </v-flex>
                 <v-flex md6>
                     <income-and-expense-table></income-and-expense-table>
