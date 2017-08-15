@@ -18,7 +18,10 @@
     import formatMoney from '../util/formatMoney';
     import addMonths from 'date-fns/add_months';
     import {formatDate} from '../../api/apiFormats';
+    import debounce from 'debounce';
     import extrapolateBalances from './netWorthGraphData';
+
+    const maxTicks = width => Math.floor(width / 160);
 
     const items = nullLabel => [
         {text: '1 Month', value: 1},
@@ -43,6 +46,7 @@
                 today: formatDate(new Date()),
                 previousMonths: 6,
                 forecastMonths: 1,
+                maxTicks: 1000,
             };
         },
         computed: {
@@ -75,7 +79,7 @@
             },
             tickValues() {
                 let date = new Date();
-                const ticks = [formatDate(date)];
+                let ticks = [formatDate(date)];
                 for (let i = 0; i < this.previousMonths; i++) {
                     date = addMonths(date, -1);
                     ticks.push(formatDate(date));
@@ -84,6 +88,9 @@
                 for (let i = 0; i < this.forecastMonths; i++) {
                     date = addMonths(date, 1);
                     ticks.push(formatDate(date));
+                }
+                while (ticks.length > this.maxTicks) {
+                    ticks = ticks.filter((value, idx) => idx % 2 === 0);
                 }
                 return ticks;
             },
@@ -155,6 +162,11 @@
                     this.update();
                 });
             },
+
+            handleResize: debounce(function() {
+                this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
+                this.update();
+            }, 100),
         },
         async mounted() {
             const response = await client.dailyBalances(this.afterDate, this.untilDate);
@@ -165,9 +177,12 @@
                 bindto: this.$refs.chart,
                 ...args
             });
+            this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
+            window.addEventListener('resize', this.handleResize);
         },
         beforeDestroy() {
             this.$chart = this.$chart.destroy();
+            window.removeEventListener('resize', this.handleResize);
         },
     };
 </script>
