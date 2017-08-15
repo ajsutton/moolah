@@ -1,4 +1,4 @@
-export default function updateBalances(transactions, updateFrom, priorBalance = 0)
+export default function updateBalances(transactions, updateFrom, priorBalance = 0, ignoreTransfers = false)
 {
     let start;
     let balance;
@@ -10,7 +10,10 @@ export default function updateBalances(transactions, updateFrom, priorBalance = 
         balance = start + 1 < transactions.length ? transactions[start + 1].balance : priorBalance;
     }
     for (let i = start; i >= 0; i--) {
-        balance += transactions[i].amount;
-        transactions[i].balance = balance;
+        const transaction = transactions[i];
+        if (!ignoreTransfers || transaction.type !== 'transfer') {
+            balance += transaction.amount;
+        }
+        transaction.balance = balance;
     }
 }

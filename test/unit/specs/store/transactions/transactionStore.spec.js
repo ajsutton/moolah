@@ -78,6 +78,7 @@ describe('transactionStore', function() {
                 transactionStore.mutations[mutations.setTransactions](state, {
                     transactions: [{id: 2, amount: 50}, {id: 1, amount: 25}],
                     priorBalance: 30,
+                    singleAccount: true,
                 });
 
                 assert.deepEqual(state, {
@@ -88,6 +89,7 @@ describe('transactionStore', function() {
                         1: ensureAllFieldsPresent
                         ({id: 1, amount: 25, balance: 55}),
                     },
+                    singleAccount: true,
                 });
             });
         });

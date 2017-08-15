@@ -67,6 +67,7 @@ export default {
             transactions: [],
             priorBalance: 0,
             transactionsById: {},
+            singleAccount: true,
         };
     },
     getters: {
@@ -81,21 +82,22 @@ export default {
                 ensureAllFieldsPresent(transaction);
                 transactionsById[transaction.id] = transaction;
             });
-            updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance);
+            updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance, !transactionsResponse.singleAccount);
             state.transactions = transactionsResponse.transactions;
             state.priorBalance = transactionsResponse.priorBalance;
+            state.singleAccount = transactionsResponse.singleAccount;
             state.transactionsById = transactionsById;
         },
         [mutations.addTransaction](state, transaction) {
             const insertIndex = findInsertIndex(state, transaction);
             state.transactions.splice(insertIndex, 0, ensureAllFieldsPresent(transaction));
-            updateBalance(state.transactions, insertIndex, state.priorBalance);
+            updateBalance(state.transactions, insertIndex, state.priorBalance, !state.singleAccount);
             Vue.set(state.transactionsById, transaction.id, transaction);
         },
         [mutations.removeTransaction](state, transaction) {
             const transactionIndex = findTransactionIndex(state, transaction);
             state.transactions.splice(transactionIndex, 1);
-            updateBalance(state.transactions, transactionIndex - 1, state.priorBalance);
+            updateBalance(state.transactions, transactionIndex - 1, state.priorBalance, !state.singleAccount);
             Vue.delete(state.transactionsById, transaction.id);
         },
         [mutations.updateTransaction](state, payload) {
@@ -117,7 +119,7 @@ export default {
                     updateBalanceFrom = index;
                 }
                 if (updateBalanceFrom !== -1) {
-                    updateBalance(state.transactions, updateBalanceFrom, state.priorBalance);
+                    updateBalance(state.transactions, updateBalanceFrom, state.priorBalance, !state.singleAccount);
                 }
             } else {
                 throw Error(`No transaction with ID ${payload.id}`);
@@ -131,7 +133,7 @@ export default {
             if (searchOptions.scheduled) {
                 response.transactions = response.transactions.reverse();
             }
-            commit(mutations.setTransactions, response);
+            commit(mutations.setTransactions, Object.assign(response, {singleAccount: !!searchOptions.account}));
         },
 
         async [actions.addTransaction]({commit, rootState, dispatch}, attributes = {}) {
