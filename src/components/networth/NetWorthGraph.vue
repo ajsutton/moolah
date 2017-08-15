@@ -172,12 +172,12 @@
             const response = await client.dailyBalances(this.afterDate, this.untilDate);
             this.dailyBalances = response.dailyBalances;
             this.scheduledBalances = response.scheduledBalances || [];
+            this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
             const args = this.getArgs();
             this.$chart = c3.generate({
                 bindto: this.$refs.chart,
                 ...args
             });
-            this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
             window.addEventListener('resize', this.handleResize);
         },
         beforeDestroy() {
