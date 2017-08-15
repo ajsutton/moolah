@@ -5,7 +5,7 @@ export function makeModelProperty(propertyName, toDisplay = value => value, from
     return {
         get() {
             if (this.raw[propertyName] === undefined) {
-                return this.transaction ? toDisplay(this.transaction[propertyName], this.transaction) : undefined;
+                return toDisplay(this.transaction[propertyName], this.transaction);
             } else {
                 return this.raw[propertyName];
             }

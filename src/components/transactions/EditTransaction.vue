@@ -61,7 +61,7 @@
                 return this.transaction.id;
             },
             isOpeningBalance() {
-                return this.transaction && this.transaction.type === 'openingBalance';
+                return this.transaction.type === 'openingBalance';
             },
             toAccountLabel() {
                 return this.transaction.amount < 0 ? 'To Account' : 'From Account';
@@ -74,7 +74,7 @@
             }),
             accountId: {
                 get () {
-                    return this.transaction ? this.transaction.accountId : undefined;
+                    return this.transaction.accountId;
                 },
                 set (value) {
                     this.updateTransaction({
@@ -97,7 +97,7 @@
             notes: makeModelProperty('notes'),
             date: {
                 get () {
-                    return this.transaction ? this.transaction.date : undefined;
+                    return this.transaction.date;
                 },
                 set: debounce(function(value) {
                     this.updateTransaction({
@@ -108,7 +108,7 @@
             },
             type: {
                 get () {
-                    return this.transaction ? this.transaction.type : undefined;
+                    return this.transaction.type;
                 },
                 set (value) {
                     if (value !== this.transaction.type) {
@@ -118,7 +118,7 @@
             },
             toAccountId: {
                 get () {
-                    return this.transaction ? this.transaction.toAccountId : undefined;
+                    return this.transaction.toAccountId;
                 },
                 set (value) {
                     this.updateTransaction({
