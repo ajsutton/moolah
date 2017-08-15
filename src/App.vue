@@ -60,7 +60,7 @@
                 <v-btn flat dark ripple v-if="!loggedIn" tag="a" href="/api/googleauth">Sign in</v-btn>
                 <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
             </v-toolbar-items>
-            <v-toolbar-side-icon @click.native.prevent="toggleRightNav" dark :disabled="!hasTransaction"></v-toolbar-side-icon>
+            <v-toolbar-side-icon @click.native.prevent="toggleRightNav" dark :disabled="!hasTransaction" v-if="loggedIn"></v-toolbar-side-icon>
         </v-toolbar>
         <main>
             <welcome v-if="!loggedIn"></welcome>
