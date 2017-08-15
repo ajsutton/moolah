@@ -37,6 +37,7 @@
     import DatePickerField from '../util/DatePickerField.vue';
     import createTypeChangePatch from './changeType';
     import {makeModelProperty, onBlur} from './modelProperty';
+    import debounce from 'debounce';
 
     function typeMultiplier(transaction) {
         return transaction.type === 'expense' ? -1 : 1;
@@ -98,12 +99,12 @@
                 get () {
                     return this.transaction ? this.transaction.date : undefined;
                 },
-                set (value) {
+                set: debounce(function(value) {
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch: {date: value},
                     });
-                },
+                }, 1000),
             },
             type: {
                 get () {

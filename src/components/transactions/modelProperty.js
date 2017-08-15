@@ -1,4 +1,5 @@
 import {isValid} from '../validation';
+import debounce from 'debounce';
 
 export function makeModelProperty(propertyName, toDisplay = value => value, fromDisplay = value => value) {
     return {
@@ -9,7 +10,7 @@ export function makeModelProperty(propertyName, toDisplay = value => value, from
                 return this.raw[propertyName];
             }
         },
-        set(value) {
+        set: debounce(function(value) {
             this.raw[propertyName] = value;
             if (isValid(value, this.rules[propertyName])) {
                 this.updateTransaction({
@@ -17,7 +18,7 @@ export function makeModelProperty(propertyName, toDisplay = value => value, from
                     patch: {[propertyName]: fromDisplay(value, this.transaction)},
                 });
             }
-        },
+        }, 1000),
     };
 }
 
