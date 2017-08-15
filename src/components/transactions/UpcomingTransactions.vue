@@ -8,6 +8,7 @@
                 <v-icon>add</v-icon>
             </v-btn>
         </v-toolbar>
+        <v-progress-linear v-bind:indeterminate="true" v-if="loading"></v-progress-linear>
         <v-list two-line>
             <template v-for="transaction in transactionsToDisplay">
                 <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction" :showBalance="false">
@@ -50,7 +51,7 @@
                     ? this.transactions.filter(transaction => differenceInCalendarDays(transaction.date, new Date()) < 14)
                     : this.transactions;
             },
-            ...mapState('scheduledTransactions', ['transactions']),
+            ...mapState('scheduledTransactions', ['transactions', 'loading']),
             ...mapState('accounts', ['accounts']),
         },
 

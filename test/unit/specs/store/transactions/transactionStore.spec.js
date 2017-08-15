@@ -90,6 +90,7 @@ describe('transactionStore', function() {
                         ({id: 1, amount: 25, balance: 55}),
                     },
                     singleAccount: true,
+                    loading: false,
                 });
             });
         });
@@ -258,7 +259,7 @@ describe('transactionStore', function() {
                         payload: {accountId: 'account-1'},
                     },
                     [
-                        {type: mutations.setTransactions, payload: {transactions: [], priorBalance: 0}},
+                        {type: mutations.setTransactions, payload: {transactions: [], priorBalance: 0, loading: true}},
                         {type: mutations.setTransactions, payload: response},
                     ],
                 );

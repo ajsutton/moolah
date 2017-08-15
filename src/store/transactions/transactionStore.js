@@ -68,6 +68,7 @@ export default {
             priorBalance: 0,
             transactionsById: {},
             singleAccount: true,
+            loading: false,
         };
     },
     getters: {
@@ -86,6 +87,7 @@ export default {
             state.transactions = transactionsResponse.transactions;
             state.priorBalance = transactionsResponse.priorBalance;
             state.singleAccount = transactionsResponse.singleAccount;
+            state.loading = !!transactionsResponse.loading;
             state.transactionsById = transactionsById;
         },
         [mutations.addTransaction](state, transaction) {
@@ -128,7 +130,7 @@ export default {
     },
     actions: {
         async [actions.loadTransactions]({commit}, searchOptions) {
-            commit(mutations.setTransactions, {transactions: [], priorBalance: 0});
+            commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loading: true});
             const response = await client.transactions(searchOptions);
             if (searchOptions.scheduled) {
                 response.transactions = response.transactions.reverse();

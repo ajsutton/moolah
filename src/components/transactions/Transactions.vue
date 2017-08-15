@@ -12,6 +12,7 @@
             </template>
         </v-toolbar>
         <v-divider></v-divider>
+        <v-progress-linear v-bind:indeterminate="true" v-if="loading"></v-progress-linear>
         <v-list two-line>
             <template v-for="transaction in transactions">
                 <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
@@ -39,7 +40,7 @@
             },
             ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
-            ...mapState('transactions', ['transactions']),
+            ...mapState('transactions', ['transactions', 'loading']),
         },
 
         created() {
