@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import {assert} from 'chai';
-import {mutations, actions} from '../../../../src/store/accountsStore';
+import {actions, mutations} from '../../../../src/store/accountsStore';
 import accountsStoreLoader from 'inject-loader!../../../../src/store/accountsStore';
 import testAction from './testAction';
 
@@ -112,7 +112,6 @@ describe('accountsStore', function() {
 
         describe('Adjust Balance', function() {
             it('should update account with new balance', async function() {
-                const dispatch = sinon.spy();
                 const originalAccount = {id: 'abc', name: 'Account Name', type: 'bank', position: 1, balance: 30};
                 await testAction(
                     accountsStore,
@@ -120,10 +119,11 @@ describe('accountsStore', function() {
                     {
                         payload: {accountId: 'abc', amount: 10},
                         state: {accounts: [originalAccount]},
-                        dispatch,
                     },
+                    [
+                        {type: mutations.updateAccount, payload: {id: 'abc', patch: {balance: 40}}},
+                    ],
                 );
-                sinon.assert.calledWith(dispatch, actions.updateAccount, {id: 'abc', patch: {balance: 40}});
             });
         });
     });

@@ -78,9 +78,9 @@ export default {
             }
         },
 
-        async [actions.adjustBalance]({state, dispatch}, changes) {
+        async [actions.adjustBalance]({state, commit}, changes) {
             const account = state.accounts.find(account => account.id === changes.accountId);
-            dispatch(actions.updateAccount, {id: account.id, patch: {balance: account.balance + changes.amount}});
+            commit(mutations.updateAccount, {id: account.id, patch: {balance: account.balance + changes.amount}});
         },
     },
 };
