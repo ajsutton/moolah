@@ -99,12 +99,12 @@
                 get () {
                     return this.transaction.date;
                 },
-                set: debounce(function(value) {
+                set: function(value) {
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch: {date: value},
                     });
-                }, 1000),
+                },
             },
             type: {
                 get () {
