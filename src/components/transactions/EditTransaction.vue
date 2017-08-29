@@ -1,6 +1,6 @@
 <template>
     <div class="pl-2 pr-2">
-        <v-select name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" :items="payeeItems" :search-input.sync="payeeSearch" autocomplete v-if="!isOpeningBalance" ref="payee"></v-select>
+        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-if="!isOpeningBalance" ref="payee"></v-text-field>
         <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')"></v-text-field>
 
         <date-picker-field v-model="date"></date-picker-field>
@@ -53,20 +53,10 @@
                     note: undefined,
                     categoryId: undefined,
                 },
-                searchTerm: null,
-                payeeItems: [],
                 rules,
             };
         },
         computed: {
-            payeeSearch: {
-                get() { return this.searchTerm; },
-                set(value) {
-                    console.log(value);
-                    this.searchTerm = value;
-                    this.payeeItems = [value];
-                }
-            },
             transactionId() {
                 return this.transaction.id;
             },
