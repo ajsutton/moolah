@@ -1,5 +1,5 @@
 <template>
-    <v-card class="networth-graph">
+    <v-card class="networth-graph" v-resize="handleResize">
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">Net Worth</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -178,11 +178,9 @@
                 bindto: this.$refs.chart,
                 ...args
             });
-            window.addEventListener('resize', this.handleResize);
         },
         beforeDestroy() {
             this.$chart = this.$chart.destroy();
-            window.removeEventListener('resize', this.handleResize);
         },
     };
 </script>
