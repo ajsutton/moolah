@@ -130,7 +130,7 @@
                     });
                 },
             },
-            category: makeModelProperty('categoryId'),
+            category: makeModelProperty('categoryId', value => value || '', value => value === '' ? undefined : value),
             amount: makeModelProperty('amount',
                 (amount, transaction) => (typeMultiplier(transaction) * amount / 100).toFixed(2),
                 (value, transaction) => typeMultiplier(transaction) * Math.round(value * 100)),
