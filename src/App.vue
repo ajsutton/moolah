@@ -64,7 +64,7 @@
         </v-toolbar>
         <main>
             <welcome v-if="!loggedIn"></welcome>
-            <v-container fluid v-if="loggedIn">
+            <v-container fluid v-if="loggedIn" grid-list-md>
                 <router-view></router-view>
             </v-container>
         </main>

@@ -4,7 +4,7 @@
             <net-worth-graph></net-worth-graph>
         </v-flex>
         <v-flex xs12>
-            <v-layout row-md column>
+            <v-layout v-bind="bottomLayout">
                 <v-flex md6>
                     <upcoming-transactions height="100%" :shortTerm="true"></upcoming-transactions>
                 </v-flex>
@@ -26,6 +26,12 @@
             NetWorthGraph,
             UpcomingTransactions,
             IncomeAndExpenseTable,
+        },
+
+        computed: {
+            bottomLayout() {
+                return this.$vuetify.breakpoint.mdAndUp ? {}  : {column: true};
+            },
         },
     };
 </script>
