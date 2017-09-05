@@ -44,7 +44,7 @@
                 </v-list>
             </template>
         </v-navigation-drawer>
-        <v-navigation-drawer :value="showRightNavPanel" class="transparent" floating light right persistent clipped disable-route-watcher>
+        <v-navigation-drawer v-model="showRightNavPanel" floating light right persistent clipped disable-route-watcher>
             <v-card class="ma-3">
                 <v-card-text>
                     <edit-transaction v-if="hasTransaction"></edit-transaction>
@@ -116,8 +116,13 @@
                     this.mainNavToggle = value;
                 },
             },
-            showRightNavPanel() {
-                return this.hasTransaction && this.rightNavToggle;
+            showRightNavPanel: {
+                get() {
+                    return this.hasTransaction && this.rightNavToggle;
+                },
+                set(value) {
+                    this.$store.commit(mutations.showEditTransactionPanel, value);
+                }
             },
             hasTransaction() {
                 return this.selectedTransaction !== undefined && this.loggedIn;
@@ -127,7 +132,7 @@
         },
         methods: {
             toggleRightNav() {
-                this.$store.commit(mutations.showEditTransactionPanel, !this.rightNavToggle);
+                this.showRightNavPanel = !this.rightNavToggle;
             },
             ...mapActions('categories', [categoryActions.loadCategories]),
             ...mapActions([stateActions.showUpcoming]),
