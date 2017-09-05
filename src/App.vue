@@ -47,7 +47,7 @@
         <v-navigation-drawer v-model="showRightNavPanel" floating light right persistent clipped disable-route-watcher>
             <v-card class="ma-3">
                 <v-card-text>
-                    <edit-transaction v-if="hasTransaction"></edit-transaction>
+                    <edit-transaction v-if="hasTransaction" :key="selectedTransaction.id"></edit-transaction>
                 </v-card-text>
             </v-card>
         </v-navigation-drawer>
