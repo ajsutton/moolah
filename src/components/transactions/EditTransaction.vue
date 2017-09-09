@@ -40,7 +40,7 @@
     import debounce from 'debounce';
 
     function typeMultiplier(transaction) {
-        return transaction.type === 'expense' ? -1 : 1;
+        return transaction.type === 'expense' || transaction.type === 'transfer' ? -1 : 1;
     }
 
     export default {
