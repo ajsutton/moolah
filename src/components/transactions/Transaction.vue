@@ -6,6 +6,7 @@
                 <div class="grey--text text-xs-center body-1">{{dateYear}}</div>
             </div>
         </v-list-tile-action>
+        <v-chip :class="{'primary white--text': true, 'invisible': !due}" :aria-hidden="due" v-if="highlightOverdue">Due</v-chip>
         <v-list-tile-content>
             <v-list-tile-title>{{transactionTitle}}</v-list-tile-title>
             <v-list-tile-sub-title>{{ categoryName }}</v-list-tile-sub-title>
@@ -13,6 +14,7 @@
         <v-list-tile-action>
             <monetary-amount :value="transaction.amount"></monetary-amount>
             <monetary-amount :value="transaction.balance" v-if="showBalance"></monetary-amount>
+            <!--<span class="red&#45;&#45;text" v-if="overdue">Overdue</span>-->
         </v-list-tile-action>
     </v-list-tile>
 </template>
@@ -23,8 +25,10 @@
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
+    import {formatDate as formatApiDate} from '../../api/apiFormats';
     import formatDate from 'date-fns/format';
     import parseDate from 'date-fns/parse';
+    import isBefore from 'date-fns/is_before';
 
     export default {
         props: {
@@ -35,6 +39,10 @@
                 type: Boolean,
                 'default': true,
             },
+            highlightOverdue: {
+                type: Boolean,
+                'default': false,
+            }
         },
         computed: {
             transactionTitle() {
@@ -68,6 +76,9 @@
             dateYear() {
                 return formatDate(this.parsedDate, 'YYYY');
             },
+            due() {
+                return this.highlightOverdue && isBefore(this.parsedDate, Date.now());
+            },
             ...mapGetters(['selectedTransaction']),
             ...mapGetters('categories', ['getCategoryName']),
             ...mapGetters('accounts', ['accountName']),
@@ -84,3 +95,9 @@
         },
     };
 </script>
+
+<style lang="scss" scoped>
+    .invisible {
+        visibility: hidden !important;
+    }
+</style>

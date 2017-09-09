@@ -11,7 +11,7 @@
         <v-progress-linear v-bind:indeterminate="true" v-if="loading"></v-progress-linear>
         <v-list two-line>
             <template v-for="transaction in transactionsToDisplay">
-                <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction" :showBalance="false">
+                <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction" :showBalance="false" highlightOverdue>
                 </transaction>
                 <v-divider></v-divider>
             </template>
