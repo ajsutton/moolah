@@ -1,6 +1,6 @@
 <template>
     <div class="pl-2 pr-2">
-        <v-text-field name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-if="!isOpeningBalance" ref="payee"></v-text-field>
+        <auto-complete-payee name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-if="!isOpeningBalance" ref="payee" @autofill="autofill"></auto-complete-payee>
         <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')"></v-text-field>
 
         <date-picker-field v-model="date"></date-picker-field>
@@ -33,6 +33,7 @@
     import {rules, isValid} from '../validation';
     import AccountSelector from '../accounts/AccountSelector.vue';
     import CategorySelector from '../categories/CategorySelector.vue';
+    import AutoCompletePayee from './AutoCompletePayee.vue';
     import Recurrence from './RecurranceControls.vue';
     import DatePickerField from '../util/DatePickerField.vue';
     import createTypeChangePatch from './changeType';
@@ -73,10 +74,10 @@
                 accounts: state => state.accounts,
             }),
             accountId: {
-                get () {
+                get() {
                     return this.transaction.accountId;
                 },
-                set (value) {
+                set(value) {
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch: {accountId: value},
@@ -96,7 +97,7 @@
             payee: makeModelProperty('payee'),
             notes: makeModelProperty('notes'),
             date: {
-                get () {
+                get() {
                     return this.transaction.date;
                 },
                 set: function(value) {
@@ -107,20 +108,20 @@
                 },
             },
             type: {
-                get () {
+                get() {
                     return this.transaction.type;
                 },
-                set (value) {
+                set(value) {
                     if (value !== this.transaction.type) {
                         this.updateTransaction(createTypeChangePatch(this.transaction, value, this.accounts));
                     }
                 },
             },
             toAccountId: {
-                get () {
+                get() {
                     return this.transaction.toAccountId;
                 },
-                set (value) {
+                set(value) {
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch: {
@@ -137,6 +138,17 @@
 
         },
         methods: {
+            autofill(transaction) {
+                this.updateTransaction({
+                    id: this.transaction.id,
+                    patch: {
+                        payee: transaction.payee,
+                        amount: transaction.amount,
+                        categoryId: transaction.categoryId,
+                        type: transaction.type,
+                    },
+                });
+            },
             onBlur,
             ...mapActions({
                 updateTransaction: transactionActions.updateTransaction,
@@ -160,6 +172,7 @@
             CategorySelector,
             DatePickerField,
             Recurrence,
+            AutoCompletePayee,
         },
     };
 </script>
