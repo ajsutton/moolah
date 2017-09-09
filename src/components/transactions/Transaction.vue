@@ -6,7 +6,7 @@
                 <div class="grey--text text-xs-center body-1">{{dateYear}}</div>
             </div>
         </v-list-tile-action>
-        <v-chip :class="{'primary white--text': true, 'invisible': !due}" :aria-hidden="due" v-if="highlightOverdue">Due</v-chip>
+        <v-chip label :class="{'primary white--text': true, 'invisible': !due}" :aria-hidden="due" v-if="highlightOverdue">Due</v-chip>
         <v-list-tile-content>
             <v-list-tile-title>{{transactionTitle}}</v-list-tile-title>
             <v-list-tile-sub-title>{{ categoryName }}</v-list-tile-sub-title>
