@@ -72,13 +72,13 @@
                     pie: {
                         label: {
                             format(value, ratio, title) {
-                                return formatMoney(-value, 0);
+                                return title;
                             },
                         },
                         expand: false,
                     },
                     legend: {
-                        show: true,
+                        show: false,
                     },
                     tooltip: {
                         format:{ 
