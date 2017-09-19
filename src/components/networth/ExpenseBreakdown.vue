@@ -1,7 +1,7 @@
 <template>
     <v-card class="expense-breakdown-graph" v-resize="handleResize">
         <v-toolbar card class="white" prominent>
-            <v-toolbar-title class="body-2 grey--text">Expense Breakdown</v-toolbar-title>
+            <v-toolbar-title class="body-2 grey--text">Expenses by Category</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
