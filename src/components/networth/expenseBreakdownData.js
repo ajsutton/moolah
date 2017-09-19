@@ -1,6 +1,5 @@
-const numberDetailedCategories = 10;
 export default function summariseCategories(expensesByCategory, getCategoryName, categoriesById) {
-    const columns = rollupToTopLevel(expensesByCategory, getCategoryName, categoriesById)
+    return rollupToTopLevel(expensesByCategory, getCategoryName, categoriesById)
     .sort(([name1, value1], [name2, value2]) => {
         if (value1 < value2) {
             return -1;
@@ -10,13 +9,6 @@ export default function summariseCategories(expensesByCategory, getCategoryName,
             return 0;
         }
     });
-    
-    const detailed = columns.slice(0, Math.min(numberDetailedCategories, columns.length));
-    const summarise = columns.slice(numberDetailedCategories);
-    if (summarise.length > 0) {
-        detailed.push(['Other', summarise.reduce((total, [id, value]) => total + value, 0)]);
-    }
-    return detailed;
 }
 
 function rollupToTopLevel(expensesByCategory, getCategoryName, categoriesById) {

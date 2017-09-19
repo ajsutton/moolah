@@ -36,6 +36,7 @@
                     {text: '3 Years', value: 36},
                     {text: '4 Years', value: 48},
                     {text: '5 Years', value: 60},
+                    {text: 'All', value: 'All'},
                 ],
             };
         },
