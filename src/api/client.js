@@ -92,6 +92,11 @@ export default {
         return json(`/api/analysis/dailyBalances/?${params}`);
     },
 
+    async expenseBreakdown(afterDate) {
+        const params = asQueryParams({after: formatDate(afterDate)});
+        return json(`/api/analysis/expenseBreakdown/?${params}`);
+    },
+
     async userProfile() {
         return json('/api/auth/');
     },

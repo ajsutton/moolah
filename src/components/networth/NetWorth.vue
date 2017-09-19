@@ -13,17 +13,24 @@
                 </v-flex>
             </v-layout>
         </v-flex>
+        <v-flex xs12>
+            <v-flex md6>
+                <expense-breakdown></expense-breakdown>
+            </v-flex>
+        </v-flex>
     </v-layout>
 </template>
 
 <script>
     import NetWorthGraph from './NetWorthGraph.vue';
+    import ExpenseBreakdown from './ExpenseBreakdown';
     import UpcomingTransactions from '../transactions/UpcomingTransactions.vue';
     import IncomeAndExpenseTable from './IncomeAndExpenseTable.vue';
 
     export default {
         components: {
             NetWorthGraph,
+            ExpenseBreakdown,
             UpcomingTransactions,
             IncomeAndExpenseTable,
         },
