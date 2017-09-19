@@ -6,6 +6,7 @@ export default function extrapolateBalances(dailyBalances, scheduledBalances, to
     extendUntil(extendBackTo(scheduledBalances, dailyBalances, today), forecastUntil).forEach(scheduledBalance => {
         const balance = (data[scheduledBalance.date]) || {date: scheduledBalance.date};
         balance.scheduled = scheduledBalance.balance;
+        balance.bestFit = balance.bestFit || scheduledBalance.bestFit;
         data[scheduledBalance.date] = balance;
     });
     return Object.values(data);

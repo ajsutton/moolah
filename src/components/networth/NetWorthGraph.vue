@@ -56,18 +56,23 @@
             graphData() {
                 return {
                     type: 'step',
+                    types: {
+                        bestFit: 'line'
+                    },
                     json: this.extrapolatedBalances,
                     keys: {
                         x: 'date',
-                        value: ['balance', 'scheduled'],
+                        value: ['balance', 'bestFit', 'scheduled'],
                     },
                     names: {
                         balance: 'Actual Net Worth',
                         scheduled: 'Scheduled Net Worth',
+                        bestFit: 'Best Fit',
                     },
                     colors: {
                         'balance': 'green',
                         'scheduled': 'gray',
+                        'bestFit': 'gray',
                     },
                 };
             },
@@ -110,6 +115,9 @@
                         height: '25vh',
                     },
                     data: this.graphData,
+                    point: {
+                        show: false,
+                    },
                     axis: {
                         x: {
                             type: 'timeseries',
@@ -128,6 +136,7 @@
                         step: {
                             type: 'step-after',
                         },
+                        connectNull: true,
                     },
                     legend: {
                         show: false,
@@ -207,6 +216,10 @@
 
         .c3-line {
             stroke-width: 2px;
+        }
+
+        .c3-line-bestFit {
+            stroke-width: 1px;
         }
 
         .c3-ygrid {
