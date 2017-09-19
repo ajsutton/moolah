@@ -7,16 +7,12 @@
             <v-layout v-bind="bottomLayout">
                 <v-flex md6>
                     <upcoming-transactions height="100%" :shortTerm="true"></upcoming-transactions>
+                    <expense-breakdown></expense-breakdown>
                 </v-flex>
                 <v-flex md6>
                     <income-and-expense-table></income-and-expense-table>
                 </v-flex>
             </v-layout>
-        </v-flex>
-        <v-flex xs12>
-            <v-flex md6>
-                <expense-breakdown></expense-breakdown>
-            </v-flex>
         </v-flex>
     </v-layout>
 </template>
