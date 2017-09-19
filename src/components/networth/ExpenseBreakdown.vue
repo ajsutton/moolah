@@ -118,3 +118,13 @@
         },
     };
 </script>
+
+<style lang="scss">
+    @import "~c3/c3.css";
+
+    .expense-breakdown-graph {
+        .input-group--select {
+            min-width: 10em;
+        }
+    }
+</style>
