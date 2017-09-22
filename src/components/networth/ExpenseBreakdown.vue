@@ -25,6 +25,7 @@
         data() {
             return {
                 expenseBreakdown: [],
+                rootCategoryId: null,
                 previousMonths: 6,
                 historyItems: [
                     {text: '1 Month', value: 1},
@@ -45,11 +46,18 @@
                 return this.previousMonths !== 'All' ? formatDate(addMonths(new Date(), -this.previousMonths)) : undefined;
             },
 
+            categories() {
+                return summariseCategories(this.expenseBreakdown, this.rootCategoryId, this.getCategoryName, this.categoriesById);
+            },
+
             graphData() {
                 return {
                     type: 'pie',
-                    columns: summariseCategories(this.expenseBreakdown, this.getCategoryName, this.categoriesById),
+                    columns: this.categories,
                     unload: true,
+                    onclick: (data) => {
+                        this.rootCategoryId = this.categories[data.index][2];
+                    }
                 };
             },
 
@@ -58,6 +66,9 @@
         },
         watch: {
             previousMonths() {
+                this.update();
+            },
+            rootCategoryId() {
                 this.update();
             },
         },
