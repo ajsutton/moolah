@@ -73,7 +73,11 @@
                     columns: this.categories,
                     unload: true,
                     onclick: (data) => {
-                        this.rootCategoryId = this.categories[data.index][2];
+                        const categoryId = this.categories[data.index][2];
+                        const category = this.categoriesById[categoryId];
+                        if (category.children.length > 0) {
+                            this.rootCategoryId = categoryId;
+                        }
                     }
                 };
             },
