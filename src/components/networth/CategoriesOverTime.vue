@@ -1,18 +1,13 @@
 <template>
-    <v-card class="expense-breakdown-graph" v-resize="handleResize">
+    <v-card class="expense-category-time-graph" v-resize="handleResize">
         <v-toolbar card class="white" prominent>
-            <v-toolbar-title class="body-2 grey--text">Expenses by Category</v-toolbar-title>
+            <v-toolbar-title class="body-2 grey--text">Expenses by Category Over Time</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
             </v-toolbar-items>
         </v-toolbar>
         <div ref="chart" class="chart"></div>
-        <v-breadcrumbs icons divider="chevron_right" v-if="breadcrumbs.length > 1">
-            <v-breadcrumbs-item v-for="item in breadcrumbs" :key="item.id" @click.native="rootCategoryId = item.id">
-                {{ item.name }}
-            </v-breadcrumbs-item>
-        </v-breadcrumbs>
     </v-card>
 </template>
 
@@ -24,14 +19,14 @@
     import {formatDate} from '../../api/apiFormats';
     import debounce from 'debounce';
     import {mapGetters, mapState} from 'vuex';
-    import {summariseCategories} from './expenseBreakdownData';
+    import {categoriesOverTimeGraphData} from './categories/categoryOverTimeData';
 
     export default {
         data() {
             return {
                 expenseBreakdown: [],
                 rootCategoryId: null,
-                previousMonths: 6,
+                previousMonths: 24,
                 historyItems: [
                     {text: '1 Month', value: 1},
                     {text: '3 Months', value: 3},
@@ -51,35 +46,8 @@
                 return this.previousMonths !== 'All' ? formatDate(addMonths(new Date(), -this.previousMonths)) : undefined;
             },
 
-            categories() {
-                return summariseCategories(this.expenseBreakdown, this.rootCategoryId, this.getCategoryName, this.categoriesById);
-            },
-
-            breadcrumbs() {
-                const crumbs = [];
-                let id = this.rootCategoryId;
-                while (id != null) {
-                    const category = this.categoriesById[id];
-                    crumbs.unshift(category);
-                    id = category.parentId;
-                }
-                crumbs.unshift({name: 'Categories', id: null});
-                return crumbs;
-            },
-
             graphData() {
-                return {
-                    type: 'pie',
-                    columns: this.categories,
-                    unload: true,
-                    onclick: (data) => {
-                        const categoryId = this.categories[data.index][2];
-                        const category = this.categoriesById[categoryId];
-                        if (category.children.length > 0) {
-                            this.rootCategoryId = categoryId;
-                        }
-                    }
-                };
+                return categoriesOverTimeGraphData(this.expenseBreakdown, this.getCategoryName, this.categoriesById);
             },
 
             ...mapGetters('categories', ['getCategoryName']),
@@ -97,28 +65,38 @@
             getArgs() {
                 return {
                     data: this.graphData,
+                    axis: {
+                        x: {
+                            type: 'category',
+                            tick: {
+                                culling: true,
+                                centered: true,
+                                outer: false,
+                                multiline: false
+                            }
+                        },
+                        y: {
+                            show: false,
+                        },
+                    },
                     padding: {
-                        left: 100,
-                        right: 40,
+                        left: 10,
+                        right: 10,
                         bottom: 10,
                     },
-                    pie: {
-                        label: {
-                            format(value, ratio, title) {
-                                return title;
-                            },
-                        },
-                        expand: false,
-                    },
                     legend: {
-                        show: false,
+                        show: true,
                     },
                     tooltip: {
+                        show: false,
                         format:{ 
                             value(value, ratio) {
-                                return `${formatMoney(-value)} (${Math.round(ratio * 100)}%)`;
+                                return `${formatMoney(value)}`;
                             },
                         },
+                    },
+                    point: {
+                        show: false,
                     },
                 };
             },
@@ -154,9 +132,15 @@
 <style lang="scss">
     @import "~c3/c3.css";
 
-    .expense-breakdown-graph {
+    .expense-category-time-graph {
         .input-group--select {
             min-width: 10em;
+        }
+
+        .chart {
+            .c3-line {
+                stroke-width: 0;
+            }
         }
     }
 </style>

@@ -14,12 +14,16 @@
                 </v-flex>
             </v-layout>
         </v-flex>
+        <v-flex xs12>
+            <categories-over-time></categories-over-time>
+        </v-flex>
     </v-layout>
 </template>
 
 <script>
     import NetWorthGraph from './NetWorthGraph.vue';
-    import ExpenseBreakdown from './ExpenseBreakdown';
+    import ExpenseBreakdown from './ExpenseBreakdown.vue';
+    import CategoriesOverTime from './CategoriesOverTime.vue';
     import UpcomingTransactions from '../transactions/UpcomingTransactions.vue';
     import IncomeAndExpenseTable from './IncomeAndExpenseTable.vue';
 
@@ -27,6 +31,7 @@
         components: {
             NetWorthGraph,
             ExpenseBreakdown,
+            CategoriesOverTime,
             UpcomingTransactions,
             IncomeAndExpenseTable,
         },
