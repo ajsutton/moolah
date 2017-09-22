@@ -123,7 +123,7 @@
                 };
             },
             async update() {
-                this.expenseBreakdown = await client.expenseBreakdown(this.afterDate);
+                this.expenseBreakdown = await client.expenseBreakdown(new Date().getDate(), this.afterDate);
                 this.$chart.load(this.graphData);
             },
             reload() {
@@ -138,7 +138,7 @@
             }, 100),
         },
         async mounted() {
-            this.expenseBreakdown = await client.expenseBreakdown(this.afterDate);
+            this.expenseBreakdown = await client.expenseBreakdown(new Date().getDate(), this.afterDate);
             const args = this.getArgs();
             this.$chart = c3.generate({
                 bindto: this.$refs.chart,

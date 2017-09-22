@@ -92,8 +92,8 @@ export default {
         return json(`/api/analysis/dailyBalances/?${params}`);
     },
 
-    async expenseBreakdown(afterDate) {
-        const params = asQueryParams({after: formatDate(afterDate)});
+    async expenseBreakdown(monthEnd, afterDate) {
+        const params = asQueryParams({monthEnd, after: formatDate(afterDate)});
         return json(`/api/analysis/expenseBreakdown/?${params}`);
     },
 
