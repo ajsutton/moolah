@@ -168,13 +168,14 @@
             reload() {
                 this.$chart.unload();
                 this.$nextTick(() => {
-                    this.update();
+                    this.$chart.internal.config.axis_x_tick_values = this.tickValues;
+                    this.$chart.load(this.graphData);
                 });
             },
 
             handleResize: debounce(function() {
                 this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
-                this.update();
+                this.reload();
             }, 100),
         },
         async mounted() {
