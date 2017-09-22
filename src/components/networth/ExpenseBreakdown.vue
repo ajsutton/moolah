@@ -8,6 +8,11 @@
             </v-toolbar-items>
         </v-toolbar>
         <div ref="chart" class="chart"></div>
+        <v-breadcrumbs icons divider="chevron_right" v-if="breadcrumbs.length > 1">
+            <v-breadcrumbs-item v-for="item in breadcrumbs" :key="item.id" @click.native="rootCategoryId = item.id">
+                {{ item.name }}
+            </v-breadcrumbs-item>
+        </v-breadcrumbs>
     </v-card>
 </template>
 
@@ -48,6 +53,18 @@
 
             categories() {
                 return summariseCategories(this.expenseBreakdown, this.rootCategoryId, this.getCategoryName, this.categoriesById);
+            },
+
+            breadcrumbs() {
+                const crumbs = [];
+                let id = this.rootCategoryId;
+                while (id != null) {
+                    const category = this.categoriesById[id];
+                    crumbs.unshift(category);
+                    id = category.parentId;
+                }
+                crumbs.unshift({name: 'Categories', id: null});
+                return crumbs;
             },
 
             graphData() {
