@@ -129,12 +129,12 @@
             reload() {
                 this.$chart.unload();
                 this.$nextTick(() => {
-                    this.update();
+                    this.$chart.load(this.graphData);
                 });
             },
 
             handleResize: debounce(function() {
-                this.update();
+                this.reload();
             }, 100),
         },
         async mounted() {
