@@ -68,21 +68,29 @@
                     axis: {
                         x: {
                             type: 'category',
+                            padding: 0,
                             tick: {
                                 culling: true,
                                 centered: true,
                                 outer: false,
-                                multiline: false
+                                multiline: false,
                             }
                         },
                         y: {
-                            show: false,
+                            show: true,
+                            min: 0,
+                            max: 100,
+                            padding: 0,
+                            tick: {
+                                format: value => value + '%',
+                            }
                         },
                     },
                     padding: {
-                        left: 10,
+                        left: 50,
                         right: 10,
                         bottom: 10,
+                        top: 10,
                     },
                     legend: {
                         show: true,
