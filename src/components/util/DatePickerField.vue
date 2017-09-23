@@ -12,8 +12,7 @@
         <v-text-field
                 slot="activator"
                 label="Date"
-                :value="value"
-                @input="onInput"
+                v-model="textValue"
                 readonly
                 v-on:keyup.up="incrementDate"
                 v-on:keyup.down="decrementDate"
@@ -35,6 +34,17 @@
         data() {
             return {
                 dateMenu: false,
+            }
+        },
+
+        computed: {
+            textValue: {
+                get() {
+                    return this.value;
+                },
+                set(value) {
+                    this.onInput(value);
+                }
             }
         },
 
