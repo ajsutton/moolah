@@ -141,6 +141,10 @@
             .c3-line {
                 stroke-width: 0;
             }
+
+            .c3-area {
+                opacity: 0.8 !important;
+            }
         }
     }
 </style>
