@@ -146,6 +146,7 @@
         }
 
         .chart {
+            height: 500px;
             .c3-line {
                 stroke-width: 0;
             }
