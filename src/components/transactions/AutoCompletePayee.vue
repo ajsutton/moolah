@@ -1,5 +1,5 @@
 <template>
-    <div class="position: relative">
+    <div class="auto-complete-payee">
         <v-menu v-model="showMenu" offset-y>
             <v-text-field slot="activator" :name="name" :label="label" v-model="content" :rules="rules" @blur="$emit('blur')" ref="field"></v-text-field>
             <v-list>
@@ -65,3 +65,11 @@
         },
     };
 </script>
+
+<style lang="scss">
+    .auto-complete-payee {
+        .menu {
+            display: block !important;
+        }
+    }
+</style>
