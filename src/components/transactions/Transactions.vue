@@ -20,6 +20,13 @@
                 <v-divider></v-divider>
             </template>
         </v-list>
+        <v-divider></v-divider>
+        <v-btn :loading="loadingMore" @click.native="goPrevious" :disabled="loadingMore">
+            Previous page
+        </v-btn>
+        <v-btn :loading="loadingMore" @click.native="goNext" :disabled="loadingMore">
+            Next page
+        </v-btn>
     </v-card>
 </template>
 
@@ -42,6 +49,12 @@
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
             ...mapState('transactions', ['transactions', 'loading']),
         },
+        data() {
+            return {
+                loadingMore: false,
+
+            };
+        },
 
         created() {
             this.selectAccount(this.accountId);
@@ -63,8 +76,24 @@
             editTransaction(transaction) {
                 this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: false});
             },
+            goNext() {
+                this.loadingMore = true;
+                try {
+                    this[transactionActions.nextPage]();
+                } finally {
+                    this.loadingMore = false;
+                }
+            },
+            goPrevious() {
+                this.loadingMore = true;
+                try {
+                    this[transactionActions.previousPage]();
+                } finally {
+                    this.loadingMore = false;
+                }
+            },
             ...mapActions([stateActions.selectAccount]),
-            ...mapActions('transactions', [transactionActions.addTransaction]),
+            ...mapActions('transactions', [transactionActions.addTransaction, transactionActions.nextPage, transactionActions.previousPage]),
         },
 
         components: {

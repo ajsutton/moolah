@@ -8,12 +8,16 @@ import nextDueDate from './nextDueDate';
 import accountBalanceAdjuster from './accountBalanceAdjuster';
 import transactionComparator from './transactionComparator';
 
+const PAGE_SIZE = 100;
+
 export const actions = {
     loadTransactions: 'LOAD_TRANSACTIONS',
     addTransaction: 'ADD_TRANSACTION',
     updateTransaction: 'UPDATE_TRANSACTION',
     deleteTransaction: 'DELETE_TRANSACTION',
     payTransaction: 'PAY_TRANSACTION',
+    nextPage: 'NEXT_PAGE',
+    previousPage: 'PREVIOUS_PAGE',
 };
 export const mutations = {
     setTransactions: 'SET_TRANSACTIONS',
@@ -69,12 +73,20 @@ export default {
             transactionsById: {},
             singleAccount: true,
             loading: false,
+            transactionOffset: 0,
+            hasMore: false,
         };
     },
     getters: {
         selectedTransaction(state, getters, rootState) {
             return findTransaction(state, rootState.selectedTransactionId);
         },
+        hasNext(state) {
+            return state.hasMore;
+        },
+        hasPrevious(state) {
+            return state.transactionOffset > 0;
+        }
     },
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
@@ -89,6 +101,8 @@ export default {
             state.singleAccount = transactionsResponse.singleAccount;
             state.loading = !!transactionsResponse.loading;
             state.transactionsById = transactionsById;
+            state.transactionOffset = transactionsResponse.transactionOffset;
+            state.hasMore = transactionsResponse.hasMore;
         },
         [mutations.addTransaction](state, transaction) {
             const insertIndex = findInsertIndex(state, transaction);
@@ -131,11 +145,23 @@ export default {
     actions: {
         async [actions.loadTransactions]({commit}, searchOptions) {
             commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loading: true});
-            const response = await client.transactions(searchOptions);
+            const response = await client.transactions(searchOptions, 0, PAGE_SIZE);
             if (searchOptions.scheduled) {
                 response.transactions = response.transactions.reverse();
             }
-            commit(mutations.setTransactions, Object.assign(response, {singleAccount: !!searchOptions.account}));
+            commit(mutations.setTransactions, Object.assign(response, {singleAccount: !!searchOptions.account, transactionOffset: 0}));
+        },
+
+        async [actions.nextPage]({commit, rootState, state}) {
+            const transactionOffset = state.transactionOffset + state.transactions.length;
+            const response = await client.transactions({account: rootState.selectedAccountId, scheduled: false}, transactionOffset, PAGE_SIZE);
+            commit(mutations.setTransactions, Object.assign(response, {singleAccount: true, transactionOffset}));
+        },
+        
+        async [actions.previousPage]({commit, rootState, state}) {
+            const transactionOffset = Math.max(0, state.transactionOffset - PAGE_SIZE);
+            const response = await client.transactions({account: rootState.selectedAccountId, scheduled: false}, transactionOffset, PAGE_SIZE);
+            commit(mutations.setTransactions, Object.assign(response, {singleAccount: true, transactionOffset}));
         },
 
         async [actions.addTransaction]({commit, rootState, dispatch}, attributes = {}) {

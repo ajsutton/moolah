@@ -79,6 +79,8 @@ describe('transactionStore', function() {
                     transactions: [{id: 2, amount: 50}, {id: 1, amount: 25}],
                     priorBalance: 30,
                     singleAccount: true,
+                    transactionOffset: 13,
+                    hasMore: true,
                 });
 
                 assert.deepEqual(state, {
@@ -91,6 +93,8 @@ describe('transactionStore', function() {
                     },
                     singleAccount: true,
                     loading: false,
+                    transactionOffset: 13,
+                    hasMore: true,
                 });
             });
         });
