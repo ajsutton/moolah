@@ -24,7 +24,7 @@
             <v-btn icon :loading="loadingMore" @click.native="goPrevious" :disabled="loadingMore || !hasPrevious">
                 <v-icon>navigate_before</v-icon>
             </v-btn>
-            <v-btn icon @click.native="goNext" :disabled="loadingMore || !hasNext">
+            <v-btn icon :loading="loadingMore" @click.native="goNext" :disabled="loadingMore || !hasNext">
                 <v-icon>navigate_next</v-icon>
             </v-btn>
         </div>
@@ -78,18 +78,18 @@
             editTransaction(transaction) {
                 this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: false});
             },
-            goNext() {
+            async goNext() {
                 this.loadingMore = true;
                 try {
-                    this[transactionActions.nextPage]();
+                    await this[transactionActions.nextPage]();
                 } finally {
                     this.loadingMore = false;
                 }
             },
-            goPrevious() {
+            async goPrevious() {
                 this.loadingMore = true;
                 try {
-                    this[transactionActions.previousPage]();
+                    await this[transactionActions.previousPage]();
                 } finally {
                     this.loadingMore = false;
                 }
