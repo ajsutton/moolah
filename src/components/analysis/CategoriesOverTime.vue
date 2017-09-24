@@ -3,6 +3,11 @@
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">Expenses by Category Over Time</v-toolbar-title>
             <v-spacer></v-spacer>
+
+            <v-radio-group row v-model="actualValues">
+                <v-radio label="Percentage" :value="false" ></v-radio>
+                <v-radio label="Actual" :value="true"></v-radio>
+            </v-radio-group>
             <v-toolbar-items>
                 <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
             </v-toolbar-items>
@@ -27,6 +32,7 @@
                 expenseBreakdown: [],
                 rootCategoryId: null,
                 previousMonths: 24,
+                actualValues: false,
                 historyItems: [
                     {text: '1 Month', value: 1},
                     {text: '3 Months', value: 3},
@@ -47,13 +53,21 @@
             },
 
             graphData() {
-                return categoriesOverTimeGraphData(this.expenseBreakdown, this.getCategoryName, this.categoriesById);
+                return categoriesOverTimeGraphData(this.expenseBreakdown, this.actualValues, this.getCategoryName, this.categoriesById);
             },
 
             ...mapGetters('categories', ['getCategoryName']),
             ...mapState('categories', ['categoriesById'])
         },
         watch: {
+            actualValues() {
+                this.$chart.destroy();
+                const args = this.getArgs();
+                this.$chart = c3.generate({
+                    bindto: this.$refs.chart,
+                    ...args
+                });
+            },
             previousMonths() {
                 this.update();
             },
@@ -63,6 +77,7 @@
         },
         methods: {
             getArgs() {
+                const actualValues = this.actualValues;
                 return {
                     data: this.graphData,
                     axis: {
@@ -78,16 +93,16 @@
                         },
                         y: {
                             show: true,
-                            min: 0,
-                            max: 100,
+                            min: actualValues ? undefined : 0,
+                            max: actualValues ? undefined : 100,
                             padding: 0,
                             tick: {
-                                format: value => value + '%',
+                                format: value => actualValues ? formatMoney(value) : value + '%',
                             }
                         },
                     },
                     padding: {
-                        left: 50,
+                        left: actualValues ? 100 : 50,
                         right: 10,
                         bottom: 10,
                         top: 10,

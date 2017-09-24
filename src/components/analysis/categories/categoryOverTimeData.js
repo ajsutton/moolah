@@ -1,7 +1,7 @@
 import {rootLevelId} from './rootLevelId';
 import formatDate from 'date-fns/format';
 
-export function categoriesOverTimeGraphData(expensesByCategory, getCategoryName, categoriesById) {
+export function categoriesOverTimeGraphData(expensesByCategory, actualValues, getCategoryName, categoriesById) {
     const rootLevelCategories = {};
     const allMonths = new Set();
     expensesByCategory.map(({categoryId, month, totalExpenses}) => {
@@ -18,7 +18,10 @@ export function categoriesOverTimeGraphData(expensesByCategory, getCategoryName,
 
     const columns = Object.entries(rootLevelCategories)
         .map(([categoryId, months]) => {
-            return [getCategoryName(categoryId)].concat(orderedMonths.map(month => Math.max(0, months[month] || 0) / totals[month] * 100));
+            return [getCategoryName(categoryId)].concat(orderedMonths.map(month => {
+                const actualValue = Math.max(0, months[month] || 0);
+                return actualValues ? actualValue : actualValue / totals[month] * 100;
+            }));
         })
         .sort((category1, category2) => {
             const values1 = category1.slice(1).reduce((sum, value) => sum + value, 0);
