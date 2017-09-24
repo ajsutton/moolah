@@ -17,17 +17,17 @@
                 </v-list>
                 <account-list></account-list>
                 <v-list>
-                    <v-list-tile  ripple to="/transactions/">
+                    <v-list-tile  ripple to="/" exact>
                         <v-list-tile-action>
-                            <v-icon dark>list</v-icon>
+                            <v-icon dark>trending_up</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>All Transactions</v-list-tile-title>
+                            <v-list-tile-title>Analysis</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile ripple to="/categories/">
                         <v-list-tile-action>
-                            <v-icon dark>list</v-icon>
+                            <v-icon dark>folder_open</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
                             <v-list-tile-title>Categories</v-list-tile-title>
@@ -35,7 +35,7 @@
                     </v-list-tile>
                     <v-list-tile ripple to="/upcoming/">
                         <v-list-tile-action>
-                            <v-icon dark>list</v-icon>
+                            <v-icon dark>schedule</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
                             <v-list-tile-title>Upcoming</v-list-tile-title>

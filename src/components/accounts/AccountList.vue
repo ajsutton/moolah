@@ -4,12 +4,12 @@
             <account-list-item :account="account" v-for="account in accounts" :key="account.id">
             </account-list-item>
         <v-divider></v-divider>
-        <v-list-tile ripple to="/" exact>
+        <v-list-tile ripple to="/transactions/">
             <v-list-tile-action>
-                <v-icon dark>trending_up</v-icon>
+                <v-icon dark>list</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-                <v-list-tile-title>Net Worth</v-list-tile-title>
+                <v-list-tile-title>All Transactions</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
                 <monetary-amount :value="networth"></monetary-amount>
