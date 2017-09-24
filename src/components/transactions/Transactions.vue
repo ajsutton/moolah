@@ -21,12 +21,7 @@
             </template>
         </v-list>
         <div class="text-xs-center">
-            <v-btn icon :loading="loadingMore" @click.native="goPrevious" :disabled="loadingMore || !hasPrevious">
-                <v-icon>navigate_before</v-icon>
-            </v-btn>
-            <v-btn icon :loading="loadingMore" @click.native="goNext" :disabled="loadingMore || !hasNext">
-                <v-icon>navigate_next</v-icon>
-            </v-btn>
+            <v-pagination :length="numberOfPages" v-model="currentPage"></v-pagination>
         </div>
     </v-card>
 </template>
@@ -46,15 +41,22 @@
             title() {
                 return this.accountId === undefined ? 'All Transactions' : this.accountName(this.accountId);
             },
+            currentPage: {
+                get() {
+                    return this.pageNumber;
+                },
+                set(value) {
+                    this[transactionActions.loadPage](value);
+                }
+            },
             ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
-            ...mapGetters('transactions', ['hasNext', 'hasPrevious']),
-            ...mapState('transactions', ['transactions', 'loading']),
+            ...mapGetters('transactions', ['hasNext', 'hasPrevious', 'numberOfPages']),
+            ...mapState('transactions', ['transactions', 'loading', 'pageNumber']),
         },
         data() {
             return {
                 loadingMore: false,
-
             };
         },
 
@@ -95,7 +97,7 @@
                 }
             },
             ...mapActions([stateActions.selectAccount]),
-            ...mapActions('transactions', [transactionActions.addTransaction, transactionActions.nextPage, transactionActions.previousPage]),
+            ...mapActions('transactions', [transactionActions.addTransaction, transactionActions.loadPage]),
         },
 
         components: {

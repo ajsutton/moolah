@@ -16,8 +16,7 @@ export const actions = {
     updateTransaction: 'UPDATE_TRANSACTION',
     deleteTransaction: 'DELETE_TRANSACTION',
     payTransaction: 'PAY_TRANSACTION',
-    nextPage: 'NEXT_PAGE',
-    previousPage: 'PREVIOUS_PAGE',
+    loadPage: 'LOAD_PAGE',
 };
 export const mutations = {
     setTransactions: 'SET_TRANSACTIONS',
@@ -73,8 +72,9 @@ export default {
             transactionsById: {},
             singleAccount: true,
             loading: false,
-            transactionOffset: 0,
+            pageNumber: 1,
             hasMore: false,
+            totalNumberOfTransactions: 0,
         };
     },
     getters: {
@@ -85,8 +85,11 @@ export default {
             return state.hasMore;
         },
         hasPrevious(state) {
-            return state.transactionOffset > 0;
-        }
+            return state.pageNumber > 0;
+        },
+        numberOfPages(state) {
+            return Math.ceil(state.totalNumberOfTransactions / PAGE_SIZE) || 0;
+        },
     },
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
@@ -101,8 +104,9 @@ export default {
             state.singleAccount = transactionsResponse.singleAccount;
             state.loading = !!transactionsResponse.loading;
             state.transactionsById = transactionsById;
-            state.transactionOffset = transactionsResponse.transactionOffset;
             state.hasMore = transactionsResponse.hasMore;
+            state.pageNumber = transactionsResponse.pageNumber;
+            state.totalNumberOfTransactions = transactionsResponse.totalNumberOfTransactions;
         },
         [mutations.addTransaction](state, transaction) {
             const insertIndex = findInsertIndex(state, transaction);
@@ -149,19 +153,13 @@ export default {
             if (searchOptions.scheduled) {
                 response.transactions = response.transactions.reverse();
             }
-            commit(mutations.setTransactions, Object.assign(response, {singleAccount: !!searchOptions.account, transactionOffset: 0}));
+            commit(mutations.setTransactions, Object.assign(response, {singleAccount: !!searchOptions.account, pageNumber: 1}));
         },
 
-        async [actions.nextPage]({commit, rootState, state}) {
-            const transactionOffset = state.transactionOffset + state.transactions.length;
+        async [actions.loadPage]({commit, rootState, state}, pageNumber) {
+            const transactionOffset = PAGE_SIZE * (pageNumber - 1);
             const response = await client.transactions({account: rootState.selectedAccountId, scheduled: false}, transactionOffset, PAGE_SIZE);
-            commit(mutations.setTransactions, Object.assign(response, {singleAccount: true, transactionOffset}));
-        },
-        
-        async [actions.previousPage]({commit, rootState, state}) {
-            const transactionOffset = Math.max(0, state.transactionOffset - PAGE_SIZE);
-            const response = await client.transactions({account: rootState.selectedAccountId, scheduled: false}, transactionOffset, PAGE_SIZE);
-            commit(mutations.setTransactions, Object.assign(response, {singleAccount: true, transactionOffset}));
+            commit(mutations.setTransactions, Object.assign(response, {singleAccount: true, pageNumber}));
         },
 
         async [actions.addTransaction]({commit, rootState, dispatch}, attributes = {}) {
