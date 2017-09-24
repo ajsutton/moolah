@@ -21,10 +21,10 @@
             </template>
         </v-list>
         <v-divider></v-divider>
-        <v-btn :loading="loadingMore" @click.native="goPrevious" :disabled="loadingMore">
+        <v-btn :loading="loadingMore" @click.native="goPrevious" :disabled="loadingMore || !hasPrevious">
             Previous page
         </v-btn>
-        <v-btn :loading="loadingMore" @click.native="goNext" :disabled="loadingMore">
+        <v-btn :loading="loadingMore" @click.native="goNext" :disabled="loadingMore || !hasNext">
             Next page
         </v-btn>
     </v-card>
@@ -47,6 +47,7 @@
             },
             ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
+            ...mapGetters('transactions', ['hasNext', 'hasPrevious']),
             ...mapState('transactions', ['transactions', 'loading']),
         },
         data() {
