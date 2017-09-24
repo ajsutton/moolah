@@ -20,13 +20,14 @@
                 <v-divider></v-divider>
             </template>
         </v-list>
-        <v-divider></v-divider>
-        <v-btn :loading="loadingMore" @click.native="goPrevious" :disabled="loadingMore || !hasPrevious">
-            Previous page
-        </v-btn>
-        <v-btn :loading="loadingMore" @click.native="goNext" :disabled="loadingMore || !hasNext">
-            Next page
-        </v-btn>
+        <div class="text-xs-center">
+            <v-btn icon :loading="loadingMore" @click.native="goPrevious" :disabled="loadingMore || !hasPrevious">
+                <v-icon>navigate_before</v-icon>
+            </v-btn>
+            <v-btn icon @click.native="goNext" :disabled="loadingMore || !hasNext">
+                <v-icon>navigate_next</v-icon>
+            </v-btn>
+        </div>
     </v-card>
 </template>
 
