@@ -65,7 +65,9 @@
         <main>
             <welcome v-if="!loggedIn"></welcome>
             <v-container fluid v-if="loggedIn" grid-list-md>
-                <router-view></router-view>
+                <transition name="slide-x-reverse-transition">
+                    <router-view></router-view>
+                </transition>
             </v-container>
         </main>
         <v-footer class="primary" v-if="!loggedIn">
