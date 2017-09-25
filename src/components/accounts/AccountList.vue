@@ -1,8 +1,8 @@
 <template>
     <v-list class="pt-0" dense>
         <v-divider></v-divider>
-            <account-list-item :account="account" v-for="account in accounts" :key="account.id">
-            </account-list-item>
+        <account-list-item :account="account" v-for="account in accounts" :key="account.id">
+        </account-list-item>
         <v-divider></v-divider>
         <v-list-tile ripple to="/transactions/">
             <v-list-tile-action>
