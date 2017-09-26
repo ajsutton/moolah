@@ -22,8 +22,9 @@
         </feature-panel>
       </v-layout>
 
-      <v-layout row justify-center class="mt-5">
-        <a href="/api/googleauth"><img src="../../assets/auth/signin_google.png" width="191" height="46"></a>
+      <v-layout row justify-center class="mt-5 login-buttons">
+        <a href="/api/googleauth"><img src="../../assets/auth/signin_google.png"></a>
+        <a href="/api/facebookauth"><img src="../../assets/auth/signin_facebook.png"></a>
       </v-layout>
     </v-container>
   </div>
@@ -43,8 +44,17 @@
   }
 </script>
 
-<style>
+<style lang="scss">
   .parallax__image-container img {
     filter: brightness(60%);
+  }
+
+  .login-buttons {
+    a {
+      padding-right: 2em;
+    }
+    img {
+      height: 40px;
+    }
   }
 </style>

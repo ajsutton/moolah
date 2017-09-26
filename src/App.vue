@@ -57,7 +57,20 @@
             <v-toolbar-title class="hidden-sm-and-down white--text" v-if="loggedIn">Moolah</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <v-btn flat ripple v-if="!loggedIn" tag="a" href="/api/googleauth">Sign in</v-btn>
+                <v-menu :nudge-width="100" v-if="!loggedIn" bottom :nudge-bottom="50">
+                    <v-btn flat slot="activator">Sign in with
+                        <v-icon dark>arrow_drop_down</v-icon>
+                    </v-btn>
+                    <v-list>
+                        <v-list-tile ripple href="/api/googleauth">
+                            <v-list-tile-title>Google</v-list-tile-title>
+                        </v-list-tile>
+                        <v-list-tile ripple href="/api/facebookauth">
+                            <v-list-tile-title>Facebook</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
+                </v-menu>
+
                 <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
             </v-toolbar-items>
             <v-toolbar-side-icon @click.native.prevent="toggleRightNav" :disabled="!hasTransaction" v-if="loggedIn"></v-toolbar-side-icon>
