@@ -13,7 +13,8 @@
                 slot="activator"
                 label="Date"
                 v-model="textValue"
-                
+                :error-messages="errorMessages"
+                @blur="onBlur"
                 v-on:keyup.up="incrementDate"
                 v-on:keyup.down="decrementDate"
         ></v-text-field>
@@ -27,30 +28,50 @@
 
 <script>
     import addDays from 'date-fns/add_days';
+    import parseDate from 'date-fns/parse';
     import {formatDate} from '../../api/apiFormats';
 
     export default {
         props: ['value'],
         data() {
             return {
+                invalidText: null,
                 dateMenu: false,
+                errorMessages: [],
             }
         },
 
         computed: {
             textValue: {
                 get() {
-                    return this.value;
+                    return this.invalidText !== null ? this.invalidText : this.value;
                 },
                 set(value) {
-                    this.onInput(value);
+                    const parsedValue = parseDate(value);
+                    if (!isNaN(parsedValue) && formatDate(parsedValue) === value) {
+                        this.invalidText = null;
+                        this.errorMessages = [];
+                        this.onInput(value);
+                    } else {
+                        this.invalidText = value;
+                    }
                 }
-            }
+            },
+        },
+
+        watch: {
+            value() {
+                this.invalidText = null;
+            },
         },
 
         methods: {
             onInput(value) {
                 this.$emit('input', value);
+            },
+
+            onBlur() {
+                this.errorMessages = this.invalidText !== null ? ['Invalid date'] : [];
             },
 
             incrementDate() {
