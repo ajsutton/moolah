@@ -13,7 +13,7 @@
                 slot="activator"
                 label="Date"
                 v-model="textValue"
-                readonly
+                
                 v-on:keyup.up="incrementDate"
                 v-on:keyup.down="decrementDate"
         ></v-text-field>
