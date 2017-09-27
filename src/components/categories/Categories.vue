@@ -37,7 +37,7 @@
         },
         methods: {
             selectCategory(category) {
-                this.selectedCategory = category;
+                this.selectedCategory = category.id !== null ? category : null;
                 this.$nextTick(() => {
                     this.$refs.categoryCards[this.$refs.categoryCards.length - 1].$el.scrollIntoView();
                 });

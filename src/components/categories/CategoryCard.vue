@@ -1,8 +1,8 @@
 <template>
     <v-flex xs3 class="category">
         <v-card flat class="scrolling-card">
-            <v-toolbar card class="white">
-                <v-toolbar-title class="body-2 grey--text">
+            <v-toolbar card :class="toolbarClass">
+                <v-toolbar-title class="body-2 gray--text" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave="onDragLeave" @drop="onDrop">
                     <category-name :category="category" :editable="category.id !== null" ref="categoryNames"></category-name>
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -24,8 +24,23 @@
     import Category from './Category.vue';
     import CategoryName from './CategoryName.vue';
 
+    const categoryType = 'application/x-moolah-category';
     export default {
         props: ['category', 'categoryTree'],
+        data() {
+            return {
+                dragOver: 0,
+            };
+        },
+        computed: {
+            toolbarClass() {
+                return {
+                    'white': !this.dragOver,
+                    'blue lighten-4': this.dragOver,
+                }
+            },
+            ...mapGetters('categories', ['getCategory']),
+        },
         methods: {
             selectCategory(category) {
                 this.$emit('selectCategory', category);
@@ -37,7 +52,48 @@
                     this.$refs.categoryNames.find(categoryName => categoryName.category === createdCategory).focusName();
                 });
             },
-            ...mapActions('categories', [actions.addCategory]),
+
+            onDragEnter(e) {
+                if (e.dataTransfer.types.includes(categoryType)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (this.dragOver === 0) {
+                        this.$emit('selectCategory', this.category);
+                    }
+                    this.dragOver++;
+                }
+            },
+            onDragOver(e) {
+                if (e.dataTransfer.types.includes(categoryType)) {
+                    e.dataTransfer.dropEffect = "move";
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            },
+            onDragLeave(e) {
+                if (e.dataTransfer.types.includes(categoryType)) {
+                    this.dragOver = Math.max(0, this.dragOver - 1);
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            },
+            onDrop(e) {
+                this.dragOver = 0;
+                if (e.dataTransfer.types.includes(categoryType)) {
+                    const droppedCategory = this.getCategory(e.dataTransfer.getData(categoryType));
+                    if (droppedCategory.id === this.category.id) {
+                        return;
+                    }
+                    e.stopPropagation();
+                    this[actions.updateCategory]({
+                        id: droppedCategory.id,
+                        patch: {
+                            parentId: this.category.id,
+                        },
+                    });
+                }
+            },
+            ...mapActions('categories', [actions.addCategory, actions.updateCategory]),
         },
         components: {
             Category,
