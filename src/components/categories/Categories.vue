@@ -1,32 +1,14 @@
 <template>
     <v-card class="categories">
         <v-layout row>
-            <v-flex xs3 v-for="selectedCategory in categoryTree" :key="selectedCategory.id" class="category">
-                <v-card flat class="scrolling-card" ref="categoryCards">
-                    <v-toolbar card class="white">
-                        <v-toolbar-title class="body-2 grey--text">
-                            <category-name :category="selectedCategory" :editable="selectedCategory.id !== null" ref="categoryNames"></category-name>
-                        </v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-btn icon @click.native.stop="addCategory(selectedCategory)">
-                            <v-icon>add</v-icon>
-                        </v-btn>
-                    </v-toolbar>
-                    <v-divider></v-divider>
-                    <v-list class="children">
-                        <category v-for="category in selectedCategory.children" :category="category" :expanded="categoryTree.includes(category)" :key="category.id" @selectCategory="selectCategory"></category>
-                    </v-list>
-                </v-card>
-            </v-flex>
+            <category-card v-for="category in categoryTree" :key="category.id" :category="category" :categoryTree="categoryTree" @selectCategory="selectCategory" ref="categoryCards"></category-card>
         </v-layout>
     </v-card>
 </template>
 
 <script>
-    import {mapState, mapGetters, mapActions} from 'vuex';
-    import {actions} from '../../store/categoryStore';
-    import Category from './Category.vue';
-    import CategoryName from './CategoryName.vue';
+    import {mapState, mapGetters} from 'vuex';
+    import CategoryCard from './CategoryCard.vue';
 
     export default {
         data() {
@@ -54,24 +36,15 @@
             ...mapGetters('categories', ['getCategory']),
         },
         methods: {
-            async addCategory(parent) {
-                const createdCategory = await this[actions.addCategory]({name: 'New Category', parentId: parent.id});
-                this.selectCategory(createdCategory);
-                this.$nextTick(() => {
-                    this.$refs.categoryNames.find(categoryName => categoryName.category === createdCategory).focusName();
-                });
-            },
             selectCategory(category) {
                 this.selectedCategory = category;
                 this.$nextTick(() => {
-                    this.$refs.categoryCards[this.$refs.categoryCards.length - 1].scrollIntoView();
+                    this.$refs.categoryCards[this.$refs.categoryCards.length - 1].$el.scrollIntoView();
                 });
             },
-            ...mapActions('categories', [actions.addCategory]),
         },
         components: {
-            Category,
-            CategoryName,
+            CategoryCard,
         },
     };
 </script>
