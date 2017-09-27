@@ -2,7 +2,7 @@
     <v-card class="categories">
         <v-layout row>
             <v-flex xs3 v-for="selectedCategory in categoryTree" :key="selectedCategory.id" class="category">
-                <v-card flat class="scrolling-card">
+                <v-card flat class="scrolling-card" ref="categoryCards">
                     <v-toolbar card class="white">
                         <v-toolbar-title class="body-2 grey--text">
                             <category-name :category="selectedCategory" :editable="selectedCategory.id !== null"></category-name>
@@ -60,6 +60,9 @@
             },
             selectCategory(category) {
                 this.selectedCategory = category;
+                this.$nextTick(() => {
+                    this.$refs.categoryCards[this.$refs.categoryCards.length - 1].scrollIntoView();
+                });
             },
             ...mapActions('categories', [actions.addCategory]),
         },
