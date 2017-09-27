@@ -1,8 +1,8 @@
 <template>
-    <v-card>
+    <v-card class="categories">
         <v-layout row>
             <v-flex xs3 v-for="selectedCategory in categoryTree" :key="selectedCategory.id">
-                <v-card flat>
+                <v-card flat class="scrolling-card">
                     <v-toolbar card class="white">
                         <v-toolbar-title class="body-2 grey--text">
                             <category-name :category="selectedCategory" :editable="selectedCategory.id !== null"></category-name>
@@ -13,7 +13,7 @@
                         </v-btn>
                     </v-toolbar>
                     <v-divider></v-divider>
-                    <v-list>
+                    <v-list class="children">
                         <category v-for="category in selectedCategory.children" :category="category" :expanded="categoryTree.includes(category)" :key="category.id" @selectCategory="selectCategory"></category>
                     </v-list>
                 </v-card>
@@ -69,3 +69,14 @@
         },
     };
 </script>
+
+<style lang="scss">
+    .categories {
+        .scrolling-card {
+             .children {
+                overflow-y: auto;
+                height: calc(100vh - 64px - 92px);
+            }
+        }
+    }
+</style>
