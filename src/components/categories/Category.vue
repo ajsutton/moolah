@@ -1,6 +1,6 @@
 <template>
     <v-list-tile :class="mainClass" @click.native.prevent="selectCategory" draggable="true" 
-                 @dragstart="onDragStart" @dragend="onDragEnd" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave.stop="onDragLeave" @drop="onDrop">
+                 @dragstart="onDragStart" @dragend="onDragEnd" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave="onDragLeave" @drop="onDrop">
         <v-list-tile-content>
             <v-list-tile-title>{{category.name}}</v-list-tile-title>
         </v-list-tile-content>
@@ -65,7 +65,11 @@
                 }
             },
             onDragLeave(e) {
-                this.dragOver = Math.max(0, this.dragOver - 1);
+                if (e.dataTransfer.types.includes(categoryType)) {
+                    this.dragOver = Math.max(0, this.dragOver - 1);
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
             },
             onDrop(e) {
                 this.dragOver = 0;
