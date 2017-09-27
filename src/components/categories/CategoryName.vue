@@ -1,5 +1,5 @@
 <template>
-    <input type="text" :disabled="!editable" v-model="name" ref="nameField">
+    <v-text-field  :disabled="!editable" v-model="name" ref="nameField"></v-text-field>
 </template>
 
 <script>

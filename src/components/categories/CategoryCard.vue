@@ -2,7 +2,7 @@
     <v-flex xs3 class="category">
         <v-card flat class="scrolling-card">
             <v-toolbar card :class="toolbarClass">
-                <v-toolbar-title class="body-2 gray--text" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave="onDragLeave" @drop="onDrop">
+                <v-toolbar-title class="body-2 gray--text full-width" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave="onDragLeave" @drop="onDrop">
                     <category-name :category="category" :editable="category.id !== null" ref="categoryNames"></category-name>
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -55,3 +55,9 @@
         },
     };
 </script>
+
+<style lang="scss">
+    .category .full-width {
+        width: 100%;
+    }
+</style>
