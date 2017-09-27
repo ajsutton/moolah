@@ -5,7 +5,7 @@
                 <v-card flat class="scrolling-card" ref="categoryCards">
                     <v-toolbar card class="white">
                         <v-toolbar-title class="body-2 grey--text">
-                            <category-name :category="selectedCategory" :editable="selectedCategory.id !== null"></category-name>
+                            <category-name :category="selectedCategory" :editable="selectedCategory.id !== null" ref="categoryNames"></category-name>
                         </v-toolbar-title>
                         <v-spacer></v-spacer>
                         <v-btn icon @click.native.stop="addCategory(selectedCategory)">
@@ -57,6 +57,9 @@
             async addCategory(parent) {
                 const createdCategory = await this[actions.addCategory]({name: 'New Category', parentId: parent.id});
                 this.selectCategory(createdCategory);
+                this.$nextTick(() => {
+                    this.$refs.categoryNames.find(categoryName => categoryName.category === createdCategory).focusName();
+                });
             },
             selectCategory(category) {
                 this.selectedCategory = category;

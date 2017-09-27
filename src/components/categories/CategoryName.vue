@@ -1,5 +1,5 @@
 <template>
-    <input type="text" :disabled="!editable" v-model="name">
+    <input type="text" :disabled="!editable" v-model="name" ref="nameField">
 </template>
 
 <script>
@@ -25,6 +25,10 @@
             },
         },
         methods: {
+            focusName() {
+                this.$refs.nameField.focus();
+                this.$refs.nameField.select();
+            },
             ...mapActions('categories', [actions.updateCategory]),
         }
     };
