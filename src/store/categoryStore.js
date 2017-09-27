@@ -129,12 +129,13 @@ export default {
             commit(mutations.setCategories, response.categories);
         },
 
-        async [actions.addCategory]({commit}, category) {
+        async [actions.addCategory]({commit, state}, category) {
             const newCategory = Object.assign({id: 'new-category'}, category);
             commit(mutations.addCategory, newCategory);
             try {
                 const createdCategory = await client.createCategory(category);
                 commit(mutations.updateCategory, {id: newCategory.id, patch: createdCategory});
+                return state.categoriesById[createdCategory.id];
             } catch (error) {
                 commit(mutations.removeCategory, newCategory);
                 throw error;

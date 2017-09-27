@@ -54,8 +54,9 @@
             ...mapGetters('categories', ['getCategory']),
         },
         methods: {
-            addCategory(parent) {
-                this[actions.addCategory]({name: 'New Category', parentId: parent.id});
+            async addCategory(parent) {
+                const createdCategory = await this[actions.addCategory]({name: 'New Category', parentId: parent.id});
+                this.selectCategory(createdCategory);
             },
             selectCategory(category) {
                 this.selectedCategory = category;
