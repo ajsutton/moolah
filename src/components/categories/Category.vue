@@ -1,5 +1,6 @@
 <template>
-    <v-list-tile :class="mainClass" @click.native.prevent="selectCategory">
+    <v-list-tile :class="mainClass" @click.native.prevent="selectCategory" draggable="true" 
+                 @dragstart="onDragStart" @dragend="onDragEnd" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave.stop="onDragLeave" @drop="onDrop">
         <v-list-tile-content>
             <v-list-tile-title>{{category.name}}</v-list-tile-title>
         </v-list-tile-content>
@@ -9,31 +10,93 @@
     </v-list-tile>
 </template>
 <script>
+    import {mapGetters, mapActions} from 'vuex';
+    import {actions} from '../../store/categoryStore';
+
+    const categoryType = 'application/x-moolah-category';
     export default {
         name: 'CategoryListItem',
         props: ['category', 'expanded'],
+        data() {
+            return {
+                dragging: false,
+                dragOver: 0,
+            };
+        },
         computed: {
             hasChildren() {
                 return this.category.children.length > 0;
             },
             mainClass() {
-                return this.expanded ? 'blue lighten-2' : '';
+                return {
+                    category: true,
+                    'blue lighten-2': this.expanded,
+                    'blue lighten-4': this.dragOver,
+                    dragging: this.dragging,
+                }
             },
             badge() {
                 return {value: this.category.children.length, left: true, bottom: true, visible: this.hasChildren};
-            }
+            },
+            ...mapGetters('categories', ['getCategory']),
         },
         methods: {
             selectCategory() {
                 this.$emit('selectCategory', this.category);
-            }
+            },
+            onDragStart(e) {
+                this.dragging = true;
+                e.dataTransfer.setData(categoryType, this.category.id);
+            },
+            onDragEnd(e) {
+                this.dragging = false;
+            },
+            onDragEnter(e) {
+                if (e.dataTransfer.types.includes(categoryType)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.dragOver++;
+                }
+            },
+            onDragOver(e) {
+                if (e.dataTransfer.types.includes(categoryType)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            },
+            onDragLeave(e) {
+                this.dragOver--;
+            },
+            onDrop(e) {
+                this.dragOver--;
+                if (e.dataTransfer.types.includes(categoryType)) {
+                    const droppedCategory = this.getCategory(e.dataTransfer.getData(categoryType));
+                    if (droppedCategory.id === this.category.id) {
+                        return;
+                    }
+                    e.stopPropagation();
+                    this[actions.updateCategory]({
+                        id: droppedCategory.id,
+                        patch: {
+                            parentId: this.category.id,
+                        },
+                    });
+                }
+            },
+            ...mapActions('categories', [actions.updateCategory]),
         }
     }
 </script>
 
-<style scoped>
-    i.badge::after {
-        top: initial;
-        bottom: 0;
+<style lang="scss">
+    .category {
+        i.badge::after {
+            top: initial;
+            bottom: 0;
+        }
+
+        .dragging {
+            opacity: 0.4;
+        }
     }
 </style>
