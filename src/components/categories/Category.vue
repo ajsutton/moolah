@@ -12,15 +12,14 @@
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import {actions} from '../../store/categoryStore';
+    import {categoryType, CategoryDropTargetMixin} from './categoryDropTarget';
 
-    const categoryType = 'application/x-moolah-category';
     export default {
-        name: 'CategoryListItem',
+        mixins: [CategoryDropTargetMixin],
         props: ['category', 'expanded'],
         data() {
             return {
                 dragging: false,
-                dragOver: 0,
             };
         },
         computed: {
@@ -38,7 +37,6 @@
             badge() {
                 return {value: this.category.children.length, left: true, bottom: true, visible: this.hasChildren};
             },
-            ...mapGetters('categories', ['getCategory']),
         },
         methods: {
             selectCategory() {
@@ -50,46 +48,6 @@
             },
             onDragEnd(e) {
                 this.dragging = false;
-            },
-            onDragEnter(e) {
-                if (e.dataTransfer.types.includes(categoryType)) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (this.dragOver === 0) {
-                        this.$emit('selectCategory', this.category);
-                    }
-                    this.dragOver++;
-                }
-            },
-            onDragOver(e) {
-                if (e.dataTransfer.types.includes(categoryType)) {
-                    e.dataTransfer.dropEffect = "move";
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            },
-            onDragLeave(e) {
-                if (e.dataTransfer.types.includes(categoryType)) {
-                    this.dragOver = Math.max(0, this.dragOver - 1);
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-            },
-            onDrop(e) {
-                this.dragOver = 0;
-                if (e.dataTransfer.types.includes(categoryType)) {
-                    const droppedCategory = this.getCategory(e.dataTransfer.getData(categoryType));
-                    if (droppedCategory.id === this.category.id) {
-                        return;
-                    }
-                    e.stopPropagation();
-                    this[actions.updateCategory]({
-                        id: droppedCategory.id,
-                        patch: {
-                            parentId: this.category.id,
-                        },
-                    });
-                }
             },
             ...mapActions('categories', [actions.updateCategory]),
         }
