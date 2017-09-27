@@ -75,7 +75,7 @@
         .scrolling-card {
              .children {
                 overflow-y: auto;
-                height: calc(100vh - 64px - 92px);
+                max-height: calc(100vh - 64px - 92px);
             }
         }
     }
