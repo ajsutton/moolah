@@ -1,7 +1,7 @@
 <template>
     <v-card class="categories">
         <v-layout row>
-            <v-flex xs3 v-for="selectedCategory in categoryTree" :key="selectedCategory.id">
+            <v-flex xs3 v-for="selectedCategory in categoryTree" :key="selectedCategory.id" class="category">
                 <v-card flat class="scrolling-card">
                     <v-toolbar card class="white">
                         <v-toolbar-title class="body-2 grey--text">
@@ -72,11 +72,15 @@
 
 <style lang="scss">
     .categories {
-        .scrolling-card {
-             .children {
-                overflow-y: auto;
-                max-height: calc(100vh - 64px - 92px);
-            }
+        overflow-x: auto;
+
+        .category {
+            min-width: 25%;
+        }
+
+        .children {
+            overflow-y: auto;
+            max-height: calc(100vh - 64px - 92px);
         }
     }
 </style>
