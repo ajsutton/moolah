@@ -55,6 +55,9 @@
                 if (e.dataTransfer.types.includes(categoryType)) {
                     e.preventDefault();
                     e.stopPropagation();
+                    if (this.dragOver === 0) {
+                        this.$emit('selectCategory', this.category);
+                    }
                     this.dragOver++;
                 }
             },
