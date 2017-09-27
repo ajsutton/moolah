@@ -63,6 +63,7 @@
             },
             onDragOver(e) {
                 if (e.dataTransfer.types.includes(categoryType)) {
+                    e.dataTransfer.dropEffect = "move";
                     e.preventDefault();
                     e.stopPropagation();
                 }
