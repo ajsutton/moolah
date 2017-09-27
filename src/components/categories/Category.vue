@@ -65,10 +65,10 @@
                 }
             },
             onDragLeave(e) {
-                this.dragOver--;
+                this.dragOver = Math.max(0, this.dragOver - 1);
             },
             onDrop(e) {
-                this.dragOver--;
+                this.dragOver = 0;
                 if (e.dataTransfer.types.includes(categoryType)) {
                     const droppedCategory = this.getCategory(e.dataTransfer.getData(categoryType));
                     if (droppedCategory.id === this.category.id) {
