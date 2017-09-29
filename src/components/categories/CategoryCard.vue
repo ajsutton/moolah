@@ -2,7 +2,7 @@
     <v-flex xs3 class="category">
         <v-card class="scrolling-card">
             <v-card-title primary-title :class="toolbarClass" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave="onDragLeave" @drop="onDrop">
-                <div class="headline"><category-name :category="category" :editable="realCategory" ref="categoryName"></category-name></div>
+                <div class="headline full-width"><category-name :category="category" :editable="realCategory" ref="categoryName"></category-name></div>
             </v-card-title>
             <v-card-actions class="pt-0">
                 <v-btn flat @click.native.stop="addCategory" class="primary--text">Add category</v-btn>
