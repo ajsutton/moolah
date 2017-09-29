@@ -5,7 +5,10 @@
             <v-list-tile-title>{{category.name}}</v-list-tile-title>
         </v-list-tile-content>
         <v-list-tile-action>
-            <v-icon v-badge="badge" class="secondary--after">keyboard_arrow_right</v-icon>
+            <v-badge left bottom overlay v-model="showBadge">
+                <span slot="badge" :v-model="false">{{category.children.length}}</span>
+                <v-icon>keyboard_arrow_right</v-icon>
+            </v-badge>
         </v-list-tile-action>
     </v-list-tile>
 </template>
@@ -25,6 +28,9 @@
         computed: {
             hasChildren() {
                 return this.category.children.length > 0;
+            },
+            showBadge() {
+                return this.hasChildren ? true : false;
             },
             mainClass() {
                 return {
@@ -56,7 +62,7 @@
 
 <style lang="scss">
     .category {
-        i.badge::after {
+        .badge__badge {
             top: initial;
             bottom: 0;
         }

@@ -1,6 +1,6 @@
 <template>
-    <v-app light toolbar>
-        <v-navigation-drawer persistent clipped enable-resize-watcher v-model="showMainNav" dark>
+    <v-app light>
+        <v-navigation-drawer persistent clipped enable-resize-watcher v-model="showMainNav" dark app>
             <template v-if="loggedIn">
                 <v-list class="pa-0">
                     <v-list-tile avatar>
@@ -44,14 +44,14 @@
                 </v-list>
             </template>
         </v-navigation-drawer>
-        <v-navigation-drawer v-model="showRightNavPanel" floating light right persistent clipped disable-route-watcher>
+        <v-navigation-drawer v-model="showRightNavPanel" floating light right persistent clipped disable-route-watcher app>
             <v-card class="ma-3">
                 <v-card-text>
                     <edit-transaction v-if="hasTransaction" :key="selectedTransaction.id"></edit-transaction>
                 </v-card-text>
             </v-card>
         </v-navigation-drawer>
-        <v-toolbar dark class="primary" fixed>
+        <v-toolbar dark class="primary" fixed app clipped-left clipped-right>
             <v-toolbar-side-icon v-if="loggedIn"
                                  @click.native.stop="showMainNav = !showMainNav"></v-toolbar-side-icon>
             <v-toolbar-title class="hidden-sm-and-down white--text" v-if="loggedIn">Moolah</v-toolbar-title>
@@ -76,12 +76,14 @@
             <v-toolbar-side-icon @click.native.prevent="toggleRightNav" :disabled="!hasTransaction" v-if="loggedIn"></v-toolbar-side-icon>
         </v-toolbar>
         <main>
-            <welcome v-if="!loggedIn"></welcome>
-            <v-container fluid v-if="loggedIn" grid-list-md>
-                <transition name="slide-x-reverse-transition">
-                    <router-view></router-view>
-                </transition>
-            </v-container>
+            <v-content>
+                <welcome v-if="!loggedIn"></welcome>
+                <v-container fluid v-if="loggedIn" grid-list-md>
+                    <transition name="slide-x-reverse-transition">
+                        <router-view></router-view>
+                    </transition>
+                </v-container>
+            </v-content>
         </main>
         <v-footer class="primary" v-if="!loggedIn">
             <div v-if="!loggedIn">Hero image by
