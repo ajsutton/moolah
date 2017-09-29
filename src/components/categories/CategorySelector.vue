@@ -22,7 +22,7 @@
             },
             exclude: {
                 type: Array,
-                'default': [],
+                'default': () => [],
             },
         },
         computed: {
