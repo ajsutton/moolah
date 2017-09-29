@@ -2,11 +2,11 @@
     <v-flex xs3 class="category">
         <v-card class="scrolling-card">
             <v-card-title primary-title :class="toolbarClass" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave="onDragLeave" @drop="onDrop">
-                <div class="headline"><category-name :category="category" :editable="category.id !== null" ref="categoryName"></category-name></div>
+                <div class="headline"><category-name :category="category" :editable="realCategory" ref="categoryName"></category-name></div>
             </v-card-title>
             <v-card-actions>
                 <v-btn flat @click.native.stop="addCategory" class="primary--text">Add category</v-btn>
-                <v-btn flat>Merge</v-btn>
+                <merge-dialog :category="category" v-if="realCategory && category.children.length === 0" @selectCategory="selectCategory"></merge-dialog>
             </v-card-actions>
             <v-divider></v-divider>
             <v-list class="children">
@@ -22,10 +22,16 @@
     import Category from './Category.vue';
     import CategoryName from './CategoryName.vue';
     import {categoryType, CategoryDropTargetMixin} from './categoryDropTarget';
+    import MergeDialog from './MergeDialog.vue';
 
     export default {
         mixins: [CategoryDropTargetMixin],
         props: ['category', 'categoryTree'],
+        data() {
+            return {
+                mergeDialog: false,
+            };
+        },
         computed: {
             toolbarClass() {
                 return {
@@ -33,6 +39,9 @@
                     'blue lighten-4': this.dragOver,
                     'pb-0 pt-0': true,
                 }
+            },
+            realCategory() {
+                return this.category.id !== null;
             },
         },
         methods: {
@@ -51,6 +60,7 @@
         components: {
             Category,
             CategoryName,
+            MergeDialog,
         },
     };
 </script>

@@ -19,7 +19,11 @@
             label: {
                 type: String,
                 'default': 'Category',
-            }
+            },
+            exclude: {
+                type: Array,
+                'default': [],
+            },
         },
         computed: {
             valueProxy: {
@@ -35,7 +39,9 @@
                 const categories = [];
                 const addCategory = category => {
                     name.push(category.name);
-                    categories.push({id: category.id, name: name.join(':')});
+                    if (!this.exclude.includes(category)) {
+                        categories.push({id: category.id, name: name.join(':')});
+                    }
                     category.children.forEach(addCategory);
                     name.pop();
                 };

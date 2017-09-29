@@ -6,6 +6,7 @@ export const actions = {
     loadCategories: 'LOAD_CATEGORIES',
     addCategory: 'ADD_CATEGORY',
     updateCategory: 'UPDATE_CATEGORY',
+    deleteCategory: 'DELETE_CATEGORY',
 };
 
 export const mutations = {
@@ -150,6 +151,18 @@ export default {
                 await client.updateCategory(apiCategory(state.categoriesById[changes.id]));
             } catch (error) {
                 commit(mutations.updateCategory, {id: category.id, patch: original});
+                throw error;
+            }
+        },
+
+        async [actions.deleteCategory]({commit, state}, options) {
+            const category = state.categoriesById[options.id];
+            const replacement = state.categoriesById[options.replaceWith];
+            commit(mutations.removeCategory, category);
+            try {
+                await client.deleteCategory(category, replacement);
+            } catch (error) {
+                commit(mutations.addCategory, category);
                 throw error;
             }
         },

@@ -82,6 +82,11 @@ export default {
         return json(`/api/categories/${encodeURIComponent(category.id)}/`, {method: 'PUT', body: JSON.stringify(category)});
     },
 
+    async deleteCategory(category, replacement) {
+        const replacementParam = asQueryParams({replaceWith: replacement ? replacement.id : null});
+        return request(`/api/categories/${encodeURIComponent(category.id)}/?${replacementParam}`, {method: 'DELETE'})
+    },
+
     async incomeAndExpenseAnalsyis(monthEnd, afterDate) {
         const afterParam = afterDate ? `&after=${encodeURIComponent(formatDate(afterDate))}` : '';
         return json(`/api/analysis/incomeAndExpense/?monthEnd=${encodeURIComponent(monthEnd)}${afterParam}`);
