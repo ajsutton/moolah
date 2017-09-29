@@ -1,5 +1,5 @@
 <template>
-    <v-text-field :disabled="!editable" v-model="name" ref="nameField"></v-text-field>
+    <v-text-field :disabled="!editable" v-model="name" ref="nameField" :label="editable ? 'Category' : null" class="category-name"></v-text-field>
 </template>
 
 <script>
@@ -33,3 +33,9 @@
         }
     };
 </script>
+
+<style lang="scss">
+.category-name.input-group--disabled .input-group__details:before {
+    background-image: none !important;
+}
+</style>

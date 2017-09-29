@@ -4,7 +4,7 @@
             <v-card-title primary-title :class="toolbarClass" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave="onDragLeave" @drop="onDrop">
                 <div class="headline"><category-name :category="category" :editable="realCategory" ref="categoryName"></category-name></div>
             </v-card-title>
-            <v-card-actions>
+            <v-card-actions class="pt-0">
                 <v-btn flat @click.native.stop="addCategory" class="primary--text">Add category</v-btn>
                 <merge-dialog :category="category" v-if="realCategory && category.children.length === 0" @selectCategory="selectCategory"></merge-dialog>
             </v-card-actions>
@@ -37,7 +37,7 @@
                 return {
                     'white': !this.dragOver,
                     'blue lighten-4': this.dragOver,
-                    'pb-0 pt-0': true,
+                    'pb-0': true,
                 }
             },
             realCategory() {
