@@ -1,9 +1,9 @@
 <template>
-    <v-card class="categories">
+    <v-container class="categories">
         <v-layout row>
             <category-card v-for="category in categoryTree" :key="category.id" :category="category" :categoryTree="categoryTree" @selectCategory="selectCategory" ref="categoryCards"></category-card>
         </v-layout>
-    </v-card>
+    </v-container>
 </template>
 
 <script>
@@ -39,7 +39,7 @@
             selectCategory(category) {
                 this.selectedCategory = category.id !== null ? category : null;
                 this.$nextTick(() => {
-                    this.$refs.categoryCards[this.$refs.categoryCards.length - 1].$el.scrollIntoView();
+                    this.$refs.categoryCards[this.$refs.categoryCards.length - 1].focus();
                 });
             },
         },
@@ -59,7 +59,7 @@
 
         .children {
             overflow-y: auto;
-            max-height: calc(100vh - 64px - 92px);
+            max-height: calc(100vh - 64px - 180px);
         }
     }
 </style>
