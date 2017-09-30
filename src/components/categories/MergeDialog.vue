@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="open" width="50%">
-        <v-btn flat class="red--text ma-0" slot="activator">Delete&hellip;</v-btn>
+        <v-btn flat class="red--text card-action-button" slot="activator">Delete&hellip;</v-btn>
         <v-card>
             <v-card-title>
                 <span class="headline">Delete Category {{categoryName}}</span>
@@ -48,3 +48,9 @@
         }
     }
 </script>
+
+<style lang="scss">
+    .card-action-button {
+        margin: 0 4px;
+    }
+</style>
