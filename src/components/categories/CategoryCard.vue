@@ -8,10 +8,12 @@
                 <v-btn flat @click.native.stop="addCategory" class="primary--text">Add category</v-btn>
                 <merge-dialog :category="category" v-if="realCategory && category.children.length === 0" @selectCategory="selectCategory"></merge-dialog>
             </v-card-actions>
-            <v-divider></v-divider>
-            <v-list class="children">
-                <category v-for="childCategory in category.children" :category="childCategory" :expanded="categoryTree.includes(childCategory)" :key="childCategory.id" @selectCategory="selectCategory"></category>
-            </v-list>
+            <template v-if="category.children.length > 0">
+                <v-divider></v-divider>
+                <v-list class="children">
+                    <category v-for="childCategory in category.children" :category="childCategory" :expanded="categoryTree.includes(childCategory)" :key="childCategory.id" @selectCategory="selectCategory"></category>
+                </v-list>
+            </template>
         </v-card>
     </v-flex>
 </template>
