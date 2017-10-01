@@ -22,16 +22,20 @@
         </feature-panel>
       </v-layout>
 
-      <v-layout row justify-center class="mt-5 login-buttons">
-        <a href="/api/googleauth"><img src="../../assets/auth/signin_google.png"></a>
-        <a href="/api/facebookauth"><img src="../../assets/auth/signin_facebook.png"></a>
+      <v-layout row class="mt-5 login-buttons" justify-space-around wrap>
+        <v-flex class="text-xs-center">
+          <a href="/api/googleauth"><img src="../../assets/auth/signin_google.png"></a>
+        </v-flex>
+        <v-flex class="text-xs-center">
+          <a href="/api/facebookauth"><img src="../../assets/auth/signin_facebook.png"></a>
+        </v-flex>
       </v-layout>
     </v-container>
   </div>
 </template>
 
 <script>
-  import FeaturePanel from './FeaturePanel';
+  import FeaturePanel from './FeaturePanel.vue';
 
   export default {
     name: 'hello',
@@ -50,9 +54,6 @@
   }
 
   .login-buttons {
-    a {
-      padding-right: 2em;
-    }
     img {
       height: 40px;
     }
