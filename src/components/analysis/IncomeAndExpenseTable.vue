@@ -42,6 +42,7 @@
 <script>
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import client from '../../api/client';
+    import {monthAsIsoDate} from '../../api/apiFormats';
     import addMonths from 'date-fns/add_months';
     import parseDate from 'date-fns/parse';
     import format from 'date-fns/format';
@@ -112,19 +113,21 @@
 
         filters: {
             monthName(value) {
-                const startDate = parseDate(value.start);
-                const endDate = parseDate(value.end);
+                const dayOfMonth = new Date().getDate();
+                const endDate = parseDate(monthAsIsoDate(value.month, dayOfMonth));
+                const startDate = addMonths(endDate, -1);
                 const startMonth = getMonth(startDate);
                 const endMonth = getMonth(endDate);
-                const includeYear = differenceInCalendarMonths(new Date(), endDate) + 1 > 12;
+                const includeYear = differenceInCalendarMonths(new Date(), endDate) >= 12;
                 const monthLabel = startMonth === endMonth ? format(startDate, 'MMM') : format(startDate, 'MMM') + '/' + format(endDate, 'MMM');
                 const yearLabel = includeYear ? ' ' + format(endDate, 'YYYY') : '';
                 return monthLabel + yearLabel;
             },
             monthsAgo(value) {
                 const plural = value => value === 1 ? '' : 's';
-                const startDate = parseDate(value.start);
-                const endDate = parseDate(value.end);
+                const dayOfMonth = new Date().getDate();
+                const endDate = parseDate(monthAsIsoDate(value.month, dayOfMonth));
+                const startDate = addMonths(endDate, -1);
                 const monthsAgo = differenceInCalendarMonths(new Date(), endDate) + 1;
                 if (monthsAgo === 1) {
                     return 'Last\xa0month';

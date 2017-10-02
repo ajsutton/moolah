@@ -1,4 +1,5 @@
 import {rootLevelId} from './rootLevelId';
+import {monthAsIsoDate} from '../../../api/apiFormats';
 import formatDate from 'date-fns/format';
 
 export function categoriesOverTimeGraphData(expensesByCategory, actualValues, getCategoryName, categoriesById) {
@@ -58,7 +59,5 @@ function calculateMonthTotals(rootLevelCategories, orderedMonths) {
 }
 
 function labelForMonth(month) {
-    const strMonth = String(month);
-    const isoMonth = strMonth.substring(0, strMonth.length - 2) + '-' + strMonth.substring(strMonth.length - 2) + '-01';
-    return formatDate(isoMonth, 'MMM YY');
+    return formatDate(monthAsIsoDate(month), 'MMM YY');
 }
