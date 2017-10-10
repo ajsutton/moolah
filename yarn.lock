@@ -2287,8 +2287,8 @@ expand-range@^1.8.1:
     fill-range "^2.1.0"
 
 express@^4.14.1:
-  version "4.16.1"
-  resolved "https://registry.yarnpkg.com/express/-/express-4.16.1.tgz#6b33b560183c9b253b7b62144df33a4654ac9ed0"
+  version "4.16.2"
+  resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"
   dependencies:
     accepts "~1.3.4"
     array-flatten "1.1.1"
@@ -3347,8 +3347,8 @@ karma-sourcemap-loader@^0.3.7:
     graceful-fs "^4.1.2"
 
 karma-webpack@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/karma-webpack/-/karma-webpack-2.0.4.tgz#3e2d4f48ba94a878e1c66bb8e1ae6128987a175b"
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/karma-webpack/-/karma-webpack-2.0.5.tgz#4f56887e32cf4f9583391c2388415de06af06efd"
   dependencies:
     async "~0.9.0"
     loader-utils "^0.2.5"
@@ -5810,8 +5810,8 @@ vue@^2.3.3:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.4.4.tgz#ea9550b96a71465fd2b8b17b61673b3561861789"
 
 vuetify@^0.16.1:
-  version "0.16.4"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-0.16.4.tgz#d0b284d5cdc5719c1a69dc6e341c3b68fce47523"
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-0.16.5.tgz#7fdb55d480b17391a19288fe1fb684018cab6bdd"
 
 vuex@^2.3.1:
   version "2.4.1"
