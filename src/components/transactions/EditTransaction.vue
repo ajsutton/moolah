@@ -146,6 +146,7 @@
                         amount: transaction.amount,
                         categoryId: transaction.categoryId,
                         type: transaction.type,
+                        toAccountId: transaction.toAccountId,
                     },
                 });
             },
