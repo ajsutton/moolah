@@ -11,7 +11,7 @@
                 rows-per-page-text="Months per page"
                 :loading="loading"
         >
-            <template slot="headers" scope="props">
+            <template slot="headers" slot-scope="props">
                 <tr>
                     <th v-for="header in props.headers" :key="header.text"
                         :class="['column sortable', header.classes, pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
@@ -22,7 +22,7 @@
                     </th>
                 </tr>
             </template>
-            <template slot="items" scope="props">
+            <template slot="items" slot-scope="props">
                 <td>
                     <v-layout row-lg column>
                         <div>{{ props.item | monthsAgo}}</div>

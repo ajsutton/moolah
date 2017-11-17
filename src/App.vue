@@ -1,6 +1,6 @@
 <template>
     <v-app light>
-        <v-navigation-drawer persistent clipped enable-resize-watcher v-model="showMainNav" dark app>
+        <v-navigation-drawer persistent clipped enable-resize-watcher v-model="showMainNav" dark app fixed>
             <template v-if="loggedIn">
                 <v-list class="pa-0">
                     <v-list-tile avatar>
@@ -44,7 +44,7 @@
                 </v-list>
             </template>
         </v-navigation-drawer>
-        <v-navigation-drawer v-model="showRightNavPanel" floating light right persistent clipped disable-route-watcher app>
+        <v-navigation-drawer v-model="showRightNavPanel" floating light right clipped disable-route-watcher disable-resize-watcher app fixed>
             <v-card class="ma-3">
                 <v-card-text>
                     <edit-transaction v-if="hasTransaction" :key="selectedTransaction.id"></edit-transaction>
@@ -75,16 +75,14 @@
             </v-toolbar-items>
             <v-toolbar-side-icon @click.native.prevent="toggleRightNav" :disabled="!hasTransaction" v-if="loggedIn"></v-toolbar-side-icon>
         </v-toolbar>
-        <main>
-            <v-content>
-                <welcome v-if="!loggedIn"></welcome>
-                <v-container fluid v-if="loggedIn" grid-list-md>
-                    <transition name="slide-x-reverse-transition">
-                        <router-view></router-view>
-                    </transition>
-                </v-container>
-            </v-content>
-        </main>
+        <v-content>
+            <welcome v-if="!loggedIn"></welcome>
+            <v-container fluid v-if="loggedIn" grid-list-md>
+                <transition name="slide-x-reverse-transition">
+                    <router-view></router-view>
+                </transition>
+            </v-container>
+        </v-content>
         <v-footer class="primary" v-if="!loggedIn" app>
             <div v-if="!loggedIn">Hero image by
                 <a class="white--text"
@@ -180,18 +178,6 @@
     }
 </script>
 
-<style lang="stylus">
-    @import '../node_modules/vuetify/src/stylus/settings/_colors'
-
-    $theme := {
-        primary: $blue.darken-2
-        accent: $orange.accent-2
-        secondary: $grey.darken-3
-        info: $blue.base
-        warning: $amber.base
-        error: $red.base
-        success: $green.base
-    }
-
-    @import '../node_modules/vuetify/src/stylus/main'
+<style>
+    @import '~vuetify/dist/vuetify.min.css';
 </style>

@@ -6,7 +6,7 @@
             item-text="name"
             item-value="id"
     >
-        <template slot="item" scope="account">
+        <template slot="item" slot-scope="account">
             <v-list-tile-action>
                 <v-icon>{{ icon(account.item) }}</v-icon>
             </v-list-tile-action>
