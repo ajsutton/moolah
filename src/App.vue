@@ -1,6 +1,6 @@
 <template>
     <v-app light>
-        <v-navigation-drawer persistent clipped enable-resize-watcher v-model="showMainNav" dark app fixed>
+        <v-navigation-drawer persistent clipped v-model="showMainNav" dark app fixed>
             <template v-if="loggedIn">
                 <v-list class="pa-0">
                     <v-list-tile avatar>
@@ -44,7 +44,7 @@
                 </v-list>
             </template>
         </v-navigation-drawer>
-        <v-navigation-drawer v-model="showRightNavPanel" floating light right clipped disable-route-watcher disable-resize-watcher app fixed>
+        <v-navigation-drawer v-model="showRightNavPanel" floating right clipped disable-route-watcher disable-resize-watcher app fixed>
             <v-card class="ma-3">
                 <v-card-text>
                     <edit-transaction v-if="hasTransaction" :key="selectedTransaction.id"></edit-transaction>
