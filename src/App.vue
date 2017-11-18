@@ -1,6 +1,6 @@
 <template>
     <v-app light>
-        <v-navigation-drawer persistent clipped v-model="showMainNav" dark app fixed>
+        <v-navigation-drawer clipped v-model="showMainNav" dark app fixed>
             <template v-if="loggedIn">
                 <v-list class="pa-0">
                     <v-list-tile avatar>
