@@ -21,7 +21,7 @@
         <v-date-picker
                 :value="value"
                 @input="onInput"
-                no-title scrollable actions>
+                no-title scrollable>
         </v-date-picker>
     </v-menu>
 </template>
