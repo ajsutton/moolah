@@ -128,10 +128,12 @@
                 this.$chart.load(this.graphData);
             },
             reload() {
-                this.$chart.unload();
-                this.$nextTick(() => {
-                    this.$chart.load(this.graphData);
-                });
+                if (this.$chart) {
+                    this.$chart.unload();
+                    this.$nextTick(() => {
+                        this.$chart.load(this.graphData);
+                    });
+                }
             },
 
             handleResize: debounce(function() {

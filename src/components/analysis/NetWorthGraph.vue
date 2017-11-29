@@ -166,11 +166,13 @@
                 this.$chart.load(this.graphData);
             },
             reload() {
-                this.$chart.unload();
-                this.$nextTick(() => {
-                    this.$chart.internal.config.axis_x_tick_values = this.tickValues;
-                    this.$chart.load(this.graphData);
-                });
+                if (this.$chart) {
+                    this.$chart.unload();
+                    this.$nextTick(() => {
+                        this.$chart.internal.config.axis_x_tick_values = this.tickValues;
+                        this.$chart.load(this.graphData);
+                    });
+                }
             },
 
             handleResize: debounce(function() {
