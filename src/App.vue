@@ -173,6 +173,7 @@
                 if (this.$store.getters['accounts/selectedAccount'] !== undefined && e.code === 'KeyI' && e.ctrlKey) {
                     this.$store.dispatch('transactions/' + transactionActions.addTransaction);
                     e.preventDefault();
+                    e.stopPropagation();
                 }
             });
         }
