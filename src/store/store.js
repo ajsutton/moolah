@@ -50,7 +50,7 @@ const store = new Vuex.Store({
     actions: {
         [actions.selectAccount]({commit, dispatch}, accountId) {
             commit(mutations.selectAccount, accountId);
-            dispatch('transactions/' + transactionActions.loadTransactions, {account: accountId, scheduled: false});
+            return dispatch('transactions/' + transactionActions.loadTransactions, {account: accountId, scheduled: false});
         },
         [actions.showUpcoming]({commit, dispatch}) {
             commit(mutations.selectAccount, null);

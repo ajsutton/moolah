@@ -13,6 +13,7 @@
         </v-toolbar>
         <v-divider></v-divider>
         <v-progress-linear v-bind:indeterminate="true" v-if="loading"></v-progress-linear>
+        <v-alert type="error" v-model="error">Failed to load transactions</v-alert>
         <v-list two-line>
             <template v-for="transaction in transactions">
                 <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
@@ -45,14 +46,14 @@
                 get() {
                     return this.pageNumber;
                 },
-                set(value) {
-                    this[transactionActions.loadPage](value);
+                async set(value) {
+                    await this[transactionActions.loadPage](value);
                 }
             },
             ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
-            ...mapGetters('transactions', ['hasNext', 'hasPrevious', 'numberOfPages']),
-            ...mapState('transactions', ['transactions', 'loading', 'pageNumber']),
+            ...mapGetters('transactions', ['hasNext', 'hasPrevious', 'numberOfPages', 'loading', 'error']),
+            ...mapState('transactions', ['transactions', 'pageNumber']),
         },
         data() {
             return {
@@ -72,7 +73,7 @@
 
         methods: {
             async selectAccount(accountId) {
-                this[stateActions.selectAccount](accountId);
+                await this[stateActions.selectAccount](accountId);
             },
             addTransaction() {
                 this[transactionActions.addTransaction]();

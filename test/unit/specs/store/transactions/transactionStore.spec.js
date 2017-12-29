@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import format from 'date-fns/format';
 import {assert, config as chaiConfig} from 'chai';
-import {actions, ensureAllFieldsPresent, mutations} from '../../../../../src/store/transactions/transactionStore';
+import {actions, ensureAllFieldsPresent, mutations, loadingStates} from '../../../../../src/store/transactions/transactionStore';
 import {actions as accountActions} from '../../../../../src/store/accountsStore';
 import {actions as stateActions} from '../../../../../src/store/store';
 import transactionStoreLoader from 'inject-loader!../../../../../src/store/transactions/transactionStore';
@@ -93,7 +93,7 @@ describe('transactionStore', function() {
                         ({id: 1, amount: 25, balance: 55}),
                     },
                     singleAccount: true,
-                    loading: false,
+                    loadingState: loadingStates.IDLE,
                     pageNumber: 13,
                     hasMore: true,
                     totalNumberOfTransactions: 45,
@@ -265,7 +265,7 @@ describe('transactionStore', function() {
                         payload: {accountId: 'account-1'},
                     },
                     [
-                        {type: mutations.setTransactions, payload: {transactions: [], priorBalance: 0, loading: true}},
+                        {type: mutations.setTransactions, payload: {transactions: [], priorBalance: 0, loadingState: loadingStates.LOADING}},
                         {type: mutations.setTransactions, payload: response},
                     ],
                 );

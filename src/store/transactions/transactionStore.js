@@ -63,6 +63,11 @@ export function ensureAllFieldsPresent(transaction) {
     return transaction;
 }
 
+const IDLE = "idle";
+const LOADING = "loading";
+const ERROR = "error";
+export const loadingStates = { IDLE, LOADING, ERROR }
+
 export default {
     namespaced: true,
     state() {
@@ -71,7 +76,7 @@ export default {
             priorBalance: 0,
             transactionsById: {},
             singleAccount: true,
-            loading: false,
+            loadingState: IDLE,
             pageNumber: 1,
             hasMore: false,
             totalNumberOfTransactions: 0,
@@ -90,6 +95,12 @@ export default {
         numberOfPages(state) {
             return Math.ceil(state.totalNumberOfTransactions / PAGE_SIZE) || 0;
         },
+        loading(state) {
+            return state.loadingState === LOADING;
+        },
+        error(state) {
+            return state.loadingState === ERROR;
+        }
     },
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
@@ -102,7 +113,7 @@ export default {
             state.transactions = transactionsResponse.transactions;
             state.priorBalance = transactionsResponse.priorBalance;
             state.singleAccount = transactionsResponse.singleAccount;
-            state.loading = !!transactionsResponse.loading;
+            state.loadingState = transactionsResponse.loadingState || IDLE;
             state.transactionsById = transactionsById;
             state.hasMore = transactionsResponse.hasMore;
             state.pageNumber = transactionsResponse.pageNumber;
@@ -148,12 +159,17 @@ export default {
     },
     actions: {
         async [actions.loadTransactions]({commit}, searchOptions) {
-            commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loading: true});
-            const response = await client.transactions(searchOptions, 0, PAGE_SIZE);
-            if (searchOptions.scheduled) {
-                response.transactions = response.transactions.reverse();
+            try {
+                commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loadingState: LOADING});
+                const response = await client.transactions(searchOptions, 0, PAGE_SIZE);
+                if (searchOptions.scheduled) {
+                    response.transactions = response.transactions.reverse();
+                }
+                commit(mutations.setTransactions, Object.assign(response, {singleAccount: !!searchOptions.account, pageNumber: 1}));
+            } catch (error) {
+                commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loadingState: ERROR});
+                throw error;
             }
-            commit(mutations.setTransactions, Object.assign(response, {singleAccount: !!searchOptions.account, pageNumber: 1}));
         },
 
         async [actions.loadPage]({commit, rootState, state}, pageNumber) {
