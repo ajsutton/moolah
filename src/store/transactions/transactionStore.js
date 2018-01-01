@@ -68,6 +68,10 @@ const LOADING = "loading";
 const ERROR = "error";
 export const loadingStates = { IDLE, LOADING, ERROR }
 
+function isSingleAccount(state) {
+    return state && state.searchOptions && !!state.searchOptions.account;
+}
+
 export default {
     namespaced: true,
     state() {
@@ -75,7 +79,7 @@ export default {
             transactions: [],
             priorBalance: 0,
             transactionsById: {},
-            singleAccount: true,
+            searchOptions: {},
             loadingState: IDLE,
             pageNumber: 1,
             hasMore: false,
@@ -109,10 +113,10 @@ export default {
                 ensureAllFieldsPresent(transaction);
                 transactionsById[transaction.id] = transaction;
             });
-            updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance, !transactionsResponse.singleAccount);
+            updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance, isSingleAccount(transactionsResponse));
             state.transactions = transactionsResponse.transactions;
             state.priorBalance = transactionsResponse.priorBalance;
-            state.singleAccount = transactionsResponse.singleAccount;
+            state.searchOptions = transactionsResponse.searchOptions;
             state.loadingState = transactionsResponse.loadingState || IDLE;
             state.transactionsById = transactionsById;
             state.hasMore = transactionsResponse.hasMore;
@@ -122,13 +126,13 @@ export default {
         [mutations.addTransaction](state, transaction) {
             const insertIndex = findInsertIndex(state, transaction);
             state.transactions.splice(insertIndex, 0, ensureAllFieldsPresent(transaction));
-            updateBalance(state.transactions, insertIndex, state.priorBalance, !state.singleAccount);
+            updateBalance(state.transactions, insertIndex, state.priorBalance, !isSingleAccount(state));
             Vue.set(state.transactionsById, transaction.id, transaction);
         },
         [mutations.removeTransaction](state, transaction) {
             const transactionIndex = findTransactionIndex(state, transaction);
             state.transactions.splice(transactionIndex, 1);
-            updateBalance(state.transactions, transactionIndex - 1, state.priorBalance, !state.singleAccount);
+            updateBalance(state.transactions, transactionIndex - 1, state.priorBalance, !isSingleAccount(state));
             Vue.delete(state.transactionsById, transaction.id);
         },
         [mutations.updateTransaction](state, payload) {
@@ -150,7 +154,7 @@ export default {
                     updateBalanceFrom = index;
                 }
                 if (updateBalanceFrom !== -1) {
-                    updateBalance(state.transactions, updateBalanceFrom, state.priorBalance, !state.singleAccount);
+                    updateBalance(state.transactions, updateBalanceFrom, state.priorBalance, !isSingleAccount(state));
                 }
             } else {
                 throw Error(`No transaction with ID ${payload.id}`);
@@ -160,22 +164,22 @@ export default {
     actions: {
         async [actions.loadTransactions]({commit}, searchOptions) {
             try {
-                commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loadingState: LOADING});
+                commit(mutations.setTransactions, {transactions: [], priorBalance: 0, searchOptions, loadingState: LOADING});
                 const response = await client.transactions(searchOptions, 0, PAGE_SIZE);
                 if (searchOptions.scheduled) {
                     response.transactions = response.transactions.reverse();
                 }
-                commit(mutations.setTransactions, Object.assign(response, {singleAccount: !!searchOptions.account, pageNumber: 1}));
+                commit(mutations.setTransactions, Object.assign(response, {pageNumber: 1, searchOptions}));
             } catch (error) {
-                commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loadingState: ERROR});
+                commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loadingState: ERROR, searchOptions});
                 throw error;
             }
         },
 
         async [actions.loadPage]({commit, rootState, state}, pageNumber) {
             const transactionOffset = PAGE_SIZE * (pageNumber - 1);
-            const response = await client.transactions({account: rootState.selectedAccountId, scheduled: false}, transactionOffset, PAGE_SIZE);
-            commit(mutations.setTransactions, Object.assign(response, {singleAccount: true, pageNumber}));
+            const response = await client.transactions(state.searchOptions, transactionOffset, PAGE_SIZE);
+            commit(mutations.setTransactions, Object.assign(response, {searchOptions: state.searchOptions, pageNumber}));
         },
 
         async [actions.addTransaction]({commit, rootState, dispatch}, attributes = {}) {
