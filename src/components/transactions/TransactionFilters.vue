@@ -60,8 +60,8 @@
                 this.dialog = false;
                 this.reset();
             },
-            async search() {
-                await this[transactionActions.loadTransactions](Object.assign(
+            search() {
+                this[transactionActions.loadTransactions](Object.assign(
                     {},
                     this.searchOptions,
                     {
