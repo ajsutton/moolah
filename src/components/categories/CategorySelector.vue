@@ -7,6 +7,9 @@
             :label="label"
             no-data-text="No matching categories"
             autocomplete
+            :multiple="multiple"
+            :chips="multiple"
+            clearable
     ></v-select>
 </template>
 
@@ -15,7 +18,11 @@
 
     export default {
         props: {
-            value: String,
+            value: [String, Array],
+            multiple: {
+                type: Boolean,
+                'default': false,
+            },
             label: {
                 type: String,
                 'default': 'Category',

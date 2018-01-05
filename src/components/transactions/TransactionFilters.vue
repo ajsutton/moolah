@@ -16,6 +16,11 @@
                             <date-picker-field label="To" v-model="to" :optional="true"></date-picker-field>
                         </v-flex>
                     </v-layout>
+                    <v-layout wrap>
+                        <v-flex xs12>
+                            <category-selector multiple v-model="categories" label="Categories"></category-selector>
+                        </v-flex>
+                    </v-layout>
                 </v-container>
             </v-card-text>
             <v-card-actions>
@@ -29,6 +34,7 @@
 
 <script>
     import DatePickerField from '../util/DatePickerField.vue';
+    import CategorySelector from '../categories/CategorySelector.vue';
     import {mapState, mapActions, mapGetters} from 'vuex';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     export default {
@@ -36,6 +42,7 @@
             return {
                 from: undefined,
                 to: undefined,
+                categories: [],
                 dialog: false,
             };
         },
@@ -53,6 +60,7 @@
             reset() {
                 this.from = this.searchOptions.from;
                 this.to = this.searchOptions.to;
+                this.categories = this.searchOptions.category || [];
             },
             close() {
                 this.dialog = false;
@@ -64,7 +72,8 @@
                     this.searchOptions,
                     {
                         from: this.from,
-                        to: this.to
+                        to: this.to,
+                        category: this.categories,
                     }
                 ));
                 this.dialog = false;
@@ -72,7 +81,8 @@
             ...mapActions('transactions', [transactionActions.loadTransactions]),
         },
         components: {
-            DatePickerField
+            DatePickerField,
+            CategorySelector,
         }
     };
 </script>

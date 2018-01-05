@@ -29,8 +29,15 @@ async function json(url, options = {}) {
 function asQueryParams(args) {
     return Object.entries(args)
         .filter(([key, value]) => value !== undefined && value !== null)
-        .map(([key, value]) => encodeURIComponent(key) + '=' + encodeURIComponent(value))
+        .map(formatQueryArg)
         .join('&');
+}
+
+function formatQueryArg([key, value]) {
+    if (value instanceof Array) {
+        return value.map(singleValue => encodeURIComponent(key) + '=' + encodeURIComponent(singleValue)).join('&');
+    }
+    return encodeURIComponent(key) + '=' + encodeURIComponent(value);
 }
 
 export default {
@@ -47,11 +54,8 @@ export default {
     },
 
     async transactions(searchOptions, offset = 0, pageSize = 100) {
-        const options = [`offset=${offset}`, `pageSize=${pageSize}`];
-        Object.entries(searchOptions)
-            .filter(([key, value]) => value !== undefined && value !== null)
-            .forEach(([key, value]) => options.push(encodeURIComponent(key) + '=' + encodeURIComponent(value)));
-        return json(`/api/transactions/?${options.join('&')}`);
+        const params = Object.assign({}, searchOptions, {offset, pageSize});
+        return json(`/api/transactions/?${asQueryParams(params)}`);
     },
 
     async createTransaction(transaction) {

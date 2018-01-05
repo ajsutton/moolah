@@ -16,10 +16,22 @@
                 } else if (this.searchOptions.to !== undefined) {
                     message += ` on or before ${this.searchOptions.to}`;
                 }
+
+                if (this.searchOptions.category !== undefined && this.searchOptions.category.length > 0) {
+                    if (this.searchOptions.category.length < 3) {
+                        const categoryList = this.searchOptions.category
+                            .map(this.getCategoryName)
+                            .join(', ');
+                        message += ` categorised as ${categoryList}`;
+                    } else {
+                        message += ` in ${this.searchOptions.category.length} categories`;
+                    }
+                }
                 return message;
             },
             ...mapGetters('transactions', ['isFiltered']),
             ...mapState('transactions', ['searchOptions']),
+            ...mapGetters('categories', ['getCategoryName'])
         }
     };
 </script>
