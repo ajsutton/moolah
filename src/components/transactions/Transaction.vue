@@ -14,7 +14,6 @@
         <v-list-tile-action>
             <monetary-amount :value="transaction.amount"></monetary-amount>
             <monetary-amount :value="transaction.balance" v-if="showBalance"></monetary-amount>
-            <!--<span class="red&#45;&#45;text" v-if="overdue">Overdue</span>-->
         </v-list-tile-action>
     </v-list-tile>
 </template>
