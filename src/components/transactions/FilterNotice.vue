@@ -1,12 +1,22 @@
 <template>
-        <v-alert type="info" v-model="isFiltered">{{message}}</v-alert>
+        <v-alert type="info" v-model="active" dismissible>{{message}}</v-alert>
 </template>
 <script>
-    import {mapState, mapGetters} from 'vuex';
+    import {mapState, mapGetters, mapActions} from 'vuex';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
 
     export default {
         computed: {
+            active: {
+                get() {
+                    return this.isFiltered;
+                },
+                set(value) {
+                    if (!value) {
+                        this[transactionActions.loadTransactions]({accountId: this.searchOptions.accountId});
+                    }
+                }
+            },
             message() {
                 let message = 'Showing transactions';
                 if (this.searchOptions.from !== undefined && this.searchOptions.to !== undefined) {
@@ -32,6 +42,9 @@
             ...mapGetters('transactions', ['isFiltered']),
             ...mapState('transactions', ['searchOptions']),
             ...mapGetters('categories', ['getCategoryName'])
+        },
+        methods: {
+            ...mapActions('transactions', [transactionActions.loadTransactions]),
         }
     };
 </script>
