@@ -11,9 +11,10 @@
     >
         <v-text-field
                 slot="activator"
-                label="Date"
+                :label="label"
                 v-model="textValue"
                 :error-messages="errorMessages"
+                :clearable="optional"
                 @blur="onBlur"
                 v-on:keyup.up="incrementDate"
                 v-on:keyup.down="decrementDate"
@@ -32,7 +33,17 @@
     import {formatDate} from '../../api/apiFormats';
 
     export default {
-        props: ['value'],
+        props: {
+            value: String,
+            optional: {
+                type: Boolean,
+                'default': false
+            },
+            label: {
+                type: String,
+                'default': 'Date',
+            },
+        },
         data() {
             return {
                 invalidText: null,
@@ -47,13 +58,19 @@
                     return this.invalidText !== null ? this.invalidText : this.value;
                 },
                 set(value) {
-                    const parsedValue = parseDate(value);
-                    if (!isNaN(parsedValue) && formatDate(parsedValue) === value) {
+                    if (this.optional && (value === undefined || value === null || value === '')) {
                         this.invalidText = null;
                         this.errorMessages = [];
-                        this.onInput(value);
+                        this.onInput(undefined);
                     } else {
-                        this.invalidText = value;
+                        const parsedValue = parseDate(value);
+                        if (!isNaN(parsedValue) && formatDate(parsedValue) === value) {
+                            this.invalidText = null;
+                            this.errorMessages = [];
+                            this.onInput(value);
+                        } else {
+                            this.invalidText = value;
+                        }
                     }
                 }
             },

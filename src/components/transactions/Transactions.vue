@@ -2,8 +2,9 @@
     <v-card>
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <transaction-filters :filters="filters"></transaction-filters>
             <template v-if="selectedAccount">
-                <v-spacer></v-spacer>
                 <create-account :account="selectedAccount"></create-account>
                 <v-btn icon
                        @click.native.stop="addTransaction">
@@ -33,6 +34,7 @@
     import Transaction from './Transaction.vue';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import CreateAccount from '../accounts/CreateAccount.vue';
+    import TransactionFilters from './TransactionFilters.vue';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
@@ -58,6 +60,10 @@
         data() {
             return {
                 loadingMore: false,
+                filters: {
+                    from: undefined,
+                    to: undefined,
+                },
             };
         },
 
@@ -105,6 +111,7 @@
             MonetaryAmount,
             Transaction,
             CreateAccount,
+            TransactionFilters,
         },
     };
 </script>
