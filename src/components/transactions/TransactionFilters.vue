@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
-        <v-btn slot="activator" flat icon :color="filtersActive ? 'primary' : null"><v-icon>search</v-icon></v-btn>
+        <v-btn slot="activator" flat icon :color="isFiltered ? 'primary' : null"><v-icon>search</v-icon></v-btn>
 
         <v-card>
             <v-card-title>
@@ -29,7 +29,7 @@
 
 <script>
     import DatePickerField from '../util/DatePickerField.vue';
-    import {mapState, mapActions} from 'vuex';
+    import {mapState, mapActions, mapGetters} from 'vuex';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     export default {
         data() {
@@ -40,10 +40,8 @@
             };
         },
         computed: {
-            filtersActive() {
-                return this.from !== undefined || this.to !== undefined;
-            },
             ...mapState('transactions', ['searchOptions']),
+            ...mapGetters('transactions', ['isFiltered']),
         },
         watch: {
             'searchOptions': {

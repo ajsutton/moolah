@@ -12,9 +12,10 @@
                 </v-btn>
             </template>
         </v-toolbar>
+        <filter-notice></filter-notice>
+        <v-alert type="error" v-model="error">Failed to load transactions</v-alert>
         <v-divider></v-divider>
         <v-progress-linear v-bind:indeterminate="true" v-if="loading"></v-progress-linear>
-        <v-alert type="error" v-model="error">Failed to load transactions</v-alert>
         <v-list two-line>
             <template v-for="transaction in transactions">
                 <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction">
@@ -35,6 +36,7 @@
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import CreateAccount from '../accounts/CreateAccount.vue';
     import TransactionFilters from './TransactionFilters.vue';
+    import FilterNotice from './FilterNotice.vue';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
@@ -54,7 +56,7 @@
             },
             ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
-            ...mapGetters('transactions', ['hasNext', 'hasPrevious', 'numberOfPages', 'loading', 'error']),
+            ...mapGetters('transactions', ['hasNext', 'hasPrevious', 'numberOfPages', 'isFiltered', 'loading', 'error']),
             ...mapState('transactions', ['transactions', 'pageNumber']),
         },
         data() {
@@ -112,6 +114,7 @@
             Transaction,
             CreateAccount,
             TransactionFilters,
+            FilterNotice,
         },
     };
 </script>

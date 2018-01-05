@@ -99,6 +99,9 @@ export default {
         numberOfPages(state) {
             return Math.ceil(state.totalNumberOfTransactions / PAGE_SIZE) || 0;
         },
+        isFiltered(state) {
+            return state.searchOptions.from !== undefined || state.searchOptions.to !== undefined;
+        },
         loading(state) {
             return state.loadingState === LOADING;
         },

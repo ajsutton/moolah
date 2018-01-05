@@ -1,0 +1,25 @@
+<template>
+        <v-alert type="info" v-model="isFiltered">{{message}}</v-alert>
+</template>
+<script>
+    import {mapState, mapGetters} from 'vuex';
+    import {actions as transactionActions} from '../../store/transactions/transactionStore';
+
+    export default {
+        computed: {
+            message() {
+                let message = 'Showing transactions';
+                if (this.searchOptions.from !== undefined && this.searchOptions.to !== undefined) {
+                    message += ` between ${this.searchOptions.from} and ${this.searchOptions.to}`
+                } else if (this.searchOptions.from !== undefined) {
+                    message += ` on or after ${this.searchOptions.from}`;
+                } else if (this.searchOptions.to !== undefined) {
+                    message += ` on or before ${this.searchOptions.to}`;
+                }
+                return message;
+            },
+            ...mapGetters('transactions', ['isFiltered']),
+            ...mapState('transactions', ['searchOptions']),
+        }
+    };
+</script>
