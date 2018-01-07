@@ -182,4 +182,9 @@
 
 <style>
     @import '~vuetify/dist/vuetify.min.css';
+
+    /* Work around https://github.com/vuetifyjs/vuetify/issues/2773 */
+    .navigation-drawer {
+            transition-property: transform,width,box-shadow !important;
+        }
 </style>
