@@ -24,6 +24,7 @@ import {
     VAlert,
     VBadge,
     VSwitch,
+    VDatePicker,
     transitions
 } from 'vuetify'
 
@@ -59,6 +60,7 @@ export function useVuetify() {
             VAlert,
             VBadge,
             VSwitch,
+            VDatePicker,
             transitions
         },
         directives: {
