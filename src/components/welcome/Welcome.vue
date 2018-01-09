@@ -1,11 +1,14 @@
 <template>
   <div>
-    <v-parallax :src="require('../../assets/brisbane-large.jpg')">
-      <v-layout column align-center justify-center>
-        <h1 class="white--text">Moolah</h1>
-        <h4 class="white--text">Track your pot of gold</h4>
-      </v-layout>
-    </v-parallax>
+    <v-jumbotron :src="require('../../assets/brisbane-large.jpg')" gradient="to top, rgba(0, 0, 0, .2), rgba(0, 0, 0, .5)">
+      <v-container fill-height>
+        <v-layout align-center>
+          <v-flex>
+            <h1 class="white--text display-3 text-xs-center">Moolah</h1>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-jumbotron>
     <v-container>
       <v-layout row wrap class="mt-3">
         <feature-panel icon="account_balance" headline="Businessy">
