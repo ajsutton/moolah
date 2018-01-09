@@ -8,7 +8,8 @@
             </v-toolbar-items>
         </v-toolbar>
         <div ref="chart" class="chart"></div>
-        <v-breadcrumbs icons divider="chevron_right" v-if="breadcrumbs.length > 1">
+        <v-breadcrumbs icons v-if="breadcrumbs.length > 1">
+            <v-icon slot="divider">chevron_right</v-icon>
             <v-breadcrumbs-item v-for="item in breadcrumbs" :key="item.id" @click.native="rootCategoryId = item.id">
                 {{ item.name }}
             </v-breadcrumbs-item>
