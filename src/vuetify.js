@@ -23,6 +23,7 @@ import {
     VPagination,
     VAlert,
     VBadge,
+    VSwitch,
     transitions
 } from 'vuetify'
 
@@ -57,6 +58,7 @@ export function useVuetify() {
             VPagination,
             VAlert,
             VBadge,
+            VSwitch,
             transitions
         },
         directives: {
