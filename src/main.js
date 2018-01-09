@@ -10,6 +10,6 @@ useVuetify();
 new Vue({
     el: '#app',
     router,
-    template: '<App/>',
+    render: h => h(App),
     components: {App},
 });
