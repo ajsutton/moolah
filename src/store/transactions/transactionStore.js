@@ -69,7 +69,7 @@ const ERROR = "error";
 export const loadingStates = { IDLE, LOADING, ERROR }
 
 function isSingleAccount(state) {
-    return state && state.searchOptions && !!state.searchOptions.account;
+    return state && state.searchOptions && (state.searchOptions.account === undefined || state.searchOptions.account === null);
 }
 
 export default {
