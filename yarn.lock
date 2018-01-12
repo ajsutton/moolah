@@ -1429,10 +1429,10 @@ browserslist@^1.3.6, browserslist@^1.5.2, browserslist@^1.7.6:
     electron-to-chromium "^1.2.7"
 
 browserslist@^2.1.2, browserslist@^2.10.2:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.11.0.tgz#50350d6873a82ebe0f3ae5483658c571ae5f9d7d"
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.11.1.tgz#02fda29d9a2164b879100126e7b0d0b57e43a7bb"
   dependencies:
-    caniuse-lite "^1.0.30000784"
+    caniuse-lite "^1.0.30000789"
     electron-to-chromium "^1.3.30"
 
 buffer-indexof@^1.0.0:
@@ -1568,12 +1568,12 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000789"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000789.tgz#5cf3fec75480041ab162ca06413153141e234325"
+  version "1.0.30000791"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000791.tgz#06787f56caef4300a17e35d137447123bdf536f9"
 
-caniuse-lite@^1.0.30000784:
-  version "1.0.30000789"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000789.tgz#2e3d937b267133f63635ef7f441fac66360fc889"
+caniuse-lite@^1.0.30000784, caniuse-lite@^1.0.30000789:
+  version "1.0.30000791"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000791.tgz#8e35745efd483a3e23bb7d350990326d2319fc16"
 
 caseless@~0.11.0:
   version "0.11.0"
@@ -1677,13 +1677,12 @@ clap@^1.0.9:
     chalk "^1.1.3"
 
 class-utils@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/class-utils/-/class-utils-0.3.5.tgz#17e793103750f9627b2176ea34cfd1b565903c80"
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/class-utils/-/class-utils-0.3.6.tgz#f93369ae8b9a7ce02fd41faad0ca83033190c463"
   dependencies:
     arr-union "^3.1.0"
     define-property "^0.2.5"
     isobject "^3.0.0"
-    lazy-cache "^2.0.2"
     static-extend "^0.1.1"
 
 clean-css@4.1.x:
@@ -1817,9 +1816,13 @@ commander@2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
-commander@2.12.x, commander@^2.9.0, commander@~2.12.1:
+commander@2.12.x, commander@~2.12.1:
   version "2.12.2"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
+
+commander@^2.9.0:
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -2310,9 +2313,13 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
 
-depd@1.1.1, depd@~1.1.1:
+depd@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.1.tgz#5783b4e1c459f06fa5ca27f991f3d06e7a310359"
+
+depd@~1.1.1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
 
 deps-sort@^2.0.0:
   version "2.0.0"
@@ -2387,8 +2394,8 @@ dns-equal@^1.0.0:
   resolved "https://registry.yarnpkg.com/dns-equal/-/dns-equal-1.0.0.tgz#b39e7f1da6eb0a75ba9c17324b34753c47e0654d"
 
 dns-packet@^1.0.1:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/dns-packet/-/dns-packet-1.3.0.tgz#7e2b33bf992678a44534c7117d39196bda684d33"
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/dns-packet/-/dns-packet-1.3.1.tgz#12aa426981075be500b910eedcd0b47dd7deda5a"
   dependencies:
     ip "^1.1.0"
     safe-buffer "^5.0.1"
@@ -5957,8 +5964,8 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
 prettier@^1.7.0:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.10.1.tgz#01423fea6957ea23618d37d339ef0e7f7c967fc6"
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.10.2.tgz#1af8356d1842276a99a5b5529c82dd9e9ad3cc93"
 
 pretty-error@^2.0.2:
   version "2.1.1"
@@ -6502,8 +6509,8 @@ require-directory@^2.1.1:
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
 
 require-from-string@^1.1.0:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#9fce58558db06add0e02da5771ac3b6cd93881a9"
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-1.2.1.tgz#529c9ccef27380adfec9a2f965b649bbee636418"
 
 require-main-filename@^1.0.1:
   version "1.0.1"
@@ -6768,9 +6775,9 @@ shell-quote@^1.6.1:
     array-reduce "~0.0.0"
     jsonify "~0.0.0"
 
-shelljs@^0.7.6:
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.7.8.tgz#decbcf874b0d1e5fb72e14b164a9683048e9acb3"
+shelljs@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.8.0.tgz#12f561c52ec5d0d3315af15616c011a18ff80d59"
   dependencies:
     glob "^7.0.0"
     interpret "^1.0.0"
@@ -7728,8 +7735,8 @@ vue@^2.3.3:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.13.tgz#95bd31e20efcf7a7f39239c9aa6787ce8cf578e1"
 
 vuetify@^1.0.0-alpha.3:
-  version "1.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.0.0-beta.2.tgz#1e3d6e5cf6055b3499b9325fcec8da68491ac866"
+  version "1.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.0.0-beta.4.tgz#bd0e0235dd8de40df83f41d78f430483e87c72a1"
 
 vuex@^3.0.0:
   version "3.0.1"
@@ -7938,8 +7945,8 @@ xml-char-classes@^1.0.0:
   resolved "https://registry.yarnpkg.com/xml-char-classes/-/xml-char-classes-1.0.0.tgz#64657848a20ffc5df583a42ad8a277b4512bbc4d"
 
 xmlhttprequest-ssl@~1.5.4:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/xmlhttprequest-ssl/-/xmlhttprequest-ssl-1.5.4.tgz#04f560915724b389088715cc0ed7813e9677bf57"
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/xmlhttprequest-ssl/-/xmlhttprequest-ssl-1.5.5.tgz#c2876b06168aadc40e57d97e81191ac8f4398b3e"
 
 xregexp@2.0.0:
   version "2.0.0"
