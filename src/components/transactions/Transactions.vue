@@ -41,7 +41,9 @@
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
     export default {
-        props: ['accountId'],
+        props: {
+            'accountId': String,
+        },
         computed: {
             title() {
                 return this.accountId === undefined ? 'All Transactions' : this.accountName(this.accountId);
@@ -52,7 +54,7 @@
                 },
                 async set(value) {
                     await this[transactionActions.loadPage](value);
-                }
+                },
             },
             ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
@@ -88,22 +90,6 @@
             },
             editTransaction(transaction) {
                 this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: false});
-            },
-            async goNext() {
-                this.loadingMore = true;
-                try {
-                    await this[transactionActions.nextPage]();
-                } finally {
-                    this.loadingMore = false;
-                }
-            },
-            async goPrevious() {
-                this.loadingMore = true;
-                try {
-                    await this[transactionActions.previousPage]();
-                } finally {
-                    this.loadingMore = false;
-                }
             },
             ...mapActions([stateActions.selectAccount]),
             ...mapActions('transactions', [transactionActions.addTransaction, transactionActions.loadPage]),
