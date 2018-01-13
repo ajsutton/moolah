@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import format from 'date-fns/format';
 import {assert, config as chaiConfig} from 'chai';
-import {actions, ensureAllFieldsPresent, mutations, loadingStates} from '../../../../../src/store/transactions/transactionStore';
+import {actions, ensureAllFieldsPresent, loadingStates, mutations} from '../../../../../src/store/transactions/transactionStore';
 import {actions as accountActions} from '../../../../../src/store/accountsStore';
 import {actions as stateActions} from '../../../../../src/store/store';
 import transactionStoreLoader from 'inject-loader!../../../../../src/store/transactions/transactionStore';
@@ -80,7 +80,7 @@ describe('transactionStore', function() {
                     priorBalance: 30,
                     hasMore: true,
                     totalNumberOfTransactions: 45,
-                    searchOptions: { account: 'account1', page: 13 },
+                    searchOptions: {account: 'account1', page: 13},
                 });
 
                 assert.deepEqual(state, {
@@ -91,7 +91,7 @@ describe('transactionStore', function() {
                         1: ensureAllFieldsPresent
                         ({id: 1, amount: 25, balance: 55}),
                     },
-                    searchOptions: { account: 'account1', page: 13 },
+                    searchOptions: {account: 'account1', page: 13},
                     loadingState: loadingStates.IDLE,
                     hasMore: true,
                     totalNumberOfTransactions: 45,
@@ -538,14 +538,14 @@ describe('transactionStore', function() {
                     {
                         state: addIdLookup({transactions: [scheduledTransaction], priorBalance: 100}),
                         payload: scheduledTransaction,
-                        dispatch
+                        dispatch,
                     },
                     [
                         {type: mutations.removeTransaction, payload: scheduledTransaction},
                     ],
                 );
 
-                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true})
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true});
             });
 
             it('should update balance of both accounts when transaction is a transfer', async function() {
@@ -568,15 +568,15 @@ describe('transactionStore', function() {
                     {
                         state: addIdLookup({transactions: [scheduledTransaction], priorBalance: 100}),
                         payload: scheduledTransaction,
-                        dispatch
+                        dispatch,
                     },
                     [
                         {type: mutations.removeTransaction, payload: scheduledTransaction},
                     ],
                 );
 
-                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true})
-                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account2', amount: -scheduledTransaction.amount}, {root: true})
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true});
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account2', amount: -scheduledTransaction.amount}, {root: true});
             });
         });
     });
