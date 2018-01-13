@@ -16,7 +16,6 @@ export const actions = {
     updateTransaction: 'UPDATE_TRANSACTION',
     deleteTransaction: 'DELETE_TRANSACTION',
     payTransaction: 'PAY_TRANSACTION',
-    loadPage: 'LOAD_PAGE',
 };
 export const mutations = {
     setTransactions: 'SET_TRANSACTIONS',
@@ -79,9 +78,10 @@ export default {
             transactions: [],
             priorBalance: 0,
             transactionsById: {},
-            searchOptions: {},
+            searchOptions: {
+                page: 1
+            },
             loadingState: IDLE,
-            pageNumber: 1,
             hasMore: false,
             totalNumberOfTransactions: 0,
         };
@@ -94,13 +94,13 @@ export default {
             return state.hasMore;
         },
         hasPrevious(state) {
-            return state.pageNumber > 0;
+            return (state.searchOptions.page || 1) > 1;
         },
         numberOfPages(state) {
             return Math.ceil(state.totalNumberOfTransactions / PAGE_SIZE) || 0;
         },
         isFiltered(state) {
-            return state.searchOptions.from !== undefined || state.searchOptions.to !== undefined || 
+            return state.searchOptions.from !== undefined || state.searchOptions.to !== undefined ||
                    (state.searchOptions.category !== undefined && state.searchOptions.category.length > 0);
         },
         loading(state) {
@@ -124,7 +124,6 @@ export default {
             state.loadingState = transactionsResponse.loadingState || IDLE;
             state.transactionsById = transactionsById;
             state.hasMore = transactionsResponse.hasMore;
-            state.pageNumber = transactionsResponse.pageNumber;
             state.totalNumberOfTransactions = transactionsResponse.totalNumberOfTransactions;
         },
         [mutations.addTransaction](state, transaction) {
@@ -169,21 +168,15 @@ export default {
         async [actions.loadTransactions]({commit}, searchOptions) {
             try {
                 commit(mutations.setTransactions, {transactions: [], priorBalance: 0, searchOptions, loadingState: LOADING});
-                const response = await client.transactions(searchOptions, 0, PAGE_SIZE);
+                const response = await client.transactions(searchOptions, ((searchOptions.page || 1) - 1) * PAGE_SIZE,  PAGE_SIZE);
                 if (searchOptions.scheduled) {
                     response.transactions = response.transactions.reverse();
                 }
-                commit(mutations.setTransactions, Object.assign(response, {pageNumber: 1, searchOptions}));
+                commit(mutations.setTransactions, Object.assign(response, {searchOptions}));
             } catch (error) {
                 commit(mutations.setTransactions, {transactions: [], priorBalance: 0, loadingState: ERROR, searchOptions});
                 throw error;
             }
-        },
-
-        async [actions.loadPage]({commit, rootState, state}, pageNumber) {
-            const transactionOffset = PAGE_SIZE * (pageNumber - 1);
-            const response = await client.transactions(state.searchOptions, transactionOffset, PAGE_SIZE);
-            commit(mutations.setTransactions, Object.assign(response, {searchOptions: state.searchOptions, pageNumber}));
         },
 
         async [actions.addTransaction]({commit, rootState, dispatch}, attributes = {}) {

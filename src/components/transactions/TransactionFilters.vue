@@ -64,7 +64,6 @@
         },
         methods: {
             reset() {
-                console.log('Reset');
                 this.from = this.searchOptions.from;
                 this.to = this.searchOptions.to;
                 this.categories = this.searchOptions.category || [];

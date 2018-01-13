@@ -17,7 +17,8 @@ function createTransactionProps(route) {
             to: route.query.to,
             category: route.query.category,
             account: route.params.accountId,
-            scheduled: false
+            scheduled: false,
+            page: parseInt(route.query.page) || 1
         },
     };
 }

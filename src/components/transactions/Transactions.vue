@@ -51,16 +51,16 @@
             },
             currentPage: {
                 get() {
-                    return this.pageNumber;
+                    return this.searchOptions.page;
                 },
                 async set(value) {
-                    await this[transactionActions.loadPage](value);
+                    this.$router.push({path: this.$router.path, query: Object.assign({}, this.$router.query, {page: value})});
                 },
             },
             ...mapState(['selectedAccountId']),
             ...mapGetters('accounts', ['accountName', 'selectedAccount']),
             ...mapGetters('transactions', ['hasNext', 'hasPrevious', 'numberOfPages', 'isFiltered', 'loading', 'error']),
-            ...mapState('transactions', ['transactions', 'pageNumber']),
+            ...mapState('transactions', ['transactions']),
         },
         data() {
             return {

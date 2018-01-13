@@ -54,7 +54,7 @@ export default {
     },
 
     async transactions(searchOptions, offset = 0, pageSize = 100) {
-        const params = Object.assign({}, searchOptions, {offset, pageSize});
+        const params = Object.assign({}, searchOptions, {offset, pageSize, page: undefined});
         return json(`/api/transactions/?${asQueryParams(params)}`);
     },
 
