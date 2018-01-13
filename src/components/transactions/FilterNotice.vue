@@ -3,7 +3,6 @@
 </template>
 <script>
     import {mapState, mapGetters, mapActions} from 'vuex';
-    import {actions as transactionActions} from '../../store/transactions/transactionStore';
 
     export default {
         computed: {
@@ -13,7 +12,13 @@
                 },
                 set(value) {
                     if (!value) {
-                        this[transactionActions.loadTransactions]({accountId: this.searchOptions.accountId});
+                        this.$router.push({
+                            path: this.$route.path, query: {
+                                from: undefined,
+                                to: undefined,
+                                category: undefined,
+                            },
+                        });
                     }
                 }
             },
@@ -43,8 +48,5 @@
             ...mapState('transactions', ['searchOptions']),
             ...mapGetters('categories', ['getCategoryName'])
         },
-        methods: {
-            ...mapActions('transactions', [transactionActions.loadTransactions]),
-        }
     };
 </script>

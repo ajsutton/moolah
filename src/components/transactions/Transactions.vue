@@ -3,7 +3,7 @@
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
             <v-spacer></v-spacer>
-            <transaction-filters :filters="filters"></transaction-filters>
+            <transaction-filters></transaction-filters>
             <template v-if="selectedAccount">
                 <create-account :account="selectedAccount"></create-account>
                 <v-btn icon
@@ -43,6 +43,7 @@
     export default {
         props: {
             'accountId': String,
+            searchOptions: Object,
         },
         computed: {
             title() {
@@ -64,26 +65,22 @@
         data() {
             return {
                 loadingMore: false,
-                filters: {
-                    from: undefined,
-                    to: undefined,
-                },
             };
         },
 
         created() {
-            this.selectAccount(this.accountId);
+            this.selectAccount(this.searchOptions);
         },
 
         watch: {
-            accountId(newAccountId) {
-                this.selectAccount(newAccountId);
+            '$route'() {
+                this.selectAccount(this.searchOptions);
             },
         },
 
         methods: {
-            async selectAccount(accountId) {
-                await this[stateActions.selectAccount](accountId);
+            async selectAccount(searchOptions) {
+                await this[stateActions.selectAccount](searchOptions);
             },
             addTransaction() {
                 this[transactionActions.addTransaction]();

@@ -5,18 +5,35 @@ import Analysis from '../components/analysis/Analysis.vue';
 import Transactions from '../components/transactions/Transactions.vue';
 import UpcomingTransactions from '../components/transactions/UpcomingTransactions.vue';
 import Categories from '../components/categories/Categories.vue';
-import store from '../store/store';
-import {mutations} from '../store/store';
+import store, {mutations} from '../store/store';
 
 Vue.use(Router);
+
+function createTransactionProps(route) {
+    return {
+        accountId: route.params.accountId,
+        searchOptions: {
+            from: route.query.from,
+            to: route.query.to,
+            category: route.query.category,
+            account: route.params.accountId,
+            scheduled: false
+        },
+    };
+}
 
 const router = new Router({
     mode: 'history',
     routes: [
         {path: '/', name: 'analysis', component: Analysis},
-        {path: '/account/:accountId/', component: Transactions, props: true},
-        {path: '/transactions/', component: Transactions, props: true},
-        {path: '/upcoming/', component: UpcomingTransactions },
+        {
+            name: 'account',
+            path: '/account/:accountId/',
+            component: Transactions,
+            props: createTransactionProps,
+        },
+        {path: '/transactions/', component: Transactions, props: createTransactionProps},
+        {path: '/upcoming/', component: UpcomingTransactions},
         {path: '/categories/', component: Categories},
         {path: '*', component: NotFound},
     ],

@@ -1,6 +1,8 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
-        <v-btn slot="activator" flat icon :color="isFiltered ? 'primary' : null"><v-icon>search</v-icon></v-btn>
+        <v-btn slot="activator" flat icon :color="isFiltered ? 'primary' : null">
+            <v-icon>search</v-icon>
+        </v-btn>
 
         <v-card>
             <v-card-title>
@@ -37,6 +39,7 @@
     import CategorySelector from '../categories/CategorySelector.vue';
     import {mapState, mapActions, mapGetters} from 'vuex';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
+
     export default {
         data() {
             return {
@@ -50,14 +53,18 @@
             ...mapState('transactions', ['searchOptions']),
             ...mapGetters('transactions', ['isFiltered']),
         },
+        created() {
+            this.reset();
+        },
         watch: {
             'searchOptions': {
                 handler: 'reset',
-                deep: true
-            }
+                deep: true,
+            },
         },
         methods: {
             reset() {
+                console.log('Reset');
                 this.from = this.searchOptions.from;
                 this.to = this.searchOptions.to;
                 this.categories = this.searchOptions.category || [];
@@ -67,15 +74,13 @@
                 this.reset();
             },
             search() {
-                this[transactionActions.loadTransactions](Object.assign(
-                    {},
-                    this.searchOptions,
-                    {
+                this.$router.push({
+                    path: this.$route.path, query: {
                         from: this.from,
                         to: this.to,
                         category: this.categories,
-                    }
-                ));
+                    },
+                });
                 this.dialog = false;
             },
             ...mapActions('transactions', [transactionActions.loadTransactions]),
@@ -83,6 +88,6 @@
         components: {
             DatePickerField,
             CategorySelector,
-        }
+        },
     };
 </script>

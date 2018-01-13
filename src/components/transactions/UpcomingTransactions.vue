@@ -55,12 +55,6 @@
             ...mapState('accounts', ['accounts']),
         },
 
-        watch: {
-            accountId(newAccountId) {
-                this.selectAccount(newAccountId);
-            },
-        },
-
         methods: {
             addTransaction() {
                 this[transactionActions.addTransaction]({recurEvery: 1, recurPeriod: 'MONTH'});
