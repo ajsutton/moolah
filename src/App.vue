@@ -119,7 +119,6 @@
                     familyName: null,
                     picture: null,
                 },
-                mainNavToggle: true,
             }
         },
         computed: {
@@ -128,7 +127,7 @@
                     return this.mainNavToggle && this.loggedIn;
                 },
                 set(value) {
-                    this.mainNavToggle = value;
+                    this.$store.commit(mutations.showMainNav, value);
                 },
             },
             showRightNavPanel: {
@@ -143,7 +142,7 @@
                 return this.selectedTransaction !== undefined && this.loggedIn;
             },
             ...mapGetters(['selectedTransaction']),
-            ...mapState({ rightNavToggle: 'showEditTransactionPanel'})
+            ...mapState({ rightNavToggle: 'showEditTransactionPanel', mainNavToggle: 'showMainNav'})
         },
         methods: {
             toggleRightNav() {
@@ -151,7 +150,7 @@
             },
             ...mapActions('categories', [categoryActions.loadCategories]),
             ...mapActions([stateActions.showUpcoming]),
-            ...mapMutations([mutations.selectTransaction]),
+            ...mapMutations([mutations.selectTransaction, mutations.showMainNav]),
         },
         store,
         components: {
