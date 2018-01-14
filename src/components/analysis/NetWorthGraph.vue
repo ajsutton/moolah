@@ -1,19 +1,14 @@
 <template>
-    <v-card class="networth-graph" v-resize="handleResize">
-        <v-toolbar card class="white" prominent>
-            <v-toolbar-title class="body-2 grey--text">Net Worth</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-                <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
-                <v-select label="Forecast" :items="forecastItems" v-model="forecastMonths"></v-select>
-            </v-toolbar-items>
-        </v-toolbar>
-        <div ref="chart" class="chart"></div>
-    </v-card>
+    <graph-panel title="Net Worth" class="networth-graph" @resize="handleResize" ref="chartPanel">
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+            <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
+            <v-select label="Forecast" :items="forecastItems" v-model="forecastMonths"></v-select>
+        </v-toolbar-items>
+    </graph-panel>
 </template>
 
 <script>
-    import {mapState} from 'vuex';
     import c3 from 'c3';
     import client from '../../api/client';
     import formatMoney from '../util/formatMoney';
@@ -21,6 +16,7 @@
     import {formatDate} from '../../api/apiFormats';
     import debounce from 'debounce';
     import extrapolateBalances from './netWorthGraphData';
+    import GraphPanel from './GraphPanel.vue';
 
     const maxTicks = width => Math.floor(width / 160);
 
@@ -100,7 +96,6 @@
                 }
                 return ticks;
             },
-            ...mapState(['showEditTransactionPanel', 'showMainNav'])
         },
         watch: {
             previousMonths() {
@@ -108,12 +103,6 @@
             },
             forecastMonths() {
                 this.update();
-            },
-            showEditTransactionPanel() {
-                this.handleNavChange();
-            },
-            showMainNav() {
-                this.handleNavChange();
             },
         },
         methods: {
@@ -183,72 +172,38 @@
                 }
             },
 
-            handleResize: debounce(function() {
-                if (this.$refs.chart) {
-                    this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
+            handleResize() {
+                if (this.$refs.chartPanel.chart) {
+                    this.maxTicks = maxTicks(this.$refs.chartPanel.chart.offsetWidth);
                 }
                 this.reload();
-            }, 100),
-
-            handleNavChange() {
-                const listener = () => {
-                    this.handleResize();
-                    document.body.removeEventListener("transitionend", listener);
-                };
-                document.body.addEventListener("transitionend", listener);
-            }
+            },
         },
         async mounted() {
             const response = await client.dailyBalances(this.afterDate, this.untilDate);
             this.dailyBalances = response.dailyBalances;
             this.scheduledBalances = response.scheduledBalances || [];
-            this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
+            this.maxTicks = maxTicks(this.$refs.chartPanel.chart.offsetWidth);
             const args = this.getArgs();
             this.$chart = c3.generate({
-                bindto: this.$refs.chart,
+                bindto: this.$refs.chartPanel.chart,
                 ...args
             });
         },
         beforeDestroy() {
             this.$chart = this.$chart.destroy();
         },
+        components: {
+            GraphPanel
+        }
     };
 </script>
 
 <style lang="scss">
-    @import "~c3/c3.css";
-
     .networth-graph {
         .input-group--select {
             min-width: 10em;
             margin-left: 12px;
-        }
-    }
-
-    .chart {
-        svg {
-            font-family: inherit;
-            font-size: inherit;
-        }
-
-        * {
-            shape-rendering: geometricPrecision !important;
-        }
-
-        .c3-line {
-            stroke-width: 2px;
-        }
-
-        .c3-line-bestFit {
-            stroke-width: 1px;
-        }
-
-        .c3-ygrid {
-            stroke-dasharray: none;
-            stroke: #ddd;
-        }
-
-        .c3-axis-x-label {
         }
     }
 </style>

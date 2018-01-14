@@ -1,20 +1,16 @@
 <template>
-    <v-card class="expense-breakdown-graph" v-resize="handleResize">
-        <v-toolbar card class="white" prominent>
-            <v-toolbar-title class="body-2 grey--text">Expenses by Category</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-                <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
-            </v-toolbar-items>
-        </v-toolbar>
-        <div ref="chart" class="chart"></div>
-        <v-breadcrumbs icons v-if="breadcrumbs.length > 1">
+    <graph-panel title="Expenses by Category" class="expense-breakdown-graph" @resize="handleResize" ref="chartPanel">
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+            <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
+        </v-toolbar-items>
+        <v-breadcrumbs icons v-if="breadcrumbs.length > 1" slot="footer">
             <v-icon slot="divider">chevron_right</v-icon>
             <v-breadcrumbs-item v-for="item in breadcrumbs" :key="item.id" @click.native="rootCategoryId = item.id">
                 {{ item.name }}
             </v-breadcrumbs-item>
         </v-breadcrumbs>
-    </v-card>
+    </graph-panel>
 </template>
 
 <script>
@@ -26,6 +22,7 @@
     import debounce from 'debounce';
     import {mapGetters, mapState} from 'vuex';
     import {summariseCategories} from './expenseBreakdownData';
+    import GraphPanel from './GraphPanel.vue';
 
     export default {
         data() {
@@ -79,7 +76,7 @@
                         if (category.children.length > 0) {
                             this.rootCategoryId = categoryId;
                         }
-                    }
+                    },
                 };
             },
 
@@ -115,7 +112,7 @@
                         show: false,
                     },
                     tooltip: {
-                        format:{ 
+                        format: {
                             value(value, ratio) {
                                 return `${formatMoney(-value)} (${Math.round(ratio * 100)}%)`;
                             },
@@ -144,19 +141,20 @@
             this.expenseBreakdown = await client.expenseBreakdown(new Date().getDate(), this.afterDate);
             const args = this.getArgs();
             this.$chart = c3.generate({
-                bindto: this.$refs.chart,
+                bindto: this.$refs.chartPanel.chart,
                 ...args
             });
         },
         beforeDestroy() {
             this.$chart = this.$chart.destroy();
         },
+        components: {
+            GraphPanel,
+        },
     };
 </script>
 
 <style lang="scss">
-    @import "~c3/c3.css";
-
     .expense-breakdown-graph {
         .input-group--select {
             min-width: 10em;

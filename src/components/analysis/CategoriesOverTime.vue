@@ -1,19 +1,15 @@
 <template>
-    <v-card class="expense-category-time-graph" v-resize="handleResize">
-        <v-toolbar card class="white" prominent>
-            <v-toolbar-title class="body-2 grey--text">Expenses by Category Over Time</v-toolbar-title>
-            <v-spacer></v-spacer>
+    <graph-panel title="Expenses by Category Over Time" class="expense-category-time-graph" @resize="handleResize" ref="chartPanel">
+        <v-spacer></v-spacer>
 
-            <v-radio-group row v-model="actualValues">
-                <v-radio label="Percentage" :value="false" ></v-radio>
-                <v-radio label="Actual" :value="true"></v-radio>
-            </v-radio-group>
-            <v-toolbar-items>
-                <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
-            </v-toolbar-items>
-        </v-toolbar>
-        <div ref="chart" class="chart"></div>
-    </v-card>
+        <v-radio-group row v-model="actualValues">
+            <v-radio label="Percentage" :value="false" ></v-radio>
+            <v-radio label="Actual" :value="true"></v-radio>
+        </v-radio-group>
+        <v-toolbar-items>
+            <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
+        </v-toolbar-items>
+    </graph-panel>
 </template>
 
 <script>
@@ -25,6 +21,7 @@
     import debounce from 'debounce';
     import {mapGetters, mapState} from 'vuex';
     import {categoriesOverTimeGraphData} from './categories/categoryOverTimeData';
+    import GraphPanel from './GraphPanel.vue';
 
     export default {
         data() {
@@ -64,7 +61,7 @@
                 this.$chart.destroy();
                 const args = this.getArgs();
                 this.$chart = c3.generate({
-                    bindto: this.$refs.chart,
+                    bindto: this.$refs.chartPanel.chart,
                     ...args
                 });
             },
@@ -112,7 +109,7 @@
                     },
                     tooltip: {
                         show: false,
-                        format:{ 
+                        format:{
                             value(value, ratio) {
                                 return `${formatMoney(value)}`;
                             },
@@ -144,19 +141,20 @@
             this.expenseBreakdown = await client.expenseBreakdown(new Date().getDate(), this.afterDate);
             const args = this.getArgs();
             this.$chart = c3.generate({
-                bindto: this.$refs.chart,
+                bindto: this.$refs.chartPanel.chart,
                 ...args
             });
         },
         beforeDestroy() {
             this.$chart = this.$chart.destroy();
         },
+        components: {
+            GraphPanel
+        }
     };
 </script>
 
 <style lang="scss">
-    @import "~c3/c3.css";
-
     .expense-category-time-graph {
         .input-group--select {
             min-width: 10em;

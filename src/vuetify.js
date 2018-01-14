@@ -25,6 +25,7 @@ import {
     VBadge,
     VSwitch,
     VDatePicker,
+    VBreadcrumbs,
     transitions
 } from 'vuetify'
 
@@ -61,6 +62,7 @@ export function useVuetify() {
             VBadge,
             VSwitch,
             VDatePicker,
+            VBreadcrumbs,
             transitions
         },
         directives: {
