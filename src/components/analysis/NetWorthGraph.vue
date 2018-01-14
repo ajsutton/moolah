@@ -176,7 +176,9 @@
             },
 
             handleResize: debounce(function() {
-                this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
+                if (this.$refs.chart) {
+                    this.maxTicks = maxTicks(this.$refs.chart.offsetWidth);
+                }
                 this.reload();
             }, 100),
         },
