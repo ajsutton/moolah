@@ -13,6 +13,7 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex';
     import c3 from 'c3';
     import client from '../../api/client';
     import formatMoney from '../util/formatMoney';
@@ -57,7 +58,7 @@
                 return {
                     type: 'step',
                     types: {
-                        bestFit: 'line'
+                        bestFit: 'line',
                     },
                     json: this.extrapolatedBalances,
                     keys: {
@@ -99,6 +100,7 @@
                 }
                 return ticks;
             },
+            ...mapState(['showEditTransactionPanel', 'showMainNav'])
         },
         watch: {
             previousMonths() {
@@ -106,6 +108,12 @@
             },
             forecastMonths() {
                 this.update();
+            },
+            showEditTransactionPanel() {
+                this.handleNavChange();
+            },
+            showMainNav() {
+                this.handleNavChange();
             },
         },
         methods: {
@@ -181,6 +189,14 @@
                 }
                 this.reload();
             }, 100),
+
+            handleNavChange() {
+                const listener = () => {
+                    this.handleResize();
+                    document.body.removeEventListener("transitionend", listener);
+                };
+                document.body.addEventListener("transitionend", listener);
+            }
         },
         async mounted() {
             const response = await client.dailyBalances(this.afterDate, this.untilDate);
