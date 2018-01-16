@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-jumbotron :src="require('../../assets/brisbane-large.jpg')" gradient="to top, rgba(0, 0, 0, .2), rgba(0, 0, 0, .5)">
+    <v-jumbotron :src="require('../../assets/jumbo-background.jpg')">
       <v-container fill-height>
         <v-layout align-center>
           <v-flex>
