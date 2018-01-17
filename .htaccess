@@ -1,4 +1,5 @@
 Header add X-Content-Type-Options "nosniff"
+Header add Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
