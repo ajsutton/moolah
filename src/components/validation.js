@@ -42,6 +42,9 @@ export const rules = {
     recurEvery: [
         positiveInteger()
     ],
+    savingsTarget: [
+        maxDecimalPlaces(2)
+    ],
 };
 
 export function isValid(value, rules) {
