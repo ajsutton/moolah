@@ -15,7 +15,7 @@
                         label="Account Type"
                         required
                         v-model="type"
-                        :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}]"
+                        :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}, {text: 'Earmarked Funds', value: 'earmark'}]"
                 ></v-select>
                 <small>*indicates required field</small>
             </v-card-text>

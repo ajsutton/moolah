@@ -38,7 +38,15 @@
                             <v-icon dark>schedule</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>Upcoming</v-list-tile-title>
+                            <v-list-tile-title>Upcoming Transactions</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile ripple to="/transactions/">
+                        <v-list-tile-action>
+                            <v-icon>list</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>All Transactions</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>

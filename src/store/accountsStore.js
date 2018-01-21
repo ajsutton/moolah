@@ -29,8 +29,19 @@ export default {
         selectedAccount(state, getters, rootState) {
             return state.accounts.find(account => account.id === rootState.selectedAccountId);
         },
-        networth(state) {
-            return state.accounts.reduce((networth, account) => networth + account.balance, 0);
+        standardAccounts(state) {
+            return state.accounts.filter(account => account.type !== 'earmark');
+        },
+        earmarkAccounts(state) {
+            return state.accounts.filter(account=> account.type === 'earmark');
+        },
+        networth(state, getters) {
+            return getters.standardAccounts
+                .reduce((networth, account) => networth + account.balance, 0);
+        },
+        networthWithEarmarks(state) {
+            return state.accounts
+                .reduce((networth, account) => networth + account.balance, 0);
         },
     },
     mutations: {

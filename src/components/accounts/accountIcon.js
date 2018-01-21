@@ -4,6 +4,8 @@ export default function iconForType(type) {
             return 'credit_card';
         case 'asset':
             return 'home';
+        case 'earmark':
+            return 'bookmark';
         default:
             return 'account_balance';
     }
