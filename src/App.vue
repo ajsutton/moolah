@@ -1,57 +1,6 @@
 <template>
     <v-app light>
-        <v-navigation-drawer clipped v-model="showMainNav" dark app fixed>
-            <template v-if="loggedIn">
-                <v-list class="pa-0">
-                    <v-list-tile avatar>
-                        <v-list-tile-avatar v-if="profile.picture">
-                            <img :src="profile.picture"/>
-                        </v-list-tile-avatar>
-                        <v-list-tile-content>
-                            <v-list-tile-title>{{profile.givenName}} {{profile.familyName}}</v-list-tile-title>
-                        </v-list-tile-content>
-                        <v-list-tile-action>
-                            <create-account dark></create-account>
-                        </v-list-tile-action>
-                    </v-list-tile>
-                </v-list>
-                <account-list></account-list>
-                <v-list>
-                    <v-list-tile  ripple to="/" exact>
-                        <v-list-tile-action>
-                            <v-icon dark>trending_up</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>Analysis</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile ripple to="/categories/">
-                        <v-list-tile-action>
-                            <v-icon dark>folder_open</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>Categories</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile ripple to="/upcoming/">
-                        <v-list-tile-action>
-                            <v-icon dark>schedule</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>Upcoming Transactions</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile ripple to="/transactions/">
-                        <v-list-tile-action>
-                            <v-icon>list</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>All Transactions</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                </v-list>
-            </template>
-        </v-navigation-drawer>
+        <account-nav :profile="profile" :loggedIn="loggedIn"></account-nav>
         <v-navigation-drawer v-model="showRightNavPanel" floating right clipped disable-route-watcher disable-resize-watcher app fixed>
             <v-card class="ma-3">
                 <v-card-text>
@@ -97,10 +46,10 @@
 <script>
     import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
     import {actions as transactionActions} from './store/transactions/transactionStore';
+    import {actions as accountActions} from './store/accountsStore';
     import {mutations, actions as stateActions} from './store/store';
-    import AccountList from './components/accounts/AccountList';
+    import AccountNav from './components/accounts/AccountNav.vue';
     import EditTransaction from './components/transactions/EditTransaction';
-    import CreateAccount from './components/accounts/CreateAccount';
     import Welcome from './components/welcome/Welcome';
     import Logout from './components/Logout';
     import client from './api/client';
@@ -149,13 +98,13 @@
                 this.showRightNavPanel = !this.rightNavToggle;
             },
             ...mapActions('categories', [categoryActions.loadCategories]),
+            ...mapActions('accounts', [accountActions.loadAccounts]),
             ...mapActions([stateActions.showUpcoming]),
             ...mapMutations([mutations.selectTransaction, mutations.showMainNav]),
         },
         store,
         components: {
-            AccountList,
-            CreateAccount,
+            AccountNav,
             EditTransaction,
             Welcome,
             Logout,
@@ -163,8 +112,9 @@
         async created() {
             const state = await client.userProfile();
             if (state.loggedIn) {
-                await this[categoryActions.loadCategories]();
+                this[categoryActions.loadCategories]();
                 this[stateActions.showUpcoming]();
+                this[accountActions.loadAccounts]();
             }
             this.loggedIn = state.loggedIn;
             this.profile = state.profile;

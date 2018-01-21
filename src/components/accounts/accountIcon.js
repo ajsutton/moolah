@@ -5,7 +5,7 @@ export default function iconForType(type) {
         case 'asset':
             return 'home';
         case 'earmark':
-            return 'bookmark';
+            return 'bookmark_outline';
         default:
             return 'account_balance';
     }
