@@ -14,8 +14,8 @@
                     </v-list-tile-action>
                 </v-list-tile>
             </v-list>
-            <account-list title="Accounts" :accounts="standardAccounts" totalLabel="Available funds" :totalValue="networth"></account-list>
-            <account-list title="Earmarks" :accounts="earmarkAccounts" totalLabel="Net worth" :totalValue="networthWithEarmarks"></account-list>
+            <account-list title="Accounts" :accounts="standardAccounts" :totalLabel="standardAccountsTotalLabel" :totalValue="networth"></account-list>
+            <account-list title="Earmarked" :accounts="earmarkAccounts" totalLabel="Net worth" :totalValue="networthWithEarmarks" v-if="hasEarmarks"></account-list>
             <v-list>
                 <v-list-tile ripple to="/" exact>
                     <v-list-tile-action>
@@ -77,6 +77,12 @@
                 set(value) {
                     this.$store.commit(mutations.showMainNav, value);
                 },
+            },
+            hasEarmarks() {
+                return this.earmarkAccounts.length > 0;
+            },
+            standardAccountsTotalLabel() {
+                return this.hasEarmarks ? 'Available funds' : 'Net worth'
             },
             ...mapState({mainNavToggle: 'showMainNav'}),
             ...mapGetters('accounts', ['networth', 'networthWithEarmarks', 'standardAccounts', 'earmarkAccounts']),
