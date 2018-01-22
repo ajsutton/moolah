@@ -17,10 +17,9 @@
         <v-layout row wrap>
             <v-flex v-if="hasSavingsTarget" md6 xl3>
                 <v-progress-circular :value="savingsPercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="progressColor(savingsPercent)">
-                    Saved:
-                    <monetary-amount :value="selectedAccount.balance" :omitZeroCents="true"></monetary-amount>
-                    <br>
-                    Target:
+                    Saved<br>
+                    <monetary-amount :value="selectedAccount.balance" :omitZeroCents="true"></monetary-amount><br>
+                    Target<br>
                     <monetary-amount :value="selectedAccount.savingsTarget" :omitZeroCents="true"></monetary-amount>
                 </v-progress-circular>
             </v-flex>
