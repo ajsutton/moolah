@@ -6,14 +6,23 @@
     import formatMoney from './formatMoney';
 
     export default {
-        props: ['value'],
+        props: {
+            'value': {
+                type: Number,
+                required: true,
+            },
+            omitZeroCents: {
+                type: Boolean,
+                'default': false
+            }
+        },
         computed: {
             colour() {
                 return this.value >= 0 ? 'green--text' : 'red--text';
             },
             amount() {
-                return formatMoney(this.value);
-            }
+                return formatMoney(this.value, this.omitZeroCents);
+            },
         },
-    }
+    };
 </script>

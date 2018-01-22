@@ -1,5 +1,5 @@
 <template>
-        <v-alert type="info" v-model="active" dismissible>{{message}}</v-alert>
+    <v-alert type="info" v-model="active" dismissible>{{message}}</v-alert>
 </template>
 <script>
     import {mapState, mapGetters, mapActions} from 'vuex';
@@ -20,12 +20,12 @@
                             },
                         });
                     }
-                }
+                },
             },
             message() {
                 let message = 'Showing transactions';
                 if (this.searchOptions.from !== undefined && this.searchOptions.to !== undefined) {
-                    message += ` between ${this.searchOptions.from} and ${this.searchOptions.to}`
+                    message += ` between ${this.searchOptions.from} and ${this.searchOptions.to}`;
                 } else if (this.searchOptions.from !== undefined) {
                     message += ` on or after ${this.searchOptions.from}`;
                 } else if (this.searchOptions.to !== undefined) {

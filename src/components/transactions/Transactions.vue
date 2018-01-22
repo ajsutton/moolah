@@ -13,6 +13,7 @@
             </template>
         </v-toolbar>
         <filter-notice></filter-notice>
+        <savings-goal-notice></savings-goal-notice>
         <v-alert type="error" v-model="error">Failed to load transactions</v-alert>
         <v-divider></v-divider>
         <v-progress-linear v-bind:indeterminate="true" v-if="loading"></v-progress-linear>
@@ -37,6 +38,7 @@
     import CreateAccount from '../accounts/CreateAccount.vue';
     import TransactionFilters from './TransactionFilters.vue';
     import FilterNotice from './FilterNotice.vue';
+    import SavingsGoalNotice from '../savings/SavingsGoalNotice.vue'
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
 
@@ -98,6 +100,7 @@
             CreateAccount,
             TransactionFilters,
             FilterNotice,
+            SavingsGoalNotice,
         },
     };
 </script>
