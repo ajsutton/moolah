@@ -112,9 +112,9 @@
         async created() {
             const state = await client.userProfile();
             if (state.loggedIn) {
-                this[categoryActions.loadCategories]();
+                await this[categoryActions.loadCategories]();
                 this[stateActions.showUpcoming]();
-                this[accountActions.loadAccounts]();
+                await this[accountActions.loadAccounts]();
             }
             this.loggedIn = state.loggedIn;
             this.profile = state.profile;
