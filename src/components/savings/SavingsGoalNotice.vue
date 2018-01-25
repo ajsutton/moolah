@@ -13,10 +13,12 @@
                     --><template v-if="selectedAccount.savingsStartDate && !startedToday && started"> in {{daysElapsed}}</template>.
                     <template v-if="hasReachedTarget">Congratulations!</template>
                     <template v-else-if="!started">Savings plan starts in {{daysElapsed}}.</template>
-                    <template v-else-if="selectedAccount.savingsEndDate && started">
-                        <template v-if="dueToday">The target date is today.</template>
-                        <template v-else-if="overdue">Target end date was {{daysRemaining}} ago.</template>
-                        <template v-else>You have {{daysRemaining}} left to reach your goal.</template>
+                    <template v-else>You are <monetary-amount :value="remainingAmount" :omitZeroCents="true" :invertColors="true"></monetary-amount> short of your target<template v-if="!selectedAccount.savingsEndDate">.</template>
+                        <template v-else>
+                            <template v-if="dueToday"> which is due today.</template>
+                            <template v-else-if="overdue"> and the target end date was {{daysRemaining}} ago.</template>
+                            <template v-else> with {{daysRemaining}} left.</template>
+                        </template>
                     </template>
                 </p>
             </v-flex>
@@ -66,6 +68,10 @@
 
             hasReachedTarget() {
                 return this.hasSavingsTarget && this.selectedAccount.balance >= this.selectedAccount.savingsTarget;
+            },
+
+            remainingAmount() {
+                return this.hasSavingsTarget && this.selectedAccount.savingsTarget - this.selectedAccount.balance;
             },
 
             hasSavingsTarget() {

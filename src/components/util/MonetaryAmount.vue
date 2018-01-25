@@ -14,11 +14,15 @@
             omitZeroCents: {
                 type: Boolean,
                 'default': false
+            },
+            invertColors: {
+                type: Boolean,
+                'default': false
             }
         },
         computed: {
             colour() {
-                return this.value >= 0 ? 'green--text' : 'red--text';
+                return this.value >= 0 !== this.invertColors ? 'green--text' : 'red--text';
             },
             amount() {
                 return formatMoney(this.value, this.omitZeroCents);
