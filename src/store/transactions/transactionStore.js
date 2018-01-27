@@ -179,14 +179,15 @@ export default {
             }
         },
 
-        async [actions.addTransaction]({commit, rootState, dispatch}, attributes = {}) {
+        async [actions.addTransaction]({commit, rootState, rootGetters, dispatch}, attributes = {}) {
+            const account = rootGetters['accounts/selectedAccount'] || rootState.accounts.accounts[0];
             const initialProperties = Object.assign({
                 amount: 0,
                 date: formatDate(new Date()),
                 notes: '',
                 payee: '',
-                accountId: rootState.selectedAccountId || rootState.accounts.accounts[0].id,
-                type: 'expense',
+                accountId: account.id,
+                type: account.type === 'earmark' ? 'income' : 'expense',
                 categoryId: null,
             }, attributes);
             const transaction = Object.assign({id: 'new-transaction'}, initialProperties);

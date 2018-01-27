@@ -20,9 +20,14 @@ export default {
         accounts: [],
     },
     getters: {
-        accountName(state) {
+        account(state) {
             return accountId => {
-                const account = state.accounts.find(account => account.id === accountId);
+                return state.accounts.find(account => account.id === accountId);
+            }
+        },
+        accountName(state, getters) {
+            return accountId => {
+                const account = getters.account(accountId);
                 return account ? account.name : 'Unknown';
             };
         },
@@ -36,11 +41,14 @@ export default {
             return state.accounts.filter(account=> account.type === 'earmark');
         },
         networth(state, getters) {
-            return getters.standardAccounts
+            return getters.networthWithEarmarks - getters.totalEarmarked;
+        },
+        totalEarmarked(state, getters) {
+            return getters.earmarkAccounts
                 .reduce((networth, account) => networth + account.balance, 0);
         },
-        networthWithEarmarks(state) {
-            return state.accounts
+        networthWithEarmarks(state, getters) {
+            return getters.standardAccounts
                 .reduce((networth, account) => networth + account.balance, 0);
         },
     },

@@ -1,19 +1,22 @@
 <template>
     <div class="pl-2 pr-2">
-        <auto-complete-payee name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-if="!isOpeningBalance" ref="payee" @autofill="autofill"></auto-complete-payee>
-        <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')"></v-text-field>
+        <p v-if="isEarmarkAccount" class="subheading">Earmark funds</p>
+        <auto-complete-payee name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-else-if="!isOpeningBalance" ref="payee" @autofill="autofill"></auto-complete-payee>
+        <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')" ref="amount"></v-text-field>
 
         <date-picker-field v-model="date"></date-picker-field>
 
-        <category-selector v-model="category"></category-selector>
+        <template v-if="!isEarmarkAccount">
+            <category-selector v-model="category"></category-selector>
 
-        <v-select
-                label="Type"
-                v-if="!isOpeningBalance"
-                v-model="type"
-                :items="validTransactionTypes"
-        ></v-select>
-        <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
+            <v-select
+                    label="Type"
+                    v-if="!isOpeningBalance"
+                    v-model="type"
+                    :items="validTransactionTypes"
+            ></v-select>
+            <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
+        </template>
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
@@ -67,12 +70,17 @@
             toAccountLabel() {
                 return this.transaction.amount < 0 ? 'To Account' : 'From Account';
             },
+            isEarmarkAccount() {
+                return this.account.type === 'earmark';
+            },
+            account() {
+                return this.accountById(this.transaction.accountId);
+            },
             ...mapGetters({
                 transaction: 'selectedTransaction',
             }),
-            ...mapState('accounts', {
-                accounts: state => state.accounts,
-            }),
+            ...mapGetters('accounts', { accountById: 'account' }),
+            ...mapState('accounts', ['accounts']),
             accountId: {
                 get() {
                     return this.transaction.accountId;
@@ -157,16 +165,20 @@
             }),
             ...mapActions('scheduledTransactions', {
                 pay: transactionActions.payTransaction,
-            })
+            }),
+            focus() {
+                (this.$refs.payee || this.$refs.amount).focus();
+
+            }
         },
         watch: {
             transactionId() {
                 Object.keys(this.raw).forEach(key => this.raw[key] = undefined);
-                this.$refs.payee.focus();
+                this.focus();
             },
         },
         mounted() {
-            this.$refs.payee.focus();
+            this.focus();
         },
         components: {
             AccountSelector,

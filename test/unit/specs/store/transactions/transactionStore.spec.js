@@ -296,7 +296,7 @@ describe('transactionStore', function() {
                     actions.addTransaction,
                     {
                         state: {transactions: [], transactionsById: {}},
-                        rootState: {selectedAccountId: 'account-1'},
+                        rootGetters: {'accounts/selectedAccount': {type: 'bank', id: 'account-1'}},
                         dispatch,
                     },
                     [
@@ -313,7 +313,10 @@ describe('transactionStore', function() {
                 await testAction(
                     transactionStore,
                     actions.addTransaction,
-                    {state: addIdLookup({transactions: [], priorBalance: 0}), rootState: {selectedAccountId: 'account-1'}, ignoreFailures: true},
+                    {
+                        state: addIdLookup({transactions: [], priorBalance: 0}),
+                        rootGetters: {'accounts/selectedAccount': {type: 'bank', id: 'account-1'}},
+                        ignoreFailures: true},
                     [
                         {type: mutations.addTransaction, payload: Object.assign({}, newTransaction)},
                         {type: mutations.removeTransaction, payload: Object.assign(newTransaction, {balance: 0, recurPeriod: undefined, recurEvery: undefined, toAccountId: undefined})},
