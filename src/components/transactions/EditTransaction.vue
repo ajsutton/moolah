@@ -22,7 +22,7 @@
 
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')" multiLine></v-text-field>
 
-        <account-selector v-if="scheduled" label="Account" v-bind:value.sync="accountId"></account-selector>
+        <account-selector v-if="scheduled" label="Account" v-bind:value.sync="accountId" :includeEarmarks="true"></account-selector>
 
         <div class="text-xs-right">
             <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>
@@ -79,15 +79,23 @@
             ...mapGetters({
                 transaction: 'selectedTransaction',
             }),
-            ...mapGetters('accounts', { accountById: 'account', accounts: 'standardAccounts' }),
+            ...mapGetters('accounts', { accountById: 'account', standardAccounts: 'standardAccounts' }),
+            ...mapState('accounts', ['accounts']),
             accountId: {
                 get() {
                     return this.transaction.accountId;
                 },
                 set(value) {
+                    const patch = {accountId: value};
+                    if (this.accountById(value).type === 'earmark') {
+                        patch.type = 'income';
+                        patch.payee = undefined;
+                        patch.categoryId = undefined;
+                        patch.toAccountId = undefined;
+                    }
                     this.updateTransaction({
                         id: this.transaction.id,
-                        patch: {accountId: value},
+                        patch,
                     });
                 },
             },

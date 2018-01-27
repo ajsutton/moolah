@@ -21,16 +21,30 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapState} from 'vuex';
     import iconForType from './accountIcon';
     import MonetaryAmount from '../util/MonetaryAmount';
 
     export default {
-        props: ['label', 'value', 'excludeAccountId'],
+        props: {
+            'label': String,
+            'value': {
+                type: String,
+                required: true,
+            },
+            'excludeAccountId': {
+                type: String,
+            },
+            'includeEarmarks': {
+                type: Boolean,
+                'default': false
+            }
+        },
         computed: {
-            ...mapGetters('accounts', { accounts: 'standardAccounts' }),
+            ...mapGetters('accounts', {standardAccounts: 'standardAccounts'}),
+            ...mapState('accounts', { allAccounts: 'accounts' }),
             filteredAccounts() {
-                return this.accounts.filter(account => account.id !== this.excludeAccountId);
+                return (this.includeEarmarks ? this.allAccounts : this.standardAccounts).filter(account => account.id !== this.excludeAccountId);
             },
             selectedAccountId: {
                 get() {
@@ -38,8 +52,8 @@
                 },
                 set(accountId) {
                     this.$emit('update:value', accountId);
-                }
-            }
+                },
+            },
         },
         methods: {
             icon(account) {
