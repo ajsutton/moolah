@@ -79,8 +79,7 @@
             ...mapGetters({
                 transaction: 'selectedTransaction',
             }),
-            ...mapGetters('accounts', { accountById: 'account' }),
-            ...mapState('accounts', ['accounts']),
+            ...mapGetters('accounts', { accountById: 'account', accounts: 'standardAccounts' }),
             accountId: {
                 get() {
                     return this.transaction.accountId;

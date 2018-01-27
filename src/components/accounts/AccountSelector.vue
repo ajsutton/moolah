@@ -21,16 +21,14 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
+    import {mapGetters} from 'vuex';
     import iconForType from './accountIcon';
     import MonetaryAmount from '../util/MonetaryAmount';
 
     export default {
         props: ['label', 'value', 'excludeAccountId'],
         computed: {
-            ...mapState('accounts', {
-                accounts: state => state.accounts,
-            }),
+            ...mapGetters('accounts', { accounts: 'standardAccounts' }),
             filteredAccounts() {
                 return this.accounts.filter(account => account.id !== this.excludeAccountId);
             },
