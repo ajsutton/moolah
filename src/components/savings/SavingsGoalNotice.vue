@@ -13,21 +13,14 @@
         <v-layout row wrap>
             <v-flex v-if="hasSavingsTarget" md6 xl3>
                 <v-progress-circular :value="savingsPercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="savingsColor">
-                    Saved<br>
-                    <monetary-amount :value="selectedAccount.balance" :omitZeroCents="true"></monetary-amount>
-                    <br>
-                    Target<br>
-                    <monetary-amount :value="selectedAccount.savingsTarget" :omitZeroCents="true"></monetary-amount>
+                    Savings<br>
+                    <span class="headline">{{Math.round(savingsPercent)}}%</span>
                 </v-progress-circular>
             </v-flex>
             <v-flex v-if="hasTargetDates && started" md6 xl3>
                 <v-progress-circular :value="timePercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="timeColor">
-                    <template v-if="notStartedYet">Start in {{daysElapsed}}<br></template>
-                    <template v-else-if="!startedToday">{{daysElapsed}} gone<br></template>
-
-                    <template v-if="dueToday">Due today</template>
-                    <template v-else-if="overdue">{{daysRemaining}} overdue</template>
-                    <template v-else>{{daysRemaining}} left</template>
+                    Time<br>
+                    <span class="headline">{{Math.round(timePercent)}}%</span>
                 </v-progress-circular>
             </v-flex>
         </v-layout>
