@@ -14,13 +14,13 @@
             <v-flex v-if="hasSavingsTarget" md6 xl3>
                 <v-progress-circular :value="savingsPercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="savingsColor">
                     Savings<br>
-                    <span class="headline">{{Math.round(savingsPercent)}}%</span>
+                    <span class="headline">{{Math.floor(savingsPercent)}}%</span>
                 </v-progress-circular>
             </v-flex>
             <v-flex v-if="hasTargetDates && started" md6 xl3>
                 <v-progress-circular :value="timePercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="timeColor">
                     Time<br>
-                    <span class="headline">{{Math.round(timePercent)}}%</span>
+                    <span class="headline">{{Math.floor(timePercent)}}%</span>
                 </v-progress-circular>
             </v-flex>
         </v-layout>
