@@ -54,7 +54,7 @@ function affectsBalance(patch) {
 }
 
 export function ensureAllFieldsPresent(transaction) {
-    ['amount', 'date', 'notes', 'payee', 'accountId', 'type', 'balance', 'categoryId', 'recurPeriod', 'recurEvery', 'toAccountId'].forEach(key => {
+    ['amount', 'date', 'notes', 'payee', 'accountId', 'type', 'balance', 'categoryId', 'recurPeriod', 'recurEvery', 'toAccountId', 'earmark'].forEach(key => {
         if (!transaction.hasOwnProperty(key)) {
             transaction[key] = undefined;
         }

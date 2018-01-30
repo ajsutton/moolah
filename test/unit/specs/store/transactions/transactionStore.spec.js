@@ -319,7 +319,7 @@ describe('transactionStore', function() {
                         ignoreFailures: true},
                     [
                         {type: mutations.addTransaction, payload: Object.assign({}, newTransaction)},
-                        {type: mutations.removeTransaction, payload: Object.assign(newTransaction, {balance: 0, recurPeriod: undefined, recurEvery: undefined, toAccountId: undefined})},
+                        {type: mutations.removeTransaction, payload: Object.assign(newTransaction, {balance: 0, recurPeriod: undefined, recurEvery: undefined, toAccountId: undefined, earmark: undefined})},
                     ],
                 );
             });

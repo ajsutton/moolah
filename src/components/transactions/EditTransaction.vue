@@ -18,6 +18,8 @@
             <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
         </template>
 
+        <account-selector label="Earmark" v-bind:value.sync="earmark" :includeEarmarks="true" :includeNonEarmarks="false" :clearable="true"></account-selector>
+
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')" multiLine></v-text-field>
@@ -96,6 +98,17 @@
                     this.updateTransaction({
                         id: this.transaction.id,
                         patch,
+                    });
+                },
+            },
+            earmark: {
+                get() {
+                    return this.transaction.earmark;
+                },
+                set(value) {
+                    this.updateTransaction({
+                        id: this.transaction.id,
+                        patch: {earmark: value},
                     });
                 },
             },

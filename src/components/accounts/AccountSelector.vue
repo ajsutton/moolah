@@ -2,6 +2,7 @@
     <v-select
             :label="label"
             :items="filteredAccounts"
+            :clearable="clearable"
             v-model="selectedAccountId"
             item-text="name"
             item-value="id"
@@ -30,7 +31,7 @@
             'label': String,
             'value': {
                 type: String,
-                required: true,
+                required: false,
             },
             'excludeAccountId': {
                 type: String,
@@ -38,13 +39,32 @@
             'includeEarmarks': {
                 type: Boolean,
                 'default': false
+            },
+            'includeNonEarmarks': {
+                type: Boolean,
+                'default': true
+            },
+            'clearable': {
+                type: Boolean,
+                'default': false,
             }
         },
         computed: {
-            ...mapGetters('accounts', {standardAccounts: 'standardAccounts'}),
+            ...mapGetters('accounts', {standardAccounts: 'standardAccounts', earmarkAccounts: 'earmarkAccounts'}),
             ...mapState('accounts', { allAccounts: 'accounts' }),
+            accounts() {
+                if (this.includeEarmarks && this.includeNonEarmarks) {
+                    return this.allAccounts;
+                } else if (this.includeNonEarmarks) {
+                    return this.standardAccounts;
+                } else if (this.includeEarmarks) {
+                    return this.earmarkAccounts;
+                } else {
+                    return [];
+                }
+            },
             filteredAccounts() {
-                return (this.includeEarmarks ? this.allAccounts : this.standardAccounts).filter(account => account.id !== this.excludeAccountId);
+                return (this.accounts).filter(account => account.id !== this.excludeAccountId);
             },
             selectedAccountId: {
                 get() {
