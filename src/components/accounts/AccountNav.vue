@@ -1,19 +1,6 @@
 <template>
     <v-navigation-drawer clipped v-model="showMainNav" dark app fixed>
         <template v-if="loggedIn">
-            <v-list class="pa-0">
-                <v-list-tile avatar>
-                    <v-list-tile-avatar v-if="profile.picture">
-                        <img :src="profile.picture"/>
-                    </v-list-tile-avatar>
-                    <v-list-tile-content>
-                        <v-list-tile-title>{{profile.givenName}} {{profile.familyName}}</v-list-tile-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                        <create-account dark></create-account>
-                    </v-list-tile-action>
-                </v-list-tile>
-            </v-list>
             <account-list title="Accounts" :accounts="standardAccounts" totalLabel="Net worth" :totalValue="networthWithEarmarks"></account-list>
             <account-list title="Earmarked" :accounts="earmarkAccounts" totalLabel="Available funds" :totalValue="networth" v-if="hasEarmarks"></account-list>
             <v-list>

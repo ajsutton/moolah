@@ -1,6 +1,11 @@
 <template>
     <v-list class="pt-0" dense expand>
-        <v-subheader>{{title}}</v-subheader>
+        <v-subheader>
+            <v-list-tile-content>{{title}}</v-list-tile-content>
+            <v-list-tile-action>
+                <create-account dark></create-account>
+            </v-list-tile-action>
+        </v-subheader>
         <account-list-item :account="account" v-for="account in accounts" :key="account.id"></account-list-item>
         <v-divider></v-divider>
 
@@ -21,6 +26,7 @@
     import MonetaryAmount from '../util/MonetaryAmount';
     import AccountListItem from './AccountListItem.vue';
     import {VSubheader, VDivider, VList} from 'vuetify';
+    import CreateAccount from './CreateAccount';
 
     export default {
         props: {
@@ -30,7 +36,7 @@
             },
             totalLabel: {
                 type: String,
-                required: true
+                required: true,
             },
             accounts: {
                 type: Array,
@@ -47,6 +53,7 @@
             MonetaryAmount,
             AccountListItem,
             VSubheader,
+            CreateAccount,
         },
     };
 </script>
