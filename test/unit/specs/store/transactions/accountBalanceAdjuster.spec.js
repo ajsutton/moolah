@@ -1,5 +1,5 @@
 import accountBalanceAdjuster from '../../../../../src/store/transactions/accountBalanceAdjuster';
-import {actions as accountActions} from '../../../../../src/store/accountsStore';
+import {actions as accountActions} from '../../../../../src/store/accounts/accountsStore';
 import sinon from 'sinon';
 
 describe('Account Balance Adjuster', function() {

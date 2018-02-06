@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import format from 'date-fns/format';
 import {assert, config as chaiConfig} from 'chai';
 import {actions, ensureAllFieldsPresent, loadingStates, mutations} from '../../../../../src/store/transactions/transactionStore';
-import {actions as accountActions} from '../../../../../src/store/accountsStore';
+import {actions as accountActions} from '../../../../../src/store/accounts/accountsStore';
 import {actions as stateActions} from '../../../../../src/store/store';
 import transactionStoreLoader from 'inject-loader!../../../../../src/store/transactions/transactionStore';
 import testAction from '../testAction';

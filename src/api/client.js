@@ -41,16 +41,32 @@ function formatQueryArg([key, value]) {
 }
 
 export default {
-    async accounts() {
-        return json('/api/accounts/');
+    accounts: {
+        async get() {
+            return json('/api/accounts/');
+        },
+
+        async create(account) {
+            return json('/api/accounts/', {method: 'POST', body: JSON.stringify(account)});
+        },
+
+        async update(account) {
+            return json(`/api/accounts/${encodeURIComponent(account.id)}/`, {method: 'PUT', body: JSON.stringify(account)});
+        },
     },
 
-    async createAccount(account) {
-        return json('/api/accounts/', {method: 'POST', body: JSON.stringify(account)});
-    },
+    earmarks: {
+        async get() {
+            return json('/api/earmarks/');
+        },
 
-    async updateAccount(account) {
-        return json(`/api/accounts/${encodeURIComponent(account.id)}/`, {method: 'PUT', body: JSON.stringify(account)});
+        async create(earmark) {
+            return json('/api/earmarks/', {method: 'POST', body: JSON.stringify(earmark)});
+        },
+
+        async update(earmark) {
+            return json(`/api/earmarks/${encodeURIComponent(earmark.id)}/`, {method: 'PUT', body: JSON.stringify(earmark)});
+        },
     },
 
     async transactions(searchOptions, offset = 0, pageSize = 100) {

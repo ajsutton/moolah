@@ -46,7 +46,7 @@
 <script>
     import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
     import {actions as transactionActions} from './store/transactions/transactionStore';
-    import {actions as accountActions} from './store/accountsStore';
+    import {actions as accountActions} from './store/accounts/accountsStore';
     import {mutations, actions as stateActions} from './store/store';
     import AccountNav from './components/accounts/AccountNav.vue';
     import EditTransaction from './components/transactions/EditTransaction';

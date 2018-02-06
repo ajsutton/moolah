@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import {assert} from 'chai';
-import {actions, mutations} from '../../../../src/store/accountsStore';
-import accountsStoreLoader from 'inject-loader!../../../../src/store/accountsStore';
+import {actions, mutations} from '../../../../src/store/accounts/accountsStore';
+import accountsStoreLoader from 'inject-loader!../../../../src/store/accounts/accountsStore';
 import testAction from './testAction';
 
 describe('accountsStore', function() {
@@ -9,12 +9,14 @@ describe('accountsStore', function() {
     let accountsStore;
     beforeEach(function() {
         client = {
-            accounts: sinon.stub(),
-            createAccount: sinon.stub(),
-            updateAccount: sinon.stub(),
+            accounts: {
+                get: sinon.stub(),
+                create: sinon.stub(),
+                update: sinon.stub(),
+            }
         };
         accountsStore = accountsStoreLoader({
-            '../api/client': client,
+            '../../api/client': client,
         }).default;
     });
 
@@ -22,7 +24,7 @@ describe('accountsStore', function() {
         it('should load accounts', async function() {
             const account1 = {name: 'Account1', type: 'bank', balance: 2300};
             const expectedAccounts = [account1];
-            client.accounts.resolves({accounts: expectedAccounts});
+            client.accounts.get.resolves({accounts: expectedAccounts});
             await testAction(
                 accountsStore,
                 actions.loadAccounts,
@@ -36,7 +38,7 @@ describe('accountsStore', function() {
         describe('Create Account', function() {
             it('should create a new account', async function() {
                 const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
-                client.createAccount.resolves({id: 'assigned-id', ...newAccount});
+                client.accounts.create.resolves({id: 'assigned-id', ...newAccount});
                 await testAction(
                     accountsStore,
                     actions.createAccount,
@@ -54,7 +56,7 @@ describe('accountsStore', function() {
             it('should remove account again if create fails', async function() {
 
                 const newAccount = {name: 'New Account', type: 'cc', balance: 123456};
-                client.createAccount.rejects('Fetch failed');
+                client.accounts.create.rejects('Fetch failed');
                 await testAction(
                     accountsStore,
                     actions.createAccount,
@@ -75,7 +77,7 @@ describe('accountsStore', function() {
             it('should update account and notify server', async function() {
                 const originalAccount = {id: 'abc', name: 'Old Name', type: 'bank', position: 1};
                 const modifiedAccount = {id: 'abc', name: 'New Name', type: 'cc', position: 3};
-                client.updateAccount.resolves(modifiedAccount);
+                client.accounts.update.resolves(modifiedAccount);
                 await testAction(
                     accountsStore,
                     actions.updateAccount,
@@ -87,13 +89,13 @@ describe('accountsStore', function() {
                         {type: mutations.updateAccount, payload: {id: 'abc', patch: modifiedAccount}},
                     ],
                 );
-                sinon.assert.calledWith(client.updateAccount, modifiedAccount);
+                sinon.assert.calledWith(client.accounts.update, modifiedAccount);
             });
 
             it('should rollback account change if server rejects it', async function() {
                 const originalAccount = {id: 'abc', name: 'Old Name', type: 'bank', position: 1};
                 const modifiedAccount = {id: 'abc', name: 'New Name', type: 'cc', position: 3};
-                client.updateAccount.rejects('Fetch failed');
+                client.accounts.update.rejects('Fetch failed');
                 await testAction(
                     accountsStore,
                     actions.updateAccount,
