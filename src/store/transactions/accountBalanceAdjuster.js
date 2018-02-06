@@ -1,4 +1,4 @@
-import {actions} from '../accounts/accountsStore';
+import {actions} from '../wallets/accountsStore';
 
 function addChange(changes, accountId, amount) {
     const currentChange = changes[accountId] || 0;

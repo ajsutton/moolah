@@ -50,7 +50,7 @@
 <script>
     import {mapActions} from 'vuex';
     import client from '../../api/client';
-    import {actions} from '../../store/accounts/accountsStore';
+    import {actions} from '../../store/wallets/accountsStore';
     import {rules} from '../validation';
     import {VForm} from 'vuetify';
     import DatePickerField from '../util/DatePickerField.vue';

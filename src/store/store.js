@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
-import accountsModule from './accounts/accountsStore';
+import accountsModule from './wallets/accountsStore';
 import transactionsModule, {actions as transactionActions} from './transactions/transactionStore';
 import categoryModule from './categoryStore';
 
