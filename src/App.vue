@@ -47,6 +47,7 @@
     import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
     import {actions as transactionActions} from './store/transactions/transactionStore';
     import {actions as accountActions} from './store/wallets/accountsStore';
+    import {actions as earmarkActions} from './store/wallets/earmarksStore';
     import {mutations, actions as stateActions} from './store/store';
     import AccountNav from './components/accounts/AccountNav.vue';
     import EditTransaction from './components/transactions/EditTransaction';
@@ -98,7 +99,8 @@
                 this.showRightNavPanel = !this.rightNavToggle;
             },
             ...mapActions('categories', [categoryActions.loadCategories]),
-            ...mapActions('accounts', [accountActions.loadAccounts]),
+            ...mapActions('accounts', {loadAccounts: accountActions.loadAccounts}),
+            ...mapActions('earmarks', {loadEarmarks: earmarkActions.loadEarmarks}),
             ...mapActions([stateActions.showUpcoming]),
             ...mapMutations([mutations.selectTransaction, mutations.showMainNav]),
         },
@@ -114,7 +116,8 @@
             if (state.loggedIn) {
                 await this[categoryActions.loadCategories]();
                 this[stateActions.showUpcoming]();
-                await this[accountActions.loadAccounts]();
+                await this.loadAccounts();
+                await this.loadEarmarks();
             }
             this.loggedIn = state.loggedIn;
             this.profile = state.profile;

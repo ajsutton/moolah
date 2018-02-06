@@ -1,6 +1,7 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
 import accountsModule from './wallets/accountsStore';
+import earmarksModule from './wallets/earmarksStore';
 import transactionsModule, {actions as transactionActions} from './transactions/transactionStore';
 import categoryModule from './categoryStore';
 
@@ -73,6 +74,7 @@ const store = new Vuex.Store({
     },
     modules: {
         accounts: accountsModule,
+        earmarks: earmarksModule,
         transactions: transactionsModule,
         scheduledTransactions: transactionsModule,
         categories: categoryModule,

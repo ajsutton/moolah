@@ -16,7 +16,7 @@ export function createWalletStoreActions(propertyName, client) {
     return {
         async [walletActions.load]({commit}) {
             const response = await client.get();
-            commit(walletMutations.set, response.accounts);
+            commit(walletMutations.set, response[propertyName]);
         },
 
         async [walletActions.create]({commit}, account) {
