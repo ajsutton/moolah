@@ -54,9 +54,6 @@
                         const transferDescription = `Transfer ${direction} ${accountName}`;
                         return this.transaction.payee ? `${this.transaction.payee} (${transferDescription})` : transferDescription;
                     default:
-                        if (this.account(this.transaction.accountId).type === 'earmark') {
-                            return 'Earmark funds';
-                        }
                         return this.transaction.payee || '\xa0';
                 }
             },
@@ -83,7 +80,7 @@
             },
             ...mapGetters(['selectedTransaction']),
             ...mapGetters('categories', ['getCategoryName']),
-            ...mapGetters('accounts', ['accountName', 'account']),
+            ...mapGetters('accounts', ['accountName']),
         },
 
         methods: {

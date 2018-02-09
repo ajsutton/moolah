@@ -4,13 +4,7 @@
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <transaction-filters></transaction-filters>
-            <template v-if="account">
-                <create-account :account="account"></create-account>
-                <v-btn icon
-                       @click.native.stop="addTransaction">
-                    <v-icon>add</v-icon>
-                </v-btn>
-            </template>
+            <slot name="additionalButtons"></slot>
         </v-toolbar>
         <filter-notice></filter-notice>
         <savings-goal-notice></savings-goal-notice>
@@ -45,12 +39,12 @@
     export default {
         props: {
             searchOptions: Object,
-            account: Object,
+            title: {
+                type: String,
+                required: true,
+            }
         },
         computed: {
-            title() {
-                return this.account === undefined ? 'All Transactions' : this.account.name;
-            },
             currentPage: {
                 get() {
                     return this.searchOptions.page;
@@ -69,13 +63,10 @@
         },
 
         methods: {
-            addTransaction() {
-                this[transactionActions.addTransaction]();
-            },
             editTransaction(transaction) {
                 this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: false});
             },
-            ...mapActions('transactions', [transactionActions.addTransaction, transactionActions.loadPage]),
+            ...mapActions('transactions', [transactionActions.loadPage]),
         },
 
         components: {
