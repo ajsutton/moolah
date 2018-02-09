@@ -4,8 +4,8 @@
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <transaction-filters></transaction-filters>
-            <template v-if="selectedAccount">
-                <create-account :account="selectedAccount"></create-account>
+            <template v-if="account">
+                <create-account :account="account"></create-account>
                 <v-btn icon
                        @click.native.stop="addTransaction">
                     <v-icon>add</v-icon>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
+    import {mapState, mapGetters, mapActions} from 'vuex';
     import client from '../../api/client';
     import Transaction from './Transaction.vue';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
@@ -40,16 +40,16 @@
     import FilterNotice from './FilterNotice.vue';
     import SavingsGoalNotice from '../savings/SavingsGoalNotice.vue'
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
-    import {actions as stateActions, mutations as stateMutations} from '../../store/store';
+    import {mutations as stateMutations} from '../../store/store';
 
     export default {
         props: {
-            'accountId': String,
             searchOptions: Object,
+            account: Object,
         },
         computed: {
             title() {
-                return this.accountId === undefined ? 'All Transactions' : this.accountName(this.accountId);
+                return this.account === undefined ? 'All Transactions' : this.account.name;
             },
             currentPage: {
                 get() {
@@ -59,8 +59,6 @@
                     this.$router.push({path: this.$router.path, query: Object.assign({}, this.$router.query, {page: value})});
                 },
             },
-            ...mapState(['selectedAccountId']),
-            ...mapGetters('accounts', ['accountName', 'selectedAccount']),
             ...mapGetters('transactions', ['hasNext', 'hasPrevious', 'numberOfPages', 'isFiltered', 'loading', 'error']),
             ...mapState('transactions', ['transactions']),
         },
@@ -70,27 +68,13 @@
             };
         },
 
-        created() {
-            this.selectAccount(this.searchOptions);
-        },
-
-        watch: {
-            '$route'() {
-                this.selectAccount(this.searchOptions);
-            },
-        },
-
         methods: {
-            async selectAccount(searchOptions) {
-                await this[stateActions.selectAccount](searchOptions);
-            },
             addTransaction() {
                 this[transactionActions.addTransaction]();
             },
             editTransaction(transaction) {
                 this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: false});
             },
-            ...mapActions([stateActions.selectAccount]),
             ...mapActions('transactions', [transactionActions.addTransaction, transactionActions.loadPage]),
         },
 

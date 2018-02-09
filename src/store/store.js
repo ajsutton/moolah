@@ -8,12 +8,11 @@ import categoryModule from './categoryStore';
 Vue.use(Vuex);
 
 export const actions = {
-    selectAccount: 'SELECT_ACCOUNT',
+    loadTransactions: 'SELECT_ACCOUNT',
     showUpcoming: 'SHOW_UPCOMING',
     selectTransaction: 'SELECT_TRANSACTION',
 };
 export const mutations = {
-    selectAccount: 'SELECT_ACCOUNT',
     selectTransaction: 'SELECT_TRANSACTION',
     showEditTransactionPanel: 'SHOW_EDIT_TRANSACTION_PANEL',
     showMainNav: 'SHOW_MAIN_NAV',
@@ -22,7 +21,6 @@ export const mutations = {
 const store = new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production',
     state: {
-        selectedAccountId: null,
         selectedTransactionId: null,
         selectedScheduledTransaction: false,
         showEditTransactionPanel: false,
@@ -41,9 +39,6 @@ const store = new Vuex.Store({
         },
     },
     mutations: {
-        [mutations.selectAccount](state, selectedAccountId) {
-            state.selectedWalletId = selectedAccountId;
-        },
         [mutations.selectTransaction](state, data) {
             state.selectedTransactionId = data && data.id;
             state.selectedScheduledTransaction = data && data.scheduled;
@@ -57,12 +52,10 @@ const store = new Vuex.Store({
         },
     },
     actions: {
-        [actions.selectAccount]({commit, dispatch}, searchOptions) {
-            commit(mutations.selectAccount, searchOptions.account);
+        [actions.loadTransactions]({dispatch}, searchOptions) {
             return dispatch('transactions/' + transactionActions.loadTransactions, searchOptions);
         },
-        [actions.showUpcoming]({commit, dispatch}) {
-            commit(mutations.selectAccount, null);
+        [actions.showUpcoming]({dispatch}) {
             dispatch('scheduledTransactions/' + transactionActions.loadTransactions, {account: null, scheduled: true});
         },
         [actions.selectTransaction]({commit}, data) {

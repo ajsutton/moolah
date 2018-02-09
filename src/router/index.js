@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import NotFound from '../components/NotFound.vue';
 import Analysis from '../components/analysis/Analysis.vue';
 import Transactions from '../components/transactions/Transactions.vue';
+import Account from '../components/accounts/Account.vue';
 import UpcomingTransactions from '../components/transactions/UpcomingTransactions.vue';
 import Categories from '../components/categories/Categories.vue';
 import store, {mutations} from '../store/store';
@@ -30,7 +31,7 @@ const router = new Router({
         {
             name: 'account',
             path: '/account/:accountId/',
-            component: Transactions,
+            component: Account,
             props: createTransactionProps,
         },
         {path: '/transactions/', component: Transactions, props: createTransactionProps},
