@@ -3,7 +3,7 @@
         <v-subheader>
             <v-list-tile-content>{{title}}</v-list-tile-content>
             <v-list-tile-action>
-                <create-account dark></create-account>
+                <slot name="titleAction"></slot>
             </v-list-tile-action>
         </v-subheader>
         <wallet-list-item :account="account" :baseUrl="baseUrl" v-for="account in accounts" :key="account.id"></wallet-list-item>
@@ -26,7 +26,6 @@
     import MonetaryAmount from '../util/MonetaryAmount';
     import WalletListItem from './WalletListItem.vue';
     import {VSubheader, VDivider, VList} from 'vuetify';
-    import CreateAccount from './CreateAccount';
 
     export default {
         props: {
@@ -57,7 +56,6 @@
             MonetaryAmount,
             WalletListItem,
             VSubheader,
-            CreateAccount,
         },
     };
 </script>

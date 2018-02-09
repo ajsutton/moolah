@@ -26,7 +26,7 @@ function notEmpty() {
 }
 
 export const rules = {
-    accountName: [
+    walletName: [
         maxLength(255),
         notEmpty(),
     ],

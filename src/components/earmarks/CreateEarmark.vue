@@ -12,13 +12,20 @@
                 <v-card-text>
                     <v-container>
                         <v-text-field label="Name" v-model="name" name="name" :rules="rules.name" required autofocus></v-text-field>
-                        <v-text-field label="Initial Balance" prefix="$" type="number" v-model="balance" name="balance" :rules="rules.balance" v-if="!editing"></v-text-field>
-                        <v-select
-                                label="Account Type"
-                                required
-                                v-model="type"
-                                :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}, {text: 'Earmarked Funds', value: 'earmark'}]"
-                        ></v-select>
+
+                        <div class="subheading mt-4">Savings goal</div>
+
+                        <v-layout row wrap>
+                            <v-flex sm4 xs12>
+                                <v-text-field label="Savings target" prefix="$" type="number" v-model="savingsTarget" name="savingsTarget" :rules="rules.savingsTarget" clearable></v-text-field>
+                            </v-flex>
+                            <v-flex sm3 offset-sm1 xs12>
+                                <date-picker-field label="Start" v-model="savingsStartDate" :optional="true"></date-picker-field>
+                            </v-flex>
+                            <v-flex sm3 offset-sm1 xs12>
+                                <date-picker-field label="End" v-model="savingsEndDate" :optional="true"></date-picker-field>
+                            </v-flex>
+                        </v-layout>
 
                         <small>*indicates required field</small>
                     </v-container>
@@ -36,18 +43,19 @@
 <script>
     import {mapActions} from 'vuex';
     import client from '../../api/client';
-    import {actions} from '../../store/wallets/accountsStore';
+    import {actions} from '../../store/wallets/earmarksStore';
     import {rules} from '../validation';
     import {VForm} from 'vuetify';
     import DatePickerField from '../util/DatePickerField.vue';
 
     export default {
-        props: ['account', 'dark'],
+        props: ['earmark', 'dark'],
         data() {
             return {
-                name: 'Unnamed account',
-                type: 'bank',
-                balance: 0,
+                name: 'Unnamed earmark',
+                savingsTarget: null,
+                savingsStartDate: null,
+                savingsEndDate: null,
                 dialog: false,
                 errorMessage: null,
 
@@ -55,13 +63,12 @@
 
                 rules: {
                     name: rules.walletName,
-                    balance: rules.amount,
                 },
             };
         },
         computed: {
             title() {
-                return this.editing ? 'Edit Account' : 'Create Account';
+                return this.editing ? 'Edit Earmark' : 'Create Earmark';
             },
             icon() {
                 return this.editing ? 'edit' : 'add';
@@ -70,17 +77,17 @@
                 return this.editing ? 'Save' : 'Create';
             },
             editing() {
-                return !!this.account;
+                return !!this.earmark;
             },
         },
 
         created() {
-            this.syncFromAccount(this.account);
+            this.syncFromEarmark(this.earmark);
         },
 
         watch: {
-            account(newAccount) {
-                this.syncFromAccount(newAccount);
+            earmark(newEarmark) {
+                this.syncFromEarmark(newEarmark);
             },
         },
 
@@ -89,19 +96,24 @@
                 if (this.$refs.form.validate()) {
                     try {
                         if (this.editing) {
-                            await this[actions.updateAccount]({
-                                id: this.account.id, patch: {
+                            await this[actions.updateEarmark]({
+                                id: this.earmark.id, patch: {
                                     name: this.name,
                                     type: this.type,
+                                    savingsTarget: Math.round(this.savingsTarget * 100),
+                                    savingsStartDate: this.savingsStartDate || undefined,
+                                    savingsEndDate: this.savingsEndDate || undefined,
                                 },
                             });
                         } else {
-                            await this[actions.createAccount]({
+                            await this[actions.createEarmark]({
                                 name: this.name,
                                 type: this.type,
-                                balance: Math.round(this.balance * 100),
+                                savingsTarget: Math.round(this.savingsTarget * 100),
+                                savingsStartDate: this.savingsStartDate || undefined,
+                                savingsEndDate: this.savingsEndDate || undefined,
                             });
-                            this.syncFromAccount(undefined);
+                            this.syncFromEarmark(undefined);
                         }
                         this.dialog = false;
                     } catch (error) {
@@ -110,19 +122,21 @@
                     }
                 }
             },
-            syncFromAccount(newAccount) {
-                if (newAccount) {
-                    this.balance = newAccount.balance / 100;
-                    this.type = newAccount.type;
-                    this.name = newAccount.name;
+            syncFromEarmark(newEarmark) {
+                if (newEarmark) {
+                    this.name = newEarmark.name;
+                    this.savingsTarget = newEarmark.savingsTarget / 100;
+                    this.savingsStartDate = newEarmark.savingsStartDate;
+                    this.savingsEndDate = newEarmark.savingsEndDate;
                 } else {
-                    this.balance = 0;
-                    this.type = 'bank';
-                    this.name = 'Unnamed account';
+                    this.name = 'Unnamed earmark';
+                    this.savingsTarget = null;
+                    this.savingsStartDate = null;
+                    this.savingsEndDate = null;
                 }
                 this.errorMessage = null;
             },
-            ...mapActions('accounts', [actions.createAccount, actions.updateAccount])
+            ...mapActions('earmarks', [actions.createEarmark, actions.updateEarmark])
         },
         components: {
             VForm,

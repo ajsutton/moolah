@@ -10,11 +10,13 @@
         </v-card>
 
         <transactions :searchOptions="searchOptions" title="Transactions">
-            <v-btn slot="buttons"
-                   icon
-                   @click.native.stop="addTransaction">
-                <v-icon>add</v-icon>
-            </v-btn>
+            <template slot="buttons">
+                <create-earmark :earmark="selectedEarmark"></create-earmark>
+                <v-btn icon
+                       @click.native.stop="addTransaction">
+                    <v-icon>add</v-icon>
+                </v-btn>
+            </template>
         </transactions>
     </div>
 </template>
@@ -25,6 +27,7 @@
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import Transactions from '../transactions/Transactions.vue';
     import SavingsGoalNotice from './SavingsGoalNotice.vue';
+    import CreateEarmark from './CreateEarmark.vue';
 
     export default {
         props: {
@@ -66,6 +69,7 @@
         components: {
             Transactions,
             SavingsGoalNotice,
+            CreateEarmark,
         },
     };
 </script>

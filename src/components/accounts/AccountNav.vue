@@ -1,8 +1,12 @@
 <template>
     <v-navigation-drawer clipped v-model="showMainNav" dark app fixed>
         <template v-if="loggedIn">
-            <wallet-list title="Accounts" :accounts="accounts" baseUrl="/account" totalLabel="Net worth" :totalValue="networth"></wallet-list>
-            <wallet-list title="Earmarked" :accounts="earmarks" baseUrl="/earmark" icon="bookmark_outline" totalLabel="Available funds" :totalValue="availableFunds" v-if="hasEarmarks"></wallet-list>
+            <wallet-list title="Accounts" :accounts="accounts" baseUrl="/account" totalLabel="Net worth" :totalValue="networth">
+                <create-account dark slot="titleAction"></create-account>
+            </wallet-list>
+            <wallet-list title="Earmarked" :accounts="earmarks" baseUrl="/earmark" icon="bookmark_outline" totalLabel="Available funds" :totalValue="availableFunds" v-if="hasEarmarks">
+                <create-earmark dark slot="titleAction"></create-earmark>
+            </wallet-list>
             <v-list>
                 <v-list-tile ripple to="/" exact>
                     <v-list-tile-action>
@@ -44,7 +48,8 @@
 <script>
     import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
     import WalletList from './WalletList.vue';
-    import CreateAccount from './CreateAccount';
+    import CreateAccount from './CreateAccount.vue';
+    import CreateEarmark from '../earmarks/CreateEarmark.vue';
     import client from '../../api/client';
     import store, {mutations} from '../../store/store';
 
@@ -77,6 +82,7 @@
         components: {
             WalletList,
             CreateAccount,
+            CreateEarmark,
         },
     };
 </script>

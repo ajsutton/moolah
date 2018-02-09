@@ -12,7 +12,7 @@ export const walletActions = {
     adjustBalance: 'ADJUST_BALANCE',
 };
 
-export function createWalletStoreActions(propertyName, client) {
+export function createWalletStoreActions(propertyName, client, newWalletFilter = wallet => wallet) {
     return {
         async [walletActions.load]({commit}) {
             const response = await client.get();
@@ -21,7 +21,7 @@ export function createWalletStoreActions(propertyName, client) {
 
         async [walletActions.create]({commit}, account) {
             const id = 'new-account';
-            const accountToAdd = {id, ...account};
+            const accountToAdd = newWalletFilter({id, ...account});
             commit(walletMutations.add, accountToAdd);
             try {
                 const createdAccount = await client.create(account);
@@ -63,11 +63,11 @@ export function createWalletStoreMutations(propertyName) {
         [walletMutations.set](state, wallets) {
             state[propertyName] = wallets;
         },
-        [walletMutations.add](state, account) {
-            state[propertyName].unshift(account);
+        [walletMutations.add](state, wallet) {
+            state[propertyName].unshift(wallet);
         },
-        [walletMutations.remove](state, account) {
-            state[propertyName] = state[propertyName].filter(existingAccount => existingAccount.id !== account.id);
+        [walletMutations.remove](state, wallet) {
+            state[propertyName] = state[propertyName].filter(existingWallet => existingWallet.id !== wallet.id);
         },
         [walletMutations.update](state, changes) {
             const wallet = state[propertyName].find(wallet => wallet.id === changes.id);

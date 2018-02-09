@@ -32,5 +32,5 @@ export default {
         },
     },
     mutations: createWalletStoreMutations('earmarks'),
-    actions: createWalletStoreActions('earmarks', client.earmarks),
+    actions: createWalletStoreActions('earmarks', client.earmarks, newEarmark => Object.assign({balance: 0, saved: 0, spent: 0}, newEarmark)),
 };
