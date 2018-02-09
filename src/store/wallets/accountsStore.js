@@ -1,5 +1,5 @@
 import client from '../../api/client';
-import {createWalletStoreActions, walletActions, walletMutations, createWalletStoreMutations} from './walletStoreFunctions';
+import {createWalletStoreActions, createWalletStoreMutations, walletActions, walletMutations} from './walletStoreFunctions';
 
 export const mutations = {
     setAccounts: walletMutations.set,
@@ -33,24 +33,10 @@ export default {
             };
         },
         selectedAccount(state, getters, rootState) {
-            return state.accounts.find(account => account.id === rootState.selectedAccountId);
+            return state.accounts.find(account => account.id === rootState.selectedWalletId);
         },
-        standardAccounts(state) {
-            return state.accounts.filter(account => account.type !== 'earmark');
-        },
-        earmarkAccounts(state) {
-            return state.accounts.filter(account => account.type === 'earmark');
-        },
-        networth(state, getters) {
-            return getters.networthWithEarmarks - getters.totalEarmarked;
-        },
-        totalEarmarked(state, getters) {
-            return getters.earmarkAccounts
-                .reduce((networth, account) => networth + account.balance, 0);
-        },
-        networthWithEarmarks(state, getters) {
-            return getters.standardAccounts
-                .reduce((networth, account) => networth + account.balance, 0);
+        networth(state) {
+            return state.accounts.reduce((networth, account) => networth + account.balance, 0);
         },
     },
     mutations: createWalletStoreMutations('accounts'),

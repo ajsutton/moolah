@@ -1,9 +1,9 @@
 <template>
     <v-select
             :label="label"
-            :items="filteredAccounts"
+            :items="filteredWallets"
             :clearable="clearable"
-            v-model="selectedAccountId"
+            v-model="selectedWalletId"
             item-text="name"
             item-value="id"
     >
@@ -29,20 +29,16 @@
     export default {
         props: {
             'label': String,
+            'wallets': {
+                type: Array,
+                required: true
+            },
             'value': {
                 type: String,
                 required: false,
             },
-            'excludeAccountId': {
+            'exclude': {
                 type: String,
-            },
-            'includeEarmarks': {
-                type: Boolean,
-                'default': false
-            },
-            'includeNonEarmarks': {
-                type: Boolean,
-                'default': true
             },
             'clearable': {
                 type: Boolean,
@@ -50,34 +46,21 @@
             }
         },
         computed: {
-            ...mapGetters('accounts', {standardAccounts: 'standardAccounts', earmarkAccounts: 'earmarkAccounts'}),
-            ...mapState('accounts', { allAccounts: 'accounts' }),
-            accounts() {
-                if (this.includeEarmarks && this.includeNonEarmarks) {
-                    return this.allAccounts;
-                } else if (this.includeNonEarmarks) {
-                    return this.standardAccounts;
-                } else if (this.includeEarmarks) {
-                    return this.earmarkAccounts;
-                } else {
-                    return [];
-                }
+            filteredWallets() {
+                return (this.wallets).filter(wallet => wallet.id !== this.exclude);
             },
-            filteredAccounts() {
-                return (this.accounts).filter(account => account.id !== this.excludeAccountId);
-            },
-            selectedAccountId: {
+            selectedWalletId: {
                 get() {
                     return this.value;
                 },
-                set(accountId) {
-                    this.$emit('update:value', accountId);
+                set(walletId) {
+                    this.$emit('update:value', walletId);
                 },
             },
         },
         methods: {
-            icon(account) {
-                return iconForType(account.type);
+            icon(wallet) {
+                return iconForType(wallet.type);
             },
         },
         components: {

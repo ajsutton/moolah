@@ -1,7 +1,7 @@
 <template>
     <v-list-tile ripple :to="accountLink">
         <v-list-tile-action>
-            <v-icon dark>{{ icon }}</v-icon>
+            <v-icon dark>{{ walletIcon }}</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
             <v-list-tile-title>{{ account.name }}</v-list-tile-title>
@@ -17,17 +17,29 @@
     import iconForType from './accountIcon';
 
     export default {
-        props: ['account'],
+        props: {
+            account: {
+                type: Object,
+                required: true,
+            },
+            baseUrl: {
+                type: String,
+                required: true,
+            },
+            icon: {
+                type: String,
+            },
+        },
         computed: {
             accountLink() {
-                return `/account/${encodeURIComponent(this.account.id)}/`;
+                return `${this.baseUrl}/${encodeURIComponent(this.account.id)}/`;
             },
-            icon() {
-                return iconForType(this.account.type);
+            walletIcon() {
+                return this.icon || iconForType(this.account.type);
             },
         },
         components: {
             MonetaryAmount,
         },
-    }
+    };
 </script>

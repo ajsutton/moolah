@@ -45,8 +45,15 @@ export function createWalletStoreActions(propertyName, client) {
         },
 
         async [walletActions.adjustBalance]({state, commit}, changes) {
-            const account = state[propertyName].find(account => account.id === changes.accountId);
-            commit(walletMutations.update, {id: account.id, patch: {balance: account.balance + changes.amount}});
+            const wallet = state[propertyName].find(candidate => candidate.id === changes.id);
+            const patch = {balance: wallet.balance + changes.balance};
+            if (changes.saved !== undefined) {
+                patch.saved = wallet.saved + changes.saved;
+            }
+            if (changes.spent !== undefined) {
+                patch.spent = wallet.spent + changes.spent;
+            }
+            commit(walletMutations.update, {id: wallet.id, patch: patch});
         },
     };
 }
@@ -63,7 +70,8 @@ export function createWalletStoreMutations(propertyName) {
             state[propertyName] = state[propertyName].filter(existingAccount => existingAccount.id !== account.id);
         },
         [walletMutations.update](state, changes) {
-            Object.assign(state[propertyName].find(wallet => wallet.id === changes.id), changes.patch);
+            const wallet = state[propertyName].find(wallet => wallet.id === changes.id);
+            Object.assign(wallet, changes.patch);
         },
     };
 }

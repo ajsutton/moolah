@@ -36,10 +36,13 @@ const store = new Vuex.Store({
             const module = getters.selectedTransactionModule;
             return getters[`${module}/selectedTransaction`];
         },
+        availableFunds(state, getters) {
+            return getters['accounts/networth'] - getters['earmarks/totalEarmarked'];
+        },
     },
     mutations: {
         [mutations.selectAccount](state, selectedAccountId) {
-            state.selectedAccountId = selectedAccountId;
+            state.selectedWalletId = selectedAccountId;
         },
         [mutations.selectTransaction](state, data) {
             state.selectedTransactionId = data && data.id;

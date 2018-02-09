@@ -1,4 +1,7 @@
 export default function iconForType(type) {
+    if (type === undefined) {
+        return 'bookmark_outline';
+    }
     switch (type) {
         case 'cc':
             return 'credit_card';

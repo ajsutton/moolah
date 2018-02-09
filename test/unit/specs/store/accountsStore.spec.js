@@ -119,7 +119,7 @@ describe('accountsStore', function() {
                     accountsStore,
                     actions.adjustBalance,
                     {
-                        payload: {accountId: 'abc', amount: 10},
+                        payload: {id: 'abc', balance: 10},
                         state: {accounts: [originalAccount]},
                     },
                     [

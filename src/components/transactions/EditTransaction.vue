@@ -15,16 +15,16 @@
                     v-model="type"
                     :items="validTransactionTypes"
             ></v-select>
-            <account-selector :label="toAccountLabel" v-if="type === 'transfer'" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></account-selector>
+            <wallet-selector :label="toAccountLabel" v-if="type === 'transfer'" :wallets="accounts" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></wallet-selector>
         </template>
 
-        <account-selector label="Earmark" v-bind:value.sync="earmark" :includeEarmarks="true" :includeNonEarmarks="false" :clearable="true"></account-selector>
+        <wallet-selector label="Earmark" v-bind:value.sync="earmark" :wallets="earmarks" :clearable="true"></wallet-selector>
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')" multiLine></v-text-field>
 
-        <account-selector v-if="scheduled" label="Account" v-bind:value.sync="accountId" :includeEarmarks="true"></account-selector>
+        <wallet-selector v-if="scheduled" label="Account" v-bind:value.sync="accountId" :wallets="accounts"></wallet-selector>
 
         <div class="text-xs-right">
             <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>
@@ -36,7 +36,7 @@
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {rules, isValid} from '../validation';
-    import AccountSelector from '../accounts/AccountSelector.vue';
+    import WalletSelector from '../accounts/WalletSelector.vue';
     import CategorySelector from '../categories/CategorySelector.vue';
     import AutoCompletePayee from './AutoCompletePayee.vue';
     import Recurrence from './RecurranceControls.vue';
@@ -81,8 +81,9 @@
             ...mapGetters({
                 transaction: 'selectedTransaction',
             }),
-            ...mapGetters('accounts', { accountById: 'account', standardAccounts: 'standardAccounts' }),
+            ...mapGetters('accounts', { accountById: 'account' }),
             ...mapState('accounts', ['accounts']),
+            ...mapState('earmarks', ['earmarks']),
             accountId: {
                 get() {
                     return this.transaction.accountId;
@@ -201,7 +202,7 @@
             this.focus();
         },
         components: {
-            AccountSelector,
+            WalletSelector,
             CategorySelector,
             DatePickerField,
             Recurrence,

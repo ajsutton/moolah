@@ -1,24 +1,43 @@
 import {actions} from '../wallets/accountsStore';
 
-function addChange(changes, accountId, amount) {
-    const currentChange = changes[accountId] || 0;
-    changes[accountId] = currentChange + amount;
+function addChange(changes, accountId, amount, saved = false, spent = false) {
+    const change = changes[accountId] || { balance: 0, saved: 0, spent: 0};
+    change.balance += amount;
+    if (saved) {
+        change.saved += amount;
+    }
+    if (spent) {
+        change.spent += amount;
+    }
+    changes[accountId] = change;
 }
+
 export default function updateAccountBalances(dispatch, originalTransaction, modifiedTransaction) {
-    const changes = {};
+    const accountChanges = {};
+    const earmarkChanges = {};
     if (originalTransaction && !originalTransaction.recurPeriod) {
-        addChange(changes, originalTransaction.accountId, -originalTransaction.amount);
+        addChange(accountChanges, originalTransaction.accountId, -originalTransaction.amount);
         if (originalTransaction.toAccountId) {
-            addChange(changes, originalTransaction.toAccountId, originalTransaction.amount);
+            addChange(accountChanges, originalTransaction.toAccountId, originalTransaction.amount);
+        }
+        if (originalTransaction.earmark) {
+            addChange(earmarkChanges, originalTransaction.earmark, -originalTransaction.amount, originalTransaction.type === 'income', originalTransaction.type === 'expense');
         }
     }
     if (modifiedTransaction && !modifiedTransaction.recurPeriod) {
-        addChange(changes, modifiedTransaction.accountId, modifiedTransaction.amount);
+        addChange(accountChanges, modifiedTransaction.accountId, modifiedTransaction.amount);
         if (modifiedTransaction.toAccountId) {
-            addChange(changes, modifiedTransaction.toAccountId, -modifiedTransaction.amount);
+            addChange(accountChanges, modifiedTransaction.toAccountId, -modifiedTransaction.amount);
+        }
+        if (modifiedTransaction.earmark) {
+            addChange(earmarkChanges, modifiedTransaction.earmark, modifiedTransaction.amount, modifiedTransaction.type === 'income', modifiedTransaction.type === 'expense');
         }
     }
-    Object.entries(changes)
-        .filter(([accountId, amount]) => amount !== 0)
-        .forEach(([accountId, amount]) => dispatch('accounts/' + actions.adjustBalance, {accountId: accountId, amount: amount}, {root: true}));
+    Object.entries(accountChanges)
+        .filter(([accountId, change]) => change.balance !== 0)
+        .forEach(([accountId, change]) => dispatch('accounts/' + actions.adjustBalance, {id: accountId, balance: change.balance}, {root: true}));
+
+    Object.entries(earmarkChanges)
+        .filter(([earmarkId, change]) => change.balance !== 0 || change.saved !== 0 || change.spent !== 0)
+        .forEach(([earmarkId, change]) => dispatch('earmarks/' + actions.adjustBalance, {id: earmarkId, balance: change.balance, saved: change.saved, spent: change.spent}, {root: true}));
 }

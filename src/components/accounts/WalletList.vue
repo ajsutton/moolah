@@ -6,7 +6,7 @@
                 <create-account dark></create-account>
             </v-list-tile-action>
         </v-subheader>
-        <account-list-item :account="account" v-for="account in accounts" :key="account.id"></account-list-item>
+        <wallet-list-item :account="account" :baseUrl="baseUrl" v-for="account in accounts" :key="account.id"></wallet-list-item>
         <v-divider></v-divider>
 
         <v-list-tile no-action>
@@ -24,7 +24,7 @@
 <script>
     import {mapState, mapGetters, mapActions} from 'vuex';
     import MonetaryAmount from '../util/MonetaryAmount';
-    import AccountListItem from './AccountListItem.vue';
+    import WalletListItem from './WalletListItem.vue';
     import {VSubheader, VDivider, VList} from 'vuetify';
     import CreateAccount from './CreateAccount';
 
@@ -46,12 +46,16 @@
                 type: Number,
                 required: true,
             },
+            baseUrl: {
+                type: String,
+                required: true,
+            }
         },
         components: {
             VList,
             VDivider,
             MonetaryAmount,
-            AccountListItem,
+            WalletListItem,
             VSubheader,
             CreateAccount,
         },

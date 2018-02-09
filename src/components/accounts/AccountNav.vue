@@ -1,8 +1,8 @@
 <template>
     <v-navigation-drawer clipped v-model="showMainNav" dark app fixed>
         <template v-if="loggedIn">
-            <account-list title="Accounts" :accounts="standardAccounts" totalLabel="Net worth" :totalValue="networthWithEarmarks"></account-list>
-            <account-list title="Earmarked" :accounts="earmarkAccounts" totalLabel="Available funds" :totalValue="networth" v-if="hasEarmarks"></account-list>
+            <wallet-list title="Accounts" :accounts="accounts" baseUrl="/account" totalLabel="Net worth" :totalValue="networth"></wallet-list>
+            <wallet-list title="Earmarked" :accounts="earmarks" baseUrl="/earmark" icon="bookmark_outline" totalLabel="Available funds" :totalValue="availableFunds" v-if="hasEarmarks"></wallet-list>
             <v-list>
                 <v-list-tile ripple to="/" exact>
                     <v-list-tile-action>
@@ -43,7 +43,7 @@
 
 <script>
     import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
-    import AccountList from './AccountList';
+    import WalletList from './WalletList.vue';
     import CreateAccount from './CreateAccount';
     import client from '../../api/client';
     import store, {mutations} from '../../store/store';
@@ -66,13 +66,16 @@
                 },
             },
             hasEarmarks() {
-                return this.earmarkAccounts.length > 0;
+                return this.earmarks.length > 0;
             },
             ...mapState({mainNavToggle: 'showMainNav'}),
-            ...mapGetters('accounts', ['networth', 'networthWithEarmarks', 'standardAccounts', 'earmarkAccounts']),
+            ...mapGetters('accounts', ['networth']),
+            ...mapGetters(['availableFunds']),
+            ...mapState('earmarks', ['earmarks']),
+            ...mapState('accounts', ['accounts']),
         },
         components: {
-            AccountList,
+            WalletList,
             CreateAccount,
         },
     };

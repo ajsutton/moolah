@@ -44,7 +44,6 @@ describe('transactionStore', function() {
             });
 
             it('should have undefined selected transaction when no transaction id is set', function() {
-
                 const selectedTransaction = transactionStore.getters.selectedTransaction(
                     addIdLookup({
                         transactions: [{id: 1}, {id: 2}, {id: 3}],
@@ -379,43 +378,43 @@ describe('transactionStore', function() {
                     name: 'becomes a transfer',
                     transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'expense', balance: 100, date: '2016-07-13'},
                     patch: {type: 'transfer', toAccountId: 'account-2'},
-                    adjustBalance: [{accountId: 'account-2', amount: 10}],
+                    adjustBalance: [{id: 'account-2', balance: 10}],
                 },
                 {
                     name: 'stops being a transfer',
                     transaction: {id: 1, amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
                     patch: {type: 'expense', toAccountId: null},
-                    adjustBalance: [{accountId: 'account-2', amount: -10}],
+                    adjustBalance: [{id: 'account-2', balance: -10}],
                 },
                 {
                     name: 'stops being a transfer and changes amount',
                     transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
                     patch: {type: 'income', toAccountId: null, amount: 20},
-                    adjustBalance: [{accountId: 'account-1', amount: 30}, {accountId: 'account-2', amount: -10}],
+                    adjustBalance: [{id: 'account-1', balance: 30}, {id: 'account-2', balance: -10}],
                 },
                 {
                     name: 'changes amount',
                     transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
                     patch: {amount: -30},
-                    adjustBalance: [{accountId: 'account-1', amount: -20}, {accountId: 'account-2', amount: 20}],
+                    adjustBalance: [{id: 'account-1', balance: -20}, {id: 'account-2', balance: 20}],
                 },
                 {
                     name: 'changes amount when not a transfer',
                     transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'expense', balance: 100, date: '2016-07-13'},
                     patch: {amount: -30},
-                    adjustBalance: [{accountId: 'account-1', amount: -20}],
+                    adjustBalance: [{id: 'account-1', balance: -20}],
                 },
                 {
                     name: 'changes destination account',
                     transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
                     patch: {toAccountId: 'account-3'},
-                    adjustBalance: [{accountId: 'account-2', amount: -10}, {accountId: 'account-3', amount: 10}],
+                    adjustBalance: [{id: 'account-2', balance: -10}, {id: 'account-3', balance: 10}],
                 },
                 {
                     name: 'changes destination account and amount',
                     transaction: {id: 1, accountId: 'account-1', amount: -10, payee: 'Payee1', type: 'transfer', toAccountId: 'account-2', balance: 100, date: '2016-07-13'},
                     patch: {toAccountId: 'account-3', amount: -30},
-                    adjustBalance: [{accountId: 'account-1', amount: -20}, {accountId: 'account-2', amount: -10}, {accountId: 'account-3', amount: 30}],
+                    adjustBalance: [{id: 'account-1', balance: -20}, {id: 'account-2', balance: -10}, {id: 'account-3', balance: 30}],
                 },
             ].forEach(scenario => {
                 it(`should update balance of other account when a transaction ${scenario.name}`, async function() {
@@ -548,7 +547,7 @@ describe('transactionStore', function() {
                     ],
                 );
 
-                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true});
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {id: 'account1', balance: scheduledTransaction.amount}, {root: true});
             });
 
             it('should update balance of both accounts when transaction is a transfer', async function() {
@@ -578,8 +577,8 @@ describe('transactionStore', function() {
                     ],
                 );
 
-                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account1', amount: scheduledTransaction.amount}, {root: true});
-                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {accountId: 'account2', amount: -scheduledTransaction.amount}, {root: true});
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {id: 'account1', balance: scheduledTransaction.amount}, {root: true});
+                sinon.assert.calledWith(dispatch, 'accounts/' + accountActions.adjustBalance, {id: 'account2', balance: -scheduledTransaction.amount}, {root: true});
             });
         });
     });

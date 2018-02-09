@@ -27,6 +27,9 @@ export default {
                 return earmark ? earmark.name : 'Unknown';
             };
         },
+        totalEarmarked(state) {
+            return state.earmarks.reduce((total, earmark) => total + earmark.balance, 0);
+        },
     },
     mutations: createWalletStoreMutations('earmarks'),
     actions: createWalletStoreActions('earmarks', client.earmarks),
