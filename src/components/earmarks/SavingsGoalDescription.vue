@@ -21,7 +21,7 @@
             });
             const children = [
                 'You have saved ',
-                money(this.selectedAccount.balance)
+                money(this.selectedAccount.saved),
             ];
             if (this.selectedAccount.savingsTarget) {
                 children.push(' of your ', money(this.selectedAccount.savingsTarget), ' target');
@@ -33,7 +33,7 @@
             if (this.hasReachedTarget) {
                 children.push(' Congratulations!');
             } else if (!this.started) {
-                children.push(` Savings plan starts in ${this.daysElapsed}.`);
+                children.push(` Savings plan starts in ${this.daysElapsed}`);
             } else if (this.selectedAccount.savingsTarget) {
                 children.push(' You are ', money(this.remainingAmount, true), ' short of your target');
                 if (this.selectedAccount.savingsEndDate) {
@@ -45,7 +45,6 @@
                         children.push(` with ${this.daysRemaining} left`);
                     }
                 }
-                children.push('.');
             }
             return h(
                 'p',

@@ -33,11 +33,11 @@ export function createWalletStoreActions(propertyName, client) {
         },
 
         async [walletActions.update]({commit, state}, changes) {
-            const account = state[propertyName].find(account => account.id === changes.id);
-            const originalAccount = Object.assign({}, account);
+            const wallet = state[propertyName].find(wallet => wallet.id === changes.id);
+            const originalAccount = Object.assign({}, wallet);
             commit(walletMutations.update, changes);
             try {
-                await client.update(account);
+                await client.update(wallet);
             } catch (error) {
                 commit(walletMutations.update, {id: changes.id, patch: originalAccount});
                 throw error;

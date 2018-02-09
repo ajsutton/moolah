@@ -4,7 +4,7 @@
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <transaction-filters></transaction-filters>
-            <slot name="additionalButtons"></slot>
+            <slot name="buttons"></slot>
         </v-toolbar>
         <filter-notice></filter-notice>
         <v-alert type="error" v-model="error">Failed to load transactions</v-alert>

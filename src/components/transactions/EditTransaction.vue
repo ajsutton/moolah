@@ -18,7 +18,7 @@
             <wallet-selector :label="toAccountLabel" v-if="type === 'transfer'" :wallets="accounts" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></wallet-selector>
         </template>
 
-        <wallet-selector label="Earmark" v-bind:value.sync="earmark" :wallets="earmarks" :clearable="true"></wallet-selector>
+        <wallet-selector label="Earmark" v-bind:value.sync="earmark" :wallets="earmarks" :clearable="true" v-if="!isEarmarkAccount"></wallet-selector>
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
@@ -73,7 +73,7 @@
                 return this.transaction.amount < 0 ? 'To Account' : 'From Account';
             },
             isEarmarkAccount() {
-                return this.account.type === 'earmark';
+                return this.account === undefined || this.account === null;
             },
             account() {
                 return this.accountById(this.transaction.accountId);

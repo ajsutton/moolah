@@ -1,16 +1,11 @@
 <template>
-    <v-container v-if="hasSavings">
+    <v-container fluid>
         <v-layout row>
             <v-flex xs12>
-                <div class="subheading mb-2">Savings Goal</div>
+                <savings-goal-description :selectedAccount="selectedAccount"></savings-goal-description>
             </v-flex>
         </v-layout>
-        <v-layout row>
-            <v-flex xs12>
-                <savings-goal-description></savings-goal-description>
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap>
+        <v-layout row wrap v-if="hasSavings">
             <v-flex v-if="hasSavingsTarget" md6 xl3>
                 <v-progress-circular :value="savingsPercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="savingsColor">
                     Savings<br>
@@ -28,7 +23,7 @@
 </template>
 
 <script>
-    import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
+    import {mapState, mapGetters, mapActions} from 'vuex';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import SavingsGoalDescription from './SavingsGoalDescription.vue';
     import {VProgressCircular} from 'vuetify';

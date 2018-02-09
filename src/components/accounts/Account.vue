@@ -1,6 +1,6 @@
 <template>
     <transactions :searchOptions="searchOptions" :title="accountName">
-        <template v-if="selectedAccount" slot="additionalButtons">
+        <template v-if="selectedAccount" slot="buttons">
             <create-account :account="selectedAccount"></create-account>
             <v-btn icon
                    @click.native.stop="addTransaction">
