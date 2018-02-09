@@ -1,11 +1,15 @@
 <template>
-    <transactions :searchOptions="searchOptions" title="Earmarked Transactions"></transactions>
+    <div>
+        <savings-goal-notice :selectedAccount="selectedEarmark" v-if="selectedEarmark"></savings-goal-notice>
+        <transactions :searchOptions="searchOptions" :title="earmarkName"></transactions>
+    </div>
 </template>
 
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import {actions as stateActions} from '../../store/store';
     import Transactions from '../transactions/Transactions.vue';
+    import SavingsGoalNotice from './SavingsGoalNotice.vue';
 
     export default {
         props: {
@@ -27,6 +31,9 @@
             selectedEarmark() {
                 return this.findEarmarkById(this.earmarkId);
             },
+            earmarkName() {
+                return this.selectedEarmark ? this.selectedEarmark.name : '';
+            },
             ...mapGetters('earmarks', {findEarmarkById: 'earmark'}),
         },
 
@@ -39,6 +46,7 @@
 
         components: {
             Transactions,
+            SavingsGoalNotice,
         },
     };
 </script>

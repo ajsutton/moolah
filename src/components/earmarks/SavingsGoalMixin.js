@@ -1,12 +1,15 @@
-import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
-import MonetaryAmount from '../util/MonetaryAmount.vue';
-import SavingsGoalDescription from './SavingsGoalDescription.vue';
 import {VProgressCircular} from 'vuetify';
 import differenceInCalendarDays from 'date-fns/difference_in_calendar_days';
 import distanceInWords from 'date-fns/distance_in_words';
 import startOfToday from 'date-fns/start_of_today';
 
 export default {
+    props: {
+        selectedAccount: {
+            type: Object,
+            required: true,
+        },
+    },
     computed: {
         hasReachedTarget() {
             return this.hasSavingsTarget && this.selectedAccount.balance >= this.selectedAccount.savingsTarget;
@@ -73,6 +76,5 @@ export default {
                     this.selectedAccount.savingsStartDate ||
                     this.selectedAccount.savingsEndDate);
         },
-        ...mapGetters('accounts', ['accountName', 'selectedAccount']),
     },
 };

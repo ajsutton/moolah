@@ -18,7 +18,7 @@ export default {
     getters: {
         earmark(state) {
             return earmarkId => {
-                return state.earmark.find(earmark => earmark.id === earmarkId);
+                return state.earmarks.find(earmark => earmark.id === earmarkId);
             };
         },
         earmarkName(state, getters) {

@@ -14,6 +14,7 @@ Vue.use(Router);
 function createTransactionProps(route) {
     return {
         accountId: route.params.accountId,
+        earmarkId: route.params.earmarkId,
         searchOptions: {
             from: route.query.from,
             to: route.query.to,
