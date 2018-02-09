@@ -28,7 +28,7 @@ export default {
             };
         },
         totalEarmarked(state) {
-            return state.earmarks.reduce((total, earmark) => total + earmark.balance, 0);
+            return state.earmarks.reduce((total, earmark) => total + Math.max(earmark.balance, 0), 0);
         },
     },
     mutations: createWalletStoreMutations('earmarks'),
