@@ -48,7 +48,7 @@
                 await this[stateActions.loadTransactions](this.searchOptions);
             },
             addTransaction() {
-                this[transactionActions.addTransaction]();
+                this[transactionActions.addTransaction]({accountId: this.accountId});
             },
             ...mapActions([stateActions.loadTransactions]),
             ...mapActions('transactions', [transactionActions.addTransaction]),
