@@ -28,12 +28,15 @@
     import Transactions from '../transactions/Transactions.vue';
     import SavingsGoalNotice from './SavingsGoalNotice.vue';
     import CreateEarmark from './CreateEarmark.vue';
+    import AddTransactionMixin from '../util/AddTransactionMixin';
 
     export default {
         props: {
             earmarkId: String,
             searchOptions: Object,
         },
+
+        mixins: [AddTransactionMixin],
 
         created() {
             this.loadTransactions();

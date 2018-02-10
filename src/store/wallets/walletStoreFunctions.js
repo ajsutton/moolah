@@ -19,15 +19,15 @@ export function createWalletStoreActions(propertyName, client, newWalletFilter =
             commit(walletMutations.set, response[propertyName]);
         },
 
-        async [walletActions.create]({commit}, account) {
-            const id = 'new-account';
-            const accountToAdd = newWalletFilter({id, ...account});
-            commit(walletMutations.add, accountToAdd);
+        async [walletActions.create]({commit}, wallet) {
+            const id = 'new-wallet';
+            const walletToAdd = newWalletFilter({id, ...wallet});
+            commit(walletMutations.add, walletToAdd);
             try {
-                const createdAccount = await client.create(account);
-                commit(walletMutations.update, {id: 'new-account', patch: {id: createdAccount.id}});
+                const createdAccount = await client.create(wallet);
+                commit(walletMutations.update, {id: 'new-wallet', patch: {id: createdAccount.id}});
             } catch (error) {
-                commit(walletMutations.remove, accountToAdd);
+                commit(walletMutations.remove, walletToAdd);
                 throw error;
             }
         },
@@ -70,8 +70,8 @@ export function createWalletStoreMutations(propertyName) {
             state[propertyName] = state[propertyName].filter(existingWallet => existingWallet.id !== wallet.id);
         },
         [walletMutations.update](state, changes) {
-            const wallet = state[propertyName].find(wallet => wallet.id === changes.id);
-            Object.assign(wallet, changes.patch);
+            const walletx = state[propertyName].find(candidate => candidate.id === changes.id);
+            Object.assign(walletx, changes.patch);
         },
     };
 }

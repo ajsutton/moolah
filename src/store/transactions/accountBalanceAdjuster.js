@@ -16,7 +16,9 @@ export default function updateAccountBalances(dispatch, originalTransaction, mod
     const accountChanges = {};
     const earmarkChanges = {};
     if (originalTransaction && !originalTransaction.recurPeriod) {
-        addChange(accountChanges, originalTransaction.accountId, -originalTransaction.amount);
+        if (originalTransaction.accountId) {
+            addChange(accountChanges, originalTransaction.accountId, -originalTransaction.amount);
+        }
         if (originalTransaction.toAccountId) {
             addChange(accountChanges, originalTransaction.toAccountId, originalTransaction.amount);
         }
@@ -25,7 +27,9 @@ export default function updateAccountBalances(dispatch, originalTransaction, mod
         }
     }
     if (modifiedTransaction && !modifiedTransaction.recurPeriod) {
-        addChange(accountChanges, modifiedTransaction.accountId, modifiedTransaction.amount);
+        if (modifiedTransaction.accountId) {
+            addChange(accountChanges, modifiedTransaction.accountId, modifiedTransaction.amount);
+        }
         if (modifiedTransaction.toAccountId) {
             addChange(accountChanges, modifiedTransaction.toAccountId, -modifiedTransaction.amount);
         }

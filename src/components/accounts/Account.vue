@@ -16,12 +16,15 @@
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import Transactions from '../transactions/Transactions.vue';
     import CreateAccount from '../accounts/CreateAccount.vue';
+    import AddTransactionMixin from '../util/AddTransactionMixin';
 
     export default {
         props: {
             accountId: String,
             searchOptions: Object,
         },
+
+        mixins: [AddTransactionMixin],
 
         created() {
             this.loadTransactions();

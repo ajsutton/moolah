@@ -31,33 +31,33 @@ describe('Account Balance Adjuster', function() {
 
     describe('Earmark Transactions', function() {
         describe('Expenses', function() {
-            it('should adjust account balance, earmark balance and earmark spent when expense amount changes', function() {
+            it('should adjust earmark balance, earmark balance and earmark spent when expense amount changes', function() {
                 assertAdjustments(
                     {amount: 10, type: 'expense', earmark: 'earmark1'}, {amount: 20, type: 'expense', earmark: 'earmark1'},
                     {accountId: 'account1', balance: 10}, {earmarkId: 'earmark1', balance: 10, spent: 10, saved: 0});
             });
 
-            it('should adjust account balance when expense added', function() {
+            it('should adjust earmark balance when expense added', function() {
                 assertAdjustments(null, {amount: 20, type: 'expense', earmark: 'earmark1'},
                     {accountId: 'account1', balance: 20}, {earmarkId: 'earmark1', balance: 20, spent: 20, saved: 0});
             });
 
-            it('should adjust account balance when expense transaction removed', function() {
+            it('should adjust earmark balance when expense transaction removed', function() {
                 assertAdjustments({amount: 20, type: 'expense', earmark: 'earmark1'}, null,
                     {accountId: 'account1', balance: -20}, {earmarkId: 'earmark1', balance: -20, spent: -20, saved: 0});
             });
 
-            it('should adjust account balance when expense added to earmark', function() {
+            it('should adjust earmark balance when expense added to earmark', function() {
                 assertAdjustments({amount: 20, type: 'expense'}, {amount: 20, type: 'expense', earmark: 'earmark1'},
                     {earmarkId: 'earmark1', balance: 20, spent: 20, saved: 0});
             });
 
-            it('should adjust account balance when expense transaction removed from earmark', function() {
+            it('should adjust earmark balance when expense transaction removed from earmark', function() {
                 assertAdjustments({amount: 20, type: 'expense', earmark: 'earmark1'}, {amount: 20, type: 'expense'},
                     {earmarkId: 'earmark1', balance: -20, spent: -20, saved: 0});
             });
 
-            it('should adjust account balance when expense transaction changes earmark', function() {
+            it('should adjust earmark balance when expense transaction changes earmark', function() {
                 assertAdjustments({accountId: 'account1', amount: 20, type: 'expense', earmark: 'earmark1'}, {accountId: 'account1', type: 'expense', earmark: 'earmark2', amount: 20},
                     {earmarkId: 'earmark1', balance: -20, spent: -20, saved: 0},
                     {earmarkId: 'earmark2', balance: 20, spent: 20, saved: 0});
@@ -65,37 +65,43 @@ describe('Account Balance Adjuster', function() {
         });
 
         describe('Income', function() {
-            it('should adjust account balance, earmark balance and earmark spent when income amount changes', function() {
+            it('should adjust earmark balance, earmark balance and earmark spent when income amount changes', function() {
                 assertAdjustments(
                     {amount: 10, type: 'income', earmark: 'earmark1'}, {amount: 20, type: 'income', earmark: 'earmark1'},
                     {accountId: 'account1', balance: 10}, {earmarkId: 'earmark1', balance: 10, saved: 10, spent: 0});
             });
 
-            it('should adjust account balance when income added', function() {
+            it('should adjust earmark balance when income added', function() {
                 assertAdjustments(null, {amount: 20, type: 'income', earmark: 'earmark1'},
                     {accountId: 'account1', balance: 20}, {earmarkId: 'earmark1', balance: 20, saved: 20, spent: 0});
             });
 
-            it('should adjust account balance when income transaction removed', function() {
+            it('should adjust earmark balance when income transaction removed', function() {
                 assertAdjustments({amount: 20, type: 'income', earmark: 'earmark1'}, null,
                     {accountId: 'account1', balance: -20}, {earmarkId: 'earmark1', balance: -20, saved: -20, spent: 0});
             });
 
-            it('should adjust account balance when income added to earmark', function() {
+            it('should adjust earmark balance when income added to earmark', function() {
                 assertAdjustments({amount: 20, type: 'income'}, {amount: 20, type: 'income', earmark: 'earmark1'},
                     {earmarkId: 'earmark1', balance: 20, saved: 20, spent: 0});
             });
 
-            it('should adjust account balance when income transaction removed from earmark', function() {
+            it('should adjust earmark balance when income transaction removed from earmark', function() {
                 assertAdjustments({amount: 20, type: 'income', earmark: 'earmark1'}, {amount: 20, type: 'income'},
                     {earmarkId: 'earmark1', balance: -20, saved: -20, spent: 0});
             });
 
-            it('should adjust account balance when income transaction changes earmark', function() {
+            it('should adjust earmark balance when income transaction changes earmark', function() {
                 assertAdjustments({accountId: 'account1', amount: 20, type: 'income', earmark: 'earmark1'}, {accountId: 'account1', type: 'income', earmark: 'earmark2', amount: 20},
                     {earmarkId: 'earmark1', balance: -20, saved: -20, spent: 0},
                     {earmarkId: 'earmark2', balance: 20, saved: 20, spent: 0});
             });
+
+            it('should adjust earmark balance when income without account changes', function() {
+                assertAdjustments({accountId: undefined, amount: 20, type: 'income', earmark: 'earmark1'}, {accountId: undefined, type: 'income', earmark: 'earmark2', amount: 20},
+                    {earmarkId: 'earmark1', balance: -20, saved: -20, spent: 0},
+                    {earmarkId: 'earmark2', balance: 20, saved: 20, spent: 0});
+            })
         });
 
         it('should update saved and spent when transaction changes from income to expense', function() {

@@ -47,8 +47,8 @@ describe('accountsStore', function() {
                         state: {accounts: [{id: 'existing'}]},
                     },
                     [
-                        {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
-                        {type: mutations.updateAccount, payload: {id: 'new-account', patch: {id: 'assigned-id'}}},
+                        {type: mutations.addAccount, payload: {id: 'new-wallet', ...newAccount}},
+                        {type: mutations.updateAccount, payload: {id: 'new-wallet', patch: {id: 'assigned-id'}}},
                     ],
                 );
             });
@@ -66,8 +66,8 @@ describe('accountsStore', function() {
                         ignoreFailures: true,
                     },
                     [
-                        {type: mutations.addAccount, payload: {id: 'new-account', ...newAccount}},
-                        {type: mutations.removeAccount, payload: {id: 'new-account', ...newAccount}},
+                        {type: mutations.addAccount, payload: {id: 'new-wallet', ...newAccount}},
+                        {type: mutations.removeAccount, payload: {id: 'new-wallet', ...newAccount}},
                     ],
                 );
             });
