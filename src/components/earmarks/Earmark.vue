@@ -2,7 +2,7 @@
     <div>
         <v-card class="mb-3">
             <v-toolbar card class="white" prominent>
-                <v-toolbar-title class="body-2 grey--text">{{earmarkName}} - Savings Progress</v-toolbar-title>
+                <v-toolbar-title class="body-2 grey--text">{{earmarkName}}</v-toolbar-title>
                 <v-spacer></v-spacer>
             </v-toolbar>
             <v-divider></v-divider>
