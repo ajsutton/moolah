@@ -12,18 +12,18 @@ export default {
     },
     computed: {
         hasReachedTarget() {
-            return this.hasSavingsTarget && this.selectedAccount.balance >= this.selectedAccount.savingsTarget;
+            return this.hasSavingsTarget && this.selectedAccount.saved >= this.selectedAccount.savingsTarget;
         },
 
         remainingAmount() {
-            return this.hasSavingsTarget && this.selectedAccount.savingsTarget - this.selectedAccount.balance;
+            return this.hasSavingsTarget && this.selectedAccount.savingsTarget - this.selectedAccount.saved;
         },
 
         hasSavingsTarget() {
             return this.hasSavings && this.selectedAccount.savingsTarget;
         },
         savingsPercent() {
-            return this.selectedAccount.balance / this.selectedAccount.savingsTarget * 100;
+            return this.selectedAccount.saved / this.selectedAccount.savingsTarget * 100;
         },
         savingsColor() {
             if (this.savingsPercent < 100) {
@@ -31,6 +31,34 @@ export default {
             } else {
                 return 'success';
             }
+        },
+
+        spentPercentOfTarget() {
+            return -this.selectedAccount.spent / this.selectedAccount.savingsTarget * 100;
+        },
+
+        spentPercentOfActual() {
+            return -this.selectedAccount.spent / this.selectedAccount.saved * 100;
+        },
+
+        balancePercentOfActual() {
+            return this.selectedAccount.balance / this.selectedAccount.saved * 100;
+        },
+
+        balancePercentOfTarget() {
+            return this.selectedAccount.balance / this.selectedAccount.savingsTarget * 100;
+        },
+
+        budgetRemaining() {
+            return this.selectedAccount.savingsTarget + this.selectedAccount.spent;
+        },
+
+        budgetRemainingPercentOfTarget() {
+            return this.budgetRemaining / this.selectedAccount.savingsTarget * 100;
+        },
+
+        budgetRemainingPercentOfActual() {
+            return this.budgetRemaining / this.selectedAccount.saved * 100;
         },
 
         hasTargetDates() {
