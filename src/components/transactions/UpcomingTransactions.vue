@@ -28,6 +28,7 @@
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
     import differenceInCalendarDays from 'date-fns/difference_in_calendar_days';
+    import AddTransactionMixin from '../util/AddTransactionMixin';
 
     export default {
         props: {
@@ -42,6 +43,7 @@
         data() {
             return {};
         },
+        mixins: [AddTransactionMixin],
         computed: {
             noAccounts() {
                 return this.accounts.length === 0;
