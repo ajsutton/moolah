@@ -1,79 +1,95 @@
 <template>
-    <v-container fluid>
-        <v-layout align-center text-xs-center>
-            <v-flex xs12>
-                <savings-goal-description :selectedAccount="selectedAccount"></savings-goal-description>
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap v-if="hasSavings" class="text-xs-center" justify-center>
-            <v-flex v-if="hasTargetDates && started" md4 xl3>
-                <v-progress-circular :value="timePercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="timeColor">
-                    Time<br>
-                    <span class="headline">{{Math.floor(timePercent)}}%</span>
-                </v-progress-circular>
-            </v-flex>
-            <v-flex v-if="hasSavingsTarget" md4 xl3>
-                <v-progress-circular :value="savingsPercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="savingsColor">
-                    Saved<br>
-                    <span class="headline">{{Math.floor(savingsPercent)}}%</span>
-                </v-progress-circular>
-            </v-flex>
-            <v-flex v-if="hasSavingsTarget" md4 xl3>
-                <v-progress-circular :value="spentPercentOfTarget" :size="progressSize" :width="progressWidth" :rotate="180" :color="savingsColor">
-                    Spent<br>
-                    <span class="headline">{{Math.ceil(spentPercentOfTarget)}}%</span>
-                </v-progress-circular>
-            </v-flex>
-        </v-layout>
-        <v-layout row align-start justify-center xs12>
-            <v-flex xs2 d-flex>
-                <v-layout column align-center>
-                    <v-flex>Savings Target</v-flex>
+    <v-container class="savingsGoalNotice">
+        <v-layout row wrap align-start justify-center>
+            <v-flex xs12 lg4 xl2 d-flex v-if="hasStartDate || hasEndDate">
+                <v-layout column text-xs-center>
                     <v-flex>
-                        <monetary-amount :value="selectedAccount.savingsTarget"></monetary-amount>
+                        <v-progress-circular :value="timePercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="timeColor">
+                            Time<br>
+                            <span class="headline" v-if="hasTargetDates">{{Math.floor(timePercent)}}%</span>
+                        </v-progress-circular>
                     </v-flex>
-                </v-layout>
-            </v-flex>
-            <v-flex xs2 d-flex>
-                <v-layout column align-center>
-                    <v-flex>Income</v-flex>
-                    <v-flex>
-                        <monetary-amount :value="selectedAccount.saved"></monetary-amount>
+
+                    <v-flex xs12>
+                        <table class="table data-table">
+                            <tr v-if="hasStartDate">
+                                <td class="text-xs-left">Start</td>
+                                <td class="text-xs-right">{{selectedAccount.savingsStartDate | date}}</td>
+                            </tr>
+                            <tr v-if="hasEndDate">
+                                <td class="text-xs-left">End</td>
+                                <td class="text-xs-right">{{selectedAccount.savingsEndDate | date}}</td>
+                            </tr>
+                            <tr v-if="hasEndDate">
+                                <td class="text-xs-left">Time remaining</td>
+                                <td class="text-xs-right">{{daysRemaining}}</td>
+                            </tr>
+                        </table>
                     </v-flex>
-                    <v-flex>{{Math.floor(savingsPercent)}}% of target</v-flex>
                 </v-layout>
             </v-flex>
 
-            <v-flex xs2 d-flex>
-                <v-layout column align-center>
-                    <v-flex>Expenses</v-flex>
+            <v-flex xs12 lg4 xl2 d-flex>
+                <v-layout column text-xs-center>
                     <v-flex>
-                        <monetary-amount :value="selectedAccount.spent"></monetary-amount>
+                        <v-progress-circular :value="savingsPercent" :size="progressSize" :width="progressWidth" :rotate="180" :color="savingsColor">
+                            Saved<br>
+                            <span class="headline" v-if="hasSavingsTarget">{{Math.floor(savingsPercent)}}%</span>
+                        </v-progress-circular>
                     </v-flex>
-                    <v-flex>{{Math.ceil(spentPercentOfTarget)}}% of target</v-flex>
-                    <v-flex>{{Math.ceil(spentPercentOfActual)}}% of actual</v-flex>
+
+                    <v-flex xs12>
+                        <table class="table data-table">
+                            <tr>
+                                <td class="text-xs-left">Saved</td>
+                                <td class="text-xs-right"><monetary-amount :value="selectedAccount.saved"></monetary-amount></td>
+                            </tr>
+                            <tr v-if="hasSavingsTarget">
+                                <td class="text-xs-left">Budget</td>
+                                <td class="text-xs-right"><monetary-amount :value="selectedAccount.savingsTarget"></monetary-amount></td>
+                            </tr>
+                            <tr v-if="hasSavingsTarget">
+                                <td class="text-xs-left">Remaining</td>
+                                <td class="text-xs-right"><monetary-amount :value="remainingAmount"></monetary-amount></td>
+                            </tr>
+                        </table>
+                    </v-flex>
                 </v-layout>
             </v-flex>
 
-            <v-flex xs2 d-flex>
-                <v-layout column align-center>
-                    <v-flex>Actual Remaining</v-flex>
+            <v-flex xs12 lg4 xl2 d-flex>
+                <v-layout column text-xs-center>
                     <v-flex>
-                        <monetary-amount :value="selectedAccount.balance"></monetary-amount>
+                        <v-progress-circular :value="spentPercentOfEither" :size="progressSize" :width="progressWidth" :rotate="180" :color="savingsColor">
+                            Spent<br>
+                            <span class="headline">{{Math.ceil(spentPercentOfEither)}}%</span>
+                        </v-progress-circular>
                     </v-flex>
-                    <v-flex>{{Math.floor(balancePercentOfTarget)}}% of target</v-flex>
-                    <v-flex>{{Math.floor(balancePercentOfActual)}}% of actual</v-flex>
-                </v-layout>
-            </v-flex>
 
-            <v-flex xs2 d-flex>
-                <v-layout column align-center>
-                    <v-flex>Budget Remaining</v-flex>
-                    <v-flex>
-                        <monetary-amount :value="budgetRemaining"></monetary-amount>
+                    <v-flex xs12>
+                        <table class="table data-table">
+                            <tr>
+                                <td class="text-xs-left">Spent</td>
+                                <td class="text-xs-right"><monetary-amount :value="selectedAccount.spent"></monetary-amount></td>
+                            </tr>
+                            <tr v-if="hasSavingsTarget">
+                                <td class="text-xs-left">Percent of budget</td>
+                                <td class="text-xs-right">{{Math.ceil(spentPercentOfTarget)}}%</td>
+                            </tr>
+                            <tr>
+                                <td class="text-xs-left">Percent of actual</td>
+                                <td class="text-xs-right">{{Math.ceil(spentPercentOfActual)}}%</td>
+                            </tr>
+                            <tr v-if="hasSavingsTarget">
+                                <td class="text-xs-left">Budget remaining:</td>
+                                <td class="text-xs-right"><monetary-amount :value="budgetRemaining"></monetary-amount></td>
+                            </tr>
+                            <tr>
+                                <td class="text-xs-left">Actual remaining</td>
+                                <td class="text-xs-right"><monetary-amount :value="selectedAccount.balance"></monetary-amount></td>
+                            </tr>
+                        </table>
                     </v-flex>
-                    <v-flex>{{Math.floor(budgetRemainingPercentOfTarget)}}% of target</v-flex>
-                    <v-flex>{{Math.floor(budgetRemainingPercentOfActual)}}% of actual</v-flex>
                 </v-layout>
             </v-flex>
         </v-layout>
@@ -83,12 +99,12 @@
 <script>
     import {mapState, mapGetters, mapActions} from 'vuex';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
-    import SavingsGoalDescription from './SavingsGoalDescription.vue';
     import {VProgressCircular} from 'vuetify';
     import differenceInCalendarDays from 'date-fns/difference_in_calendar_days';
     import distanceInWords from 'date-fns/distance_in_words';
     import startOfToday from 'date-fns/start_of_today';
     import SavingsGoalMixin from './SavingsGoalMixin';
+    import {formatDate} from '../util/formatDate';
 
     export default {
         mixins: [
@@ -104,10 +120,22 @@
                 return Math.floor(this.progressSize / 10);
             },
         },
+        filters: {
+            date: formatDate
+        },
         components: {
             VProgressCircular,
             MonetaryAmount,
-            SavingsGoalDescription,
         },
     };
 </script>
+
+<style lang="scss">
+    .savingsGoalNotice {
+        .table.data-table {
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+</style>
