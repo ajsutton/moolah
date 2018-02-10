@@ -1,6 +1,6 @@
 <template>
     <v-app light>
-        <account-nav :profile="profile" :loggedIn="loggedIn"></account-nav>
+        <main-nav :profile="profile" :loggedIn="loggedIn"></main-nav>
         <v-navigation-drawer v-model="showRightNavPanel" floating right clipped disable-route-watcher disable-resize-watcher app fixed>
             <v-card class="ma-3">
                 <v-card-text>
@@ -49,7 +49,7 @@
     import {actions as accountActions} from './store/wallets/accountsStore';
     import {actions as earmarkActions} from './store/wallets/earmarksStore';
     import {mutations, actions as stateActions} from './store/store';
-    import AccountNav from './components/accounts/AccountNav.vue';
+    import MainNav from './components/MainNav.vue';
     import EditTransaction from './components/transactions/EditTransaction';
     import Welcome from './components/welcome/Welcome';
     import Logout from './components/Logout';
@@ -106,7 +106,7 @@
         },
         store,
         components: {
-            AccountNav,
+            MainNav,
             EditTransaction,
             Welcome,
             Logout,

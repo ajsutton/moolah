@@ -36,7 +36,7 @@
     import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {rules, isValid} from '../validation';
-    import WalletSelector from '../accounts/WalletSelector.vue';
+    import WalletSelector from '../wallets/WalletSelector.vue';
     import CategorySelector from '../categories/CategorySelector.vue';
     import AutoCompletePayee from './AutoCompletePayee.vue';
     import Recurrence from './RecurranceControls.vue';

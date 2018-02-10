@@ -14,7 +14,7 @@
 
 <script>
     import MonetaryAmount from '../util/MonetaryAmount';
-    import iconForType from './accountIcon';
+    import iconForType from './walletIcon';
 
     export default {
         props: {

@@ -23,7 +23,7 @@
 
 <script>
     import {mapGetters, mapState} from 'vuex';
-    import iconForType from './accountIcon';
+    import iconForType from './walletIcon';
     import MonetaryAmount from '../util/MonetaryAmount';
 
     export default {
