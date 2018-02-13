@@ -25,6 +25,9 @@ export default {
         savingsPercent() {
             return this.hasSavingsTarget ? this.selectedAccount.saved / this.selectedAccount.savingsTarget * 100 : 0;
         },
+        hasSaved() {
+           return this.selectedAccount.saved !== 0;
+        },
         savingsColor() {
             if (this.savingsPercent < 100) {
                 return 'accent';
@@ -38,7 +41,11 @@ export default {
         },
 
         spentPercentOfActual() {
-            return -this.selectedAccount.spent / this.selectedAccount.saved * 100;
+            if (this.hasSaved) {
+                return -this.selectedAccount.spent / this.selectedAccount.saved * 100;
+            } else {
+                return this.selectedAccount.spent < 0 ? 100 : 0;
+            }
         },
 
         spentPercentOfEither() {

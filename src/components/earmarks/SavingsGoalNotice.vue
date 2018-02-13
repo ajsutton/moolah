@@ -62,7 +62,7 @@
                     <v-flex>
                         <v-progress-circular :value="spentPercentOfEither" :size="progressSize" :width="progressWidth" :rotate="180" :color="savingsColor">
                             Spent<br>
-                            <span class="headline">{{Math.ceil(spentPercentOfEither)}}%</span>
+                            <span class="headline" v-if="hasSaved">{{Math.ceil(spentPercentOfEither)}}%</span>
                         </v-progress-circular>
                     </v-flex>
 
@@ -76,7 +76,7 @@
                                 <td class="text-xs-left">Percent of budget</td>
                                 <td class="text-xs-right">{{Math.ceil(spentPercentOfTarget)}}%</td>
                             </tr>
-                            <tr>
+                            <tr v-if="hasSaved">
                                 <td class="text-xs-left">Percent of actual</td>
                                 <td class="text-xs-right">{{Math.ceil(spentPercentOfActual)}}%</td>
                             </tr>
