@@ -4,7 +4,7 @@
             <wallet-list title="Accounts" :accounts="accounts" baseUrl="/account" totalLabel="Net worth" :totalValue="networth">
                 <create-account dark slot="titleAction"></create-account>
             </wallet-list>
-            <wallet-list title="Earmarked" :accounts="earmarks" baseUrl="/earmark" icon="bookmark_outline" totalLabel="Available funds" :totalValue="availableFunds" v-if="hasEarmarks">
+            <wallet-list title="Earmarked" :accounts="earmarks" baseUrl="/earmark" icon="bookmark_outline" totalLabel="Available funds" :totalValue="availableFunds">
                 <create-earmark dark slot="titleAction"></create-earmark>
             </wallet-list>
             <v-list>
@@ -69,9 +69,6 @@
                 set(value) {
                     this.$store.commit(mutations.showMainNav, value);
                 },
-            },
-            hasEarmarks() {
-                return this.earmarks.length > 0;
             },
             ...mapState({mainNavToggle: 'showMainNav'}),
             ...mapGetters('accounts', ['networth']),

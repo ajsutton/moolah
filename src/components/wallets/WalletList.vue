@@ -9,7 +9,7 @@
         <wallet-list-item :account="account" :baseUrl="baseUrl" v-for="account in accounts" :key="account.id"></wallet-list-item>
         <v-divider></v-divider>
 
-        <v-list-tile no-action>
+        <v-list-tile no-action v-if="accounts.length > 0">
             <v-list-tile-action></v-list-tile-action>
             <v-list-tile-content>
                 <v-list-tile-title>{{totalLabel}}</v-list-tile-title>
