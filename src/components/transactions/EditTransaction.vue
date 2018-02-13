@@ -2,6 +2,7 @@
     <div class="pl-2 pr-2">
         <p v-if="isEarmarkAccount" class="subheading">Earmark funds</p>
         <auto-complete-payee name="payee" label="Payee" v-model="payee" :rules="rules.payee" @blur="onBlur('payee')" v-else-if="!isOpeningBalance" ref="payee" @autofill="autofill"></auto-complete-payee>
+
         <v-text-field name="amount" label="Amount" v-model="amount" prefix="$" :rules="rules.amount" @blur="onBlur('amount')" ref="amount"></v-text-field>
 
         <date-picker-field v-model="date"></date-picker-field>
@@ -18,13 +19,13 @@
             <wallet-selector :label="toAccountLabel" v-if="type === 'transfer'" :wallets="accounts" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></wallet-selector>
         </template>
 
-        <wallet-selector label="Earmark" v-bind:value.sync="earmark" :wallets="earmarks" :clearable="true" v-if="!isEarmarkAccount"></wallet-selector>
+        <wallet-selector label="Earmark" v-bind:value.sync="earmark" :wallets="earmarks" :clearable="!isEarmarkAccount" v-if="!isEarmarkAccount || scheduled"></wallet-selector>
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')" multiLine></v-text-field>
 
-        <wallet-selector v-if="scheduled" label="Account" v-bind:value.sync="accountId" :wallets="accounts"></wallet-selector>
+        <wallet-selector v-if="scheduled && !isEarmarkAccount" label="Account" v-bind:value.sync="accountId" :wallets="accounts"></wallet-selector>
 
         <div class="text-xs-right">
             <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>

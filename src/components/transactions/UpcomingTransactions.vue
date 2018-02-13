@@ -4,6 +4,10 @@
             <v-toolbar-title class="body-2 grey--text">Upcoming Transactions</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon
+                   @click.native.stop="addEarmark" :disabled="noEarmarks">
+                <v-icon>bookmark_outline</v-icon>
+            </v-btn>
+            <v-btn icon
                    @click.native.stop="addTransaction" :disabled="noAccounts">
                 <v-icon>add</v-icon>
             </v-btn>
@@ -48,6 +52,9 @@
             noAccounts() {
                 return this.accounts.length === 0;
             },
+            noEarmarks() {
+                return this.earmarks.length === 0;
+            },
             transactionsToDisplay() {
                 return this.shortTerm
                     ? this.transactions.filter(transaction => differenceInCalendarDays(transaction.date, new Date()) < 14)
@@ -55,11 +62,15 @@
             },
             ...mapState('scheduledTransactions', ['transactions', 'loading']),
             ...mapState('accounts', ['accounts']),
+            ...mapState('earmarks', ['earmarks']),
         },
 
         methods: {
             addTransaction() {
                 this[transactionActions.addTransaction]({recurEvery: 1, recurPeriod: 'MONTH'});
+            },
+            addEarmark() {
+                this[transactionActions.addTransaction]({earmark: this.earmarks[0].id, accountId: undefined, type: 'income', recurEvery: 1, recurPeriod: 'MONTH'});
             },
             editTransaction(transaction) {
                 this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: true});
