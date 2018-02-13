@@ -30,6 +30,9 @@ export default {
         totalEarmarked(state) {
             return state.earmarks.reduce((total, earmark) => total + Math.max(earmark.balance, 0), 0);
         },
+        hasEarmarks(state) {
+            return state.earmarks.length > 0;
+        }
     },
     mutations: createWalletStoreMutations('earmarks'),
     actions: createWalletStoreActions('earmarks', client.earmarks, newEarmark => Object.assign({balance: 0, saved: 0, spent: 0}, newEarmark)),

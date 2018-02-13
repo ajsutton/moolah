@@ -19,7 +19,7 @@
             <wallet-selector :label="toAccountLabel" v-if="type === 'transfer'" :wallets="accounts" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></wallet-selector>
         </template>
 
-        <wallet-selector label="Earmark" v-bind:value.sync="earmark" :wallets="earmarks" :clearable="!isEarmarkAccount" v-if="!isEarmarkAccount || scheduled"></wallet-selector>
+        <wallet-selector label="Earmark" v-bind:value.sync="earmark" :wallets="earmarks" :clearable="!isEarmarkAccount" v-if="showEarmarkSelector"></wallet-selector>
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
@@ -83,6 +83,7 @@
                 transaction: 'selectedTransaction',
             }),
             ...mapGetters('accounts', { accountById: 'account' }),
+            ...mapGetters('earmarks', ['hasEarmarks']),
             ...mapState('accounts', ['accounts']),
             ...mapState('earmarks', ['earmarks']),
             accountId: {
@@ -165,7 +166,9 @@
             amount: makeModelProperty('amount',
                 (amount, transaction) => (typeMultiplier(transaction) * amount / 100).toFixed(2),
                 (value, transaction) => typeMultiplier(transaction) * Math.round(value * 100)),
-
+            showEarmarkSelector() {
+                return this.hasEarmarks && (!this.isEarmarkAccount || this.scheduled);
+            },
         },
         methods: {
             autofill(transaction) {
