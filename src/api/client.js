@@ -122,6 +122,10 @@ export default {
         return json(`/api/analysis/expenseBreakdown/?${params}`);
     },
 
+    async categoryBalances(searchOptions) {
+        return json(`/api/analysis/categoryBalances/?${asQueryParams(searchOptions)}`);
+    },
+
     async userProfile() {
         return json('/api/auth/');
     },
