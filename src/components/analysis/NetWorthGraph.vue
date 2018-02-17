@@ -59,17 +59,21 @@
                     json: this.extrapolatedBalances,
                     keys: {
                         x: 'date',
-                        value: ['balance', 'bestFit', 'scheduled'],
+                        value: ['balance', 'availableFunds', 'bestFit', 'scheduled', 'scheduledAvailableFunds'],
                     },
                     names: {
-                        balance: 'Actual Net Worth',
+                        balance: 'Net Worth',
                         scheduled: 'Scheduled Net Worth',
+                        scheduledAvailableFunds: 'Scheduled Available Funds',
                         bestFit: 'Best Fit',
+                        availableFunds: 'Available Funds',
                     },
                     colors: {
-                        'balance': 'green',
-                        'scheduled': 'gray',
+                        'availableFunds': '#4CAF50',
+                        'scheduledAvailableFunds': '#A5D6A7',
                         'bestFit': 'gray',
+                        'balance': '#2196F3',
+                        'scheduled': '#90CAF9',
                     },
                 };
             },
@@ -136,7 +140,13 @@
                         connectNull: true,
                     },
                     legend: {
-                        show: false,
+                        show: true,
+                        position: 'inset',
+                        hide: ['bestFit', 'scheduled', 'scheduledAvailableFunds'],
+                        inset: {
+                            anchor: 'top-left',
+                            step: 2,
+                        }
                     },
                     grid: {
                         y: {
@@ -206,6 +216,11 @@
         .input-group--select {
             min-width: 10em;
             margin-left: 12px;
+        }
+
+        .c3-legend-background {
+            fill: transparent;
+            stroke: none;
         }
     }
 </style>

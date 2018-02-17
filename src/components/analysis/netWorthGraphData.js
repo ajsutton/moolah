@@ -6,6 +6,7 @@ export default function extrapolateBalances(dailyBalances, scheduledBalances, to
     extendUntil(extendBackTo(scheduledBalances, dailyBalances, today), forecastUntil).forEach(scheduledBalance => {
         const balance = (data[scheduledBalance.date]) || {date: scheduledBalance.date};
         balance.scheduled = scheduledBalance.balance;
+        balance.scheduledAvailableFunds = scheduledBalance.availableFunds;
         const bestFit = balance.bestFit || scheduledBalance.bestFit;
         if (bestFit !== undefined) {
             balance.bestFit = bestFit;
@@ -21,7 +22,7 @@ function extendUntil(balances, until) {
     }
     const lastBalance = balances[balances.length - 1];
     if (lastBalance.date !== until) {
-        return Array.concat([], balances, [{date: until, balance: lastBalance.balance}]);
+        return Array.concat([], balances, [{date: until, balance: lastBalance.balance, availableFunds: lastBalance.availableFunds}]);
     }
     return balances;
 }
@@ -31,7 +32,8 @@ function extendBackTo(forecastBalances, balances, startDate) {
         return forecastBalances;
     }
     if (forecastBalances[0].date !== startDate) {
-        return Array.concat([{date: startDate, balance: balances[balances.length - 1].balance}], forecastBalances);
+        const lastBalance = balances[balances.length - 1];
+        return Array.concat([{date: startDate, balance: lastBalance.balance, availableFunds: lastBalance.availableFunds}], forecastBalances);
     }
     return forecastBalances;
 }
