@@ -50,7 +50,7 @@
             },
 
             categories() {
-                return summariseCategories(this.expenseBreakdown, this.rootCategoryId, this.getCategoryName, this.categoriesById);
+                return summariseCategories(this.expenseBreakdown, this.rootCategoryId, this.categoriesById);
             },
 
             breadcrumbs() {
@@ -87,9 +87,11 @@
             previousMonths() {
                 this.update();
             },
-            rootCategoryId() {
-                this.update();
-            },
+            graphData() {
+                if (this.$chart) {
+                    this.$chart.load(this.graphData);
+                }
+            }
         },
         methods: {
             getArgs() {
@@ -122,7 +124,6 @@
             },
             async update() {
                 this.expenseBreakdown = await client.expenseBreakdown(new Date().getDate(), this.afterDate);
-                this.$chart.load(this.graphData);
             },
             reload() {
                 if (this.$chart) {

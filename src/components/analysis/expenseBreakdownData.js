@@ -1,7 +1,7 @@
 import {rootLevelId} from './categories/rootLevelId';
 
-export function summariseCategories(expensesByCategory, rootCategoryId, getCategoryName, categoriesById) {
-    return rollupToRootLevel(expensesByCategory, rootCategoryId, getCategoryName, categoriesById)
+export function summariseCategories(expensesByCategory, rootCategoryId, categoriesById) {
+    return rollupToRootLevel(expensesByCategory, rootCategoryId, categoriesById)
     .sort(([name1, value1], [name2, value2]) => {
         if (value1 < value2) {
             return -1;
@@ -13,7 +13,7 @@ export function summariseCategories(expensesByCategory, rootCategoryId, getCateg
     });
 }
 
-function rollupToRootLevel(expensesByCategory, rootCategoryId, getCategoryName, categoriesById) {
+function rollupToRootLevel(expensesByCategory, rootCategoryId, categoriesById) {
     const rootLevelCategories = {};
     expensesByCategory.map(({categoryId, totalExpenses}) => {
         const id = rootLevelId(categoryId, rootCategoryId, categoriesById);
@@ -21,6 +21,6 @@ function rollupToRootLevel(expensesByCategory, rootCategoryId, getCategoryName, 
             rootLevelCategories[id] = (rootLevelCategories[id] || 0) + totalExpenses;
         }
     });
-    return Object.entries(rootLevelCategories).map(([categoryId, totalExpenses]) => [getCategoryName(categoryId), totalExpenses, categoryId]);
+    return Object.entries(rootLevelCategories).map(([categoryId, totalExpenses]) => [categoriesById[categoryId].name, totalExpenses, categoryId]);
 }
 
