@@ -1,29 +1,19 @@
 <template>
-    <table class="table spending-breakdown">
-        <thead>
-        <tr>
-            <th class="text-xs-left">Category</th>
-            <th class="text-xs-right">Spent</th>
-            <th class="text-xs-right">Total</th>
-        </tr>
-        </thead>
+    <table class="table spending-breakdown mx-auto" style="width: auto">
         <tbody>
-        <tr v-for="category in flattenedCategories" :key="category.id">
+        <tr v-for="category in flattenedCategories" :key="category.id" :class="{total: category.total}">
             <td>
                 <div :style="{'margin-left': category.level * 24 + 'px'}">{{category.name}}</div>
             </td>
             <td class="text-xs-right">
-                <monetary-amount :value="category.balance" v-if="category.balance !== 0"></monetary-amount>
-            </td>
-            <td class="text-xs-right">
                 <monetary-amount :value="category.subtotal" v-if="category.total"></monetary-amount>
+                <monetary-amount :value="category.balance" v-if="!category.total && category.balance !== 0"></monetary-amount>
             </td>
         </tr>
         </tbody>
         <tfoot>
         <tr>
             <th class="text-xs-left">Total</th>
-            <th></th>
             <th class="text-xs-right">
                 <monetary-amount :value="earmark.spent"></monetary-amount>
             </th>
@@ -37,6 +27,7 @@
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import client from '../../api/client';
     import {buildCategoryBalanceTree} from './categoryBalances';
+    import debounce from 'debounce';
 
     export default {
         props: {
@@ -56,7 +47,7 @@
             },
             flattenedCategories() {
                 const result = [];
-                const addCategory = (category, level, namePrefix) => {
+                const addCategory = (category, level, namePrefix, skipTotal = false) => {
                     const parentRequired = category.balance !== 0 || category.children.length > 1;
                     category.level = level;
                     category.name = namePrefix + category.name;
@@ -64,19 +55,28 @@
                         result.push(category);
                     }
                     category.children.forEach(child => addCategory(child, parentRequired ? level + 1 : level, parentRequired ? '' : category.name + ' - '));
-                    if (category.children.length > 1) {
+                    if (category.children.length > 1 && !skipTotal) {
                         result.push({name: 'Total ' + category.name, subtotal: category.subtotal, balance: 0, level: level, total: true});
                     }
                 };
-                this.categories.forEach(category => addCategory(category, 0, ''));
+                this.categories.forEach(category => addCategory(category, 0, '', this.categories.length === 1));
                 return result;
             },
 
             ...mapState('categories', {rawCategories: 'categories'}),
             ...mapGetters('categories', ['getCategoryName']),
+            ...mapState('transactions', ['transactions']),
         },
         created() {
             this.load();
+        },
+        watch: {
+            transactions: {
+                handler: debounce(function() {
+                    this.load();
+                }, 250),
+                deep: true,
+            }
         },
         methods: {
             async load() {
@@ -99,7 +99,11 @@
         }
 
         tfoot {
-            border-top: rgba(0,0,0,.12) solid 3px;
+            border-top: rgba(0, 0, 0, .12) solid 3px;
+        }
+
+        .total {
+            font-style: italic !important;
         }
     }
 </style>
