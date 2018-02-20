@@ -16,7 +16,7 @@
                 <monetary-amount :value="category.balance" v-if="category.balance !== 0"></monetary-amount>
             </td>
             <td class="text-xs-right">
-                <monetary-amount :value="category.subtotal" v-if="category.balance !== category.subtotal"></monetary-amount>
+                <monetary-amount :value="category.subtotal" v-if="category.total"></monetary-amount>
             </td>
         </tr>
         </tbody>
@@ -56,11 +56,19 @@
             },
             flattenedCategories() {
                 const result = [];
-                const addCategory = category => {
-                    result.push(category);
-                    category.children.forEach(addCategory);
+                const addCategory = (category, level, namePrefix) => {
+                    const parentRequired = category.balance !== 0 || category.children.length > 1;
+                    category.level = level;
+                    category.name = namePrefix + category.name;
+                    if (parentRequired) {
+                        result.push(category);
+                    }
+                    category.children.forEach(child => addCategory(child, parentRequired ? level + 1 : level, parentRequired ? '' : category.name + ' - '));
+                    if (category.children.length > 1) {
+                        result.push({name: 'Total ' + category.name, subtotal: category.subtotal, balance: 0, level: level, total: true});
+                    }
                 };
-                this.categories.forEach(addCategory);
+                this.categories.forEach(category => addCategory(category, 0, ''));
                 return result;
             },
 
