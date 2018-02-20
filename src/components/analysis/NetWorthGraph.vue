@@ -16,7 +16,7 @@
     import {formatDate} from '../../api/apiFormats';
     import debounce from 'debounce';
     import extrapolateBalances from './netWorthGraphData';
-    import GraphPanel from './GraphPanel.vue';
+    import GraphPanel from '../util/GraphPanel.vue';
     import {mapState} from 'vuex';
 
     const maxTicks = width => Math.floor(width / 160);

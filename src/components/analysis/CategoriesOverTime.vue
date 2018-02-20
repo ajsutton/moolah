@@ -21,7 +21,7 @@
     import debounce from 'debounce';
     import {mapGetters, mapState} from 'vuex';
     import {categoriesOverTimeGraphData} from './categories/categoryOverTimeData';
-    import GraphPanel from './GraphPanel.vue';
+    import GraphPanel from '../util/GraphPanel.vue';
 
     export default {
         data() {

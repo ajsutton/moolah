@@ -1,5 +1,5 @@
 <template>
-    <v-card class="networth-graph" v-resize="handleResize">
+    <v-card v-resize="handleResize">
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
             <slot></slot>

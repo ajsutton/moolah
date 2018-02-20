@@ -22,7 +22,7 @@
     import debounce from 'debounce';
     import {mapGetters, mapState} from 'vuex';
     import {summariseCategories} from './expenseBreakdownData';
-    import GraphPanel from './GraphPanel.vue';
+    import GraphPanel from '../util/GraphPanel.vue';
 
     export default {
         data() {
