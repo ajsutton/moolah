@@ -17,6 +17,7 @@
     import debounce from 'debounce';
     import extrapolateBalances from './netWorthGraphData';
     import GraphPanel from './GraphPanel.vue';
+    import {mapState} from 'vuex';
 
     const maxTicks = width => Math.floor(width / 160);
 
@@ -75,6 +76,7 @@
                         'balance': '#2196F3',
                         'scheduled': '#90CAF9',
                     },
+                    unload: true,
                 };
             },
             afterDate() {
@@ -100,6 +102,7 @@
                 }
                 return ticks;
             },
+            ...mapState('scheduledTransactions', {scheduledTransactions: 'transactions'})
         },
         watch: {
             previousMonths() {
@@ -108,6 +111,12 @@
             forecastMonths() {
                 this.update();
             },
+            scheduledTransactions: {
+                handler: debounce(function() {
+                    this.update();
+                }, 500),
+                deep: true,
+            }
         },
         methods: {
             getArgs() {
