@@ -80,7 +80,7 @@
         },
         methods: {
             async load() {
-                this.categoryBalanceById = await client.categoryBalances({earmark: this.earmark.id});
+                this.categoryBalanceById = await client.categoryBalances({earmark: this.earmark.id, transactionType: 'expense'});
             },
         },
         components: {
