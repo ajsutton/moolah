@@ -23,7 +23,7 @@
                                 <date-picker-field label="Start" v-model="savingsStartDate" :optional="true"></date-picker-field>
                             </v-flex>
                             <v-flex sm3 offset-sm1 xs12>
-                                <date-picker-field label="End" v-model="savingsEndDate" :optional="true"></date-picker-field>
+                                <date-picker-field label="End" v-model="savingsEndDate" :optional="true" :rules="rules.endDate"></date-picker-field>
                             </v-flex>
                         </v-layout>
 
@@ -47,6 +47,7 @@
     import {rules} from '../validation';
     import {VForm} from 'vuetify';
     import DatePickerField from '../util/DatePickerField.vue';
+    import isBefore from 'date-fns/is_before';
 
     export default {
         props: ['earmark', 'dark'],
@@ -63,6 +64,12 @@
 
                 rules: {
                     name: rules.walletName,
+                    endDate: [value => {
+                        if (this.savingsStartDate && isBefore(value, this.savingsStartDate)) {
+                            return 'Must be after start date';
+                        }
+                        return true;
+                    }]
                 },
             };
         },

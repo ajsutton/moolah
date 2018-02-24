@@ -13,9 +13,11 @@
                 slot="activator"
                 :label="label"
                 v-model="textValue"
-                :rules="rules"
+                :rules="allRules"
                 :clearable="optional"
                 validate-on-blur
+                @blur="onBlur"
+                ref="textField"
                 v-on:keyup.up="incrementDate"
                 v-on:keyup.down="decrementDate"
         ></v-text-field>
@@ -37,18 +39,24 @@
             value: String,
             optional: {
                 type: Boolean,
-                'default': false
+                'default': false,
             },
             label: {
                 type: String,
                 'default': 'Date',
+            },
+            rules: {
+                type: Array,
+                'default'() {
+                    return [];
+                },
             },
         },
         data() {
             return {
                 invalidText: null,
                 dateMenu: false,
-            }
+            };
         },
 
         computed: {
@@ -69,12 +77,12 @@
                             this.invalidText = value;
                         }
                     }
-                }
+                },
             },
 
-            rules() {
-                return [() => this.invalidText !== null ? 'Invalid date' : true];
-            }
+            allRules() {
+                return [() => this.invalidText !== null ? 'Invalid date' : true, ...this.rules];
+            },
         },
 
         watch: {
@@ -86,6 +94,15 @@
         methods: {
             onInput(value) {
                 this.$emit('input', value);
+                if (this.$refs.textField) {
+                    this.$refs.textField.validate();
+                }
+            },
+
+            onBlur() {
+                if (this.$refs.textField) {
+                    this.$refs.textField.validate();
+                }
             },
 
             incrementDate() {
