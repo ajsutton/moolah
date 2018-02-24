@@ -13,9 +13,9 @@
                 slot="activator"
                 :label="label"
                 v-model="textValue"
-                :error-messages="errorMessages"
+                :rules="rules"
                 :clearable="optional"
-                @blur="onBlur"
+                validate-on-blur
                 v-on:keyup.up="incrementDate"
                 v-on:keyup.down="decrementDate"
         ></v-text-field>
@@ -48,7 +48,6 @@
             return {
                 invalidText: null,
                 dateMenu: false,
-                errorMessages: [],
             }
         },
 
@@ -60,13 +59,11 @@
                 set(value) {
                     if (this.optional && (value === undefined || value === null || value === '')) {
                         this.invalidText = null;
-                        this.errorMessages = [];
                         this.onInput(undefined);
                     } else {
                         const parsedValue = parseDate(value);
                         if (!isNaN(parsedValue) && formatDate(parsedValue) === value) {
                             this.invalidText = null;
-                            this.errorMessages = [];
                             this.onInput(value);
                         } else {
                             this.invalidText = value;
@@ -74,6 +71,10 @@
                     }
                 }
             },
+
+            rules() {
+                return [() => this.invalidText !== null ? 'Invalid date' : true];
+            }
         },
 
         watch: {
@@ -85,10 +86,6 @@
         methods: {
             onInput(value) {
                 this.$emit('input', value);
-            },
-
-            onBlur() {
-                this.errorMessages = this.invalidText !== null ? ['Invalid date'] : [];
             },
 
             incrementDate() {
