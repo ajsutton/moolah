@@ -4,7 +4,9 @@
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
             <slot></slot>
         </v-toolbar>
-        <div ref="chart" class="chart"></div>
+        <slot name="chart">
+            <div ref="chart" class="chart"></div>
+        </slot>
         <slot name="footer"></slot>
     </v-card>
 </template>

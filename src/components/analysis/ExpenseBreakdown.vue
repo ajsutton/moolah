@@ -10,6 +10,8 @@
                 {{ item.name }}
             </v-breadcrumbs-item>
         </v-breadcrumbs>
+
+        <pie-chart :data="categories" slot="chart" @click="onGraphClick"></pie-chart>
     </graph-panel>
 </template>
 
@@ -23,6 +25,7 @@
     import {mapGetters, mapState} from 'vuex';
     import {summariseCategories} from './expenseBreakdownData';
     import GraphPanel from '../util/GraphPanel.vue';
+    import PieChart from '../charts/PieChart.vue';
 
     export default {
         data() {
@@ -64,22 +67,6 @@
                 crumbs.unshift({name: 'Categories', id: null});
                 return crumbs;
             },
-
-            graphData() {
-                return {
-                    type: 'pie',
-                    columns: this.categories,
-                    unload: true,
-                    onclick: (data) => {
-                        const categoryId = this.categories[data.index][2];
-                        const category = this.categoriesById[categoryId];
-                        if (category.children.length > 0) {
-                            this.rootCategoryId = categoryId;
-                        }
-                    },
-                };
-            },
-
             ...mapGetters('categories', ['getCategoryName']),
             ...mapState('categories', ['categoriesById'])
         },
@@ -94,33 +81,12 @@
             }
         },
         methods: {
-            getArgs() {
-                return {
-                    data: this.graphData,
-                    padding: {
-                        left: 100,
-                        right: 40,
-                        bottom: 10,
-                    },
-                    pie: {
-                        label: {
-                            format(value, ratio, title) {
-                                return title;
-                            },
-                        },
-                        expand: false,
-                    },
-                    legend: {
-                        show: false,
-                    },
-                    tooltip: {
-                        format: {
-                            value(value, ratio) {
-                                return `${formatMoney(-value)} (${Math.round(ratio * 100)}%)`;
-                            },
-                        },
-                    },
-                };
+            onGraphClick(data) {
+                const categoryId = this.categories[data.index][2];
+                const category = this.categoriesById[categoryId];
+                if (category.children.length > 0) {
+                    this.rootCategoryId = categoryId;
+                }
             },
             async update() {
                 this.expenseBreakdown = await client.expenseBreakdown(new Date().getDate(), this.afterDate);
@@ -140,17 +106,13 @@
         },
         async mounted() {
             this.expenseBreakdown = await client.expenseBreakdown(new Date().getDate(), this.afterDate);
-            const args = this.getArgs();
-            this.$chart = c3.generate({
-                bindto: this.$refs.chartPanel.chart,
-                ...args
-            });
         },
         beforeDestroy() {
             this.$chart = this.$chart.destroy();
         },
         components: {
             GraphPanel,
+            PieChart,
         },
     };
 </script>
