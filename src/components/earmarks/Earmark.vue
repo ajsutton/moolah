@@ -20,7 +20,7 @@
                 <v-tab-item id="overview">
                     <savings-goal-notice v-if="selectedEarmark !== undefined" :selectedAccount="selectedEarmark"></savings-goal-notice>
                 </v-tab-item>
-                <v-tab-item id="breakdown">
+                <v-tab-item id="breakdown" lazy>
                     <spending-breakdown :earmark="selectedEarmark"></spending-breakdown>
                 </v-tab-item>
             </v-tabs-items>

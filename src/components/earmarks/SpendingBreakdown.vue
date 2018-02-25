@@ -1,25 +1,34 @@
 <template>
-    <table class="table spending-breakdown mx-auto" style="width: auto">
-        <tbody>
-        <tr v-for="category in flattenedCategories" :key="category.id" :class="{total: category.total}">
-            <td>
-                <div :style="{'margin-left': category.level * 24 + 'px'}">{{category.name}}</div>
-            </td>
-            <td class="text-xs-right">
-                <monetary-amount :value="category.subtotal" v-if="category.total"></monetary-amount>
-                <monetary-amount :value="category.balance" v-if="!category.total && category.balance !== 0"></monetary-amount>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <th class="text-xs-left">Total</th>
-            <th class="text-xs-right">
-                <monetary-amount :value="earmark.spent"></monetary-amount>
-            </th>
-        </tr>
-        </tfoot>
-    </table>
+    <v-container>
+        <v-layout>
+            <v-flex md6>
+                <table class="table spending-breakdown mx-auto">
+                    <tbody>
+                    <tr v-for="category in flattenedCategories" :key="category.id" :class="{total: category.total}">
+                        <td>
+                            <div :style="{'margin-left': category.level * 24 + 'px'}">{{category.name}}</div>
+                        </td>
+                        <td class="text-xs-right">
+                            <monetary-amount :value="category.subtotal" v-if="category.total"></monetary-amount>
+                            <monetary-amount :value="category.balance" v-if="!category.total && category.balance !== 0"></monetary-amount>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th class="text-xs-left">Total</th>
+                        <th class="text-xs-right">
+                            <monetary-amount :value="earmark.spent"></monetary-amount>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </v-flex>
+            <v-flex md6>
+                <pie-chart :data="pieChartData"></pie-chart>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
@@ -27,6 +36,7 @@
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import client from '../../api/client';
     import {buildCategoryBalanceTree} from './categoryBalances';
+    import PieChart from '../charts/PieChart.vue';
     import debounce from 'debounce';
 
     export default {
@@ -63,7 +73,12 @@
                 return result;
             },
 
-            ...mapState('categories', {rawCategories: 'categories'}),
+            pieChartData() {
+                return Object.entries(this.categoryBalanceById)
+                    .map(([categoryId, balance]) => [this.categoriesById[categoryId].name, balance]);
+            },
+
+            ...mapState('categories', {rawCategories: 'categories', categoriesById: 'categoriesById'}),
             ...mapGetters('categories', ['getCategoryName']),
             ...mapState('transactions', ['transactions']),
         },
@@ -76,7 +91,7 @@
                     this.load();
                 }, 250),
                 deep: true,
-            }
+            },
         },
         methods: {
             async load() {
@@ -85,6 +100,7 @@
         },
         components: {
             MonetaryAmount,
+            PieChart,
         },
     };
 </script>
