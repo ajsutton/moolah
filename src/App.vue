@@ -8,13 +8,13 @@
                 </v-card-text>
             </v-card>
         </v-navigation-drawer>
-        <v-toolbar dark class="primary" fixed app clipped-left clipped-right>
+        <v-toolbar dark class="primary" fixed app clipped-left clipped-right v-if="!loading">
             <v-toolbar-side-icon v-if="loggedIn"
                                  @click.native.stop="showMainNav = !showMainNav"></v-toolbar-side-icon>
             <v-toolbar-title class="hidden-sm-and-down white--text" v-if="loggedIn">Moolah</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <v-menu :nudge-width="100" v-if="!loggedIn" bottom :nudge-bottom="50">
+                <v-menu :nudge-width="100" v-if="!loggedIn && !loading" bottom :nudge-bottom="50">
                     <v-btn flat slot="activator">Sign in with
                         <v-icon dark>arrow_drop_down</v-icon>
                     </v-btn>
@@ -33,7 +33,8 @@
             <v-toolbar-side-icon @click.native.prevent="toggleRightNav" :disabled="!hasTransaction" v-if="loggedIn"></v-toolbar-side-icon>
         </v-toolbar>
         <v-content>
-            <welcome v-if="!loggedIn"></welcome>
+            <loading-screen v-if="loading"></loading-screen>
+            <welcome v-else-if="!loggedIn"></welcome>
             <v-container fluid v-if="loggedIn" grid-list-md>
                 <transition name="slide-x-reverse-transition">
                     <router-view></router-view>
@@ -52,6 +53,7 @@
     import MainNav from './components/MainNav.vue';
     import EditTransaction from './components/transactions/EditTransaction';
     import Welcome from './components/welcome/Welcome';
+    import LoadingScreen from './components/welcome/LoadingScreen.vue';
     import Logout from './components/Logout';
     import client from './api/client';
     import store from './store/store';
@@ -61,6 +63,7 @@
         name: 'app',
         data() {
             return {
+                loading: true,
                 loggedIn: false,
                 userId: undefined,
                 profile: {
@@ -69,7 +72,7 @@
                     familyName: null,
                     picture: null,
                 },
-            }
+            };
         },
         computed: {
             showMainNav: {
@@ -86,13 +89,13 @@
                 },
                 set(value) {
                     this.$store.commit(mutations.showEditTransactionPanel, value);
-                }
+                },
             },
             hasTransaction() {
                 return this.selectedTransaction !== undefined && this.loggedIn;
             },
             ...mapGetters(['selectedTransaction']),
-            ...mapState({ rightNavToggle: 'showEditTransactionPanel', mainNavToggle: 'showMainNav'})
+            ...mapState({rightNavToggle: 'showEditTransactionPanel', mainNavToggle: 'showMainNav'})
         },
         methods: {
             toggleRightNav() {
@@ -110,6 +113,7 @@
             EditTransaction,
             Welcome,
             Logout,
+            LoadingScreen,
         },
         async created() {
             const state = await client.userProfile();
@@ -119,10 +123,11 @@
                 await this.loadAccounts();
                 await this.loadEarmarks();
             }
-            this.loggedIn = state.loggedIn;
             this.profile = state.profile;
-        }
-    }
+            this.loading = false;
+            this.loggedIn = state.loggedIn;
+        },
+    };
 </script>
 
 <style>
