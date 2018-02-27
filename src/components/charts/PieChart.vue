@@ -64,7 +64,6 @@
             },
         },
         mounted() {
-            console.log("Check", this.$parent, this.chart);
             this.$chart = c3.generate({
                 bindto: this.chart,
                 ...this.graphOptions
