@@ -120,8 +120,7 @@
             if (state.loggedIn) {
                 await this[categoryActions.loadCategories]();
                 this[stateActions.showUpcoming]();
-                await this.loadAccounts();
-                await this.loadEarmarks();
+                await Promise.all([this.loadAccounts(), this.loadEarmarks()]);
             }
             this.profile = state.profile;
             this.loading = false;
