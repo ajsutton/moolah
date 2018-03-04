@@ -4,7 +4,7 @@
             <v-toolbar-title class="body-2 grey--text">Monthly Income and Expense</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <v-switch label="Include earmarked funds" v-model="includeEarmarks" style="min-width: 18em; margin-top: 16px;"></v-switch>
+                <v-switch label="Earmarked funds" v-model="includeEarmarks" style="min-width: 13em; margin-top: 16px;"></v-switch>
             </v-toolbar-items>
         </v-toolbar>
         <v-data-table
