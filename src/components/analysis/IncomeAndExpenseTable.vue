@@ -2,10 +2,14 @@
     <v-card class="income-expense-table" height="">
         <v-toolbar card class="white" prominent>
             <v-toolbar-title class="body-2 grey--text">Monthly Income and Expense</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+                <v-switch label="Include earmarked funds" v-model="includeEarmarks" style="min-width: 18em; margin-top: 16px;"></v-switch>
+            </v-toolbar-items>
         </v-toolbar>
         <v-data-table
                 v-bind:headers="headers"
-                :items="breakdown"
+                :items="tableItems"
                 :pagination.sync="pagination"
                 :rows-per-page-items="[6, 12, 18, 24]"
                 rows-per-page-text="Months per page"
@@ -30,10 +34,18 @@
                         <div class="grey--text">{{ props.item | monthName }}</div>
                     </v-layout>
                 </td>
-                <td class="text-xs-right hidden-md-and-down"><monetary-amount :value="props.item.income"></monetary-amount></td>
-                <td class="text-xs-right hidden-md-and-down"><monetary-amount :value="props.item.expense"></monetary-amount></td>
-                <td class="text-xs-right"><monetary-amount :value="props.item.profit"></monetary-amount></td>
-                <td class="text-xs-right hidden-sm-and-down"><monetary-amount :value="props.item.cumulativeSavings"></monetary-amount></td>
+                <td class="text-xs-right hidden-md-and-down">
+                    <monetary-amount :value="props.item.income"></monetary-amount>
+                </td>
+                <td class="text-xs-right hidden-md-and-down">
+                    <monetary-amount :value="props.item.expense"></monetary-amount>
+                </td>
+                <td class="text-xs-right">
+                    <monetary-amount :value="props.item.profit"></monetary-amount>
+                </td>
+                <td class="text-xs-right hidden-sm-and-down">
+                    <monetary-amount :value="props.item.cumulativeSavings"></monetary-amount>
+                </td>
             </template>
         </v-data-table>
     </v-card>
@@ -48,6 +60,7 @@
     import format from 'date-fns/format';
     import getMonth from 'date-fns/get_month';
     import differenceInCalendarMonths from 'date-fns/difference_in_calendar_months';
+    import {VCheckbox} from 'vuetify';
 
     export default {
         data() {
@@ -93,22 +106,41 @@
                     descending: true,
                     rowsPerPage: 12,
                 },
+                includeEarmarks: false,
                 loading: true,
             };
+        },
+        computed: {
+            tableItems() {
+                const applyEarmark = (value, earmarkedValue) => this.includeEarmarks ? value : value - earmarkedValue;
+                return this.breakdown.map(data => ({
+                    income: applyEarmark(data.income, data.earmarkedIncome),
+                    expense: applyEarmark(data.expense, data.earmarkedExpense),
+                    profit: applyEarmark(data.profit, data.earmarkedProfit),
+                    cumulativeSavings: applyEarmark(data.cumulativeSavings, data.cumulativeEarmarkedSavings),
+                    month: data.month,
+                    start: data.start,
+                    end: data.end,
+                }));
+            },
         },
         async created() {
             const response = await client.incomeAndExpenseAnalsyis(new Date().getDate());
             let cumulativeSavings = 0;
+            let cumulativeEarmarkedSavings = 0;
             this.breakdown = response.incomeAndExpense.reverse().map(row => {
                 cumulativeSavings += row.profit;
+                cumulativeEarmarkedSavings += row.earmarkedProfit;
                 row.cumulativeSavings = cumulativeSavings;
+                row.cumulativeEarmarkedSavings = cumulativeEarmarkedSavings;
                 return row;
             });
             this.loading = false;
         },
 
         components: {
-            MonetaryAmount
+            MonetaryAmount,
+            VCheckbox,
         },
 
         filters: {
@@ -139,7 +171,7 @@
                     return `${monthsAgo}\xa0months\xa0ago`;
                 }
             },
-        }
+        },
     };
 </script>
 
