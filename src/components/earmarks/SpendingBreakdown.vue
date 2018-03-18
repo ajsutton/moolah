@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-layout>
+        <v-layout wrap>
             <v-flex md6>
                 <table class="table spending-breakdown mx-auto">
                     <tbody>

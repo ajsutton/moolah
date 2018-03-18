@@ -31,7 +31,7 @@
                 return {
                     data: this.graphData,
                     padding: {
-                        left: 100,
+                        left: 0,
                         right: 40,
                         bottom: 10,
                     },
