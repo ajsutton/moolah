@@ -67,10 +67,10 @@
 
         methods: {
             addTransaction() {
-                this[transactionActions.addTransaction]({recurEvery: 1, recurPeriod: 'MONTH'});
+                this[transactionActions.addTransaction]({recurEvery: null, recurPeriod: 'ONCE'});
             },
             addEarmark() {
-                this[transactionActions.addTransaction]({earmark: this.earmarks[0].id, accountId: undefined, type: 'income', recurEvery: 1, recurPeriod: 'MONTH'});
+                this[transactionActions.addTransaction]({earmark: this.earmarks[0].id, accountId: undefined, type: 'income', recurEvery: null, recurPeriod: 'ONCE'});
             },
             editTransaction(transaction) {
                 this.$store.commit(stateMutations.selectTransaction, {id: transaction.id, scheduled: true});
