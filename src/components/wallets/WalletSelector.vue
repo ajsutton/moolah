@@ -47,7 +47,7 @@
         },
         computed: {
             filteredWallets() {
-                return (this.wallets).filter(wallet => wallet.id !== this.exclude);
+                return (this.wallets).filter(wallet => wallet.id !== this.exclude && (!wallet.hidden || wallet.id === this.value));
             },
             selectedWalletId: {
                 get() {
