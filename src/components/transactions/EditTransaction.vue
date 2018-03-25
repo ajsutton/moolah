@@ -16,7 +16,7 @@
                     v-model="type"
                     :items="validTransactionTypes"
             ></v-select>
-            <wallet-selector :label="toAccountLabel" v-if="type === 'transfer'" :wallets="accounts" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></wallet-selector>
+            <wallet-selector :label="toAccountLabel" v-if="type === 'transfer'" :wallets="transferToAccounts" v-bind:value.sync="toAccountId" :excludeAccountId="accountId"></wallet-selector>
         </template>
 
         <wallet-selector label="Earmark" v-bind:value.sync="earmark" :wallets="earmarks" :clearable="!isEarmarkAccount" v-if="showEarmarkSelector"></wallet-selector>
@@ -25,7 +25,7 @@
 
         <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')" multiLine></v-text-field>
 
-        <wallet-selector v-if="scheduled && !isEarmarkAccount" label="Account" v-bind:value.sync="accountId" :wallets="accounts"></wallet-selector>
+        <wallet-selector v-if="scheduled && !isEarmarkAccount" label="Account" v-bind:value.sync="accountId" :wallets="transactionAccounts"></wallet-selector>
 
         <div class="text-xs-right">
             <v-btn v-if="!isOpeningBalance" @click.native.prevent="deleteTransaction(transaction)">Delete</v-btn>
@@ -78,6 +78,12 @@
             },
             account() {
                 return this.accountById(this.transaction.accountId);
+            },
+            transferToAccounts() {
+                return this.accounts.filter(account => !account.hidden || account.id === this.transaction.toAccountId)
+            },
+            transactionAccounts() {
+                return this.accounts.filter(account => !account.hidden || account.id === this.transaction.accountId)
             },
             ...mapGetters({
                 transaction: 'selectedTransaction',

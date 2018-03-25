@@ -20,6 +20,7 @@
                                 :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}, {text: 'Earmarked Funds', value: 'earmark'}]"
                         ></v-select>
 
+                        <v-checkbox label="Hide account" v-model="hidden" ></v-checkbox>
                         <small>*indicates required field</small>
                     </v-container>
                 </v-card-text>
@@ -38,7 +39,7 @@
     import client from '../../api/client';
     import {actions} from '../../store/wallets/accountsStore';
     import {rules} from '../validation';
-    import {VForm} from 'vuetify';
+    import {VForm, VCheckbox} from 'vuetify';
     import DatePickerField from '../util/DatePickerField.vue';
 
     export default {
@@ -48,6 +49,7 @@
                 name: 'Unnamed account',
                 type: 'bank',
                 balance: 0,
+                hidden: false,
                 dialog: false,
                 errorMessage: null,
 
@@ -93,6 +95,7 @@
                                 id: this.account.id, patch: {
                                     name: this.name,
                                     type: this.type,
+                                    hidden: this.hidden,
                                 },
                             });
                         } else {
@@ -115,10 +118,12 @@
                     this.balance = newAccount.balance / 100;
                     this.type = newAccount.type;
                     this.name = newAccount.name;
+                    this.hidden = newAccount.hidden;
                 } else {
                     this.balance = 0;
                     this.type = 'bank';
                     this.name = 'Unnamed account';
+                    this.hidden = false;
                 }
                 this.errorMessage = null;
             },
@@ -127,6 +132,7 @@
         components: {
             VForm,
             DatePickerField,
+            VCheckbox,
         },
     };
 </script>
