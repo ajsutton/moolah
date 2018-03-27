@@ -7,15 +7,15 @@
             item-text="name"
             item-value="id"
     >
-        <template slot="item" slot-scope="account">
+        <template slot="item" slot-scope="wallet">
             <v-list-tile-action>
-                <v-icon>{{ icon(account.item) }}</v-icon>
+                <v-icon>{{ icon(wallet.item) }}</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-                <v-list-tile-title>{{ account.item.name }}</v-list-tile-title>
+                <v-list-tile-title>{{ wallet.item.name }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-                <monetary-amount :value="account.item.balance"></monetary-amount>
+                <monetary-amount :value="wallet.item.balance"></monetary-amount>
             </v-list-tile-action>
         </template>
     </v-select>
@@ -29,7 +29,7 @@
     export default {
         props: {
             'label': String,
-            "accounts": {
+            'wallets': {
                 type: Array,
                 required: true
             },
@@ -47,7 +47,7 @@
         },
         computed: {
             filteredWallets() {
-                return (this.accounts).filter(wallet => wallet.id !== this.exclude && (!wallet.hidden || wallet.id === this.value));
+                return this.wallets.filter(wallet => wallet.id !== this.exclude && (!wallet.hidden || wallet.id === this.value));
             },
             selectedWalletId: {
                 get() {

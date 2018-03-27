@@ -89,7 +89,7 @@
                 return !!this.earmark;
             },
             canHide() {
-                return this.editing && this.earmark.balance === 0;
+                return this.editing && (this.earmark.balance === 0 || this.hidden);
             }
         },
 
