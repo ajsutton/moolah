@@ -4,7 +4,7 @@
             <v-list-tile-content>{{title}}</v-list-tile-content>
             <v-list-tile-action>
                 <div>
-                    <v-btn icon @click.prevent="showHidden = !showHidden" class="ma-0" v-if="hasHiddenWallets">
+                    <v-btn icon @click.prevent="showHidden = !showHidden" class="mx-1" v-if="hasHiddenWallets">
                         <v-icon v-if="showHidden">visibility</v-icon>
                         <v-icon v-else>visibility_off</v-icon>
                     </v-btn>
