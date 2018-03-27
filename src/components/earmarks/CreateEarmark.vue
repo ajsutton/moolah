@@ -1,11 +1,11 @@
 <template>
-    <v-dialog v-model="dialog" persistent>
+    <v-dialog v-model="dialog" persistent max-width="600">
         <v-btn :dark="dark" icon slot="activator">
             <v-icon :title="title">{{icon}}</v-icon>
         </v-btn>
         <v-card>
             <v-form v-model="valid" ref="form" lazy-validation>
-                <v-card-title>{{title}}</v-card-title>
+                <v-card-title>{{title}} <v-spacer></v-spacer><v-btn color="error" @click="hideEarmark" v-if="canHide">Hide</v-btn></v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert error :value="true">{{errorMessage}}</v-alert>
                 </template>
@@ -86,6 +86,9 @@
             editing() {
                 return !!this.earmark;
             },
+            canHide() {
+                return this.editing && this.earmark.balance === 0;
+            }
         },
 
         created() {
@@ -107,6 +110,7 @@
                                 id: this.earmark.id, patch: {
                                     name: this.name,
                                     type: this.type,
+                                    hidden: this.hidden,
                                     savingsTarget: Math.round(this.savingsTarget * 100),
                                     savingsStartDate: this.savingsStartDate || undefined,
                                     savingsEndDate: this.savingsEndDate || undefined,
@@ -129,17 +133,23 @@
                     }
                 }
             },
+            hideEarmark() {
+                this.hidden = true;
+                this.submit();
+            },
             syncFromEarmark(newEarmark) {
                 if (newEarmark) {
                     this.name = newEarmark.name;
                     this.savingsTarget = newEarmark.savingsTarget / 100;
                     this.savingsStartDate = newEarmark.savingsStartDate;
                     this.savingsEndDate = newEarmark.savingsEndDate;
+                    this.hidden = newEarmark.hidden;
                 } else {
                     this.name = 'Unnamed earmark';
                     this.savingsTarget = null;
                     this.savingsStartDate = null;
                     this.savingsEndDate = null;
+                    this.hidden = false;
                 }
                 this.errorMessage = null;
             },

@@ -4,7 +4,7 @@
             <wallet-list title="Accounts" :accounts="visibleAccounts" baseUrl="/account" totalLabel="Net worth" :totalValue="networth">
                 <create-account dark slot="titleAction"></create-account>
             </wallet-list>
-            <wallet-list title="Earmarked" :accounts="earmarks" baseUrl="/earmark" icon="bookmark_outline" totalLabel="Available funds" :totalValue="availableFunds">
+            <wallet-list title="Earmarked" :accounts="visibleEarmarks" baseUrl="/earmark" icon="bookmark_outline" totalLabel="Available funds" :totalValue="availableFunds">
                 <create-earmark dark slot="titleAction"></create-earmark>
             </wallet-list>
             <v-list>
@@ -72,6 +72,7 @@
             },
             ...mapState({mainNavToggle: 'showMainNav'}),
             ...mapGetters('accounts', ['networth', 'visibleAccounts']),
+            ...mapGetters('earmarks', ['visibleEarmarks']),
             ...mapGetters(['availableFunds']),
             ...mapState('earmarks', ['earmarks']),
             ...mapState('accounts', ['accounts']),

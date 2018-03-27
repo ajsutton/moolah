@@ -1,16 +1,16 @@
 <template>
-    <v-dialog v-model="dialog" persistent>
+    <v-dialog v-model="dialog" persistent max-width="600">
         <v-btn :dark="dark" icon slot="activator">
             <v-icon :title="title">{{icon}}</v-icon>
         </v-btn>
         <v-card>
             <v-form v-model="valid" ref="form" lazy-validation>
-                <v-card-title>{{title}}</v-card-title>
+                <v-card-title>{{title}} <v-spacer></v-spacer><v-btn color="error" @click="hideAccount" v-if="canHide">Hide</v-btn></v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert error :value="true">{{errorMessage}}</v-alert>
                 </template>
                 <v-card-text>
-                    <v-container>
+                    <v-container fluid>
                         <v-text-field label="Name" v-model="name" name="name" :rules="rules.name" required autofocus></v-text-field>
                         <v-text-field label="Initial Balance" prefix="$" type="number" v-model="balance" name="balance" :rules="rules.balance" v-if="!editing"></v-text-field>
                         <v-select
@@ -20,11 +20,12 @@
                                 :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}, {text: 'Earmarked Funds', value: 'earmark'}]"
                         ></v-select>
 
-                        <v-checkbox label="Hide account" v-model="hidden" ></v-checkbox>
+                        <v-checkbox label="Hide account" v-model="hidden" v-if="editing"></v-checkbox>
                         <small>*indicates required field</small>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
+
                     <v-spacer></v-spacer>
                     <v-btn class="blue--text darken-1" flat @click.native="dialog = false">Close</v-btn>
                     <v-btn class="blue--text darken-1" flat @click.native="submit">{{action}}</v-btn>
@@ -74,6 +75,9 @@
             editing() {
                 return !!this.account;
             },
+            canHide() {
+                return this.editing && this.account.balance === 0;
+            }
         },
 
         created() {
@@ -112,6 +116,10 @@
                         this.errorMessage = error.message || error;
                     }
                 }
+            },
+            hideAccount() {
+                this.hidden = true;
+                this.submit();
             },
             syncFromAccount(newAccount) {
                 if (newAccount) {
