@@ -29,7 +29,7 @@
     export default {
         props: {
             'label': String,
-            'wallets': {
+            "accounts": {
                 type: Array,
                 required: true
             },
@@ -47,7 +47,7 @@
         },
         computed: {
             filteredWallets() {
-                return (this.wallets).filter(wallet => wallet.id !== this.exclude && (!wallet.hidden || wallet.id === this.value));
+                return (this.accounts).filter(wallet => wallet.id !== this.exclude && (!wallet.hidden || wallet.id === this.value));
             },
             selectedWalletId: {
                 get() {

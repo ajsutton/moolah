@@ -3,10 +3,16 @@
         <v-subheader>
             <v-list-tile-content>{{title}}</v-list-tile-content>
             <v-list-tile-action>
-                <slot name="titleAction"></slot>
+                <div>
+                    <v-btn icon @click.prevent="showHidden = !showHidden" title="Show hidden" class="ma-0">
+                        <v-icon v-if="showHidden">visibility</v-icon>
+                        <v-icon v-else>visibility_off</v-icon>
+                    </v-btn>
+                    <slot name="titleAction"></slot>
+                </div>
             </v-list-tile-action>
         </v-subheader>
-        <wallet-list-item :account="account" :baseUrl="baseUrl" v-for="account in accounts" :key="account.id"></wallet-list-item>
+        <wallet-list-item :account="wallet" :baseUrl="baseUrl" v-for="wallet in visibleWallets" :key="wallet.id"></wallet-list-item>
         <v-divider></v-divider>
 
         <v-list-tile no-action v-if="accounts.length > 0">
@@ -48,7 +54,17 @@
             baseUrl: {
                 type: String,
                 required: true,
-            }
+            },
+        },
+        data() {
+            return {
+                showHidden: false,
+            };
+        },
+        computed: {
+            visibleWallets() {
+                return this.showHidden ? this.accounts : this.accounts.filter(wallet => !wallet.hidden || wallet.balance !== 0);
+            },
         },
         components: {
             VList,

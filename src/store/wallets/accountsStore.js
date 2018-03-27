@@ -32,9 +32,6 @@ export default {
                 return account ? account.name : 'Unknown';
             };
         },
-        visibleAccounts(state) {
-            return state.accounts.filter(account => !account.hidden || account.balance !== 0);
-        },
         selectedAccount(state, getters, rootState) {
             return state.accounts.find(account => account.id === rootState.selectedWalletId);
         },

@@ -30,9 +30,6 @@ export default {
         totalEarmarked(state) {
             return state.earmarks.reduce((total, earmark) => total + Math.max(earmark.balance, 0), 0);
         },
-        visibleEarmarks(state) {
-            return state.earmarks.filter(earmark => !earmark.hidden || earmark.balance !== 0);
-        },
         hasEarmarks(state) {
             return state.earmarks.length > 0;
         }
