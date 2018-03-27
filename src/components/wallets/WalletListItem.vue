@@ -35,7 +35,7 @@
                 return `${this.baseUrl}/${encodeURIComponent(this.account.id)}/`;
             },
             walletIcon() {
-                return this.icon || iconForType(this.account.type);
+                return this.account.hidden ? 'closed' : this.icon || iconForType(this.account.type);
             },
         },
         components: {
