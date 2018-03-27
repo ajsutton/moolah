@@ -5,7 +5,7 @@
         </v-btn>
         <v-card>
             <v-form v-model="valid" ref="form" lazy-validation>
-                <v-card-title>{{title}} <v-spacer></v-spacer><v-btn color="error" @click="hideEarmark" v-if="canHide">Hide</v-btn></v-card-title>
+                <v-card-title>{{title}}</v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert error :value="true">{{errorMessage}}</v-alert>
                 </template>
@@ -27,6 +27,7 @@
                             </v-flex>
                         </v-layout>
 
+                        <v-checkbox label="Closed" v-model="hidden" v-if="editing"></v-checkbox>
                         <small>*indicates required field</small>
                     </v-container>
                 </v-card-text>
@@ -45,7 +46,7 @@
     import client from '../../api/client';
     import {actions} from '../../store/wallets/earmarksStore';
     import {rules} from '../validation';
-    import {VForm} from 'vuetify';
+    import {VForm, VCheckbox} from 'vuetify';
     import DatePickerField from '../util/DatePickerField.vue';
     import isBefore from 'date-fns/is_before';
 
@@ -59,6 +60,7 @@
                 savingsEndDate: null,
                 dialog: false,
                 errorMessage: null,
+                hidden: false,
 
                 valid: true,
 
@@ -133,10 +135,6 @@
                     }
                 }
             },
-            hideEarmark() {
-                this.hidden = true;
-                this.submit();
-            },
             syncFromEarmark(newEarmark) {
                 if (newEarmark) {
                     this.name = newEarmark.name;
@@ -158,6 +156,7 @@
         components: {
             VForm,
             DatePickerField,
+            VCheckbox,
         },
     };
 </script>

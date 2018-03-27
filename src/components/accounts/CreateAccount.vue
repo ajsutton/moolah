@@ -5,7 +5,7 @@
         </v-btn>
         <v-card>
             <v-form v-model="valid" ref="form" lazy-validation>
-                <v-card-title>{{title}} <v-spacer></v-spacer><v-btn color="error" @click="hideAccount" v-if="canHide">Hide</v-btn></v-card-title>
+                <v-card-title>{{title}}</v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert error :value="true">{{errorMessage}}</v-alert>
                 </template>
@@ -20,12 +20,11 @@
                                 :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}, {text: 'Earmarked Funds', value: 'earmark'}]"
                         ></v-select>
 
-                        <v-checkbox label="Hide account" v-model="hidden" v-if="editing"></v-checkbox>
+                        <v-checkbox label="Closed" v-model="hidden" v-if="editing"></v-checkbox>
                         <small>*indicates required field</small>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
-
                     <v-spacer></v-spacer>
                     <v-btn class="blue--text darken-1" flat @click.native="dialog = false">Close</v-btn>
                     <v-btn class="blue--text darken-1" flat @click.native="submit">{{action}}</v-btn>
@@ -76,7 +75,10 @@
                 return !!this.account;
             },
             canHide() {
-                return this.editing && this.account.balance === 0;
+                return this.editing && this.account.balance === 0 && !this.hidden;
+            },
+            canShow() {
+                return this.editing && this.hidden;
             }
         },
 
@@ -116,10 +118,6 @@
                         this.errorMessage = error.message || error;
                     }
                 }
-            },
-            hideAccount() {
-                this.hidden = true;
-                this.submit();
             },
             syncFromAccount(newAccount) {
                 if (newAccount) {

@@ -4,7 +4,7 @@
             <v-list-tile-content>{{title}}</v-list-tile-content>
             <v-list-tile-action>
                 <div>
-                    <v-btn icon @click.prevent="showHidden = !showHidden" title="Show hidden" class="ma-0">
+                    <v-btn icon @click.prevent="showHidden = !showHidden" class="ma-0" v-if="hasHiddenWallets">
                         <v-icon v-if="showHidden">visibility</v-icon>
                         <v-icon v-else>visibility_off</v-icon>
                     </v-btn>
@@ -32,6 +32,8 @@
     import MonetaryAmount from '../util/MonetaryAmount';
     import WalletListItem from './WalletListItem.vue';
     import {VSubheader, VDivider, VList} from 'vuetify';
+
+    const hiddenFilter = wallet => !wallet.hidden || wallet.balance !== 0;
 
     export default {
         props: {
@@ -63,7 +65,10 @@
         },
         computed: {
             visibleWallets() {
-                return this.showHidden ? this.accounts : this.accounts.filter(wallet => !wallet.hidden || wallet.balance !== 0);
+                return this.showHidden ? this.accounts : this.accounts.filter(hiddenFilter);
+            },
+            hasHiddenWallets() {
+                return !this.accounts.every(hiddenFilter)
             },
         },
         components: {
