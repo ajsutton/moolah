@@ -20,7 +20,7 @@
                                 :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}, {text: 'Earmarked Funds', value: 'earmark'}]"
                         ></v-select>
 
-                        <v-checkbox label="Closed" v-model="hidden" v-if="editing"></v-checkbox>
+                        <v-checkbox label="Closed" v-model="hidden" v-if="canHide || hidden"></v-checkbox>
                         <small>*indicates required field</small>
                     </v-container>
                 </v-card-text>
@@ -75,11 +75,8 @@
                 return !!this.account;
             },
             canHide() {
-                return this.editing && this.account.balance === 0 && !this.hidden;
+                return this.editing && this.account.balance === 0;
             },
-            canShow() {
-                return this.editing && this.hidden;
-            }
         },
 
         created() {

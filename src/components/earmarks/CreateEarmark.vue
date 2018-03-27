@@ -27,7 +27,7 @@
                             </v-flex>
                         </v-layout>
 
-                        <v-checkbox label="Closed" v-model="hidden" v-if="editing"></v-checkbox>
+                        <v-checkbox label="Closed" v-model="hidden" v-if="canHide"></v-checkbox>
                         <small>*indicates required field</small>
                     </v-container>
                 </v-card-text>
