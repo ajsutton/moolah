@@ -17,7 +17,7 @@
                                 label="Account Type"
                                 required
                                 v-model="type"
-                                :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}, {text: 'Earmarked Funds', value: 'earmark'}]"
+                                :items="[{text: 'Bank Account', value: 'bank'}, {text: 'Credit Card', value: 'cc'}, {text: 'Asset', value: 'asset'}]"
                         ></v-select>
 
                         <v-checkbox label="Closed" v-model="hidden" v-if="canHide"></v-checkbox>
