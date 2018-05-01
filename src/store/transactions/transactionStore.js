@@ -68,7 +68,7 @@ const ERROR = "error";
 export const loadingStates = { IDLE, LOADING, ERROR }
 
 function isSingleAccount(state) {
-    return state && state.searchOptions && (state.searchOptions.account === undefined || state.searchOptions.account === null);
+    return state && state.searchOptions && state.searchOptions.account !== undefined && state.searchOptions.account !== null;
 }
 
 export default {
@@ -117,7 +117,7 @@ export default {
                 ensureAllFieldsPresent(transaction);
                 transactionsById[transaction.id] = transaction;
             });
-            updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance, isSingleAccount(transactionsResponse));
+            updateBalance(transactionsResponse.transactions, undefined, transactionsResponse.priorBalance, !isSingleAccount(transactionsResponse));
             state.transactions = transactionsResponse.transactions;
             state.priorBalance = transactionsResponse.priorBalance;
             state.searchOptions = transactionsResponse.searchOptions;
