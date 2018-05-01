@@ -1,6 +1,6 @@
-export function transactionTitle(transaction, getAccountName) {
+export function transactionTitle(transaction, getAccountName, getEarmarkName) {
     if (!transaction.accountId && transaction.earmark) {
-        return 'Earmark funds';
+        return 'Earmark funds for ' + getEarmarkName(transaction.earmark);
     } else if (transaction.type === 'openingBalance') {
         return 'Opening balance';
     } else if (transaction.type === 'transfer') {

@@ -47,7 +47,7 @@
         },
         computed: {
             transactionTitle() {
-                return transactionTitle(this.transaction, this.accountName);
+                return transactionTitle(this.transaction, this.accountName, this.earmarkName);
             },
             categoryName() {
                 return this.transaction.categoryId ? this.getCategoryName(this.transaction.categoryId) : '\xa0';
@@ -73,6 +73,7 @@
             ...mapGetters(['selectedTransaction']),
             ...mapGetters('categories', ['getCategoryName']),
             ...mapGetters('accounts', ['accountName']),
+            ...mapGetters('earmarks', ['earmarkName']),
         },
 
         methods: {
