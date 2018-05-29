@@ -130,6 +130,10 @@ export default {
         return json(`/api/earmarks/${earmarkId}/budget/`);
     },
 
+    async setEarmarkBudget(earmarkId, categoryId, amount) {
+        return json(`/api/earmarks/${earmarkId}/budget/${categoryId}/`, {method: 'PUT', body: JSON.stringify({amount: amount})});
+    },
+
     async userProfile() {
         return json('/api/auth/');
     },

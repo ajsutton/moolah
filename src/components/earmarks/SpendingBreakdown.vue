@@ -20,7 +20,13 @@
                         </td>
                         <td class="text-xs-right">
                             <monetary-amount :value="category.budgetSubtotal" v-if="category.total"></monetary-amount>
-                            <monetary-amount :value="category.budget" v-if="!category.total && (category.budget !== 0 || category.balance !== 0)"></monetary-amount>
+                            <v-edit-dialog large lazy persistent 
+                                    v-if="!category.total && (category.budget !== 0 || category.balance !== 0)" 
+                                    return-value.sync="getBudgetEditValue(category.id)" 
+                                    @update:returnValue="val => save(category.id, val)">
+                                <monetary-amount :value="category.budget"></monetary-amount>
+                                <v-text-field slot="input" class="input" name="amount" label="Budget" :value="getBudgetEditValue(category.id)" @input="val => updateBudget(category.id, val)" prefix="$" :rules="rules.amount"></v-text-field>
+                            </v-edit-dialog>
                         </td>
                         <td class="text-xs-right">
                             <monetary-amount :value="category.budgetSubtotal + category.subtotal" v-if="category.total"></monetary-amount>
@@ -52,6 +58,7 @@
     import {buildCategoryBalanceTree} from './categoryBalances';
     import PieChart from '../charts/PieChart.vue';
     import debounce from 'debounce';
+    import {rules} from '../validation.js';
 
     export default {
         props: {
@@ -63,6 +70,7 @@
         data() {
             return {
                 categoryData: {},
+                rules,
             };
         },
         computed: {
@@ -110,17 +118,41 @@
         methods: {
             async load() {
                 const [categoryBalanceById, categoryBudgetById] = await Promise.all([client.categoryBalances({earmark: this.earmark.id, transactionType: 'expense'}), client.earmarkBudget(this.earmark.id)]);
-                this.categoryData = {};
-                Object.entries(categoryBalanceById).forEach(([categoryId, balance]) => this.categoryData[categoryId] = {balance: balance, budget: 0});
+                const categoryData = {};
+                Object.entries(categoryBalanceById).forEach(([categoryId, balance]) => categoryData[categoryId] = {balance: balance, budget: 0});
                 Object.entries(categoryBudgetById).forEach(([categoryId, budget]) => {
-                    const entry = this.categoryData[categoryId];
+                    const entry = categoryData[categoryId];
                     if (entry) {
                         entry.budget = budget;
                     } else {
-                        this.categoryData[categoryId] = {balance: 0, budget};
+                        categoryData[categoryId] = {balance: 0, budget};
                     }
                 });
+                this.categoryData = categoryData;
             },
+            updateBudget(categoryId, value) {
+                this.categoryData[categoryId].editValue = Math.round(parseFloat(value) * 100);
+            },
+            getBudgetEditValue(categoryId) {
+                const category = this.categoryData[categoryId];
+                if (category.editValue !== undefined) {
+                    return category.editValue;
+                } else {
+                    return (category.budget / 100).toFixed(2);
+                }
+            },
+            async save(categoryId, newBudget) {
+                const category = this.categoryData[categoryId];
+                const originalBudget = category.budget;
+                category.budget = Math.round(parseFloat(newBudget) * 100);
+                category.editValue = undefined;
+                try {
+                    await client.setEarmarkBudget(this.earmark.id, categoryId, category.budget);
+                } catch (error) {
+                    console.error(error);
+                    category.budget = originalBudget;
+                }
+            }
         },
         components: {
             MonetaryAmount,
