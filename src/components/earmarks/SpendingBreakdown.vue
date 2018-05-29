@@ -94,7 +94,7 @@
                     }
                     category.children.forEach(child => addCategory(child, parentRequired ? level + 1 : level, parentRequired ? '' : category.name + ' - '));
                     if (category.children.length > 1 && !skipTotal) {
-                        result.push({name: 'Total ' + category.name, subtotal: category.subtotal, balance: 0, budget: 0, budgetSubtotal: 0, level: level, total: true});
+                        result.push({name: 'Total ' + category.name, subtotal: category.subtotal, balance: 0, budget: 0, budgetSubtotal: category.budgetSubtotal, level: level, total: true});
                     }
                 };
                 this.categories.forEach(category => addCategory(category, 0, '', this.categories.length === 1));
