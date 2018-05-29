@@ -3,6 +3,12 @@
         <v-layout wrap>
             <v-flex md6>
                 <table class="table spending-breakdown mx-auto">
+                    <thead>
+                        <th></th>
+                        <th class="text-xs-right">Actual</th>
+                        <th class="text-xs-right">Budget</th>
+                        <th class="text-xs-right">Remaining</th>
+                    </thead>
                     <tbody>
                     <tr v-for="category in flattenedCategories" :key="category.id" :class="{total: category.total}">
                         <td>
@@ -10,7 +16,15 @@
                         </td>
                         <td class="text-xs-right">
                             <monetary-amount :value="category.subtotal" v-if="category.total"></monetary-amount>
-                            <monetary-amount :value="category.balance" v-if="!category.total && category.balance !== 0"></monetary-amount>
+                            <monetary-amount :value="category.balance" v-if="!category.total && (category.budget !== 0 || category.balance !== 0)"></monetary-amount>
+                        </td>
+                        <td class="text-xs-right">
+                            <monetary-amount :value="category.budgetSubtotal" v-if="category.total"></monetary-amount>
+                            <monetary-amount :value="category.budget" v-if="!category.total && (category.budget !== 0 || category.balance !== 0)"></monetary-amount>
+                        </td>
+                        <td class="text-xs-right">
+                            <monetary-amount :value="category.budgetSubtotal + category.subtotal" v-if="category.total"></monetary-amount>
+                            <monetary-amount :value="category.budget + category.balance" v-if="!category.total && (category.budget !== 0 || category.balance !== 0)"></monetary-amount>
                         </td>
                     </tr>
                     </tbody>
@@ -48,17 +62,17 @@
         },
         data() {
             return {
-                categoryBalanceById: {},
+                categoryData: {},
             };
         },
         computed: {
             categories() {
-                return buildCategoryBalanceTree(this.categoryBalanceById, this.rawCategories);
+                return buildCategoryBalanceTree(this.categoryData, this.rawCategories);
             },
             flattenedCategories() {
                 const result = [];
                 const addCategory = (category, level, namePrefix, skipTotal = false) => {
-                    const parentRequired = category.balance !== 0 || category.children.length > 1;
+                    const parentRequired = category.balance !== 0 || category.budget !== 0 || category.children.length > 1;
                     category.level = level;
                     category.name = namePrefix + category.name;
                     if (parentRequired) {
@@ -66,7 +80,7 @@
                     }
                     category.children.forEach(child => addCategory(child, parentRequired ? level + 1 : level, parentRequired ? '' : category.name + ' - '));
                     if (category.children.length > 1 && !skipTotal) {
-                        result.push({name: 'Total ' + category.name, subtotal: category.subtotal, balance: 0, level: level, total: true});
+                        result.push({name: 'Total ' + category.name, subtotal: category.subtotal, balance: 0, budget: 0, budgetSubtotal: 0, level: level, total: true});
                     }
                 };
                 this.categories.forEach(category => addCategory(category, 0, '', this.categories.length === 1));
@@ -74,8 +88,8 @@
             },
 
             pieChartData() {
-                return Object.entries(this.categoryBalanceById)
-                    .map(([categoryId, balance]) => [this.categoriesById[categoryId].name, balance]);
+                return Object.entries(this.categoryData)
+                    .map(([categoryId, entry]) => [this.categoriesById[categoryId].name, entry.balance]);
             },
 
             ...mapState('categories', {rawCategories: 'categories', categoriesById: 'categoriesById'}),
@@ -95,7 +109,17 @@
         },
         methods: {
             async load() {
-                this.categoryBalanceById = await client.categoryBalances({earmark: this.earmark.id, transactionType: 'expense'});
+                const [categoryBalanceById, categoryBudgetById] = await Promise.all([client.categoryBalances({earmark: this.earmark.id, transactionType: 'expense'}), client.earmarkBudget(this.earmark.id)]);
+                this.categoryData = {};
+                Object.entries(categoryBalanceById).forEach(([categoryId, balance]) => this.categoryData[categoryId] = {balance: balance, budget: 0});
+                Object.entries(categoryBudgetById).forEach(([categoryId, budget]) => {
+                    const entry = this.categoryData[categoryId];
+                    if (entry) {
+                        entry.budget = budget;
+                    } else {
+                        this.categoryData[categoryId] = {balance: 0, budget};
+                    }
+                });
             },
         },
         components: {

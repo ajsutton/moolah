@@ -126,6 +126,10 @@ export default {
         return json(`/api/analysis/categoryBalances/?${asQueryParams(searchOptions)}`);
     },
 
+    async earmarkBudget(earmarkId) {
+        return json(`/api/earmarks/${earmarkId}/budget/`);
+    },
+
     async userProfile() {
         return json('/api/auth/');
     },
