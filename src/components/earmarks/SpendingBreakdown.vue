@@ -40,6 +40,12 @@
                         <th class="text-xs-right">
                             <monetary-amount :value="earmark.spent"></monetary-amount>
                         </th>
+                        <th class="text-xs-right">
+                            <monetary-amount :value="totalBudget"></monetary-amount>
+                        </th>
+                        <th class="text-xs-right">
+                            <monetary-amount :value="totalBudget + earmark.spent"></monetary-amount>
+                        </th>
                     </tr>
                     </tfoot>
                 </table>
@@ -93,6 +99,10 @@
                 };
                 this.categories.forEach(category => addCategory(category, 0, '', this.categories.length === 1));
                 return result;
+            },
+
+            totalBudget() {
+                return this.categories.reduce((total, category) => total + category.budgetSubtotal, 0);
             },
 
             pieChartData() {
