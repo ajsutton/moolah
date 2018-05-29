@@ -24,7 +24,10 @@
                                     v-if="!category.total && (category.budget !== 0 || category.balance !== 0)" 
                                     return-value.sync="getBudgetEditValue(category.id)" 
                                     @update:returnValue="val => save(category.id, val)">
-                                <monetary-amount :value="category.budget"></monetary-amount>
+                                <span>
+                                    <monetary-amount :value="category.budget"></monetary-amount>
+                                    <v-icon small class="edit-icon">edit</v-icon>
+                                </span>
                                 <v-text-field slot="input" class="input" name="amount" label="Budget" :value="getBudgetEditValue(category.id)" @input="val => updateBudget(category.id, val)" prefix="$" :rules="rules.amount"></v-text-field>
                             </v-edit-dialog>
                         </td>
@@ -186,6 +189,16 @@
 
         .total {
             font-style: italic !important;
+        }
+
+        .edit-icon {
+            display: none;
+            position: absolute;
+            margin-left: 2px;
+        }
+
+        td:hover .edit-icon {
+            display: inline;
         }
     }
 </style>
