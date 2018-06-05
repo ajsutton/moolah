@@ -9,7 +9,8 @@
             autocomplete
             :multiple="multiple"
             :chips="multiple"
-            clearable
+            :clearable="!required"
+            :required="required"
     ></v-select>
 </template>
 
@@ -31,6 +32,10 @@
                 type: Array,
                 'default': () => [],
             },
+            required: {
+                type: Boolean,
+                default: false
+            }
         },
         computed: {
             valueProxy: {

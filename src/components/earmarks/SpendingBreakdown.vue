@@ -4,7 +4,9 @@
             <v-flex md6>
                 <table class="table spending-breakdown mx-auto">
                     <thead>
-                        <th></th>
+                        <th class="text-xs-left">
+                            <add-line-item :earmark="earmark" :excludeCategories="existingCategoryIds" @add="addCategory"></add-line-item>
+                        </th>
                         <th class="text-xs-right">Actual</th>
                         <th class="text-xs-right">Budget</th>
                         <th class="text-xs-right">Remaining</th>
@@ -74,6 +76,9 @@
     import PieChart from '../charts/PieChart.vue';
     import debounce from 'debounce';
     import {rules} from '../validation.js';
+    import AddLineItem from './AddLineItem.vue';
+    import Vue from 'vue';
+    
 
     export default {
         props: {
@@ -108,6 +113,9 @@
                 };
                 this.categories.forEach(category => addCategory(category, 0, '', this.categories.length === 1));
                 return result;
+            },
+            existingCategoryIds() {
+                return Object.keys(this.categoryData).map(categoryId => this.categoriesById[categoryId]);
             },
 
             totalBudget() {
@@ -164,6 +172,9 @@
                     return (category.budget / 100).toFixed(2);
                 }
             },
+            addCategory(categoryId, budget) {
+                Vue.set(this.categoryData, categoryId, {balance: 0, budget});
+            },
             async save(categoryId, newBudget) {
                 const category = this.categoryData[categoryId];
                 const originalBudget = category.budget;
@@ -180,6 +191,7 @@
         components: {
             MonetaryAmount,
             PieChart,
+            AddLineItem,
         },
     };
 </script>
