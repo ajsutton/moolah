@@ -108,7 +108,9 @@
             this.expenseBreakdown = await client.expenseBreakdown(new Date().getDate(), this.afterDate);
         },
         beforeDestroy() {
-            this.$chart = this.$chart.destroy();
+            if (this.$chart) {
+                this.$chart = this.$chart.destroy();
+            }
         },
         components: {
             GraphPanel,
