@@ -36,6 +36,12 @@
                             <monetary-amount :value="category.budget + category.balance" v-if="!category.total && (category.budget !== 0 || category.balance !== 0)"></monetary-amount>
                         </td>
                     </tr>
+                    <tr v-if="unallocatedBudget !== 0">
+                        <td class="text-xs-left">Unallocated</td>
+                        <td class="text-xs-right">-</td>
+                        <td class="text-xs-right"><monetary-amount :value="unallocatedBudget"></monetary-amount></td>
+                        <td class="text-xs-right"><monetary-amount :value="unallocatedBudget"></monetary-amount></td>
+                    </tr>
                     </tbody>
                     <tfoot>
                     <tr>
@@ -44,10 +50,10 @@
                             <monetary-amount :value="earmark.spent"></monetary-amount>
                         </th>
                         <th class="text-xs-right">
-                            <monetary-amount :value="totalBudget"></monetary-amount>
+                            <monetary-amount :value="totalBudget + unallocatedBudget"></monetary-amount>
                         </th>
                         <th class="text-xs-right">
-                            <monetary-amount :value="totalBudget + earmark.spent"></monetary-amount>
+                            <monetary-amount :value="totalBudget + unallocatedBudget + earmark.spent"></monetary-amount>
                         </th>
                     </tr>
                     </tfoot>
@@ -106,6 +112,10 @@
 
             totalBudget() {
                 return this.categories.reduce((total, category) => total + category.budgetSubtotal, 0);
+            },
+
+            unallocatedBudget() {
+                return this.earmark.savingsTarget ? this.earmark.savingsTarget - this.totalBudget : 0;
             },
 
             pieChartData() {
