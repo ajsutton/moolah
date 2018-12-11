@@ -198,6 +198,10 @@
 
 <style lang="scss">
     .spending-breakdown {
+        .v-menu__activator a {
+            width: 100%;
+        }
+        
         tfoot td, tfoot th {
             padding: 0 24px;
             color: rgba(0, 0, 0, .54);
