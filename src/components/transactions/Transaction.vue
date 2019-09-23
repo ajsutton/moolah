@@ -26,8 +26,8 @@
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
     import {formatDate as formatApiDate} from '../../api/apiFormats';
     import formatDate from 'date-fns/format';
-    import parseDate from 'date-fns/parse';
-    import isBefore from 'date-fns/is_before';
+    import parseDate from 'date-fns/parseISO';
+    import isBefore from 'date-fns/isBefore';
     import {transactionTitle} from './transactionTitle';
 
 
@@ -59,13 +59,13 @@
                 return parseDate(this.transaction.date);
             },
             dateDay() {
-                return formatDate(this.parsedDate, 'DD');
+                return formatDate(this.parsedDate, 'dd');
             },
             dateMonth() {
                 return formatDate(this.parsedDate, 'MMM');
             },
             dateYear() {
-                return formatDate(this.parsedDate, 'YYYY');
+                return formatDate(this.parsedDate, 'yyyy');
             },
             due() {
                 return this.highlightOverdue && isBefore(this.parsedDate, Date.now());

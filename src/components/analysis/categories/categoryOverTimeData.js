@@ -59,5 +59,5 @@ function calculateMonthTotals(rootLevelCategories, orderedMonths) {
 }
 
 function labelForMonth(month) {
-    return formatDate(monthAsIsoDate(month), 'MMM YY');
+    return formatDate(monthAsIsoDate(month), 'MMM yy');
 }

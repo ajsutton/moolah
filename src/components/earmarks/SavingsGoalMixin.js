@@ -1,7 +1,7 @@
 import {VProgressCircular} from 'vuetify';
-import differenceInCalendarDays from 'date-fns/difference_in_calendar_days';
-import distanceInWords from 'date-fns/distance_in_words';
-import startOfToday from 'date-fns/start_of_today';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import distanceInWords from 'date-fns/formatDistance';
+import startOfToday from 'date-fns/startOfToday';
 
 export default {
     props: {

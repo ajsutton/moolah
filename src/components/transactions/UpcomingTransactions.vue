@@ -31,7 +31,7 @@
     import CreateAccount from '../accounts/CreateAccount.vue';
     import {actions as transactionActions} from '../../store/transactions/transactionStore';
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
-    import differenceInCalendarDays from 'date-fns/difference_in_calendar_days';
+    import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
     import AddTransactionMixin from '../util/AddTransactionMixin';
 
     export default {
@@ -57,7 +57,7 @@
             },
             transactionsToDisplay() {
                 return this.shortTerm
-                    ? this.transactions.filter(transaction => differenceInCalendarDays(transaction.date, new Date()) < 14)
+                    ? this.transactions.filter(transaction => differenceInCalendarDays(new Date(transaction.date), new Date()) < 14)
                     : this.transactions;
             },
             ...mapState('scheduledTransactions', ['transactions', 'loading']),

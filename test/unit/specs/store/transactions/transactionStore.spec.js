@@ -277,7 +277,7 @@ describe('transactionStore', function() {
                 initialTransactionProperties = {
                     payee: '',
                     amount: 0,
-                    date: format(new Date(), 'YYYY-MM-DD'),
+                    date: format(new Date(), 'yyyy-MM-dd'),
                     notes: '',
                     accountId: 'account-1',
                     type: 'expense',

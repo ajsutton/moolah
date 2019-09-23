@@ -232,10 +232,10 @@ export default {
         },
 
         async [actions.payTransaction]({commit, state, dispatch}, payload) {
+            const asyncOperations = [];
+            const transaction = findTransaction(state, payload.id);
+            const appliedTransaction = without(transaction, 'recurEvery', 'recurPeriod', 'balance', 'id');
             try {
-                const asyncOperations = [];
-                const transaction = findTransaction(state, payload.id);
-                const appliedTransaction = without(transaction, 'recurEvery', 'recurPeriod', 'balance', 'id');
                 accountBalanceAdjuster(dispatch, null, appliedTransaction);
                 asyncOperations.push(client.createTransaction(appliedTransaction));
                 if (transaction.recurPeriod === 'ONCE') {

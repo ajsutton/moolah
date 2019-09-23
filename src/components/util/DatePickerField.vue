@@ -30,8 +30,8 @@
 </template>
 
 <script>
-    import addDays from 'date-fns/add_days';
-    import parseDate from 'date-fns/parse';
+    import addDays from 'date-fns/addDays';
+    import parseDate from 'date-fns/parseISO';
     import {formatDate} from '../../api/apiFormats';
 
     export default {
@@ -106,11 +106,11 @@
             },
 
             incrementDate() {
-                this.$emit('input', formatDate(addDays(this.value, 1)));
+                this.$emit('input', formatDate(addDays(parseDate(this.value), 1)));
             },
 
             decrementDate() {
-                this.$emit('input', formatDate(addDays(this.value, -1)));
+                this.$emit('input', formatDate(addDays(parseDate(this.value), -1)));
             },
         },
     };

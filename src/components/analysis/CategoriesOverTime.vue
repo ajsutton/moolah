@@ -16,7 +16,7 @@
     import c3 from 'c3';
     import client from '../../api/client';
     import formatMoney from '../util/formatMoney';
-    import addMonths from 'date-fns/add_months';
+    import addMonths from 'date-fns/addMonths';
     import {formatDate} from '../../api/apiFormats';
     import debounce from 'debounce';
     import {mapGetters, mapState} from 'vuex';

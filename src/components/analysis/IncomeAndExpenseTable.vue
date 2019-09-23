@@ -55,11 +55,11 @@
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import client from '../../api/client';
     import {monthAsIsoDate} from '../../api/apiFormats';
-    import addMonths from 'date-fns/add_months';
-    import parseDate from 'date-fns/parse';
+    import addMonths from 'date-fns/addMonths';
+    import parseDate from 'date-fns/parseISO';
     import format from 'date-fns/format';
-    import getMonth from 'date-fns/get_month';
-    import differenceInCalendarMonths from 'date-fns/difference_in_calendar_months';
+    import getMonth from 'date-fns/getMonth';
+    import differenceInCalendarMonths from 'date-fns/differenceInCalendarMonths';
     import {VCheckbox} from 'vuetify';
 
     export default {
@@ -146,19 +146,19 @@
         filters: {
             monthName(value) {
                 const dayOfMonth = new Date().getDate();
-                const endDate = parseDate(monthAsIsoDate(value.month, dayOfMonth));
+                const endDate = monthAsIsoDate(value.month, dayOfMonth);
                 const startDate = addMonths(endDate, -1);
                 const startMonth = getMonth(startDate);
                 const endMonth = getMonth(endDate);
                 const includeYear = differenceInCalendarMonths(new Date(), endDate) >= 12;
                 const monthLabel = startMonth === endMonth ? format(startDate, 'MMM') : format(startDate, 'MMM') + '/' + format(endDate, 'MMM');
-                const yearLabel = includeYear ? ' ' + format(endDate, 'YYYY') : '';
+                const yearLabel = includeYear ? ' ' + format(endDate, 'yyyy') : '';
                 return monthLabel + yearLabel;
             },
             monthsAgo(value) {
                 const plural = value => value === 1 ? '' : 's';
                 const dayOfMonth = new Date().getDate();
-                const endDate = parseDate(monthAsIsoDate(value.month, dayOfMonth));
+                const endDate = monthAsIsoDate(value.month, dayOfMonth);
                 const startDate = addMonths(endDate, -1);
                 const monthsAgo = differenceInCalendarMonths(new Date(), endDate) + 1;
                 if (monthsAgo === 1) {

@@ -48,7 +48,7 @@
     import {rules} from '../validation';
     import {VForm, VCheckbox} from 'vuetify';
     import DatePickerField from '../util/DatePickerField.vue';
-    import isBefore from 'date-fns/is_before';
+    import isBefore from 'date-fns/isBefore';
 
     export default {
         props: ['earmark', 'dark'],
