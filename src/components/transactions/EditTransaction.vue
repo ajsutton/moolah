@@ -23,7 +23,7 @@
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
-        <v-text-field name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')" multiLine></v-text-field>
+        <v-textarea name="notes" label="Notes" v-model="notes" :rules="rules.notes" @blur="onBlur('notes')"></v-textarea>
 
         <wallet-selector v-if="scheduled && !isEarmarkAccount" label="Account" v-bind:value.sync="accountId" :wallets="accounts"></wallet-selector>
 
