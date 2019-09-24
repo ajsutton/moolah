@@ -1,27 +1,38 @@
+const CopyPlugin = require('copy-webpack-plugin');
+const path = require('path');
 module.exports = {
-  configureWebpack: {
-    resolve: {
-      alias: require('./aliases.config').webpack
-    }
-  },
-
-  css: {
-    sourceMap: true
-  },
-
-  devServer: {
-    proxy: {
-      '/api/': {
-        target: 'http://localhost:3000/',
-      }
+    configureWebpack: {
+        resolve: {
+            alias: require("./aliases.config").webpack
+        },
+        plugins: [
+            // copy htaccess file
+            new CopyPlugin([
+                {
+                    from: path.resolve(__dirname, ".htaccess"),
+                    to: ""
+                }
+            ])
+        ]
     },
-  },
 
-  pluginOptions: {
-    karma: {
-	  browsers: [ 'ChromeHeadless' ],
-	}
-  },
+    css: {
+        sourceMap: true
+    },
 
-  assetsDir: 'static'
-}
+    devServer: {
+        proxy: {
+            "/api/": {
+                target: "http://localhost:3000/"
+            }
+        }
+    },
+
+    pluginOptions: {
+        karma: {
+            browsers: ["ChromeHeadless"]
+        }
+    },
+
+    assetsDir: "static"
+};
