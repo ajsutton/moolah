@@ -9290,10 +9290,10 @@ vue@^2.3.3:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
 
-vuetify@1.1.10:
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.1.10.tgz#4a5c890f242e1cf84e318ccdf265a58928de76bb"
-  integrity sha512-yoo/2bWtQFwZ5ZNlAhjpkQCx9t26XOcGSOtmoCbjRIyjAoz88PQlZ3ejo9CLdiWmDJ8SyKYZJJbgHucAreYgNQ==
+vuetify@~1.1.0:
+  version "1.1.17"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.1.17.tgz#7c3f4eb0f7f0dbe6a918915bc820eb4ae05a73f1"
+  integrity sha512-/+uV/7BG0G8ijmtRdQyeUJzz82dZ2yjRSqMc/H9n50YbSUTa2zOScsbyTPJzz6FeQ7dX/atCIePk9Tv1D0CubA==
 
 vuex@^3.0.1:
   version "3.1.1"
