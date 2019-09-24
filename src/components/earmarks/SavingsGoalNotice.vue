@@ -100,9 +100,6 @@
     import {mapState, mapGetters, mapActions} from 'vuex';
     import MonetaryAmount from '../util/MonetaryAmount.vue';
     import {VProgressCircular} from 'vuetify';
-    import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
-    import distanceInWords from 'date-fns/formatDistance';
-    import startOfToday from 'date-fns/startOfToday';
     import SavingsGoalMixin from './SavingsGoalMixin';
     import {formatDate} from '../util/formatDate';
 

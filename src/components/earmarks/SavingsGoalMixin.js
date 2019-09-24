@@ -91,23 +91,23 @@ export default {
             return this.selectedAccount.savingsStartDate && differenceInCalendarDays(this.selectedAccount.savingsStartDate, startOfToday()) === 0;
         },
         daysElapsed() {
-            return distanceInWords(startOfToday(), this.selectedAccount.savingsStartDate);
+            return distanceInWords(startOfToday(), new Date(this.selectedAccount.savingsStartDate));
         },
         daysRemaining() {
-            return distanceInWords(startOfToday(), this.selectedAccount.savingsEndDate);
+            return distanceInWords(startOfToday(), new Date(this.selectedAccount.savingsEndDate));
         },
         dueToday() {
-            return this.selectedAccount.savingsEndDate && differenceInCalendarDays(this.selectedAccount.savingsEndDate, startOfToday()) === 0;
+            return this.selectedAccount.savingsEndDate && differenceInCalendarDays(new Date(this.selectedAccount.savingsEndDate), startOfToday()) === 0;
         },
         overdue() {
-            return this.selectedAccount.savingsEndDate && differenceInCalendarDays(this.selectedAccount.savingsEndDate, startOfToday()) < 0;
+            return this.selectedAccount.savingsEndDate && differenceInCalendarDays(new Date(this.selectedAccount.savingsEndDate), startOfToday()) < 0;
         },
         timePercent() {
             if (!this.hasTargetDates) {
                 return 0;
             }
-            const totalDays = differenceInCalendarDays(this.selectedAccount.savingsEndDate, this.selectedAccount.savingsStartDate);
-            const elapsedDays = differenceInCalendarDays(new Date(), this.selectedAccount.savingsStartDate);
+            const totalDays = differenceInCalendarDays(new Date(this.selectedAccount.savingsEndDate), new Date(this.selectedAccount.savingsStartDate));
+            const elapsedDays = differenceInCalendarDays(new Date(), new Date(this.selectedAccount.savingsStartDate));
             return Math.max(0, elapsedDays / totalDays * 100);
         },
         timeColor() {

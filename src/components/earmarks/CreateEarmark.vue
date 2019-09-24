@@ -67,7 +67,7 @@
                 rules: {
                     name: rules.walletName,
                     endDate: [value => {
-                        if (this.savingsStartDate && isBefore(value, this.savingsStartDate)) {
+                        if (this.savingsStartDate && isBefore(new Date(value), new Date(this.savingsStartDate))) {
                             return 'Must be after start date';
                         }
                         return true;
