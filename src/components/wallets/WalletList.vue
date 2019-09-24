@@ -29,9 +29,9 @@
 
 <script>
     import {mapState, mapGetters, mapActions} from 'vuex';
-    import MonetaryAmount from '../util/MonetaryAmount';
+    import MonetaryAmount from '../util/MonetaryAmount.vue';
     import WalletListItem from './WalletListItem.vue';
-    import {VSubheader, VDivider, VList} from 'vuetify';
+    import {VSubheader, VDivider} from 'vuetify';
 
     const hiddenFilter = wallet => !wallet.hidden || wallet.balance !== 0;
 
@@ -72,7 +72,6 @@
             },
         },
         components: {
-            VList,
             VDivider,
             MonetaryAmount,
             WalletListItem,

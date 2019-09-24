@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import MonetaryAmount from '../util/MonetaryAmount';
+    import MonetaryAmount from '../util/MonetaryAmount.vue';
     import iconForType from './walletIcon';
 
     export default {
