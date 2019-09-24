@@ -1,17 +1,16 @@
 <template>
-    <v-select
+    <v-autocomplete
             v-bind:items="flattenedCategories"
             item-text="name"
             item-value="id"
             v-model="valueProxy"
             :label="label"
             no-data-text="No matching categories"
-            autocomplete
             :multiple="multiple"
             :chips="multiple"
             :clearable="!required"
             :required="required"
-    ></v-select>
+    ></v-autocomplete>
 </template>
 
 <script>
