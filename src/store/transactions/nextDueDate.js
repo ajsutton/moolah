@@ -2,7 +2,6 @@ import addDays from 'date-fns/addDays';
 import addWeeks from 'date-fns/addWeeks';
 import addMonths from 'date-fns/addMonths';
 import addYears from 'date-fns/addYears';
-import parseISO from 'date-fns/parseISO'
 import {formatDate} from '../../api/apiFormats';
 
 const dateStepFunction = period => {
@@ -21,5 +20,5 @@ const dateStepFunction = period => {
 };
 
 export default function nextDueDate(transaction) {
-    return formatDate(dateStepFunction(transaction.recurPeriod)(parseISO(transaction.date), transaction.recurEvery))
+    return formatDate(dateStepFunction(transaction.recurPeriod)(new Date(transaction.date), transaction.recurEvery))
 }

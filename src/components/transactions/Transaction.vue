@@ -26,7 +26,6 @@
     import {actions as stateActions, mutations as stateMutations} from '../../store/store';
     import {formatDate as formatApiDate} from '../../api/apiFormats';
     import formatDate from 'date-fns/format';
-    import parseDate from 'date-fns/parseISO';
     import isBefore from 'date-fns/isBefore';
     import {transactionTitle} from './transactionTitle';
 
@@ -56,7 +55,7 @@
                 return this.transaction === this.selectedTransaction;
             },
             parsedDate() {
-                return parseDate(this.transaction.date);
+                return new Date(this.transaction.date);
             },
             dateDay() {
                 return formatDate(this.parsedDate, 'dd');

@@ -31,7 +31,6 @@
 
 <script>
     import addDays from 'date-fns/addDays';
-    import parseDate from 'date-fns/parseISO';
     import {formatDate} from '../../api/apiFormats';
 
     export default {
@@ -69,7 +68,7 @@
                         this.invalidText = null;
                         this.onInput(undefined);
                     } else {
-                        const parsedValue = parseDate(value);
+                        const parsedValue = new Date(value);
                         if (!isNaN(parsedValue) && formatDate(parsedValue) === value) {
                             this.invalidText = null;
                             this.onInput(value);
@@ -106,11 +105,11 @@
             },
 
             incrementDate() {
-                this.$emit('input', formatDate(addDays(parseDate(this.value), 1)));
+                this.$emit('input', formatDate(addDays(new Date(this.value), 1)));
             },
 
             decrementDate() {
-                this.$emit('input', formatDate(addDays(parseDate(this.value), -1)));
+                this.$emit('input', formatDate(addDays(new Date(this.value), -1)));
             },
         },
     };
