@@ -22,7 +22,7 @@ function extendUntil(balances, until) {
     }
     const lastBalance = balances[balances.length - 1];
     if (lastBalance.date !== until) {
-        return Array.concat([], balances, [{date: until, balance: lastBalance.balance, availableFunds: lastBalance.availableFunds}]);
+        return [].concat(balances, [{date: until, balance: lastBalance.balance, availableFunds: lastBalance.availableFunds}]);
     }
     return balances;
 }
@@ -33,7 +33,7 @@ function extendBackTo(forecastBalances, balances, startDate) {
     }
     if (forecastBalances[0].date !== startDate) {
         const lastBalance = balances[balances.length - 1];
-        return Array.concat([{date: startDate, balance: lastBalance.balance, availableFunds: lastBalance.availableFunds}], forecastBalances);
+        return [].concat([{date: startDate, balance: lastBalance.balance, availableFunds: lastBalance.availableFunds}], forecastBalances);
     }
     return forecastBalances;
 }

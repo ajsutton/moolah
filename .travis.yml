@@ -3,6 +3,7 @@ node_js:
 - node
 addons:
   ssh_known_hosts: do2.symphonious.net
+  chrome: stable
 cache:
   yarn: true
 notifications:
