@@ -1,5 +1,5 @@
 <template>
-    <v-text-field :disabled="!editable" v-model="name" ref="nameField" :label="editable ? 'Category' : null" class="category-name"></v-text-field>
+    <v-text-field :disabled="!editable" v-model="name" ref="nameField" :label="editable ? 'Name' : null" class="category-name"></v-text-field>
 </template>
 
 <script>
