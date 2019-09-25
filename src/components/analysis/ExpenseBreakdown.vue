@@ -4,11 +4,15 @@
         <v-toolbar-items>
             <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
         </v-toolbar-items>
-        <v-breadcrumbs icons v-if="breadcrumbs.length > 1" slot="footer">
-            <v-icon slot="divider">chevron_right</v-icon>
-            <v-breadcrumbs-item v-for="item in breadcrumbs" :key="item.id" @click.native="rootCategoryId = item.id">
-                {{ item.name }}
-            </v-breadcrumbs-item>
+        <v-breadcrumbs icons v-if="breadcrumbs.length > 1" slot="footer" :items="breadcrumbs">
+            <template v-slot:divider>
+                <v-icon>mdi-chevron-right</v-icon>
+            </template>
+            <template v-slot:item="props">
+                <v-breadcrumbs-item  :key="props.item.id" @click.native="rootCategoryId = props.item.id">
+                    {{ props.item.name }}
+                </v-breadcrumbs-item>
+            </template>
         </v-breadcrumbs>
 
         <pie-chart :data="categories" slot="chart" @click="onGraphClick"></pie-chart>
