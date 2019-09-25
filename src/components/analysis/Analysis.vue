@@ -1,21 +1,21 @@
 <template>
     <v-container fluid class="analysis">
         <v-row>
-            <v-col cols="12">
+            <v-col :cols="12">
                 <net-worth-graph></net-worth-graph>
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="6">
+            <v-col :cols="12" :lg="6">
                 <upcoming-transactions :shortTerm="true"></upcoming-transactions>
                 <expense-breakdown></expense-breakdown>
             </v-col>
-            <v-col cols="6">
+            <v-col :cols="12" :lg="6">
                 <income-and-expense-table></income-and-expense-table>
             </v-col>
         </v-row>
         <v-row>
-            <v-col>
+            <v-col :cols="12">
                 <categories-over-time></categories-over-time>
             </v-col>
         </v-row>

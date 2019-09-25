@@ -10,7 +10,7 @@
       </v-container>
     </v-parallax>
     <v-container>
-      <v-row class="mb-3" fill-height>
+      <v-row fill-height>
         <feature-panel icon="account_balance" headline="Businessy">
           We've got a fancy looking icon and pretty pictures.<br>
           Why wouldn't you love us?
@@ -25,7 +25,7 @@
         </feature-panel>
       </v-row>
 
-      <v-row class="mb-5 login-buttons" align="center" justify="space-around">
+      <v-row class="login-buttons" align="center" justify="space-around">
         <v-col class="text-center">
           <a href="/api/googleauth"><img src="../../assets/auth/signin_google.png"></a>
         </v-col>
