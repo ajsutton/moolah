@@ -1,9 +1,9 @@
 <template>
     <v-card v-resize="handleResize">
-        <v-toolbar card class="white" prominent>
+        <v-app-bar flat class="white">
             <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
             <slot></slot>
-        </v-toolbar>
+        </v-app-bar>
         <slot name="chart">
             <div ref="chart" class="chart"></div>
         </slot>

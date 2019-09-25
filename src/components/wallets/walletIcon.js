@@ -4,12 +4,12 @@ export default function iconForType(type) {
     }
     switch (type) {
         case 'cc':
-            return 'credit_card';
+            return 'mdi-credit-card-outline';
         case 'asset':
-            return 'home';
+            return 'mdi-home';
         case 'earmark':
-            return 'bookmark_outline';
+            return 'mdi-bookmark-outline';
         default:
-            return 'account_balance';
+            return 'mdi-bank';
     }
 }

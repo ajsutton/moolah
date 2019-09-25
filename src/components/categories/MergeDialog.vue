@@ -1,6 +1,8 @@
 <template>
     <v-dialog v-model="open" width="50%">
-        <v-btn flat class="red--text" slot="activator">Delete&hellip;</v-btn>
+        <template v-slot:activator="{ on }">
+            <v-btn text class="red--text" v-on="on">Delete&hellip;</v-btn>
+        </template>
         <v-card>
             <v-card-title>
                 <span class="headline">Delete Category {{categoryName}}</span>
@@ -10,8 +12,8 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="primary--text" flat @click.native="open = false">Cancel</v-btn>
-                <v-btn class="red--text" flat @click.native="doDelete">Delete</v-btn>
+                <v-btn class="primary--text" text @click.native="open = false">Cancel</v-btn>
+                <v-btn class="red--text" text @click.native="doDelete">Delete</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

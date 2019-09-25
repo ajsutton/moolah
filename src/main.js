@@ -3,11 +3,11 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-import {useVuetify} from './vuetify';
+import vuetify from './vuetify';
 
-useVuetify();
 
 new Vue({
+    vuetify,
     el: '#app',
     router,
     render: h => h(App),

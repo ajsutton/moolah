@@ -5,7 +5,7 @@
                 <div class="headline full-width"><category-name :category="category" :editable="realCategory" ref="categoryName"></category-name></div>
             </v-card-title>
             <v-card-actions class="pt-0">
-                <v-btn flat @click.native.stop="addCategory" class="primary--text">Add category</v-btn>
+                <v-btn text @click.native.stop="addCategory" class="primary--text">Add category</v-btn>
                 <merge-dialog :category="category" v-if="realCategory && category.children.length === 0" @selectCategory="selectCategory"></merge-dialog>
             </v-card-actions>
             <template v-if="category.children.length > 0">

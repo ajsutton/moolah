@@ -1,16 +1,16 @@
 <template>
-    <v-list-tile :class="mainClass" @click.native.prevent="selectCategory" draggable="true" 
+    <v-list-item :class="mainClass" @click.native.prevent="selectCategory" draggable="true" 
                  @dragstart="onDragStart" @dragend="onDragEnd" @dragover="onDragOver" @dragenter="onDragEnter" @dragleave="onDragLeave" @drop="onDrop">
-        <v-list-tile-content>
-            <v-list-tile-title>{{category.name}}</v-list-tile-title>
-        </v-list-tile-content>
-        <v-list-tile-action>
+        <v-list-item-content>
+            <v-list-item-title>{{category.name}}</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
             <v-badge left bottom overlay v-model="showBadge">
                 <span slot="badge" :v-model="false">{{category.children.length}}</span>
                 <v-icon>keyboard_arrow_right</v-icon>
             </v-badge>
-        </v-list-tile-action>
-    </v-list-tile>
+        </v-list-item-action>
+    </v-list-item>
 </template>
 <script>
     import {mapGetters, mapActions} from 'vuex';

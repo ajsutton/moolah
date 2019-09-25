@@ -1,51 +1,44 @@
 <template>
     <v-card class="income-expense-table" height="">
-        <v-toolbar card class="white" prominent>
+        <v-app-bar flat>
             <v-toolbar-title class="body-2 grey--text">Monthly Income and Expense</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-switch label="Earmarked funds" v-model="includeEarmarks" style="min-width: 13em; margin-top: 16px;"></v-switch>
             </v-toolbar-items>
-        </v-toolbar>
+        </v-app-bar>
         <v-data-table
                 v-bind:headers="headers"
                 :items="tableItems"
-                :pagination.sync="pagination"
-                :rows-per-page-items="[6, 12, 18, 24]"
-                rows-per-page-text="Months per page"
+                sort-by="end"
+                :descending="true"
                 :loading="loading"
+                :footer-props="footerProps"
         >
-            <template slot="headers" slot-scope="props">
-                <tr>
-                    <th v-for="header in props.headers" :key="header.text"
-                        :class="['column sortable', header.classes, pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-                        @click="changeSort(header.value)"
-                    >
-                        <v-icon>arrow_upward</v-icon>
-                        {{ header.text }}
-                    </th>
-                </tr>
-            </template>
-            <template slot="items" slot-scope="props">
-                <td>
-                    <v-layout row-lg column>
-                        <div>{{ props.item | monthsAgo}}</div>
-                        <v-spacer></v-spacer>
-                        <div class="grey--text">{{ props.item | monthName }}</div>
-                    </v-layout>
-                </td>
-                <td class="text-xs-right hidden-md-and-down">
-                    <monetary-amount :value="props.item.income"></monetary-amount>
-                </td>
-                <td class="text-xs-right hidden-md-and-down">
-                    <monetary-amount :value="props.item.expense"></monetary-amount>
-                </td>
-                <td class="text-xs-right">
-                    <monetary-amount :value="props.item.profit"></monetary-amount>
-                </td>
-                <td class="text-xs-right hidden-sm-and-down">
-                    <monetary-amount :value="props.item.cumulativeSavings"></monetary-amount>
-                </td>
+            <template v-slot:body="{ items }">
+                <tbody>
+                    <tr v-for="item in items" :key="item.name">
+                        <td>
+                            <v-layout row-lg column>
+                                <div>{{ item | monthsAgo}}</div>
+                                <v-spacer></v-spacer>
+                                <div class="grey--text">{{ item | monthName }}</div>
+                            </v-layout>
+                        </td>
+                        <td class="text-xs-right hidden-md-and-down">
+                            <monetary-amount :value="item.income"></monetary-amount>
+                        </td>
+                        <td class="text-xs-right hidden-md-and-down">
+                            <monetary-amount :value="item.expense"></monetary-amount>
+                        </td>
+                        <td class="text-xs-right">
+                            <monetary-amount :value="item.profit"></monetary-amount>
+                        </td>
+                        <td class="text-xs-right hidden-sm-and-down">
+                            <monetary-amount :value="item.cumulativeSavings"></monetary-amount>
+                        </td>
+                    </tr>
+                </tbody>
             </template>
         </v-data-table>
     </v-card>
@@ -99,6 +92,10 @@
                         classes: 'hidden-sm-and-down',
                     },
                 ],
+                footerProps: {
+                    "items-per-page-text": 'Months per page',
+                    "items-per-page-options": [6, 12, 18, 24],
+                },
                 breakdown: [],
                 pagination: {
                     sortBy: 'end',

@@ -1,24 +1,26 @@
 <template>
     <v-card class="upcoming-transactions">
-        <v-toolbar card class="white" prominent>
+        <v-app-bar flat class="white">
             <v-toolbar-title class="body-2 grey--text">Upcoming Transactions</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon
                    @click.native.stop="addEarmark" :disabled="noEarmarks">
-                <v-icon>bookmark_outline</v-icon>
+                <v-icon>mdi-bookmark-outline</v-icon>
             </v-btn>
             <v-btn icon
                    @click.native.stop="addTransaction" :disabled="noAccounts">
                 <v-icon>add</v-icon>
             </v-btn>
-        </v-toolbar>
+        </v-app-bar>
         <v-progress-linear v-bind:indeterminate="true" v-if="loading"></v-progress-linear>
         <v-list two-line>
-            <template v-for="transaction in transactionsToDisplay">
-                <transaction :transaction="transaction" :key="transaction.id" @selected="editTransaction" :showBalance="false" highlightOverdue>
-                </transaction>
-                <v-divider></v-divider>
-            </template>
+            <v-list-item-group v-model="selectedTransactionIndex" color="primary">
+                <template v-for="transaction in transactionsToDisplay">
+                    <transaction :transaction="transaction" :key="transaction.id" :showBalance="false" highlightOverdue>
+                    </transaction>
+                    <v-divider></v-divider>
+                </template>
+            </v-list-item-group>
         </v-list>
     </v-card>
 </template>
@@ -60,6 +62,15 @@
                     ? this.transactions.filter(transaction => differenceInCalendarDays(new Date(transaction.date), new Date()) < 14)
                     : this.transactions;
             },
+            selectedTransactionIndex: {
+                get() {
+                    return this.transactions.findIndex(tx => tx == this.selectedTransaction);
+                },
+                set(index) {
+                    this.editTransaction(this.transactions[index]);
+                }
+            },
+            ...mapGetters(['selectedTransaction']),
             ...mapState('scheduledTransactions', ['transactions', 'loading']),
             ...mapState('accounts', ['accounts']),
             ...mapState('earmarks', ['earmarks']),

@@ -1,11 +1,13 @@
 <template>
     <div class="auto-complete-payee">
         <v-menu v-model="showMenu" offset-y>
-            <v-text-field slot="activator" :name="name" :label="label" v-model="content" :rules="rules" @blur="$emit('blur')" ref="field"></v-text-field>
+            <template v-slot:activator="{ on }">
+                <v-text-field v-on="on" :name="name" :label="label" v-model="content" :rules="rules" @blur="$emit('blur')" ref="field"></v-text-field>
+            </template>
             <v-list>
-                <v-list-tile v-for="item in items" :key="item.payee" @click="select(item)">
-                    <v-list-tile-title>{{ item.payee }}</v-list-tile-title>
-                </v-list-tile>
+                <v-list-item v-for="item in items" :key="item.payee" @click="select(item)">
+                    <v-list-item-title>{{ item.payee }}</v-list-item-title>
+                </v-list-item>
             </v-list>
         </v-menu>
     </div>

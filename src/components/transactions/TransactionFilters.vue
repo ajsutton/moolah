@@ -1,8 +1,10 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
-        <v-btn slot="activator" flat icon :color="isFiltered ? 'primary' : null">
-            <v-icon>search</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+            <v-btn v-on="on" text icon :color="isFiltered ? 'primary' : null">
+                <v-icon>search</v-icon>
+            </v-btn>
+        </template>
 
         <v-card>
             <v-card-title>
@@ -27,8 +29,8 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn flat @click.native="close">Close</v-btn>
-                <v-btn flat @click.native="search" color="primary">Search</v-btn>
+                <v-btn text @click.native="close">Close</v-btn>
+                <v-btn text @click.native="search" color="primary">Search</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

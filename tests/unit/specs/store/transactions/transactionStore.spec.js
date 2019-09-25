@@ -4,7 +4,7 @@ import {assert, config as chaiConfig} from 'chai';
 import {actions, ensureAllFieldsPresent, loadingStates, mutations} from '../../../../../src/store/transactions/transactionStore';
 import {actions as accountActions} from '../../../../../src/store/wallets/accountsStore';
 import {actions as stateActions} from '../../../../../src/store/store';
-import transactionStoreLoader from 'inject-loader!../../../../../src/store/transactions/transactionStore';
+import transactionStoreLoader from 'inject-loader!babel-loader!../../../../../src/store/transactions/transactionStore';
 import testAction from '../testAction';
 
 chaiConfig.truncateThreshold = 0;

@@ -1,8 +1,10 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
-        <v-btn :dark="dark" icon slot="activator">
-            <v-icon :title="title">{{icon}}</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+            <v-btn :dark="dark" icon v-on="on">
+                <v-icon :title="title">{{icon}}</v-icon>
+            </v-btn>
+        </template>
         <v-card>
             <v-form v-model="valid" ref="form" lazy-validation>
                 <v-card-title>{{title}}</v-card-title>
@@ -33,8 +35,8 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn class="blue--text darken-1" flat @click.native="dialog = false">Close</v-btn>
-                    <v-btn class="blue--text darken-1" flat @click.native="submit">{{action}}</v-btn>
+                    <v-btn class="blue--text darken-1" text @click.native="dialog = false">Close</v-btn>
+                    <v-btn class="blue--text darken-1" text @click.native="submit">{{action}}</v-btn>
                 </v-card-actions>
             </v-form>
         </v-card>
@@ -67,7 +69,8 @@
                 rules: {
                     name: rules.walletName,
                     endDate: [value => {
-                        if (this.savingsStartDate && isBefore(new Date(value), new Date(this.savingsStartDate))) {
+                        if (this.savingsStartDate && isBefore(new Date(this.savingsEndDate), new Date(this.savingsStartDate))) {
+                        console.log(value, this.savingsEndDate);
                             return 'Must be after start date';
                         }
                         return true;

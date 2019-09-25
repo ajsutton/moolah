@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card class="mb-3">
-            <v-toolbar card color="accent">
+            <v-app-bar flat color="accent">
                 <v-toolbar-title>{{earmarkName}}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <create-earmark :earmark="selectedEarmark"></create-earmark>
@@ -10,17 +10,16 @@
                         centered
                         slot="extension"
                         v-model="selectedTab"
-                        color="transparent"
                 >
                     <v-tab href="#overview">Overview</v-tab>
                     <v-tab href="#breakdown">Spending Breakdown</v-tab>
                 </v-tabs>
-            </v-toolbar>
+            </v-app-bar>
             <v-tabs-items v-model="selectedTab">
                 <v-tab-item value="overview">
                     <savings-goal-notice v-if="selectedEarmark !== undefined" :selectedAccount="selectedEarmark"></savings-goal-notice>
                 </v-tab-item>
-                <v-tab-item value="breakdown" lazy>
+                <v-tab-item value="breakdown">
                     <spending-breakdown :earmark="selectedEarmark"></spending-breakdown>
                 </v-tab-item>
             </v-tabs-items>

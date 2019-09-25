@@ -1,26 +1,26 @@
 <template>
     <v-menu
-            lazy
             :close-on-content-click="true"
             v-model="dateMenu"
             offset-y
-            full-width
             :nudge-right="40"
             max-width="290px"
             transition="scale-transition"
     >
-        <v-text-field
-                slot="activator"
-                :label="label"
-                v-model="textValue"
-                :rules="allRules"
-                :clearable="optional"
-                validate-on-blur
-                @blur="onBlur"
-                ref="textField"
-                v-on:keyup.up="incrementDate"
-                v-on:keyup.down="decrementDate"
-        ></v-text-field>
+        <template v-slot:activator="{ on }">
+            <v-text-field
+                    v-on="on"
+                    :label="label"
+                    v-model="textValue"
+                    :rules="allRules"
+                    :clearable="optional"
+                    validate-on-blur
+                    @blur="onBlur"
+                    ref="textField"
+                    v-on:keyup.up="incrementDate"
+                    v-on:keyup.down="decrementDate"
+            ></v-text-field>
+        </template>
         <v-date-picker
                 :value="value"
                 @input="onInput"

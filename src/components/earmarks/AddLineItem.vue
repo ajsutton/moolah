@@ -1,6 +1,8 @@
 <template>
     <v-dialog max-width="400px" persistent v-model="visible">
-        <v-btn slot="activator" small fab color="primary"><v-icon>add</v-icon></v-btn>
+        <v-template v-slot:activator="{ on }">
+            <v-btn v-on="on" small fab color="primary"><v-icon>add</v-icon></v-btn>
+        </v-template>
 
         <v-card>
             <v-card-title>

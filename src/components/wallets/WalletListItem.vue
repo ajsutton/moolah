@@ -1,15 +1,13 @@
 <template>
-    <v-list-tile ripple :to="accountLink">
-        <v-list-tile-action>
-            <v-icon dark>{{ walletIcon }}</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-            <v-list-tile-title>{{ account.name }}</v-list-tile-title>
-        </v-list-tile-content>
-        <v-list-tile-action>
-            <monetary-amount :value="account.balance"></monetary-amount>
-        </v-list-tile-action>
-    </v-list-tile>
+    <v-list-item ripple :to="accountLink">
+        <v-list-item-content>
+            <v-list-item-title>
+                <v-icon>{{ walletIcon }}</v-icon> 
+                {{ account.name }}
+                <monetary-amount class="float-right" :value="account.balance"></monetary-amount>
+            </v-list-item-title>
+        </v-list-item-content>
+    </v-list-item>
 </template>
 
 <script>
@@ -35,7 +33,7 @@
                 return `${this.baseUrl}/${encodeURIComponent(this.account.id)}/`;
             },
             walletIcon() {
-                return this.account.hidden ? 'closed' : this.icon || iconForType(this.account.type);
+                return this.account.hidden ? 'mdi-eye-off-outline' : this.icon || iconForType(this.account.type);
             },
         },
         components: {

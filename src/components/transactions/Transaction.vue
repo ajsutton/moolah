@@ -1,21 +1,21 @@
 <template>
-    <v-list-tile @click.native.stop="editTransaction(transaction)" v-model="selected" ripple>
-        <v-list-tile-action>
+    <v-list-item ripple>
+        <v-list-item-action>
             <div>
                 <div>{{dateDay}} {{dateMonth}}</div>
                 <div class="grey--text text-xs-center body-1">{{dateYear}}</div>
             </div>
-        </v-list-tile-action>
+        </v-list-item-action>
         <v-chip label :class="{'primary white--text': true, 'invisible': !due}" :aria-hidden="due" v-if="highlightOverdue">Due</v-chip>
-        <v-list-tile-content>
-            <v-list-tile-title>{{transactionTitle}}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ categoryName }}</v-list-tile-sub-title>
-        </v-list-tile-content>
-        <v-list-tile-action>
+        <v-list-item-content>
+            <v-list-item-title>{{transactionTitle}}</v-list-item-title>
+            <v-list-item-subtitle>{{ categoryName }}</v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
             <monetary-amount :value="transaction.amount"></monetary-amount>
             <monetary-amount :value="transaction.balance" v-if="showBalance"></monetary-amount>
-        </v-list-tile-action>
-    </v-list-tile>
+        </v-list-item-action>
+    </v-list-item>
 </template>
 
 <script>

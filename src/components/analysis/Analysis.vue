@@ -1,23 +1,25 @@
 <template>
-    <v-layout column class="analysis">
-        <v-flex xs12 class="mb-4">
-            <net-worth-graph></net-worth-graph>
-        </v-flex>
-        <v-flex xs12>
-            <v-layout v-bind="bottomLayout">
-                <v-flex md6>
-                    <upcoming-transactions height="100%" :shortTerm="true"></upcoming-transactions>
-                    <expense-breakdown></expense-breakdown>
-                </v-flex>
-                <v-flex md6>
-                    <income-and-expense-table></income-and-expense-table>
-                </v-flex>
-            </v-layout>
-        </v-flex>
-        <v-flex xs12>
-            <categories-over-time></categories-over-time>
-        </v-flex>
-    </v-layout>
+    <v-container fluid class="analysis">
+        <v-row>
+            <v-col cols="12">
+                <net-worth-graph></net-worth-graph>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="6">
+                <upcoming-transactions :shortTerm="true"></upcoming-transactions>
+                <expense-breakdown></expense-breakdown>
+            </v-col>
+            <v-col cols="6">
+                <income-and-expense-table></income-and-expense-table>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <categories-over-time></categories-over-time>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>

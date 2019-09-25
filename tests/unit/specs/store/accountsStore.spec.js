@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import {assert} from 'chai';
 import {actions, mutations} from '../../../../src/store/wallets/accountsStore';
-import accountsStoreLoader from 'inject-loader!../../../../src/store/wallets/accountsStore';
+import accountsStoreLoader from 'inject-loader!babel-loader!../../../../src/store/wallets/accountsStore';
 import testAction from './testAction';
 
 describe('accountsStore', function() {

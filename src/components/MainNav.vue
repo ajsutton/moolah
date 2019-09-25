@@ -1,45 +1,45 @@
 <template>
-    <v-navigation-drawer clipped v-model="showMainNav" dark app fixed>
+    <v-navigation-drawer clipped v-model="showMainNav" dark app fixed width="300px">
         <template v-if="loggedIn">
             <wallet-list title="Accounts" :accounts="accounts" baseUrl="/account" totalLabel="Net worth" :totalValue="networth">
                 <create-account dark slot="titleAction"></create-account>
             </wallet-list>
-            <wallet-list title="Earmarked" :accounts="earmarks" baseUrl="/earmark" icon="bookmark_outline" totalLabel="Available funds" :totalValue="availableFunds">
+            <wallet-list title="Earmarked" :accounts="earmarks" baseUrl="/earmark" totalLabel="Available funds" :totalValue="availableFunds">
                 <create-earmark dark slot="titleAction"></create-earmark>
             </wallet-list>
-            <v-list>
-                <v-list-tile ripple to="/" exact>
-                    <v-list-tile-action>
-                        <v-icon dark>trending_up</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title>Analysis</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile ripple to="/categories/">
-                    <v-list-tile-action>
-                        <v-icon dark>folder_open</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title>Categories</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile ripple to="/upcoming/">
-                    <v-list-tile-action>
-                        <v-icon dark>schedule</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title>Upcoming transactions</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile ripple to="/transactions/">
-                    <v-list-tile-action>
-                        <v-icon>list</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title>All transactions</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+            <v-list dense expand nav>
+                <v-list-item ripple to="/" exact>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <v-icon>trending_up</v-icon>
+                            Analysis
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item ripple to="/categories/">
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <v-icon>folder_open</v-icon>
+                            Categories
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item ripple to="/upcoming/">
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <v-icon>schedule</v-icon>
+                            Upcoming transactions
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item ripple to="/transactions/">
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <v-icon>list</v-icon>
+                            All transactions
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </v-list>
         </template>
     </v-navigation-drawer>
