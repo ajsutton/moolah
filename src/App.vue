@@ -17,7 +17,7 @@
                 <v-menu :nudge-width="100" v-if="!loggedIn && !loading" bottom :nudge-bottom="50">
                     <template v-slot:activator="{ on }">
                         <v-btn text v-on="on">Sign in with
-                            <v-icon dark>arrow_drop_down</v-icon>
+                            <v-icon>arrow_drop_down</v-icon>
                         </v-btn>
                     </template>
                     <v-list>

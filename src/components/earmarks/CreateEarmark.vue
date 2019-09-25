@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
         <template v-slot:activator="{ on }">
-            <v-btn :dark="dark" icon v-on="on">
+            <v-btn icon v-on="on">
                 <v-icon :title="title">{{icon}}</v-icon>
             </v-btn>
         </template>
@@ -53,7 +53,7 @@
     import isBefore from 'date-fns/isBefore';
 
     export default {
-        props: ['earmark', 'dark'],
+        props: ['earmark'],
         data() {
             return {
                 name: 'Unnamed earmark',

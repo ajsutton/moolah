@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
         <template v-slot:activator="{ on }">
-            <v-btn :dark="dark" icon v-on="on">
+            <v-btn icon v-on="on">
                 <v-icon :title="title">{{icon}}</v-icon>
             </v-btn>
         </template>
@@ -45,7 +45,7 @@
     import DatePickerField from '../util/DatePickerField.vue';
 
     export default {
-        props: ['account', 'dark'],
+        props: ['account'],
         data() {
             return {
                 name: 'Unnamed account',
