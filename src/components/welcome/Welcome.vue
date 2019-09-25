@@ -2,15 +2,15 @@
   <div>
     <v-parallax :src="require('../../assets/jumbo-background.jpg')" height="250">
       <v-container fill-height>
-        <v-layout align-center>
-          <v-flex>
-            <h1 class="white--text display-3 text-xs-center">Moolah</h1>
-          </v-flex>
-        </v-layout>
+        <v-row align-center>
+          <v-col>
+            <h1 class="white--text display-3 text-center">Moolah</h1>
+          </v-col>
+        </v-row>
       </v-container>
     </v-parallax>
     <v-container>
-      <v-layout row wrap class="mt-3">
+      <v-row class="mb-3" fill-height>
         <feature-panel icon="account_balance" headline="Businessy">
           We've got a fancy looking icon and pretty pictures.<br>
           Why wouldn't you love us?
@@ -23,16 +23,16 @@
           This is a crazy side project so it's almost certain to be buggy.<br>
           But you'll probably be able to live with them.
         </feature-panel>
-      </v-layout>
+      </v-row>
 
-      <v-layout row class="mt-5 login-buttons" justify-space-around wrap>
-        <v-flex class="text-xs-center">
+      <v-row class="mb-5 login-buttons" align="center" justify="space-around">
+        <v-col class="text-center">
           <a href="/api/googleauth"><img src="../../assets/auth/signin_google.png"></a>
-        </v-flex>
-        <v-flex class="text-xs-center">
+        </v-col>
+        <v-col class="text-center">
           <a href="/api/facebookauth"><img src="../../assets/auth/signin_facebook.png"></a>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -52,10 +52,6 @@
 </script>
 
 <style lang="scss">
-  .parallax__image-container img {
-    filter: brightness(60%);
-  }
-
   .login-buttons {
     img {
       height: 40px;
