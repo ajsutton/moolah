@@ -11,6 +11,7 @@
                 v-bind:headers="headers"
                 :items="tableItems"
                 sort-by="end"
+                disable-sort
                 :descending="true"
                 :loading="loading"
                 :footer-props="footerProps"
@@ -25,16 +26,16 @@
                                 <div class="grey--text">{{ item | monthName }}</div>
                             </v-layout>
                         </td>
-                        <td class="text-xs-right hidden-md-and-down">
+                        <td class="text-xs-right">
                             <monetary-amount :value="item.income"></monetary-amount>
                         </td>
-                        <td class="text-xs-right hidden-md-and-down">
+                        <td class="text-xs-right">
                             <monetary-amount :value="item.expense"></monetary-amount>
                         </td>
                         <td class="text-xs-right">
                             <monetary-amount :value="item.profit"></monetary-amount>
                         </td>
-                        <td class="text-xs-right hidden-sm-and-down">
+                        <td class="text-xs-right">
                             <monetary-amount :value="item.cumulativeSavings"></monetary-amount>
                         </td>
                     </tr>
