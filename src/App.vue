@@ -15,16 +15,18 @@
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-menu :nudge-width="100" v-if="!loggedIn && !loading" bottom :nudge-bottom="50">
-                    <v-btn text slot="activator">Sign in with
-                        <v-icon dark>arrow_drop_down</v-icon>
-                    </v-btn>
+                    <template v-slot:activator="{ on }">
+                        <v-btn text v-on="on">Sign in with
+                            <v-icon dark>arrow_drop_down</v-icon>
+                        </v-btn>
+                    </template>
                     <v-list>
-                        <v-list-tile ripple href="/api/googleauth">
-                            <v-list-tile-title>Google</v-list-tile-title>
-                        </v-list-tile>
-                        <v-list-tile ripple href="/api/facebookauth">
-                            <v-list-tile-title>Facebook</v-list-tile-title>
-                        </v-list-tile>
+                        <v-list-item ripple href="/api/googleauth">
+                            <v-list-item-title>Google</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item ripple href="/api/facebookauth">
+                            <v-list-item-title>Facebook</v-list-item-title>
+                        </v-list-item>
                     </v-list>
                 </v-menu>
 

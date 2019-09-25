@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-jumbotron :src="require('../../assets/jumbo-background.jpg')">
+    <v-parallax :src="require('../../assets/jumbo-background.jpg')" height="250">
       <v-container fill-height>
         <v-layout align-center>
           <v-flex>
@@ -8,7 +8,7 @@
           </v-flex>
         </v-layout>
       </v-container>
-    </v-jumbotron>
+    </v-parallax>
     <v-container>
       <v-layout row wrap class="mt-3">
         <feature-panel icon="account_balance" headline="Businessy">
