@@ -12,6 +12,7 @@
                 :items="tableItems"
                 sort-by="end"
                 disable-sort
+                :mobile-breakpoint="0"
                 :descending="true"
                 :loading="loading"
                 :footer-props="footerProps"
