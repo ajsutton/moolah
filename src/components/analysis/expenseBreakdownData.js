@@ -21,6 +21,6 @@ function rollupToRootLevel(expensesByCategory, rootCategoryId, categoriesById) {
             rootLevelCategories[id] = (rootLevelCategories[id] || 0) + totalExpenses;
         }
     });
-    return Object.entries(rootLevelCategories).map(([categoryId, totalExpenses]) => [categoriesById[categoryId].name, totalExpenses, categoryId]);
+    return Object.entries(rootLevelCategories).map(([categoryId, totalExpenses]) => [categoriesById[categoryId].name, -totalExpenses, categoryId]);
 }
 
