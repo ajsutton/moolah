@@ -1,7 +1,9 @@
 <template>
     <v-card v-resize="handleResize">
         <v-app-bar flat class="white">
-            <v-toolbar-title class="body-2 grey--text">{{title}}</v-toolbar-title>
+            <v-toolbar-title class="body-2 grey--text">{{
+                title
+            }}</v-toolbar-title>
             <slot></slot>
         </v-app-bar>
         <slot name="chart">
@@ -12,74 +14,74 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
-    import debounce from 'debounce';
+import { mapState } from "vuex";
+import debounce from "debounce";
 
-    export default {
-        props: {
-            title: {
-                type: String,
-                required: true,
-            },
+export default {
+    props: {
+        title: {
+            type: String,
+            required: true
+        }
+    },
+    data() {
+        return {
+            handleResize: debounce(() => this.$emit("resize"), 100)
+        };
+    },
+    computed: {
+        chart() {
+            return this.$refs.chart;
         },
-        data() {
-            return {
-                handleResize: debounce(() => this.$emit('resize'), 100),
+        ...mapState(["showEditTransactionPanel", "showMainNav"])
+    },
+    watch: {
+        showEditTransactionPanel() {
+            this.handleNavChange();
+        },
+        showMainNav() {
+            this.handleNavChange();
+        }
+    },
+    methods: {
+        handleNavChange() {
+            const listener = () => {
+                this.handleResize();
+                document.body.removeEventListener("transitionend", listener);
             };
-        },
-        computed: {
-            chart() {
-                return this.$refs.chart;
-            },
-            ...mapState(['showEditTransactionPanel', 'showMainNav']),
-        },
-        watch: {
-            showEditTransactionPanel() {
-                this.handleNavChange();
-            },
-            showMainNav() {
-                this.handleNavChange();
-            },
-        },
-        methods: {
-            handleNavChange() {
-                const listener = () => {
-                    this.handleResize();
-                    document.body.removeEventListener('transitionend', listener);
-                };
-                document.body.addEventListener('transitionend', listener);
-            },
-        },
-    };
+            document.body.addEventListener("transitionend", listener);
+        }
+    }
+};
 </script>
 
 <style lang="scss">
-    @import "~c3/c3.css";
+@import "~c3/c3.css";
 
-    .chart {
-        svg {
-            font-family: inherit;
-            font-size: inherit;
-        }
-
-        * {
-            shape-rendering: geometricPrecision !important;
-        }
-
-        .c3-line {
-            stroke-width: 2px;
-        }
-
-        .c3-line-bestFit {
-            stroke-width: 1px;
-        }
-
-        .c3-ygrid {
-            stroke-dasharray: none;
-            stroke: #ddd;
-        }
-
-        .c3-axis-x-label {
-        }
+.chart {
+    svg {
+        font-family: inherit;
+        font-size: inherit;
     }
+
+    * {
+        shape-rendering: geometricPrecision !important;
+    }
+
+    .c3-line {
+        stroke-width: 2px;
+    }
+
+    .c3-line-bestFit {
+        stroke-width: 1px;
+    }
+
+    .c3-ygrid {
+        stroke-dasharray: none;
+        stroke: #ddd;
+    }
+
+    .c3-axis-x-label {
+    }
+}
 </style>

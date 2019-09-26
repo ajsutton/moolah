@@ -1,11 +1,18 @@
-import {isValid} from '../validation';
-import debounce from 'debounce';
+import { isValid } from "../validation";
+import debounce from "debounce";
 
-export function makeModelProperty(propertyName, toDisplay = value => value, fromDisplay = value => value) {
+export function makeModelProperty(
+    propertyName,
+    toDisplay = value => value,
+    fromDisplay = value => value
+) {
     return {
         get() {
             if (this.raw[propertyName] === undefined) {
-                return toDisplay(this.transaction[propertyName], this.transaction);
+                return toDisplay(
+                    this.transaction[propertyName],
+                    this.transaction
+                );
             } else {
                 return this.raw[propertyName];
             }
@@ -15,10 +22,12 @@ export function makeModelProperty(propertyName, toDisplay = value => value, from
             if (isValid(value, this.rules[propertyName])) {
                 this.updateTransaction({
                     id: this.transaction.id,
-                    patch: {[propertyName]: fromDisplay(value, this.transaction)},
+                    patch: {
+                        [propertyName]: fromDisplay(value, this.transaction)
+                    }
                 });
             }
-        }, 1000),
+        }, 1000)
     };
 }
 

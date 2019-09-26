@@ -1,19 +1,18 @@
 <template>
-  <v-btn text ripple v-on:click.prevent.native="logout">Log out</v-btn>
+    <v-btn text ripple v-on:click.prevent.native="logout">Log out</v-btn>
 </template>
 
 <script>
-  import client from '../api/client';
+import client from "../api/client";
 
-  export default {
+export default {
     data() {
-      return {}
+        return {};
     },
     methods: {
-      logout() {
-        client.logout()
-          .then(response => this.$emit('logOut'));
-      }
+        logout() {
+            client.logout().then(response => this.$emit("logOut"));
+        }
     }
-  }
+};
 </script>

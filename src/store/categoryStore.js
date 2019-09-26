@@ -1,22 +1,27 @@
-import client from '../api/client';
-import search from 'binary-search';
-import Vue from 'vue';
+import client from "../api/client";
+import search from "binary-search";
+import Vue from "vue";
 
 export const actions = {
-    loadCategories: 'LOAD_CATEGORIES',
-    addCategory: 'ADD_CATEGORY',
-    updateCategory: 'UPDATE_CATEGORY',
-    deleteCategory: 'DELETE_CATEGORY',
+    loadCategories: "LOAD_CATEGORIES",
+    addCategory: "ADD_CATEGORY",
+    updateCategory: "UPDATE_CATEGORY",
+    deleteCategory: "DELETE_CATEGORY"
 };
 
 export const mutations = {
-    addCategory: 'ADD_CATEGORY',
-    setCategories: 'SET_CATEGORIES',
-    updateCategory: 'UPDATE_CATEGORY',
-    removeCategory: 'REMOVE_CATEGORY',
+    addCategory: "ADD_CATEGORY",
+    setCategories: "SET_CATEGORIES",
+    updateCategory: "UPDATE_CATEGORY",
+    removeCategory: "REMOVE_CATEGORY"
 };
 
-const categoryFields = () => ({id: null, name: null, parentId: null, children: []});
+const categoryFields = () => ({
+    id: null,
+    name: null,
+    parentId: null,
+    children: []
+});
 
 const categoryComparator = (category1, category2) => {
     if (category1.name < category2.name) {
@@ -36,8 +41,8 @@ const apiCategory = category => {
     const api = {};
     Object.keys(categoryFields())
         .filter(fieldName => category.hasOwnProperty(fieldName))
-        .filter(fieldName => fieldName !== 'children')
-        .forEach(fieldName => api[fieldName] = category[fieldName]);
+        .filter(fieldName => fieldName !== "children")
+        .forEach(fieldName => (api[fieldName] = category[fieldName]));
     return api;
 };
 
@@ -51,7 +56,10 @@ const ensureAllFieldsPresent = category => {
 };
 
 const insertCategory = (categories, categoriesById, category) => {
-    const insertInto = category.parentId !== null ? categoriesById[category.parentId].children : categories;
+    const insertInto =
+        category.parentId !== null
+            ? categoriesById[category.parentId].children
+            : categories;
     let insertIndex = search(insertInto, category, categoryComparator);
     if (insertIndex < 0) {
         insertIndex = -insertIndex - 1;
@@ -64,24 +72,24 @@ export default {
 
     state: {
         categories: [],
-        categoriesById: {},
+        categoriesById: {}
     },
 
     getters: {
         getCategory(state) {
-            return (categoryId) => state.categoriesById[categoryId];
+            return categoryId => state.categoriesById[categoryId];
         },
 
         getCategoryName(state) {
-            return (categoryId) => {
+            return categoryId => {
                 let category = state.categoriesById[categoryId];
                 const names = [category.name];
                 while (category.parentId !== null) {
                     category = state.categoriesById[category.parentId];
                     names.unshift(category.name);
                 }
-                return names.join(':');
-            }
+                return names.join(":");
+            };
         }
     },
 
@@ -99,18 +107,26 @@ export default {
                 ensureAllFieldsPresent(category);
                 categoriesById[category.id] = category;
             });
-            newCategories.forEach(category => insertCategory(categories, categoriesById, category));
+            newCategories.forEach(category =>
+                insertCategory(categories, categoriesById, category)
+            );
             state.categories = categories;
             state.categoriesById = categoriesById;
         },
 
         [mutations.updateCategory](state, changes) {
             const category = state.categoriesById[changes.id];
-            if (changes.patch.id !== undefined && changes.patch.id !== category.id) {
+            if (
+                changes.patch.id !== undefined &&
+                changes.patch.id !== category.id
+            ) {
                 Vue.delete(state.categoriesById, category.id);
                 Vue.set(state.categoriesById, changes.patch.id, category);
             }
-            const currentList = category.parentId === null ? state.categories : state.categoriesById[category.parentId].children;
+            const currentList =
+                category.parentId === null
+                    ? state.categories
+                    : state.categoriesById[category.parentId].children;
             const index = search(currentList, category, categoryComparator);
             currentList.splice(index, 1);
             Object.assign(category, changes.patch);
@@ -118,24 +134,30 @@ export default {
         },
 
         [mutations.removeCategory](state, category) {
-            const currentList = category.parentId === null ? state.categories : state.categoriesById[category.parentId].children;
+            const currentList =
+                category.parentId === null
+                    ? state.categories
+                    : state.categoriesById[category.parentId].children;
             const index = search(currentList, category, categoryComparator);
             currentList.splice(index, 1);
-        },
+        }
     },
 
     actions: {
-        async [actions.loadCategories]({commit}) {
+        async [actions.loadCategories]({ commit }) {
             const response = await client.categories();
             commit(mutations.setCategories, response.categories);
         },
 
-        async [actions.addCategory]({commit, state}, category) {
-            const newCategory = Object.assign({id: 'new-category'}, category);
+        async [actions.addCategory]({ commit, state }, category) {
+            const newCategory = Object.assign({ id: "new-category" }, category);
             commit(mutations.addCategory, newCategory);
             try {
                 const createdCategory = await client.createCategory(category);
-                commit(mutations.updateCategory, {id: newCategory.id, patch: createdCategory});
+                commit(mutations.updateCategory, {
+                    id: newCategory.id,
+                    patch: createdCategory
+                });
                 return state.categoriesById[createdCategory.id];
             } catch (error) {
                 commit(mutations.removeCategory, newCategory);
@@ -143,19 +165,24 @@ export default {
             }
         },
 
-        async [actions.updateCategory]({commit, state}, changes) {
+        async [actions.updateCategory]({ commit, state }, changes) {
             const category = state.categoriesById[changes.id];
             const original = Object.assign({}, category);
             commit(mutations.updateCategory, changes);
             try {
-                await client.updateCategory(apiCategory(state.categoriesById[changes.id]));
+                await client.updateCategory(
+                    apiCategory(state.categoriesById[changes.id])
+                );
             } catch (error) {
-                commit(mutations.updateCategory, {id: category.id, patch: original});
+                commit(mutations.updateCategory, {
+                    id: category.id,
+                    patch: original
+                });
                 throw error;
             }
         },
 
-        async [actions.deleteCategory]({commit, state}, options) {
+        async [actions.deleteCategory]({ commit, state }, options) {
             const category = state.categoriesById[options.id];
             const replacement = state.categoriesById[options.replaceWith];
             commit(mutations.removeCategory, category);
@@ -165,6 +192,6 @@ export default {
                 commit(mutations.addCategory, category);
                 throw error;
             }
-        },
-    },
+        }
+    }
 };

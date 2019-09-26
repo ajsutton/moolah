@@ -1,10 +1,20 @@
-export default function extrapolateBalances(dailyBalances, scheduledBalances, today, forecastUntil) {
+export default function extrapolateBalances(
+    dailyBalances,
+    scheduledBalances,
+    today,
+    forecastUntil
+) {
     const data = {};
     extendUntil(dailyBalances, today).forEach(balance => {
         data[balance.date] = balance;
     });
-    extendUntil(extendBackTo(scheduledBalances, dailyBalances, today), forecastUntil).forEach(scheduledBalance => {
-        const balance = (data[scheduledBalance.date]) || {date: scheduledBalance.date};
+    extendUntil(
+        extendBackTo(scheduledBalances, dailyBalances, today),
+        forecastUntil
+    ).forEach(scheduledBalance => {
+        const balance = data[scheduledBalance.date] || {
+            date: scheduledBalance.date
+        };
         balance.scheduled = scheduledBalance.balance;
         balance.scheduledAvailableFunds = scheduledBalance.availableFunds;
         const bestFit = balance.bestFit || scheduledBalance.bestFit;
@@ -22,7 +32,13 @@ function extendUntil(balances, until) {
     }
     const lastBalance = balances[balances.length - 1];
     if (lastBalance.date !== until) {
-        return [].concat(balances, [{date: until, balance: lastBalance.balance, availableFunds: lastBalance.availableFunds}]);
+        return [].concat(balances, [
+            {
+                date: until,
+                balance: lastBalance.balance,
+                availableFunds: lastBalance.availableFunds
+            }
+        ]);
     }
     return balances;
 }
@@ -33,7 +49,16 @@ function extendBackTo(forecastBalances, balances, startDate) {
     }
     if (forecastBalances[0].date !== startDate) {
         const lastBalance = balances[balances.length - 1];
-        return [].concat([{date: startDate, balance: lastBalance.balance, availableFunds: lastBalance.availableFunds}], forecastBalances);
+        return [].concat(
+            [
+                {
+                    date: startDate,
+                    balance: lastBalance.balance,
+                    availableFunds: lastBalance.availableFunds
+                }
+            ],
+            forecastBalances
+        );
     }
     return forecastBalances;
 }

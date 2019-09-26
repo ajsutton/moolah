@@ -24,7 +24,7 @@ export function expenseByCategoryReportData(
                 categoryId: rootId,
                 name: getCategoryName(rootId),
                 totalExpenses: 0,
-                children: {},
+                children: {}
             };
             roots[rootId] = root;
         }
@@ -34,7 +34,7 @@ export function expenseByCategoryReportData(
             child = {
                 categoryId: categoryId,
                 name: getCategoryName(categoryId),
-                totalExpenses: 0,
+                totalExpenses: 0
             };
             root.children[categoryId] = child;
         }
@@ -50,7 +50,7 @@ export function expenseByCategoryReportData(
                 totalExpenses: children
                     .map(child => child.totalExpenses)
                     .reduce((a, b) => a + b),
-                children,
+                children
             };
         })
         .sort(sortByExpenses);

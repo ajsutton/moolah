@@ -1,42 +1,49 @@
-import Vuex from 'vuex';
-import Vue from 'vue';
-import accountsModule from './wallets/accountsStore';
-import earmarksModule from './wallets/earmarksStore';
-import transactionsModule, {actions as transactionActions} from './transactions/transactionStore';
-import categoryModule from './categoryStore';
+import Vuex from "vuex";
+import Vue from "vue";
+import accountsModule from "./wallets/accountsStore";
+import earmarksModule from "./wallets/earmarksStore";
+import transactionsModule, {
+    actions as transactionActions
+} from "./transactions/transactionStore";
+import categoryModule from "./categoryStore";
 
 Vue.use(Vuex);
 
 export const actions = {
-    loadTransactions: 'SELECT_ACCOUNT',
-    showUpcoming: 'SHOW_UPCOMING',
-    selectTransaction: 'SELECT_TRANSACTION',
+    loadTransactions: "SELECT_ACCOUNT",
+    showUpcoming: "SHOW_UPCOMING",
+    selectTransaction: "SELECT_TRANSACTION"
 };
 export const mutations = {
-    selectTransaction: 'SELECT_TRANSACTION',
-    showEditTransactionPanel: 'SHOW_EDIT_TRANSACTION_PANEL',
-    showMainNav: 'SHOW_MAIN_NAV',
+    selectTransaction: "SELECT_TRANSACTION",
+    showEditTransactionPanel: "SHOW_EDIT_TRANSACTION_PANEL",
+    showMainNav: "SHOW_MAIN_NAV"
 };
 
 const store = new Vuex.Store({
-    strict: process.env.NODE_ENV !== 'production',
+    strict: process.env.NODE_ENV !== "production",
     state: {
         selectedTransactionId: null,
         selectedScheduledTransaction: false,
         showEditTransactionPanel: false,
-        showMainNav: true,
+        showMainNav: true
     },
     getters: {
         selectedTransactionModule(state, getters) {
-            return state.selectedScheduledTransaction ? 'scheduledTransactions' : 'transactions'
+            return state.selectedScheduledTransaction
+                ? "scheduledTransactions"
+                : "transactions";
         },
         selectedTransaction(state, getters) {
             const module = getters.selectedTransactionModule;
             return getters[`${module}/selectedTransaction`];
         },
         availableFunds(state, getters) {
-            return getters['accounts/networth'] - getters['earmarks/totalEarmarked'];
-        },
+            return (
+                getters["accounts/networth"] -
+                getters["earmarks/totalEarmarked"]
+            );
+        }
     },
     mutations: {
         [mutations.selectTransaction](state, data) {
@@ -49,32 +56,48 @@ const store = new Vuex.Store({
         },
         [mutations.showMainNav](state, newValue) {
             state.showMainNav = newValue;
-        },
+        }
     },
     actions: {
-        [actions.loadTransactions]({dispatch}, searchOptions) {
-            return dispatch('transactions/' + transactionActions.loadTransactions, searchOptions);
+        [actions.loadTransactions]({ dispatch }, searchOptions) {
+            return dispatch(
+                "transactions/" + transactionActions.loadTransactions,
+                searchOptions
+            );
         },
-        [actions.showUpcoming]({dispatch}) {
-            dispatch('scheduledTransactions/' + transactionActions.loadTransactions, {account: null, scheduled: true});
+        [actions.showUpcoming]({ dispatch }) {
+            dispatch(
+                "scheduledTransactions/" + transactionActions.loadTransactions,
+                { account: null, scheduled: true }
+            );
         },
-        [actions.selectTransaction]({commit}, data) {
+        [actions.selectTransaction]({ commit }, data) {
             commit(mutations.selectTransaction, data);
         },
-        [transactionActions.updateTransaction]({dispatch, getters}, value) {
-            dispatch(getters.selectedTransactionModule + '/' + transactionActions.updateTransaction, value)
+        [transactionActions.updateTransaction]({ dispatch, getters }, value) {
+            dispatch(
+                getters.selectedTransactionModule +
+                    "/" +
+                    transactionActions.updateTransaction,
+                value
+            );
         },
-        [transactionActions.deleteTransaction]({dispatch, getters}, value) {
-            dispatch(getters.selectedTransactionModule + '/' + transactionActions.deleteTransaction, value)
-        },
+        [transactionActions.deleteTransaction]({ dispatch, getters }, value) {
+            dispatch(
+                getters.selectedTransactionModule +
+                    "/" +
+                    transactionActions.deleteTransaction,
+                value
+            );
+        }
     },
     modules: {
         accounts: accountsModule,
         earmarks: earmarksModule,
         transactions: transactionsModule,
         scheduledTransactions: transactionsModule,
-        categories: categoryModule,
-    },
+        categories: categoryModule
+    }
 });
 
 export default store;

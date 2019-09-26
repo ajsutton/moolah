@@ -3,8 +3,17 @@
         <v-layout column align-center justify-center>
             <v-flex>
                 <div class="loading text-xs-center">
-                    <p><img :src="require('../../assets/moolah.svg')" width="310" height="310"></p>
-                    <v-progress-linear :indeterminate="true" color="accent"></v-progress-linear>
+                    <p>
+                        <img
+                            :src="require('../../assets/moolah.svg')"
+                            width="310"
+                            height="310"
+                        />
+                    </p>
+                    <v-progress-linear
+                        :indeterminate="true"
+                        color="accent"
+                    ></v-progress-linear>
                 </div>
             </v-flex>
         </v-layout>
@@ -12,11 +21,11 @@
 </template>
 
 <style lang="scss">
-    .loading-screen {
-        background-color: #1976d2;
+.loading-screen {
+    background-color: #1976d2;
 
-        .flex {
-            flex: 0 0 auto;
-        }
+    .flex {
+        flex: 0 0 auto;
     }
+}
 </style>

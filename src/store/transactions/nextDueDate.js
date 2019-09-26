@@ -1,18 +1,18 @@
-import addDays from 'date-fns/addDays';
-import addWeeks from 'date-fns/addWeeks';
-import addMonths from 'date-fns/addMonths';
-import addYears from 'date-fns/addYears';
-import {formatDate} from '../../api/apiFormats';
+import addDays from "date-fns/addDays";
+import addWeeks from "date-fns/addWeeks";
+import addMonths from "date-fns/addMonths";
+import addYears from "date-fns/addYears";
+import { formatDate } from "../../api/apiFormats";
 
 const dateStepFunction = period => {
     switch (period) {
-        case 'DAY':
+        case "DAY":
             return addDays;
-        case 'WEEK':
+        case "WEEK":
             return addWeeks;
-        case 'MONTH':
+        case "MONTH":
             return addMonths;
-        case 'YEAR':
+        case "YEAR":
             return addYears;
         default:
             throw new Error(`Unknown period: ${period}`);
@@ -20,5 +20,10 @@ const dateStepFunction = period => {
 };
 
 export default function nextDueDate(transaction) {
-    return formatDate(dateStepFunction(transaction.recurPeriod)(new Date(transaction.date), transaction.recurEvery))
+    return formatDate(
+        dateStepFunction(transaction.recurPeriod)(
+            new Date(transaction.date),
+            transaction.recurEvery
+        )
+    );
 }

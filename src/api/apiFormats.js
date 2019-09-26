@@ -1,4 +1,4 @@
-import dateFormat from 'date-fns/format';
+import dateFormat from "date-fns/format";
 
 export function formatDate(date) {
     var value;
@@ -7,10 +7,16 @@ export function formatDate(date) {
     } else {
         value = new Date(date);
     }
-    return date === undefined ? undefined : dateFormat(value, 'yyyy-MM-dd');
+    return date === undefined ? undefined : dateFormat(value, "yyyy-MM-dd");
 }
 
 export function monthAsIsoDate(month, dayOfMonth = 1) {
     const strMonth = String(month);
-    return new Date(strMonth.substring(0, strMonth.length - 2) + '-' + strMonth.substring(strMonth.length - 2) + '-' + String(dayOfMonth).padStart(2, '0')); 
+    return new Date(
+        strMonth.substring(0, strMonth.length - 2) +
+            "-" +
+            strMonth.substring(strMonth.length - 2) +
+            "-" +
+            String(dayOfMonth).padStart(2, "0")
+    );
 }

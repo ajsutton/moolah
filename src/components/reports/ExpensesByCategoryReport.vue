@@ -35,11 +35,11 @@ import { expenseByCategoryReportData } from "./expenseByCategoryReportData";
 export default {
     props: {
         from: { required: true },
-        to: { required: true },
+        to: { required: true }
     },
     data() {
         return {
-            expenseBreakdown: [],
+            expenseBreakdown: []
         };
     },
     computed: {
@@ -56,7 +56,7 @@ export default {
             );
         },
         ...mapGetters("categories", ["getCategoryName"]),
-        ...mapState("categories", ["categoriesById"]),
+        ...mapState("categories", ["categoriesById"])
     },
     watch: {
         from() {
@@ -64,22 +64,22 @@ export default {
         },
         to() {
             this.update();
-        },
+        }
     },
     methods: {
         async update() {
             this.expenseBreakdown = await client.categoryBalances({
                 transactionType: "expense",
                 from: formatDate(this.from),
-                to: formatDate(this.to),
+                to: formatDate(this.to)
             });
-        },
+        }
     },
     async mounted() {
         this.update();
     },
     components: {
-        MonetaryAmount,
-    },
+        MonetaryAmount
+    }
 };
 </script>
