@@ -8,24 +8,30 @@
         <v-select label="History" :items="historyItems" v-model="previousMonths"></v-select>
       </v-toolbar-items>
     </v-app-bar>
-    <v-data-table
-      :headers="headers"
-      :items="reportData"
-      group-by="rootName"
-      hide-default-header
-      hide-default-footer
-      disable-pagination
-      disable-sort
+    <v-simple-table
+      
     >
-      <template v-slot:group.header="{ items }">
+      <tbody>
+        <template v-for="item in reportData">
+          <tr class="v-row-group__header">
+            <td class="font-weight-bold">{{item.name}}</td>
+            <td class="text-bold text-right"><monetary-amount :value="item.totalExpenses"></monetary-amount></td>
+          </tr>
+          <tr v-for="child in item.children">
+            <td>{{ child.name }}</td>
+            <td class="text-right"><monetary-amount :value="child.totalExpenses"></monetary-amount></td>
+          </tr>
+        </template>
+      </tbody>
+      <!-- <template v-slot:group.header="{ items }">
         <td class="font-weight-bold">{{ items[0].rootName }}</td>
         <td class="text-right font-weight-bold"><monetary-amount :value="items.map(item => item.totalExpenses).reduce((a, b) => a + b)"></monetary-amount></td>
       </template>
       <template v-slot:item.category="{ item }">{{ getCategoryName(item.categoryId) }}</template>
       <template v-slot:item.expenditure="{ item }">
         <monetary-amount :value="item.totalExpenses"></monetary-amount>
-      </template>
-    </v-data-table>
+      </template> -->
+    </v-simple-table>
   </v-card>
 </template>
 
