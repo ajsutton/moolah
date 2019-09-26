@@ -16,8 +16,8 @@ export function expenseByCategoryReportData(
     getCategoryName
 ) {
     const roots = {};
-    expenseBreakdown.forEach(expense => {
-        var rootId = rootLevelId(expense.categoryId, null, categoriesById);
+    Object.entries(expenseBreakdown).forEach(([categoryId, totalExpenses]) => {
+        var rootId = rootLevelId(categoryId, null, categoriesById);
         var root = roots[rootId];
         if (!root) {
             root = {
@@ -29,16 +29,16 @@ export function expenseByCategoryReportData(
             roots[rootId] = root;
         }
 
-        var child = root.children[expense.categoryId];
+        var child = root.children[categoryId];
         if (!child) {
             child = {
-                categoryId: expense.categoryId,
-                name: getCategoryName(expense.categoryId),
+                categoryId: categoryId,
+                name: getCategoryName(categoryId),
                 totalExpenses: 0,
             };
-            root.children[expense.categoryId] = child;
+            root.children[categoryId] = child;
         }
-        child.totalExpenses += expense.totalExpenses;
+        child.totalExpenses += totalExpenses;
     });
 
     return Object.values(roots)

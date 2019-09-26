@@ -46,12 +46,10 @@ describe("Expense by Category Report Data", function() {
 
     it("should sum category month data", function() {
         const result = expenseByCategoryReportData(
-            [
-                { categoryId: "c1", month: 201904, totalExpenses: -1000 },
-                { categoryId: "c1", month: 201905, totalExpenses: -500 },
-                { categoryId: "c2", month: 201904, totalExpenses: -250 },
-                { categoryId: "c2", month: 201906, totalExpenses: -30 },
-            ],
+            {
+                c1: -1500,
+                c2: -280
+            },
             categoriesById,
             getCategoryName
         );
@@ -85,12 +83,11 @@ describe("Expense by Category Report Data", function() {
 
     it("should add root id and name for sub-categories", function() {
         const result = expenseByCategoryReportData(
-            [
-                { categoryId: "c1", month: 201904, totalExpenses: -1000 },
-                { categoryId: "c1", month: 201905, totalExpenses: -500 },
-                { categoryId: "c3a", month: 201904, totalExpenses: -250 },
-                { categoryId: "c3b", month: 201906, totalExpenses: -30 },
-            ],
+            {
+                c1: -1500,
+                c3a: -250,
+                c3b: -30
+            },
             categoriesById,
             getCategoryName
         );
