@@ -1,5 +1,16 @@
 <template>
     <v-simple-table>
+        <tbody v-if="loading">
+            <tr>
+                <td
+                    colspan="2"
+                    class="progress-cell pa-0 ma-0"
+                    style="height: auto"
+                >
+                    <v-progress-linear indeterminate></v-progress-linear>
+                </td>
+            </tr>
+        </tbody>
         <tbody>
             <template v-for="item in reportData">
                 <tr class="v-row-group__header">
@@ -39,7 +50,8 @@ export default {
     },
     data() {
         return {
-            expenseBreakdown: []
+            expenseBreakdown: [],
+            loading: true
         };
     },
     computed: {
@@ -68,11 +80,16 @@ export default {
     },
     methods: {
         async update() {
-            this.expenseBreakdown = await client.categoryBalances({
-                transactionType: "expense",
-                from: formatDate(this.from),
-                to: formatDate(this.to)
-            });
+            this.loading = true;
+            try {
+                this.expenseBreakdown = await client.categoryBalances({
+                    transactionType: "expense",
+                    from: formatDate(this.from),
+                    to: formatDate(this.to)
+                });
+            } finally {
+                this.loading = false;
+            }
         }
     },
     async mounted() {
@@ -83,3 +100,9 @@ export default {
     }
 };
 </script>
+
+<style lang="scss">
+.progress-cell {
+    height: auto;
+}
+</style>
