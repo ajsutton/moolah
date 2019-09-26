@@ -19,6 +19,7 @@
                     ref="textField"
                     v-on:keyup.up="incrementDate"
                     v-on:keyup.down="decrementDate"
+                    :disabled="disabled"
             ></v-text-field>
         </template>
         <v-date-picker
@@ -49,6 +50,10 @@
                 'default'() {
                     return [];
                 },
+            },
+            disabled: {
+                type: Boolean,
+                'default': false
             },
         },
         data() {
