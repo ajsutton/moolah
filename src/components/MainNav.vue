@@ -16,6 +16,14 @@
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
+                <v-list-item ripple to="/reports/">
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <v-icon>mdi-file-chart</v-icon>
+                            Reports
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
                 <v-list-item ripple to="/categories/">
                     <v-list-item-content>
                         <v-list-item-title>

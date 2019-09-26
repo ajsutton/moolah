@@ -7,6 +7,7 @@ import Account from '../components/accounts/Account.vue';
 import Earmark from '../components/earmarks/Earmark.vue';
 import UpcomingTransactions from '../components/transactions/UpcomingTransactions.vue';
 import Categories from '../components/categories/Categories.vue';
+import Reports from '../components/reports/Reports.vue';
 import store, {mutations} from '../store/store';
 
 Vue.use(Router);
@@ -46,6 +47,7 @@ const router = new Router({
         {path: '/transactions/', component: AllTransactions, props: createTransactionProps},
         {path: '/upcoming/', component: UpcomingTransactions},
         {path: '/categories/', component: Categories},
+        {path: '/reports/', component: Reports},
         {path: '*', component: NotFound},
     ],
     scrollBehavior(to, from, savedPosition) {
