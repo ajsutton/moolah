@@ -7,12 +7,13 @@
     >
         <v-spacer></v-spacer>
 
-        <v-radio-group row v-model="actualValues">
+        <v-radio-group row v-model="actualValues" class="mt-4">
             <v-radio label="Percentage" :value="false"></v-radio>
             <v-radio label="Actual" :value="true"></v-radio>
         </v-radio-group>
         <v-toolbar-items>
             <v-select
+                class="mt-4"
                 label="History"
                 :items="historyItems"
                 v-model="previousMonths"

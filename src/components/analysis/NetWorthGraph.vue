@@ -8,11 +8,13 @@
         <v-spacer></v-spacer>
         <v-toolbar-items>
             <v-select
+                class="mt-4"
                 label="History"
                 :items="historyItems"
                 v-model="previousMonths"
             ></v-select>
             <v-select
+                class="mt-4"
                 label="Forecast"
                 :items="forecastItems"
                 v-model="forecastMonths"
