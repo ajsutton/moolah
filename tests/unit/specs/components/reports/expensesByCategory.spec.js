@@ -26,8 +26,8 @@ describe("Expense by Category Report Data", function() {
             getCategoryName
         );
         assert.deepEqual(result, [
-            { categoryId: 'c1', totalExpenses: -1500, rootId: undefined, rootName: undefined, name: 'Name: Cat1' },
-            { categoryId: 'c2', totalExpenses: -280, rootId: undefined, rootName: undefined, name: 'Name: Cat2' },
+            { categoryId: 'c1', totalExpenses: -1500, rootId: 'c1', rootName: 'Name: Cat1', name: 'Name: Cat1' },
+            { categoryId: 'c2', totalExpenses: -280, rootId: 'c2', rootName: 'Name: Cat2', name: 'Name: Cat2' },
         ]);
     });
 
@@ -43,7 +43,7 @@ describe("Expense by Category Report Data", function() {
             getCategoryName
         );
         assert.deepEqual(result, [
-            { categoryId: 'c1', totalExpenses: -1500, rootId: undefined, rootName: undefined, name: 'Name: Cat1' },
+            { categoryId: 'c1', totalExpenses: -1500, rootId: 'c1', rootName: 'Name: Cat1', name: 'Name: Cat1' },
             { categoryId: 'c3a', totalExpenses: -250, rootId: 'c3', rootName: 'Name: Cat3', name: 'Name: Cat3a' },
             { categoryId: 'c3b', totalExpenses: -30, rootId: 'c3', rootName: 'Name: Cat3', name: 'Name: Cat3b' },
         ]);

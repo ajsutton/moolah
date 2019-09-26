@@ -18,7 +18,7 @@
       disable-sort
     >
       <template v-slot:group.header="{ items }">
-        <td class="font-weight-bold">{{ getCategoryName(items[0].rootId) }}</td>
+        <td class="font-weight-bold">{{ items[0].rootName }}</td>
         <td class="text-right font-weight-bold"><monetary-amount :value="items.map(item => item.totalExpenses).reduce((a, b) => a + b)"></monetary-amount></td>
       </template>
       <template v-slot:item.category="{ item }">{{ getCategoryName(item.categoryId) }}</template>

@@ -12,14 +12,11 @@ export function expenseByCategoryReportData(
             existing.totalExpenses += expense.totalExpenses;
         } else {
             var rootId = rootLevelId(expense.categoryId, null, categoriesById);
-            if (rootId == expense.categoryId) {
-                rootId = undefined;
-            }
             totals[expense.categoryId] = {
                 categoryId: expense.categoryId,
                 name: getCategoryName(expense.categoryId),
                 rootId,
-                rootName: rootId ? getCategoryName(rootId) : undefined,
+                rootName: getCategoryName(rootId),
                 totalExpenses: expense.totalExpenses
             };
         }
