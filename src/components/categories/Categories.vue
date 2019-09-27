@@ -1,6 +1,15 @@
 <template>
     <v-card>
         <v-card-title>Categories</v-card-title>
+        <v-card-actions>
+            <v-btn
+                text
+                @click.native.stop="addCategory(null)"
+                class="primary--text"
+            >
+                Add category
+            </v-btn>
+        </v-card-actions>
         <v-card-text>
             <v-container>
                 <v-row>
@@ -9,7 +18,6 @@
                             activatable
                             :items="categories"
                             item-disabled="disabled"
-                            return-object
                             :active.sync="selectedCategory"
                             :open.sync="opened"
                         ></v-treeview>
@@ -47,7 +55,9 @@
                                 <v-card-actions class="pt-0">
                                     <v-btn
                                         text
-                                        @click.native.stop="addCategory"
+                                        @click.native.stop="
+                                            addCategory(category.id)
+                                        "
                                         class="primary--text"
                                         >Add sub-category</v-btn
                                     >
@@ -83,8 +93,8 @@ export default {
         category() {
             return this.selectedCategory &&
                 this.selectedCategory.length > 0 &&
-                this.selectedCategory[0].id !== null
-                ? this.selectedCategory[0]
+                this.selectedCategory[0] !== null
+                ? this.getCategory(this.selectedCategory[0])
                 : undefined;
         },
         categoryName() {
@@ -94,17 +104,19 @@ export default {
         ...mapGetters('categories', ['getCategory', 'getCategoryName']),
     },
     methods: {
-        async addCategory() {
+        async addCategory(parentId) {
             const createdCategory = await this[actions.addCategory]({
                 name: 'New Category',
-                parentId: this.category.id,
+                parentId,
             });
 
-            this.opened.push(this.category);
+            if (parentId) {
+                this.opened.push(parentId);
+            }
             this.selectCategory(createdCategory);
         },
         selectCategory(category) {
-            this.selectedCategory = [category];
+            this.selectedCategory = [category.id];
         },
         ...mapActions('categories', [actions.addCategory]),
     },
