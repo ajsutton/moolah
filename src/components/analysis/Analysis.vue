@@ -46,7 +46,7 @@ export default {
             return this.$vuetify.breakpoint.mdAndUp ? {} : { column: true };
         },
         hasHistory() {
-            return this.transactions.length > 0 && this.accounts.length > 0;
+            return this.accounts.length > 0;
         },
         showScheduledTransactions() {
             return this.hasHistory || this.scheduledTransactions.length > 0;
