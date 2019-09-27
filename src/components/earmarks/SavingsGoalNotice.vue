@@ -157,31 +157,31 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
-import MonetaryAmount from "../util/MonetaryAmount.vue";
-import { VProgressCircular } from "vuetify";
-import SavingsGoalMixin from "./SavingsGoalMixin";
-import { formatDate } from "../util/formatDate";
+import { mapState, mapGetters, mapActions } from 'vuex';
+import MonetaryAmount from '../util/MonetaryAmount.vue';
+import { VProgressCircular } from 'vuetify';
+import SavingsGoalMixin from './SavingsGoalMixin';
+import { formatDate } from '../util/formatDate';
 
 export default {
     mixins: [SavingsGoalMixin],
     data() {
         return {
-            progressSize: 200
+            progressSize: 200,
         };
     },
     computed: {
         progressWidth() {
             return Math.floor(this.progressSize / 10);
-        }
+        },
     },
     filters: {
-        date: formatDate
+        date: formatDate,
     },
     components: {
         VProgressCircular,
-        MonetaryAmount
-    }
+        MonetaryAmount,
+    },
 };
 </script>
 

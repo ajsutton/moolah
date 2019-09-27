@@ -28,35 +28,35 @@
 </template>
 
 <script>
-import addDays from "date-fns/addDays";
-import { formatDate } from "../../api/apiFormats";
+import addDays from 'date-fns/addDays';
+import { formatDate } from '../../api/apiFormats';
 
 export default {
     props: {
         value: String,
         optional: {
             type: Boolean,
-            default: false
+            default: false,
         },
         label: {
             type: String,
-            default: "Date"
+            default: 'Date',
         },
         rules: {
             type: Array,
             default() {
                 return [];
-            }
+            },
         },
         disabled: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     data() {
         return {
             invalidText: null,
-            dateMenu: false
+            dateMenu: false,
         };
     },
 
@@ -70,7 +70,7 @@ export default {
             set(value) {
                 if (
                     this.optional &&
-                    (value === undefined || value === null || value === "")
+                    (value === undefined || value === null || value === '')
                 ) {
                     this.invalidText = null;
                     this.onInput(undefined);
@@ -86,26 +86,26 @@ export default {
                         this.invalidText = value;
                     }
                 }
-            }
+            },
         },
 
         allRules() {
             return [
-                () => (this.invalidText !== null ? "Invalid date" : true),
-                ...this.rules
+                () => (this.invalidText !== null ? 'Invalid date' : true),
+                ...this.rules,
             ];
-        }
+        },
     },
 
     watch: {
         value() {
             this.invalidText = null;
-        }
+        },
     },
 
     methods: {
         onInput(value) {
-            this.$emit("input", value);
+            this.$emit('input', value);
             if (this.$refs.textField) {
                 this.$refs.textField.validate();
             }
@@ -118,12 +118,12 @@ export default {
         },
 
         incrementDate() {
-            this.$emit("input", formatDate(addDays(new Date(this.value), 1)));
+            this.$emit('input', formatDate(addDays(new Date(this.value), 1)));
         },
 
         decrementDate() {
-            this.$emit("input", formatDate(addDays(new Date(this.value), -1)));
-        }
-    }
+            this.$emit('input', formatDate(addDays(new Date(this.value), -1)));
+        },
+    },
 };
 </script>

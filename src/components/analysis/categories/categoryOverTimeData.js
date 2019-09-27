@@ -1,6 +1,6 @@
-import { rootLevelId } from "./rootLevelId";
-import { monthAsIsoDate } from "../../../api/apiFormats";
-import formatDate from "date-fns/format";
+import { rootLevelId } from './rootLevelId';
+import { monthAsIsoDate } from '../../../api/apiFormats';
+import formatDate from 'date-fns/format';
 
 export function categoriesOverTimeGraphData(
     expensesByCategory,
@@ -50,14 +50,14 @@ export function categoriesOverTimeGraphData(
             }
         });
 
-    columns.push(["months"].concat(orderedMonths.map(labelForMonth)));
+    columns.push(['months'].concat(orderedMonths.map(labelForMonth)));
 
     return {
-        type: "area",
+        type: 'area',
         columns,
-        x: "months",
+        x: 'months',
         groups: [columns.map(category => category[0]).reverse()],
-        unload: true
+        unload: true,
     };
 }
 
@@ -73,5 +73,5 @@ function calculateMonthTotals(rootLevelCategories, orderedMonths) {
 }
 
 function labelForMonth(month) {
-    return formatDate(monthAsIsoDate(month), "MMM yy");
+    return formatDate(monthAsIsoDate(month), 'MMM yy');
 }

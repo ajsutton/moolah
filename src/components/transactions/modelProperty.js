@@ -1,5 +1,5 @@
-import { isValid } from "../validation";
-import debounce from "debounce";
+import { isValid } from '../validation';
+import debounce from 'debounce';
 
 export function makeModelProperty(
     propertyName,
@@ -23,11 +23,11 @@ export function makeModelProperty(
                 this.updateTransaction({
                     id: this.transaction.id,
                     patch: {
-                        [propertyName]: fromDisplay(value, this.transaction)
-                    }
+                        [propertyName]: fromDisplay(value, this.transaction),
+                    },
                 });
             }
-        }, 1000)
+        }, 1000),
     };
 }
 

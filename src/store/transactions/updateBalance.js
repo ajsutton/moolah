@@ -18,7 +18,7 @@ export default function updateBalances(
     }
     for (let i = start; i >= 0; i--) {
         const transaction = transactions[i];
-        if (!ignoreTransfers || transaction.type !== "transfer") {
+        if (!ignoreTransfers || transaction.type !== 'transfer') {
             balance += transaction.amount;
         }
         transaction.balance = balance;

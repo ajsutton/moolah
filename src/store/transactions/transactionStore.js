@@ -1,27 +1,27 @@
-import client from "../../api/client";
-import updateBalance from "./updateBalance";
-import search from "binary-search";
-import Vue from "vue";
-import without from "../../util/without";
-import { formatDate } from "../../api/apiFormats";
-import nextDueDate from "./nextDueDate";
-import accountBalanceAdjuster from "./accountBalanceAdjuster";
-import transactionComparator from "./transactionComparator";
+import client from '../../api/client';
+import updateBalance from './updateBalance';
+import search from 'binary-search';
+import Vue from 'vue';
+import without from '../../util/without';
+import { formatDate } from '../../api/apiFormats';
+import nextDueDate from './nextDueDate';
+import accountBalanceAdjuster from './accountBalanceAdjuster';
+import transactionComparator from './transactionComparator';
 
 const PAGE_SIZE = 100;
 
 export const actions = {
-    loadTransactions: "LOAD_TRANSACTIONS",
-    addTransaction: "ADD_TRANSACTION",
-    updateTransaction: "UPDATE_TRANSACTION",
-    deleteTransaction: "DELETE_TRANSACTION",
-    payTransaction: "PAY_TRANSACTION"
+    loadTransactions: 'LOAD_TRANSACTIONS',
+    addTransaction: 'ADD_TRANSACTION',
+    updateTransaction: 'UPDATE_TRANSACTION',
+    deleteTransaction: 'DELETE_TRANSACTION',
+    payTransaction: 'PAY_TRANSACTION',
 };
 export const mutations = {
-    setTransactions: "SET_TRANSACTIONS",
-    addTransaction: "ADD_TRANSACTION",
-    updateTransaction: "UPDATE_TRANSACTION",
-    removeTransaction: "REMOVE_TRANSACTION"
+    setTransactions: 'SET_TRANSACTIONS',
+    addTransaction: 'ADD_TRANSACTION',
+    updateTransaction: 'UPDATE_TRANSACTION',
+    removeTransaction: 'REMOVE_TRANSACTION',
 };
 
 const findTransaction = (state, transactionId) => {
@@ -65,18 +65,18 @@ function affectsBalance(patch) {
 
 export function ensureAllFieldsPresent(transaction) {
     [
-        "amount",
-        "date",
-        "notes",
-        "payee",
-        "accountId",
-        "type",
-        "balance",
-        "categoryId",
-        "recurPeriod",
-        "recurEvery",
-        "toAccountId",
-        "earmark"
+        'amount',
+        'date',
+        'notes',
+        'payee',
+        'accountId',
+        'type',
+        'balance',
+        'categoryId',
+        'recurPeriod',
+        'recurEvery',
+        'toAccountId',
+        'earmark',
     ].forEach(key => {
         if (!transaction.hasOwnProperty(key)) {
             transaction[key] = undefined;
@@ -85,9 +85,9 @@ export function ensureAllFieldsPresent(transaction) {
     return transaction;
 }
 
-const IDLE = "idle";
-const LOADING = "loading";
-const ERROR = "error";
+const IDLE = 'idle';
+const LOADING = 'loading';
+const ERROR = 'error';
 export const loadingStates = { IDLE, LOADING, ERROR };
 
 function isSingleAccount(state) {
@@ -107,11 +107,11 @@ export default {
             priorBalance: 0,
             transactionsById: {},
             searchOptions: {
-                page: 1
+                page: 1,
             },
             loadingState: IDLE,
             hasMore: false,
-            totalNumberOfTransactions: 0
+            totalNumberOfTransactions: 0,
         };
     },
     getters: {
@@ -140,7 +140,7 @@ export default {
         },
         error(state) {
             return state.loadingState === ERROR;
-        }
+        },
     },
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
@@ -225,7 +225,7 @@ export default {
             } else {
                 throw Error(`No transaction with ID ${payload.id}`);
             }
-        }
+        },
     },
     actions: {
         async [actions.loadTransactions]({ commit }, searchOptions) {
@@ -234,7 +234,7 @@ export default {
                     transactions: [],
                     priorBalance: 0,
                     searchOptions,
-                    loadingState: LOADING
+                    loadingState: LOADING,
                 });
                 const response = await client.transactions(
                     searchOptions,
@@ -253,7 +253,7 @@ export default {
                     transactions: [],
                     priorBalance: 0,
                     loadingState: ERROR,
-                    searchOptions
+                    searchOptions,
                 });
                 throw error;
             }
@@ -264,22 +264,22 @@ export default {
             attributes = {}
         ) {
             const account =
-                rootGetters["accounts/selectedAccount"] ||
+                rootGetters['accounts/selectedAccount'] ||
                 rootState.accounts.accounts[0];
             const initialProperties = Object.assign(
                 {
                     amount: 0,
                     date: formatDate(new Date()),
-                    notes: "",
-                    payee: "",
+                    notes: '',
+                    payee: '',
                     accountId: account.id,
-                    type: account.type === "earmark" ? "income" : "expense",
-                    categoryId: null
+                    type: account.type === 'earmark' ? 'income' : 'expense',
+                    categoryId: null,
                 },
                 attributes
             );
             const transaction = Object.assign(
-                { id: "new-transaction" },
+                { id: 'new-transaction' },
                 initialProperties
             );
             commit(mutations.addTransaction, transaction);
@@ -290,13 +290,13 @@ export default {
                 );
                 commit(mutations.updateTransaction, {
                     id: transaction.id,
-                    patch: serverTransaction
+                    patch: serverTransaction,
                 });
                 dispatch(
-                    "SELECT_TRANSACTION",
+                    'SELECT_TRANSACTION',
                     {
                         id: serverTransaction.id,
-                        scheduled: transaction.recurPeriod !== undefined
+                        scheduled: transaction.recurPeriod !== undefined,
                     },
                     { root: true }
                 );
@@ -324,7 +324,7 @@ export default {
             } catch (error) {
                 commit(mutations.updateTransaction, {
                     id: transactionId,
-                    patch: transaction
+                    patch: transaction,
                 });
                 accountBalanceAdjuster(
                     dispatch,
@@ -352,24 +352,24 @@ export default {
             const transaction = findTransaction(state, payload.id);
             const appliedTransaction = without(
                 transaction,
-                "recurEvery",
-                "recurPeriod",
-                "balance",
-                "id"
+                'recurEvery',
+                'recurPeriod',
+                'balance',
+                'id'
             );
             try {
                 accountBalanceAdjuster(dispatch, null, appliedTransaction);
                 asyncOperations.push(
                     client.createTransaction(appliedTransaction)
                 );
-                if (transaction.recurPeriod === "ONCE") {
+                if (transaction.recurPeriod === 'ONCE') {
                     commit(mutations.removeTransaction, transaction);
                     asyncOperations.push(client.deleteTransaction(transaction));
                 } else {
                     const nextDate = nextDueDate(transaction);
                     commit(mutations.updateTransaction, {
                         id: transaction.id,
-                        patch: { date: nextDate }
+                        patch: { date: nextDate },
                     });
                     asyncOperations.push(client.updateTransaction(transaction));
                 }
@@ -379,6 +379,6 @@ export default {
                 accountBalanceAdjuster(dispatch, appliedTransaction, null);
                 throw error;
             }
-        }
-    }
+        },
+    },
 };

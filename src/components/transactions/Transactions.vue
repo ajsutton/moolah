@@ -41,23 +41,23 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
-import client from "../../api/client";
-import Transaction from "./Transaction.vue";
-import MonetaryAmount from "../util/MonetaryAmount.vue";
-import CreateAccount from "../accounts/CreateAccount.vue";
-import TransactionFilters from "./TransactionFilters.vue";
-import FilterNotice from "./FilterNotice.vue";
-import { actions as transactionActions } from "../../store/transactions/transactionStore";
-import { mutations as stateMutations } from "../../store/store";
+import { mapState, mapGetters, mapActions } from 'vuex';
+import client from '../../api/client';
+import Transaction from './Transaction.vue';
+import MonetaryAmount from '../util/MonetaryAmount.vue';
+import CreateAccount from '../accounts/CreateAccount.vue';
+import TransactionFilters from './TransactionFilters.vue';
+import FilterNotice from './FilterNotice.vue';
+import { actions as transactionActions } from '../../store/transactions/transactionStore';
+import { mutations as stateMutations } from '../../store/store';
 
 export default {
     props: {
         searchOptions: Object,
         title: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         currentPage: {
@@ -68,10 +68,10 @@ export default {
                 this.$router.push({
                     path: this.$router.path,
                     query: Object.assign({}, this.$router.query, {
-                        page: value
-                    })
+                        page: value,
+                    }),
                 });
-            }
+            },
         },
         selectedTransactionIndex: {
             get() {
@@ -81,22 +81,22 @@ export default {
             },
             set(index) {
                 this.editTransaction(this.transactions[index]);
-            }
+            },
         },
-        ...mapGetters(["selectedTransaction"]),
-        ...mapGetters("transactions", [
-            "hasNext",
-            "hasPrevious",
-            "numberOfPages",
-            "isFiltered",
-            "loading",
-            "error"
+        ...mapGetters(['selectedTransaction']),
+        ...mapGetters('transactions', [
+            'hasNext',
+            'hasPrevious',
+            'numberOfPages',
+            'isFiltered',
+            'loading',
+            'error',
         ]),
-        ...mapState("transactions", ["transactions"])
+        ...mapState('transactions', ['transactions']),
     },
     data() {
         return {
-            loadingMore: false
+            loadingMore: false,
         };
     },
 
@@ -105,11 +105,11 @@ export default {
             if (transaction) {
                 this.$store.commit(stateMutations.selectTransaction, {
                     id: transaction.id,
-                    scheduled: false
+                    scheduled: false,
                 });
             }
         },
-        ...mapActions("transactions", [transactionActions.loadPage])
+        ...mapActions('transactions', [transactionActions.loadPage]),
     },
 
     components: {
@@ -117,7 +117,7 @@ export default {
         Transaction,
         CreateAccount,
         TransactionFilters,
-        FilterNotice
-    }
+        FilterNotice,
+    },
 };
 </script>

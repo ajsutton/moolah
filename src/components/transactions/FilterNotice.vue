@@ -2,7 +2,7 @@
     <v-alert type="info" v-model="active" dismissible>{{ message }}</v-alert>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
     computed: {
@@ -17,14 +17,14 @@ export default {
                         query: {
                             from: undefined,
                             to: undefined,
-                            category: undefined
-                        }
+                            category: undefined,
+                        },
                     });
                 }
-            }
+            },
         },
         message() {
-            let message = "Showing transactions";
+            let message = 'Showing transactions';
             if (
                 this.searchOptions.from !== undefined &&
                 this.searchOptions.to !== undefined
@@ -43,7 +43,7 @@ export default {
                 if (this.searchOptions.category.length < 3) {
                     const categoryList = this.searchOptions.category
                         .map(this.getCategoryName)
-                        .join(", ");
+                        .join(', ');
                     message += ` categorised as ${categoryList}`;
                 } else {
                     message += ` in ${this.searchOptions.category.length} categories`;
@@ -51,9 +51,9 @@ export default {
             }
             return message;
         },
-        ...mapGetters("transactions", ["isFiltered"]),
-        ...mapState("transactions", ["searchOptions"]),
-        ...mapGetters("categories", ["getCategoryName"])
-    }
+        ...mapGetters('transactions', ['isFiltered']),
+        ...mapState('transactions', ['searchOptions']),
+        ...mapGetters('categories', ['getCategoryName']),
+    },
 };
 </script>

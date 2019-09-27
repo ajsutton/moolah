@@ -6,7 +6,7 @@ function processCategory(categoryData, category, level) {
     );
     const { balance, budget } = categoryData[category.id] || {
         balance: 0,
-        budget: 0
+        budget: 0,
     };
     const subtotal =
         children.reduce((total, child) => total + child.subtotal, 0) + balance;

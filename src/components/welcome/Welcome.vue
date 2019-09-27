@@ -48,16 +48,16 @@
 </template>
 
 <script>
-import FeaturePanel from "./FeaturePanel.vue";
+import FeaturePanel from './FeaturePanel.vue';
 
 export default {
-    name: "hello",
+    name: 'hello',
     data() {
         return {};
     },
     components: {
-        FeaturePanel
-    }
+        FeaturePanel,
+    },
 };
 </script>
 

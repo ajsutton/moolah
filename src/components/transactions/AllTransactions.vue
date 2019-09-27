@@ -6,16 +6,16 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from 'vuex';
 import {
     actions as stateActions,
-    mutations as stateMutations
-} from "../../store/store";
-import Transactions from "../transactions/Transactions.vue";
+    mutations as stateMutations,
+} from '../../store/store';
+import Transactions from '../transactions/Transactions.vue';
 
 export default {
     props: {
-        searchOptions: Object
+        searchOptions: Object,
     },
 
     created() {
@@ -25,18 +25,18 @@ export default {
     watch: {
         $route() {
             this.loadTransactions();
-        }
+        },
     },
 
     methods: {
         async loadTransactions() {
             await this[stateActions.loadTransactions](this.searchOptions);
         },
-        ...mapActions([stateActions.loadTransactions])
+        ...mapActions([stateActions.loadTransactions]),
     },
 
     components: {
-        Transactions
-    }
+        Transactions,
+    },
 };
 </script>

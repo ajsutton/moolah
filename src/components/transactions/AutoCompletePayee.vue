@@ -13,23 +13,23 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters } from 'vuex';
 
 export default {
     props: {
-        value: { default: "" },
+        value: { default: '' },
         rules: { default: [] },
         name: { required: true },
-        label: { required: true }
+        label: { required: true },
     },
     data() {
         return {
-            content: this.value
+            content: this.value,
         };
     },
 
     computed: {
-        ...mapState("transactions", ["transactions"])
+        ...mapState('transactions', ['transactions']),
     },
 
     methods: {
@@ -39,16 +39,16 @@ export default {
 
         select(transaction) {
             this.content = transaction.payee;
-            this.$emit("autofill", transaction);
+            this.$emit('autofill', transaction);
         },
 
         change(value) {
-            if (typeof value === "object") {
+            if (typeof value === 'object') {
                 this.select(value);
             } else {
-                this.$emit("input", value);
+                this.$emit('input', value);
             }
-        }
-    }
+        },
+    },
 };
 </script>

@@ -1,15 +1,15 @@
 export const walletMutations = {
-    set: "SET",
-    add: "ADD",
-    remove: "REMOVE",
-    update: "UPDATE"
+    set: 'SET',
+    add: 'ADD',
+    remove: 'REMOVE',
+    update: 'UPDATE',
 };
 
 export const walletActions = {
-    load: "LOAD",
-    create: "CREATE",
-    update: "UPDATE",
-    adjustBalance: "ADJUST_BALANCE"
+    load: 'LOAD',
+    create: 'CREATE',
+    update: 'UPDATE',
+    adjustBalance: 'ADJUST_BALANCE',
 };
 
 export function createWalletStoreActions(
@@ -24,14 +24,14 @@ export function createWalletStoreActions(
         },
 
         async [walletActions.create]({ commit }, wallet) {
-            const id = "new-wallet";
+            const id = 'new-wallet';
             const walletToAdd = newWalletFilter({ id, ...wallet });
             commit(walletMutations.add, walletToAdd);
             try {
                 const createdAccount = await client.create(wallet);
                 commit(walletMutations.update, {
-                    id: "new-wallet",
-                    patch: { id: createdAccount.id }
+                    id: 'new-wallet',
+                    patch: { id: createdAccount.id },
                 });
             } catch (error) {
                 commit(walletMutations.remove, walletToAdd);
@@ -50,7 +50,7 @@ export function createWalletStoreActions(
             } catch (error) {
                 commit(walletMutations.update, {
                     id: changes.id,
-                    patch: originalAccount
+                    patch: originalAccount,
                 });
                 throw error;
             }
@@ -68,7 +68,7 @@ export function createWalletStoreActions(
                 patch.spent = wallet.spent + changes.spent;
             }
             commit(walletMutations.update, { id: wallet.id, patch: patch });
-        }
+        },
     };
 }
 
@@ -90,6 +90,6 @@ export function createWalletStoreMutations(propertyName) {
                 candidate => candidate.id === changes.id
             );
             Object.assign(walletx, changes.patch);
-        }
+        },
     };
 }

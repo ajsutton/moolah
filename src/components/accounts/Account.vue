@@ -10,20 +10,20 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from 'vuex';
 import {
     actions as stateActions,
-    mutations as stateMutations
-} from "../../store/store";
-import { actions as transactionActions } from "../../store/transactions/transactionStore";
-import Transactions from "../transactions/Transactions.vue";
-import CreateAccount from "../accounts/CreateAccount.vue";
-import AddTransactionMixin from "../util/AddTransactionMixin";
+    mutations as stateMutations,
+} from '../../store/store';
+import { actions as transactionActions } from '../../store/transactions/transactionStore';
+import Transactions from '../transactions/Transactions.vue';
+import CreateAccount from '../accounts/CreateAccount.vue';
+import AddTransactionMixin from '../util/AddTransactionMixin';
 
 export default {
     props: {
         accountId: String,
-        searchOptions: Object
+        searchOptions: Object,
     },
 
     mixins: [AddTransactionMixin],
@@ -35,7 +35,7 @@ export default {
     watch: {
         $route() {
             this.loadTransactions();
-        }
+        },
     },
 
     computed: {
@@ -43,9 +43,9 @@ export default {
             return this.findAccountById(this.accountId);
         },
         accountName() {
-            return this.selectedAccount ? this.selectedAccount.name : "";
+            return this.selectedAccount ? this.selectedAccount.name : '';
         },
-        ...mapGetters("accounts", { findAccountById: "account" })
+        ...mapGetters('accounts', { findAccountById: 'account' }),
     },
 
     methods: {
@@ -54,16 +54,16 @@ export default {
         },
         addTransaction() {
             this[transactionActions.addTransaction]({
-                accountId: this.accountId
+                accountId: this.accountId,
             });
         },
         ...mapActions([stateActions.loadTransactions]),
-        ...mapActions("transactions", [transactionActions.addTransaction])
+        ...mapActions('transactions', [transactionActions.addTransaction]),
     },
 
     components: {
         Transactions,
-        CreateAccount
-    }
+        CreateAccount,
+    },
 };
 </script>

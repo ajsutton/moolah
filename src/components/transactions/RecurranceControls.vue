@@ -28,26 +28,26 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
-import { actions as transactionActions } from "../../store/transactions/transactionStore";
-import { rules, isValid } from "../validation";
-import { makeModelProperty, onBlur } from "./modelProperty";
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+import { actions as transactionActions } from '../../store/transactions/transactionStore';
+import { rules, isValid } from '../validation';
+import { makeModelProperty, onBlur } from './modelProperty';
 
 export default {
-    props: ["transaction"],
+    props: ['transaction'],
     data() {
         return {
             periodItems: [
-                { text: "Days", value: "DAY" },
-                { text: "Weeks", value: "WEEK" },
-                { text: "Months", value: "MONTH" },
-                { text: "Years", value: "YEAR" }
+                { text: 'Days', value: 'DAY' },
+                { text: 'Weeks', value: 'WEEK' },
+                { text: 'Months', value: 'MONTH' },
+                { text: 'Years', value: 'YEAR' },
             ],
             raw: {
                 recurPeriod: undefined,
-                recurEvery: undefined
+                recurEvery: undefined,
             },
-            rules
+            rules,
         };
     },
     computed: {
@@ -56,26 +56,26 @@ export default {
         },
         repeating: {
             get() {
-                return this.transaction.recurPeriod !== "ONCE";
+                return this.transaction.recurPeriod !== 'ONCE';
             },
             set(value) {
                 if (value) {
                     this.updateTransaction({
                         id: this.transactionId,
                         patch: {
-                            recurPeriod: this.raw.recurPeriod || "MONTH",
-                            recurEvery: this.raw.recurEvery || 1
-                        }
+                            recurPeriod: this.raw.recurPeriod || 'MONTH',
+                            recurEvery: this.raw.recurEvery || 1,
+                        },
                     });
                 } else {
                     this.raw.recurPeriod = this.transaction.recurPeriod;
                     this.raw.recurEvery = this.transaction.recurEvery;
                     this.updateTransaction({
                         id: this.transactionId,
-                        patch: { recurPeriod: "ONCE", recurEvery: null }
+                        patch: { recurPeriod: 'ONCE', recurEvery: null },
                     });
                 }
-            }
+            },
         },
         recurPeriod: {
             get() {
@@ -83,26 +83,26 @@ export default {
             },
             set(value) {
                 const recurEvery =
-                    value === "ONCE" ? null : this.transaction.recurEvery || 1;
+                    value === 'ONCE' ? null : this.transaction.recurEvery || 1;
                 this.updateTransaction({
                     id: this.transaction.id,
-                    patch: { recurPeriod: value, recurEvery }
+                    patch: { recurPeriod: value, recurEvery },
                 });
-            }
+            },
         },
-        recurEvery: makeModelProperty("recurEvery")
+        recurEvery: makeModelProperty('recurEvery'),
     },
     methods: {
         onBlur,
-        ...mapActions("scheduledTransactions", {
-            updateTransaction: transactionActions.updateTransaction
-        })
+        ...mapActions('scheduledTransactions', {
+            updateTransaction: transactionActions.updateTransaction,
+        }),
     },
     watch: {
         transactionId() {
             Object.keys(this.raw).forEach(key => (this.raw[key] = undefined));
-        }
-    }
+        },
+    },
 };
 </script>
 

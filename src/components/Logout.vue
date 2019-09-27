@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import client from "../api/client";
+import client from '../api/client';
 
 export default {
     data() {
@@ -11,8 +11,8 @@ export default {
     },
     methods: {
         logout() {
-            client.logout().then(response => this.$emit("logOut"));
-        }
-    }
+            client.logout().then(response => this.$emit('logOut'));
+        },
+    },
 };
 </script>

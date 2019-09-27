@@ -37,7 +37,7 @@ function maxLength(length) {
 
 function notEmpty() {
     return value =>
-        validate(value === undefined || value.length > 0, "Required");
+        validate(value === undefined || value.length > 0, 'Required');
 }
 
 export const rules = {
@@ -46,7 +46,7 @@ export const rules = {
     amount: [maxDecimalPlaces(2)],
     notes: [maxLength(10000)],
     recurEvery: [positiveInteger()],
-    savingsTarget: [maxDecimalPlaces(2)]
+    savingsTarget: [maxDecimalPlaces(2)],
 };
 
 export function isValid(value, rules) {

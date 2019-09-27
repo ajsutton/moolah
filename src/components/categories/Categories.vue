@@ -67,16 +67,16 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
-import { actions } from "../../store/categoryStore";
-import MergeDialog from "./MergeDialog.vue";
-import CategoryName from "./CategoryName.vue";
+import { mapState, mapGetters, mapActions } from 'vuex';
+import { actions } from '../../store/categoryStore';
+import MergeDialog from './MergeDialog.vue';
+import CategoryName from './CategoryName.vue';
 
 export default {
     data() {
         return {
             selectedCategory: [],
-            opened: []
+            opened: [],
         };
     },
     computed: {
@@ -90,14 +90,14 @@ export default {
         categoryName() {
             return this.getCategoryName(this.category.id);
         },
-        ...mapState("categories", ["categories"]),
-        ...mapGetters("categories", ["getCategory", "getCategoryName"])
+        ...mapState('categories', ['categories']),
+        ...mapGetters('categories', ['getCategory', 'getCategoryName']),
     },
     methods: {
         async addCategory() {
             const createdCategory = await this[actions.addCategory]({
-                name: "New Category",
-                parentId: this.category.id
+                name: 'New Category',
+                parentId: this.category.id,
             });
 
             this.opened.push(this.category);
@@ -106,11 +106,11 @@ export default {
         selectCategory(category) {
             this.selectedCategory = [category];
         },
-        ...mapActions("categories", [actions.addCategory])
+        ...mapActions('categories', [actions.addCategory]),
     },
     components: {
         CategoryName,
-        MergeDialog
-    }
+        MergeDialog,
+    },
 };
 </script>

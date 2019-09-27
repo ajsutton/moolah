@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
-import MonetaryAmount from "../util/MonetaryAmount.vue";
-import WalletListItem from "./WalletListItem.vue";
+import { mapState, mapGetters, mapActions } from 'vuex';
+import MonetaryAmount from '../util/MonetaryAmount.vue';
+import WalletListItem from './WalletListItem.vue';
 
 const hiddenFilter = wallet => !wallet.hidden || wallet.balance !== 0;
 
@@ -48,28 +48,28 @@ export default {
     props: {
         title: {
             type: String,
-            required: true
+            required: true,
         },
         totalLabel: {
             type: String,
-            required: true
+            required: true,
         },
         accounts: {
             type: Array,
-            required: true
+            required: true,
         },
         totalValue: {
             type: Number,
-            required: true
+            required: true,
         },
         baseUrl: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
-            showHidden: false
+            showHidden: false,
         };
     },
     computed: {
@@ -80,11 +80,11 @@ export default {
         },
         hasHiddenWallets() {
             return !this.accounts.every(hiddenFilter);
-        }
+        },
     },
     components: {
         MonetaryAmount,
-        WalletListItem
-    }
+        WalletListItem,
+    },
 };
 </script>

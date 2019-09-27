@@ -9,13 +9,13 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import { actions } from "../../store/categoryStore";
+import { mapActions } from 'vuex';
+import { actions } from '../../store/categoryStore';
 
 export default {
     props: {
         category: Object,
-        editable: Boolean
+        editable: Boolean,
     },
     computed: {
         name: {
@@ -25,18 +25,18 @@ export default {
             set(value) {
                 this[actions.updateCategory]({
                     id: this.category.id,
-                    patch: { name: value }
+                    patch: { name: value },
                 });
-            }
-        }
+            },
+        },
     },
     methods: {
         focusName() {
             this.$refs.nameField.$refs.input.focus();
             this.$refs.nameField.$refs.input.select();
         },
-        ...mapActions("categories", [actions.updateCategory])
-    }
+        ...mapActions('categories', [actions.updateCategory]),
+    },
 };
 </script>
 

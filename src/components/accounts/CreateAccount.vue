@@ -37,7 +37,7 @@
                             :items="[
                                 { text: 'Bank Account', value: 'bank' },
                                 { text: 'Credit Card', value: 'cc' },
-                                { text: 'Asset', value: 'asset' }
+                                { text: 'Asset', value: 'asset' },
                             ]"
                         ></v-select>
 
@@ -70,19 +70,19 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import client from "../../api/client";
-import { actions } from "../../store/wallets/accountsStore";
-import { rules } from "../validation";
-import { VForm, VCheckbox } from "vuetify";
-import DatePickerField from "../util/DatePickerField.vue";
+import { mapActions } from 'vuex';
+import client from '../../api/client';
+import { actions } from '../../store/wallets/accountsStore';
+import { rules } from '../validation';
+import { VForm, VCheckbox } from 'vuetify';
+import DatePickerField from '../util/DatePickerField.vue';
 
 export default {
-    props: ["account"],
+    props: ['account'],
     data() {
         return {
-            name: "Unnamed account",
-            type: "bank",
+            name: 'Unnamed account',
+            type: 'bank',
             balance: 0,
             hidden: false,
             dialog: false,
@@ -92,26 +92,26 @@ export default {
 
             rules: {
                 name: rules.walletName,
-                balance: rules.amount
-            }
+                balance: rules.amount,
+            },
         };
     },
     computed: {
         title() {
-            return this.editing ? "Edit Account" : "Create Account";
+            return this.editing ? 'Edit Account' : 'Create Account';
         },
         icon() {
-            return this.editing ? "edit" : "add";
+            return this.editing ? 'edit' : 'add';
         },
         action() {
-            return this.editing ? "Save" : "Create";
+            return this.editing ? 'Save' : 'Create';
         },
         editing() {
             return !!this.account;
         },
         canHide() {
             return this.editing && (this.account.balance === 0 || this.hidden);
-        }
+        },
     },
 
     created() {
@@ -121,7 +121,7 @@ export default {
     watch: {
         account(newAccount) {
             this.syncFromAccount(newAccount);
-        }
+        },
     },
 
     methods: {
@@ -134,14 +134,14 @@ export default {
                             patch: {
                                 name: this.name,
                                 type: this.type,
-                                hidden: this.hidden
-                            }
+                                hidden: this.hidden,
+                            },
                         });
                     } else {
                         await this[actions.createAccount]({
                             name: this.name,
                             type: this.type,
-                            balance: Math.round(this.balance * 100)
+                            balance: Math.round(this.balance * 100),
                         });
                         this.syncFromAccount(undefined);
                     }
@@ -160,21 +160,21 @@ export default {
                 this.hidden = newAccount.hidden;
             } else {
                 this.balance = 0;
-                this.type = "bank";
-                this.name = "Unnamed account";
+                this.type = 'bank';
+                this.name = 'Unnamed account';
                 this.hidden = false;
             }
             this.errorMessage = null;
         },
-        ...mapActions("accounts", [
+        ...mapActions('accounts', [
             actions.createAccount,
-            actions.updateAccount
-        ])
+            actions.updateAccount,
+        ]),
     },
     components: {
         VForm,
         DatePickerField,
-        VCheckbox
-    }
+        VCheckbox,
+    },
 };
 </script>

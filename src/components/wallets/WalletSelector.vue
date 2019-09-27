@@ -22,28 +22,28 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
-import iconForType from "./walletIcon";
-import MonetaryAmount from "../util/MonetaryAmount";
+import { mapGetters, mapState } from 'vuex';
+import iconForType from './walletIcon';
+import MonetaryAmount from '../util/MonetaryAmount';
 
 export default {
     props: {
         label: String,
         wallets: {
             type: Array,
-            required: true
+            required: true,
         },
         value: {
             type: String,
-            required: false
+            required: false,
         },
         exclude: {
-            type: String
+            type: String,
         },
         clearable: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     computed: {
         filteredWallets() {
@@ -58,17 +58,17 @@ export default {
                 return this.value;
             },
             set(walletId) {
-                this.$emit("update:value", walletId);
-            }
-        }
+                this.$emit('update:value', walletId);
+            },
+        },
     },
     methods: {
         icon(wallet) {
             return iconForType(wallet.type);
-        }
+        },
     },
     components: {
-        MonetaryAmount
-    }
+        MonetaryAmount,
+    },
 };
 </script>

@@ -13,7 +13,7 @@ export default function extrapolateBalances(
         forecastUntil
     ).forEach(scheduledBalance => {
         const balance = data[scheduledBalance.date] || {
-            date: scheduledBalance.date
+            date: scheduledBalance.date,
         };
         balance.scheduled = scheduledBalance.balance;
         balance.scheduledAvailableFunds = scheduledBalance.availableFunds;
@@ -36,8 +36,8 @@ function extendUntil(balances, until) {
             {
                 date: until,
                 balance: lastBalance.balance,
-                availableFunds: lastBalance.availableFunds
-            }
+                availableFunds: lastBalance.availableFunds,
+            },
         ]);
     }
     return balances;
@@ -54,8 +54,8 @@ function extendBackTo(forecastBalances, balances, startDate) {
                 {
                     date: startDate,
                     balance: lastBalance.balance,
-                    availableFunds: lastBalance.availableFunds
-                }
+                    availableFunds: lastBalance.availableFunds,
+                },
             ],
             forecastBalances
         );

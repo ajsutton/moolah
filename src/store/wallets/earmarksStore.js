@@ -1,10 +1,10 @@
-import client from "../../api/client";
+import client from '../../api/client';
 import {
     createWalletStoreActions,
     createWalletStoreMutations,
     walletMutations,
-    walletActions
-} from "./walletStoreFunctions";
+    walletActions,
+} from './walletStoreFunctions';
 
 export { walletMutations as mutations };
 
@@ -12,13 +12,13 @@ export const actions = {
     loadEarmarks: walletActions.load,
     createEarmark: walletActions.create,
     updateEarmark: walletActions.update,
-    adjustBalance: walletActions.adjustBalance
+    adjustBalance: walletActions.adjustBalance,
 };
 
 export default {
     namespaced: true,
     state: {
-        earmarks: []
+        earmarks: [],
     },
     getters: {
         earmark(state) {
@@ -29,7 +29,7 @@ export default {
         earmarkName(state, getters) {
             return earmarkId => {
                 const earmark = getters.earmark(earmarkId);
-                return earmark ? earmark.name : "Unknown";
+                return earmark ? earmark.name : 'Unknown';
             };
         },
         totalEarmarked(state) {
@@ -40,10 +40,10 @@ export default {
         },
         hasEarmarks(state) {
             return state.earmarks.length > 0;
-        }
+        },
     },
-    mutations: createWalletStoreMutations("earmarks"),
-    actions: createWalletStoreActions("earmarks", client.earmarks, newEarmark =>
+    mutations: createWalletStoreMutations('earmarks'),
+    actions: createWalletStoreActions('earmarks', client.earmarks, newEarmark =>
         Object.assign({ balance: 0, saved: 0, spent: 0 }, newEarmark)
-    )
+    ),
 };

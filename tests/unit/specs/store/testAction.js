@@ -1,6 +1,6 @@
-const assert = require("chai").assert;
-const AssertionError = require("assertion-error");
-import sinon from "sinon";
+const assert = require('chai').assert;
+const AssertionError = require('assertion-error');
+import sinon from 'sinon';
 
 export default async (
     module,
@@ -19,9 +19,9 @@ export default async (
         const mutation = expectedMutations[mutationsCalled.length];
         if (mutation === undefined) {
             throw new Error(
-                "Additional unexpected commit: " +
+                'Additional unexpected commit: ' +
                     type +
-                    " - " +
+                    ' - ' +
                     JSON.stringify(payload)
             );
         }
@@ -30,9 +30,9 @@ export default async (
             assert.deepEqual(
                 mutation.payload,
                 payload,
-                "Incorrect payload for mutation " +
+                'Incorrect payload for mutation ' +
                     mutationsCalled.length +
-                    " of type " +
+                    ' of type ' +
                     mutation.type
             );
         }
@@ -49,7 +49,7 @@ export default async (
                 state: state,
                 rootState,
                 rootGetters: options.rootGetters,
-                dispatch: options.dispatch || sinon.spy()
+                dispatch: options.dispatch || sinon.spy(),
             },
             options.payload
         );
@@ -63,9 +63,9 @@ export default async (
     assert.equal(
         mutationsCalled.length,
         expectedMutations.length,
-        "Incorrect number of mutations, got: " +
+        'Incorrect number of mutations, got: ' +
             JSON.stringify(mutationsCalled) +
-            "\nexpected: " +
+            '\nexpected: ' +
             JSON.stringify(expectedMutations.map(m => m.type))
     );
 };

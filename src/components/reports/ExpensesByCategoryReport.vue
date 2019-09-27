@@ -35,28 +35,28 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations, mapState } from "vuex";
-import client from "../../api/client";
-import store from "../../store/store";
-import { formatDate } from "../../api/apiFormats";
-import addMonths from "date-fns/addMonths";
-import MonetaryAmount from "../util/MonetaryAmount.vue";
-import { expenseByCategoryReportData } from "./expenseByCategoryReportData";
+import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
+import client from '../../api/client';
+import store from '../../store/store';
+import { formatDate } from '../../api/apiFormats';
+import addMonths from 'date-fns/addMonths';
+import MonetaryAmount from '../util/MonetaryAmount.vue';
+import { expenseByCategoryReportData } from './expenseByCategoryReportData';
 
 export default {
     props: {
         from: { required: true },
-        to: { required: true }
+        to: { required: true },
     },
     data() {
         return {
             expenseBreakdown: [],
-            loading: true
+            loading: true,
         };
     },
     computed: {
         afterDate() {
-            return this.previousMonths !== "All"
+            return this.previousMonths !== 'All'
                 ? formatDate(addMonths(new Date(), -this.previousMonths))
                 : undefined;
         },
@@ -67,8 +67,8 @@ export default {
                 this.getCategoryName
             );
         },
-        ...mapGetters("categories", ["getCategoryName"]),
-        ...mapState("categories", ["categoriesById"])
+        ...mapGetters('categories', ['getCategoryName']),
+        ...mapState('categories', ['categoriesById']),
     },
     watch: {
         from() {
@@ -76,28 +76,28 @@ export default {
         },
         to() {
             this.update();
-        }
+        },
     },
     methods: {
         async update() {
             this.loading = true;
             try {
                 this.expenseBreakdown = await client.categoryBalances({
-                    transactionType: "expense",
+                    transactionType: 'expense',
                     from: formatDate(this.from),
-                    to: formatDate(this.to)
+                    to: formatDate(this.to),
                 });
             } finally {
                 this.loading = false;
             }
-        }
+        },
     },
     async mounted() {
         this.update();
     },
     components: {
-        MonetaryAmount
-    }
+        MonetaryAmount,
+    },
 };
 </script>
 

@@ -23,15 +23,15 @@
 </template>
 
 <script>
-import c3 from "c3";
-import client from "../../api/client";
-import formatMoney from "../util/formatMoney";
-import addMonths from "date-fns/addMonths";
-import { formatDate } from "../../api/apiFormats";
-import debounce from "debounce";
-import { mapGetters, mapState } from "vuex";
-import { categoriesOverTimeGraphData } from "./categories/categoryOverTimeData";
-import GraphPanel from "../util/GraphPanel.vue";
+import c3 from 'c3';
+import client from '../../api/client';
+import formatMoney from '../util/formatMoney';
+import addMonths from 'date-fns/addMonths';
+import { formatDate } from '../../api/apiFormats';
+import debounce from 'debounce';
+import { mapGetters, mapState } from 'vuex';
+import { categoriesOverTimeGraphData } from './categories/categoryOverTimeData';
+import GraphPanel from '../util/GraphPanel.vue';
 
 export default {
     data() {
@@ -41,22 +41,22 @@ export default {
             previousMonths: 24,
             actualValues: false,
             historyItems: [
-                { text: "1 Month", value: 1 },
-                { text: "3 Months", value: 3 },
-                { text: "6 Months", value: 6 },
-                { text: "9 Months", value: 9 },
-                { text: "1 Year", value: 12 },
-                { text: "2 Years", value: 24 },
-                { text: "3 Years", value: 36 },
-                { text: "4 Years", value: 48 },
-                { text: "5 Years", value: 60 },
-                { text: "All", value: "All" }
-            ]
+                { text: '1 Month', value: 1 },
+                { text: '3 Months', value: 3 },
+                { text: '6 Months', value: 6 },
+                { text: '9 Months', value: 9 },
+                { text: '1 Year', value: 12 },
+                { text: '2 Years', value: 24 },
+                { text: '3 Years', value: 36 },
+                { text: '4 Years', value: 48 },
+                { text: '5 Years', value: 60 },
+                { text: 'All', value: 'All' },
+            ],
         };
     },
     computed: {
         afterDate() {
-            return this.previousMonths !== "All"
+            return this.previousMonths !== 'All'
                 ? formatDate(addMonths(new Date(), -this.previousMonths))
                 : undefined;
         },
@@ -70,8 +70,8 @@ export default {
             );
         },
 
-        ...mapGetters("categories", ["getCategoryName"]),
-        ...mapState("categories", ["categoriesById"])
+        ...mapGetters('categories', ['getCategoryName']),
+        ...mapState('categories', ['categoriesById']),
     },
     watch: {
         actualValues() {
@@ -79,7 +79,7 @@ export default {
             const args = this.getArgs();
             this.$chart = c3.generate({
                 bindto: this.$refs.chartPanel.chart,
-                ...args
+                ...args,
             });
         },
         previousMonths() {
@@ -87,7 +87,7 @@ export default {
         },
         rootCategoryId() {
             this.update();
-        }
+        },
     },
     methods: {
         getArgs() {
@@ -96,14 +96,14 @@ export default {
                 data: this.graphData,
                 axis: {
                     x: {
-                        type: "category",
+                        type: 'category',
                         padding: 0,
                         tick: {
                             culling: true,
                             centered: true,
                             outer: false,
-                            multiline: false
-                        }
+                            multiline: false,
+                        },
                     },
                     y: {
                         show: true,
@@ -112,30 +112,30 @@ export default {
                         padding: 0,
                         tick: {
                             format: value =>
-                                actualValues ? formatMoney(value) : value + "%"
-                        }
-                    }
+                                actualValues ? formatMoney(value) : value + '%',
+                        },
+                    },
                 },
                 padding: {
                     left: actualValues ? 100 : 50,
                     right: 10,
                     bottom: 10,
-                    top: 10
+                    top: 10,
                 },
                 legend: {
-                    show: true
+                    show: true,
                 },
                 tooltip: {
                     show: false,
                     format: {
                         value(value, ratio) {
                             return `${formatMoney(value)}`;
-                        }
-                    }
+                        },
+                    },
                 },
                 point: {
-                    show: false
-                }
+                    show: false,
+                },
             };
         },
         async update() {
@@ -156,7 +156,7 @@ export default {
 
         handleResize: debounce(function() {
             this.reload();
-        }, 100)
+        }, 100),
     },
     async mounted() {
         this.expenseBreakdown = await client.expenseBreakdown(
@@ -166,15 +166,15 @@ export default {
         const args = this.getArgs();
         this.$chart = c3.generate({
             bindto: this.$refs.chartPanel.chart,
-            ...args
+            ...args,
         });
     },
     beforeDestroy() {
         this.$chart = this.$chart.destroy();
     },
     components: {
-        GraphPanel
-    }
+        GraphPanel,
+    },
 };
 </script>
 

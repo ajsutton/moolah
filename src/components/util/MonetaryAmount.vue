@@ -3,32 +3,32 @@
 </template>
 
 <script>
-import formatMoney from "./formatMoney";
+import formatMoney from './formatMoney';
 
 export default {
     props: {
         value: {
             type: Number,
-            required: true
+            required: true,
         },
         omitZeroCents: {
             type: Boolean,
-            default: false
+            default: false,
         },
         invertColors: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     computed: {
         colour() {
             return this.value >= 0 !== this.invertColors
-                ? "green--text"
-                : "red--text";
+                ? 'green--text'
+                : 'red--text';
         },
         amount() {
             return formatMoney(this.value, this.omitZeroCents);
-        }
-    }
+        },
+    },
 };
 </script>

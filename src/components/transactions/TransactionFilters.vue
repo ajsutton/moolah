@@ -51,10 +51,10 @@
 </template>
 
 <script>
-import DatePickerField from "../util/DatePickerField.vue";
-import CategorySelector from "../categories/CategorySelector.vue";
-import { mapState, mapActions, mapGetters } from "vuex";
-import { actions as transactionActions } from "../../store/transactions/transactionStore";
+import DatePickerField from '../util/DatePickerField.vue';
+import CategorySelector from '../categories/CategorySelector.vue';
+import { mapState, mapActions, mapGetters } from 'vuex';
+import { actions as transactionActions } from '../../store/transactions/transactionStore';
 
 export default {
     data() {
@@ -62,21 +62,21 @@ export default {
             from: undefined,
             to: undefined,
             categories: [],
-            dialog: false
+            dialog: false,
         };
     },
     computed: {
-        ...mapState("transactions", ["searchOptions"]),
-        ...mapGetters("transactions", ["isFiltered"])
+        ...mapState('transactions', ['searchOptions']),
+        ...mapGetters('transactions', ['isFiltered']),
     },
     created() {
         this.reset();
     },
     watch: {
         searchOptions: {
-            handler: "reset",
-            deep: true
-        }
+            handler: 'reset',
+            deep: true,
+        },
     },
     methods: {
         reset() {
@@ -94,16 +94,16 @@ export default {
                 query: {
                     from: this.from,
                     to: this.to,
-                    category: this.categories
-                }
+                    category: this.categories,
+                },
             });
             this.dialog = false;
         },
-        ...mapActions("transactions", [transactionActions.loadTransactions])
+        ...mapActions('transactions', [transactionActions.loadTransactions]),
     },
     components: {
         DatePickerField,
-        CategorySelector
-    }
+        CategorySelector,
+    },
 };
 </script>

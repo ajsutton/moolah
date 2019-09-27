@@ -14,27 +14,27 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 
 export default {
     props: {
         value: [String, Array],
         multiple: {
             type: Boolean,
-            default: false
+            default: false,
         },
         label: {
             type: String,
-            default: "Category"
+            default: 'Category',
         },
         exclude: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         required: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     computed: {
         valueProxy: {
@@ -43,10 +43,10 @@ export default {
             },
             set(value) {
                 this.$emit(
-                    "input",
-                    value === "no-category-selected" ? undefined : value
+                    'input',
+                    value === 'no-category-selected' ? undefined : value
                 );
-            }
+            },
         },
         flattenedCategories() {
             const name = [];
@@ -54,7 +54,7 @@ export default {
             const addCategory = category => {
                 name.push(category.name);
                 if (!this.exclude.includes(category)) {
-                    categories.push({ id: category.id, name: name.join(":") });
+                    categories.push({ id: category.id, name: name.join(':') });
                 }
                 category.children.forEach(addCategory);
                 name.pop();
@@ -62,7 +62,7 @@ export default {
             this.categories.forEach(addCategory);
             return categories;
         },
-        ...mapState("categories", ["categories"])
-    }
+        ...mapState('categories', ['categories']),
+    },
 };
 </script>

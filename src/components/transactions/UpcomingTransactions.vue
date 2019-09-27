@@ -41,28 +41,28 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
-import client from "../../api/client";
-import Transaction from "./Transaction.vue";
-import MonetaryAmount from "../util/MonetaryAmount.vue";
-import CreateAccount from "../accounts/CreateAccount.vue";
-import { actions as transactionActions } from "../../store/transactions/transactionStore";
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+import client from '../../api/client';
+import Transaction from './Transaction.vue';
+import MonetaryAmount from '../util/MonetaryAmount.vue';
+import CreateAccount from '../accounts/CreateAccount.vue';
+import { actions as transactionActions } from '../../store/transactions/transactionStore';
 import {
     actions as stateActions,
-    mutations as stateMutations
-} from "../../store/store";
-import differenceInCalendarDays from "date-fns/differenceInCalendarDays";
-import AddTransactionMixin from "../util/AddTransactionMixin";
+    mutations as stateMutations,
+} from '../../store/store';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import AddTransactionMixin from '../util/AddTransactionMixin';
 
 export default {
     props: {
         height: {
-            default: ""
+            default: '',
         },
         shortTerm: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     data() {
         return {};
@@ -94,47 +94,47 @@ export default {
             },
             set(index) {
                 this.editTransaction(this.transactions[index]);
-            }
+            },
         },
-        ...mapGetters(["selectedTransaction"]),
-        ...mapState("scheduledTransactions", ["transactions", "loading"]),
-        ...mapState("accounts", ["accounts"]),
-        ...mapState("earmarks", ["earmarks"])
+        ...mapGetters(['selectedTransaction']),
+        ...mapState('scheduledTransactions', ['transactions', 'loading']),
+        ...mapState('accounts', ['accounts']),
+        ...mapState('earmarks', ['earmarks']),
     },
 
     methods: {
         addTransaction() {
             this[transactionActions.addTransaction]({
                 recurEvery: null,
-                recurPeriod: "ONCE"
+                recurPeriod: 'ONCE',
             });
         },
         addEarmark() {
             this[transactionActions.addTransaction]({
                 earmark: this.earmarks[0].id,
                 accountId: undefined,
-                type: "income",
+                type: 'income',
                 recurEvery: null,
-                recurPeriod: "ONCE"
+                recurPeriod: 'ONCE',
             });
         },
         editTransaction(transaction) {
             this.$store.commit(stateMutations.selectTransaction, {
                 id: transaction.id,
-                scheduled: true
+                scheduled: true,
             });
         },
         ...mapActions([stateActions.showUpcoming]),
-        ...mapActions("scheduledTransactions", [
-            transactionActions.addTransaction
-        ])
+        ...mapActions('scheduledTransactions', [
+            transactionActions.addTransaction,
+        ]),
     },
 
     components: {
         MonetaryAmount,
         Transaction,
-        CreateAccount
-    }
+        CreateAccount,
+    },
 };
 </script>
 

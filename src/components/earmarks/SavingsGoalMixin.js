@@ -1,14 +1,14 @@
-import { VProgressCircular } from "vuetify";
-import differenceInCalendarDays from "date-fns/differenceInCalendarDays";
-import distanceInWords from "date-fns/formatDistance";
-import startOfToday from "date-fns/startOfToday";
+import { VProgressCircular } from 'vuetify';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import distanceInWords from 'date-fns/formatDistance';
+import startOfToday from 'date-fns/startOfToday';
 
 export default {
     props: {
         selectedAccount: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         hasReachedTarget() {
@@ -40,9 +40,9 @@ export default {
         },
         savingsColor() {
             if (this.savingsPercent < 100) {
-                return "accent";
+                return 'accent';
             } else {
-                return "success";
+                return 'success';
             }
         },
 
@@ -183,9 +183,9 @@ export default {
         },
         timeColor() {
             if (this.timePercent < 100) {
-                return "accent";
+                return 'accent';
             } else {
-                return "error";
+                return 'error';
             }
         },
 
@@ -196,6 +196,6 @@ export default {
                     this.selectedAccount.savingsStartDate ||
                     this.selectedAccount.savingsEndDate)
             );
-        }
-    }
+        },
+    },
 };

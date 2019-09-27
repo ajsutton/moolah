@@ -42,24 +42,24 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { actions as stateActions } from "../../store/store";
-import { actions as transactionActions } from "../../store/transactions/transactionStore";
-import Transactions from "../transactions/Transactions.vue";
-import SavingsGoalNotice from "./SavingsGoalNotice.vue";
-import CreateEarmark from "./CreateEarmark.vue";
-import AddTransactionMixin from "../util/AddTransactionMixin";
-import SpendingBreakdown from "./SpendingBreakdown.vue";
+import { mapGetters, mapActions } from 'vuex';
+import { actions as stateActions } from '../../store/store';
+import { actions as transactionActions } from '../../store/transactions/transactionStore';
+import Transactions from '../transactions/Transactions.vue';
+import SavingsGoalNotice from './SavingsGoalNotice.vue';
+import CreateEarmark from './CreateEarmark.vue';
+import AddTransactionMixin from '../util/AddTransactionMixin';
+import SpendingBreakdown from './SpendingBreakdown.vue';
 
 export default {
     props: {
         earmarkId: String,
-        searchOptions: Object
+        searchOptions: Object,
     },
 
     data() {
         return {
-            selectedTab: "overview"
+            selectedTab: 'overview',
         };
     },
 
@@ -72,7 +72,7 @@ export default {
     watch: {
         $route() {
             this.loadTransactions();
-        }
+        },
     },
 
     computed: {
@@ -80,9 +80,9 @@ export default {
             return this.findEarmarkById(this.earmarkId);
         },
         earmarkName() {
-            return this.selectedEarmark ? this.selectedEarmark.name : "";
+            return this.selectedEarmark ? this.selectedEarmark.name : '';
         },
-        ...mapGetters("earmarks", { findEarmarkById: "earmark" })
+        ...mapGetters('earmarks', { findEarmarkById: 'earmark' }),
     },
 
     methods: {
@@ -93,18 +93,18 @@ export default {
             this[transactionActions.addTransaction]({
                 earmark: this.earmarkId,
                 accountId: undefined,
-                type: "income"
+                type: 'income',
             });
         },
         ...mapActions([stateActions.loadTransactions]),
-        ...mapActions("transactions", [transactionActions.addTransaction])
+        ...mapActions('transactions', [transactionActions.addTransaction]),
     },
 
     components: {
         Transactions,
         SavingsGoalNotice,
         CreateEarmark,
-        SpendingBreakdown
-    }
+        SpendingBreakdown,
+    },
 };
 </script>

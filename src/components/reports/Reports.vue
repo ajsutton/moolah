@@ -41,13 +41,13 @@
 </template>
 
 <script>
-import ExpensesByCategoryReport from "./ExpensesByCategoryReport.vue";
-import DatePickerField from "../util/DatePickerField.vue";
-import { formatDate } from "../../api/apiFormats";
-import addMonths from "date-fns/addMonths";
-import startOfMonth from "date-fns/startOfMonth";
-import startOfQuarter from "date-fns/startOfQuarter";
-import startOfYear from "date-fns/startOfYear";
+import ExpensesByCategoryReport from './ExpensesByCategoryReport.vue';
+import DatePickerField from '../util/DatePickerField.vue';
+import { formatDate } from '../../api/apiFormats';
+import addMonths from 'date-fns/addMonths';
+import startOfMonth from 'date-fns/startOfMonth';
+import startOfQuarter from 'date-fns/startOfQuarter';
+import startOfYear from 'date-fns/startOfYear';
 
 function range(text, from, to) {
     return { text, value: { from: formatDate(from), to: formatDate(to) } };
@@ -59,16 +59,16 @@ export default {
             from: formatDate(addMonths(today, -6)),
             to: formatDate(new Date()),
             ranges: [
-                range("Last month", addMonths(today, -1), today),
-                range("Last 3 months", addMonths(today, -3), today),
-                range("Last 6 months", addMonths(today, -6), today),
-                range("Last 9 months", addMonths(today, -9), today),
-                range("Last 12 months", addMonths(today, -12), today),
-                range("Month to date", startOfMonth(today), today),
-                range("Quarter to date", startOfQuarter(today), today),
-                range("Year to date", startOfYear(today), today),
-                { text: "Custom", value: null }
-            ]
+                range('Last month', addMonths(today, -1), today),
+                range('Last 3 months', addMonths(today, -3), today),
+                range('Last 6 months', addMonths(today, -6), today),
+                range('Last 9 months', addMonths(today, -9), today),
+                range('Last 12 months', addMonths(today, -12), today),
+                range('Month to date', startOfMonth(today), today),
+                range('Quarter to date', startOfQuarter(today), today),
+                range('Year to date', startOfYear(today), today),
+                { text: 'Custom', value: null },
+            ],
         };
     },
     computed: {
@@ -96,12 +96,12 @@ export default {
                     this.from = value.from;
                     this.to = value.to;
                 }
-            }
-        }
+            },
+        },
     },
     components: {
         ExpensesByCategoryReport,
-        DatePickerField
-    }
+        DatePickerField,
+    },
 };
 </script>

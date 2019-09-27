@@ -38,26 +38,26 @@
 </template>
 
 <script>
-import CategorySelector from "../categories/CategorySelector.vue";
-import { rules, isValid } from "../validation.js";
-import client from "../../api/client";
+import CategorySelector from '../categories/CategorySelector.vue';
+import { rules, isValid } from '../validation.js';
+import client from '../../api/client';
 
 export default {
     props: {
         earmark: {
             type: Object,
-            required: true
+            required: true,
         },
         excludeCategories: {
-            type: Array
-        }
+            type: Array,
+        },
     },
     data() {
         return {
             visible: false,
             category: null,
             amount: null,
-            rules
+            rules,
         };
     },
     computed: {
@@ -66,7 +66,7 @@ export default {
                 this.category !== undefined &&
                 isValid(this.amount, this.rules.amount)
             );
-        }
+        },
     },
     methods: {
         async add() {
@@ -79,7 +79,7 @@ export default {
                         parsedAmount
                     );
                     this.close();
-                    this.$emit("add", this.category, parsedAmount);
+                    this.$emit('add', this.category, parsedAmount);
                 } catch (error) {
                     console.error(error);
                 }
@@ -87,10 +87,10 @@ export default {
         },
         close() {
             this.visible = false;
-        }
+        },
     },
     components: {
-        CategorySelector
-    }
+        CategorySelector,
+    },
 };
 </script>

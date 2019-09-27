@@ -14,22 +14,22 @@
 </template>
 
 <script>
-import MonetaryAmount from "../util/MonetaryAmount.vue";
-import iconForType from "./walletIcon";
+import MonetaryAmount from '../util/MonetaryAmount.vue';
+import iconForType from './walletIcon';
 
 export default {
     props: {
         account: {
             type: Object,
-            required: true
+            required: true,
         },
         baseUrl: {
             type: String,
-            required: true
+            required: true,
         },
         icon: {
-            type: String
-        }
+            type: String,
+        },
     },
     computed: {
         accountLink() {
@@ -37,12 +37,12 @@ export default {
         },
         walletIcon() {
             return this.account.hidden
-                ? "mdi-eye-off-outline"
+                ? 'mdi-eye-off-outline'
                 : this.icon || iconForType(this.account.type);
-        }
+        },
     },
     components: {
-        MonetaryAmount
-    }
+        MonetaryAmount,
+    },
 };
 </script>

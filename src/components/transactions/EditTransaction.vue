@@ -80,20 +80,20 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
-import { actions as transactionActions } from "../../store/transactions/transactionStore";
-import { rules, isValid } from "../validation";
-import WalletSelector from "../wallets/WalletSelector.vue";
-import CategorySelector from "../categories/CategorySelector.vue";
-import AutoCompletePayee from "./AutoCompletePayee.vue";
-import Recurrence from "./RecurranceControls.vue";
-import DatePickerField from "../util/DatePickerField.vue";
-import createTypeChangePatch from "./changeType";
-import { makeModelProperty, onBlur } from "./modelProperty";
-import debounce from "debounce";
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+import { actions as transactionActions } from '../../store/transactions/transactionStore';
+import { rules, isValid } from '../validation';
+import WalletSelector from '../wallets/WalletSelector.vue';
+import CategorySelector from '../categories/CategorySelector.vue';
+import AutoCompletePayee from './AutoCompletePayee.vue';
+import Recurrence from './RecurranceControls.vue';
+import DatePickerField from '../util/DatePickerField.vue';
+import createTypeChangePatch from './changeType';
+import { makeModelProperty, onBlur } from './modelProperty';
+import debounce from 'debounce';
 
 function typeMultiplier(transaction) {
-    return transaction.type === "expense" || transaction.type === "transfer"
+    return transaction.type === 'expense' || transaction.type === 'transfer'
         ? -1
         : 1;
 }
@@ -106,9 +106,9 @@ export default {
                 payee: undefined,
                 amount: undefined,
                 note: undefined,
-                categoryId: undefined
+                categoryId: undefined,
             },
-            rules
+            rules,
         };
     },
     computed: {
@@ -116,10 +116,10 @@ export default {
             return this.transaction.id;
         },
         isOpeningBalance() {
-            return this.transaction.type === "openingBalance";
+            return this.transaction.type === 'openingBalance';
         },
         toAccountLabel() {
-            return this.transaction.amount < 0 ? "To Account" : "From Account";
+            return this.transaction.amount < 0 ? 'To Account' : 'From Account';
         },
         isEarmarkAccount() {
             return this.account === undefined || this.account === null;
@@ -128,29 +128,29 @@ export default {
             return this.accountById(this.transaction.accountId);
         },
         ...mapGetters({
-            transaction: "selectedTransaction"
+            transaction: 'selectedTransaction',
         }),
-        ...mapGetters("accounts", { accountById: "account" }),
-        ...mapGetters("earmarks", ["hasEarmarks"]),
-        ...mapState("accounts", ["accounts"]),
-        ...mapState("earmarks", ["earmarks"]),
+        ...mapGetters('accounts', { accountById: 'account' }),
+        ...mapGetters('earmarks', ['hasEarmarks']),
+        ...mapState('accounts', ['accounts']),
+        ...mapState('earmarks', ['earmarks']),
         accountId: {
             get() {
                 return this.transaction.accountId;
             },
             set(value) {
                 const patch = { accountId: value };
-                if (this.accountById(value).type === "earmark") {
-                    patch.type = "income";
+                if (this.accountById(value).type === 'earmark') {
+                    patch.type = 'income';
                     patch.payee = undefined;
                     patch.categoryId = undefined;
                     patch.toAccountId = undefined;
                 }
                 this.updateTransaction({
                     id: this.transaction.id,
-                    patch
+                    patch,
                 });
-            }
+            },
         },
         earmark: {
             get() {
@@ -159,25 +159,25 @@ export default {
             set(value) {
                 this.updateTransaction({
                     id: this.transaction.id,
-                    patch: { earmark: value }
+                    patch: { earmark: value },
                 });
-            }
+            },
         },
         validTransactionTypes() {
             const types = [
-                { text: "Expense", value: "expense" },
-                { text: "Income", value: "income" }
+                { text: 'Expense', value: 'expense' },
+                { text: 'Income', value: 'income' },
             ];
             if (this.accounts.length > 1) {
-                types.push({ text: "Transfer", value: "transfer" });
+                types.push({ text: 'Transfer', value: 'transfer' });
             }
             return types;
         },
         scheduled() {
             return this.transaction.recurPeriod !== undefined;
         },
-        payee: makeModelProperty("payee"),
-        notes: makeModelProperty("notes"),
+        payee: makeModelProperty('payee'),
+        notes: makeModelProperty('notes'),
         date: {
             get() {
                 return this.transaction.date;
@@ -185,9 +185,9 @@ export default {
             set: function(value) {
                 this.updateTransaction({
                     id: this.transaction.id,
-                    patch: { date: value }
+                    patch: { date: value },
                 });
-            }
+            },
         },
         type: {
             get() {
@@ -203,7 +203,7 @@ export default {
                         )
                     );
                 }
-            }
+            },
         },
         toAccountId: {
             get() {
@@ -213,19 +213,19 @@ export default {
                 this.updateTransaction({
                     id: this.transaction.id,
                     patch: {
-                        type: "transfer",
-                        toAccountId: value
-                    }
+                        type: 'transfer',
+                        toAccountId: value,
+                    },
                 });
-            }
+            },
         },
         category: makeModelProperty(
-            "categoryId",
-            value => value || "",
-            value => (value === "" ? undefined : value)
+            'categoryId',
+            value => value || '',
+            value => (value === '' ? undefined : value)
         ),
         amount: makeModelProperty(
-            "amount",
+            'amount',
             (amount, transaction) =>
                 ((typeMultiplier(transaction) * amount) / 100).toFixed(2),
             (value, transaction) =>
@@ -235,7 +235,7 @@ export default {
             return (
                 this.hasEarmarks && (!this.isEarmarkAccount || this.scheduled)
             );
-        }
+        },
     },
     methods: {
         autofill(transaction) {
@@ -246,27 +246,27 @@ export default {
                     amount: transaction.amount,
                     categoryId: transaction.categoryId,
                     type: transaction.type,
-                    toAccountId: transaction.toAccountId
-                }
+                    toAccountId: transaction.toAccountId,
+                },
             });
         },
         onBlur,
         ...mapActions({
             updateTransaction: transactionActions.updateTransaction,
-            deleteTransaction: transactionActions.deleteTransaction
+            deleteTransaction: transactionActions.deleteTransaction,
         }),
-        ...mapActions("scheduledTransactions", {
-            pay: transactionActions.payTransaction
+        ...mapActions('scheduledTransactions', {
+            pay: transactionActions.payTransaction,
         }),
         focus() {
             (this.$refs.payee || this.$refs.amount).focus();
-        }
+        },
     },
     watch: {
         transactionId() {
             Object.keys(this.raw).forEach(key => (this.raw[key] = undefined));
             this.focus();
-        }
+        },
     },
     mounted() {
         this.focus();
@@ -276,7 +276,7 @@ export default {
         CategorySelector,
         DatePickerField,
         Recurrence,
-        AutoCompletePayee
-    }
+        AutoCompletePayee,
+    },
 };
 </script>

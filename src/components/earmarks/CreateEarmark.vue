@@ -82,19 +82,19 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import client from "../../api/client";
-import { actions } from "../../store/wallets/earmarksStore";
-import { rules } from "../validation";
-import { VForm, VCheckbox } from "vuetify";
-import DatePickerField from "../util/DatePickerField.vue";
-import isBefore from "date-fns/isBefore";
+import { mapActions } from 'vuex';
+import client from '../../api/client';
+import { actions } from '../../store/wallets/earmarksStore';
+import { rules } from '../validation';
+import { VForm, VCheckbox } from 'vuetify';
+import DatePickerField from '../util/DatePickerField.vue';
+import isBefore from 'date-fns/isBefore';
 
 export default {
-    props: ["earmark"],
+    props: ['earmark'],
     data() {
         return {
-            name: "Unnamed earmark",
+            name: 'Unnamed earmark',
             savingsTarget: null,
             savingsStartDate: null,
             savingsEndDate: null,
@@ -116,30 +116,30 @@ export default {
                             )
                         ) {
                             console.log(value, this.savingsEndDate);
-                            return "Must be after start date";
+                            return 'Must be after start date';
                         }
                         return true;
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         };
     },
     computed: {
         title() {
-            return this.editing ? "Edit Earmark" : "Create Earmark";
+            return this.editing ? 'Edit Earmark' : 'Create Earmark';
         },
         icon() {
-            return this.editing ? "edit" : "add";
+            return this.editing ? 'edit' : 'add';
         },
         action() {
-            return this.editing ? "Save" : "Create";
+            return this.editing ? 'Save' : 'Create';
         },
         editing() {
             return !!this.earmark;
         },
         canHide() {
             return this.editing && (this.earmark.balance === 0 || this.hidden);
-        }
+        },
     },
 
     created() {
@@ -149,7 +149,7 @@ export default {
     watch: {
         earmark(newEarmark) {
             this.syncFromEarmark(newEarmark);
-        }
+        },
     },
 
     methods: {
@@ -168,8 +168,9 @@ export default {
                                 ),
                                 savingsStartDate:
                                     this.savingsStartDate || undefined,
-                                savingsEndDate: this.savingsEndDate || undefined
-                            }
+                                savingsEndDate:
+                                    this.savingsEndDate || undefined,
+                            },
                         });
                     } else {
                         await this[actions.createEarmark]({
@@ -178,7 +179,7 @@ export default {
                             savingsTarget: Math.round(this.savingsTarget * 100),
                             savingsStartDate:
                                 this.savingsStartDate || undefined,
-                            savingsEndDate: this.savingsEndDate || undefined
+                            savingsEndDate: this.savingsEndDate || undefined,
                         });
                         this.syncFromEarmark(undefined);
                     }
@@ -197,7 +198,7 @@ export default {
                 this.savingsEndDate = newEarmark.savingsEndDate;
                 this.hidden = newEarmark.hidden;
             } else {
-                this.name = "Unnamed earmark";
+                this.name = 'Unnamed earmark';
                 this.savingsTarget = null;
                 this.savingsStartDate = null;
                 this.savingsEndDate = null;
@@ -205,15 +206,15 @@ export default {
             }
             this.errorMessage = null;
         },
-        ...mapActions("earmarks", [
+        ...mapActions('earmarks', [
             actions.createEarmark,
-            actions.updateEarmark
-        ])
+            actions.updateEarmark,
+        ]),
     },
     components: {
         VForm,
         DatePickerField,
-        VCheckbox
-    }
+        VCheckbox,
+    },
 };
 </script>

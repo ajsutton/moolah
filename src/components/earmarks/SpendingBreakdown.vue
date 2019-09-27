@@ -25,7 +25,7 @@
                                 <div
                                     :style="{
                                         'margin-left':
-                                            category.level * 24 + 'px'
+                                            category.level * 24 + 'px',
                                     }"
                                 >
                                     {{ category.name }}
@@ -154,27 +154,27 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
-import MonetaryAmount from "../util/MonetaryAmount.vue";
-import client from "../../api/client";
-import { buildCategoryBalanceTree } from "./categoryBalances";
-import PieChart from "../charts/PieChart.vue";
-import debounce from "debounce";
-import { rules } from "../validation.js";
-import AddLineItem from "./AddLineItem.vue";
-import Vue from "vue";
+import { mapState, mapGetters } from 'vuex';
+import MonetaryAmount from '../util/MonetaryAmount.vue';
+import client from '../../api/client';
+import { buildCategoryBalanceTree } from './categoryBalances';
+import PieChart from '../charts/PieChart.vue';
+import debounce from 'debounce';
+import { rules } from '../validation.js';
+import AddLineItem from './AddLineItem.vue';
+import Vue from 'vue';
 
 export default {
     props: {
         earmark: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
             categoryData: {},
-            rules
+            rules,
         };
     },
     computed: {
@@ -205,23 +205,23 @@ export default {
                     addCategory(
                         child,
                         parentRequired ? level + 1 : level,
-                        parentRequired ? "" : category.name + " - "
+                        parentRequired ? '' : category.name + ' - '
                     )
                 );
                 if (category.children.length > 1 && !skipTotal) {
                     result.push({
-                        name: "Total " + category.name,
+                        name: 'Total ' + category.name,
                         subtotal: category.subtotal,
                         balance: 0,
                         budget: 0,
                         budgetSubtotal: category.budgetSubtotal,
                         level: level,
-                        total: true
+                        total: true,
                     });
                 }
             };
             this.categories.forEach(category =>
-                addCategory(category, 0, "", this.categories.length === 1)
+                addCategory(category, 0, '', this.categories.length === 1)
             );
             return result;
         },
@@ -248,17 +248,17 @@ export default {
             return Object.entries(this.categoryData).map(
                 ([categoryId, entry]) => [
                     this.categoriesById[categoryId].name,
-                    entry.balance
+                    entry.balance,
                 ]
             );
         },
 
-        ...mapState("categories", {
-            rawCategories: "categories",
-            categoriesById: "categoriesById"
+        ...mapState('categories', {
+            rawCategories: 'categories',
+            categoriesById: 'categoriesById',
         }),
-        ...mapGetters("categories", ["getCategoryName"]),
-        ...mapState("transactions", ["transactions"])
+        ...mapGetters('categories', ['getCategoryName']),
+        ...mapState('transactions', ['transactions']),
     },
     created() {
         this.load();
@@ -268,8 +268,8 @@ export default {
             handler: debounce(function() {
                 this.load();
             }, 250),
-            deep: true
-        }
+            deep: true,
+        },
     },
     methods: {
         async load() {
@@ -277,9 +277,9 @@ export default {
                 [
                     client.categoryBalances({
                         earmark: this.earmark.id,
-                        transactionType: "expense"
+                        transactionType: 'expense',
                     }),
-                    client.earmarkBudget(this.earmark.id)
+                    client.earmarkBudget(this.earmark.id),
                 ]
             );
             const categoryData = {};
@@ -330,13 +330,13 @@ export default {
                 console.error(error);
                 category.budget = originalBudget;
             }
-        }
+        },
     },
     components: {
         MonetaryAmount,
         PieChart,
-        AddLineItem
-    }
+        AddLineItem,
+    },
 };
 </script>
 

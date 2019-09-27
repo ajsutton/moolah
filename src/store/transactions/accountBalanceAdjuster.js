@@ -1,4 +1,4 @@
-import { actions } from "../wallets/accountsStore";
+import { actions } from '../wallets/accountsStore';
 
 function addChange(changes, accountId, amount, saved = false, spent = false) {
     const change = changes[accountId] || { balance: 0, saved: 0, spent: 0 };
@@ -39,8 +39,8 @@ export default function updateAccountBalances(
                 earmarkChanges,
                 originalTransaction.earmark,
                 -originalTransaction.amount,
-                originalTransaction.type === "income",
-                originalTransaction.type === "expense"
+                originalTransaction.type === 'income',
+                originalTransaction.type === 'expense'
             );
         }
     }
@@ -64,8 +64,8 @@ export default function updateAccountBalances(
                 earmarkChanges,
                 modifiedTransaction.earmark,
                 modifiedTransaction.amount,
-                modifiedTransaction.type === "income",
-                modifiedTransaction.type === "expense"
+                modifiedTransaction.type === 'income',
+                modifiedTransaction.type === 'expense'
             );
         }
     }
@@ -73,7 +73,7 @@ export default function updateAccountBalances(
         .filter(([accountId, change]) => change.balance !== 0)
         .forEach(([accountId, change]) =>
             dispatch(
-                "accounts/" + actions.adjustBalance,
+                'accounts/' + actions.adjustBalance,
                 { id: accountId, balance: change.balance },
                 { root: true }
             )
@@ -86,12 +86,12 @@ export default function updateAccountBalances(
         )
         .forEach(([earmarkId, change]) =>
             dispatch(
-                "earmarks/" + actions.adjustBalance,
+                'earmarks/' + actions.adjustBalance,
                 {
                     id: earmarkId,
                     balance: change.balance,
                     saved: change.saved,
-                    spent: change.spent
+                    spent: change.spent,
                 },
                 { root: true }
             )

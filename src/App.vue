@@ -84,22 +84,22 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations, mapState } from "vuex";
-import { actions as transactionActions } from "./store/transactions/transactionStore";
-import { actions as accountActions } from "./store/wallets/accountsStore";
-import { actions as earmarkActions } from "./store/wallets/earmarksStore";
-import { mutations, actions as stateActions } from "./store/store";
-import MainNav from "./components/MainNav.vue";
-import EditTransaction from "./components/transactions/EditTransaction";
-import Welcome from "./components/welcome/Welcome";
-import LoadingScreen from "./components/welcome/LoadingScreen.vue";
-import Logout from "./components/Logout";
-import client from "./api/client";
-import store from "./store/store";
-import { actions as categoryActions } from "./store/categoryStore";
+import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
+import { actions as transactionActions } from './store/transactions/transactionStore';
+import { actions as accountActions } from './store/wallets/accountsStore';
+import { actions as earmarkActions } from './store/wallets/earmarksStore';
+import { mutations, actions as stateActions } from './store/store';
+import MainNav from './components/MainNav.vue';
+import EditTransaction from './components/transactions/EditTransaction';
+import Welcome from './components/welcome/Welcome';
+import LoadingScreen from './components/welcome/LoadingScreen.vue';
+import Logout from './components/Logout';
+import client from './api/client';
+import store from './store/store';
+import { actions as categoryActions } from './store/categoryStore';
 
 export default {
-    name: "app",
+    name: 'app',
     data() {
         return {
             loading: true,
@@ -109,8 +109,8 @@ export default {
                 userId: null,
                 givenName: null,
                 familyName: null,
-                picture: null
-            }
+                picture: null,
+            },
         };
     },
     computed: {
@@ -120,7 +120,7 @@ export default {
             },
             set(value) {
                 this.$store.commit(mutations.showMainNav, value);
-            }
+            },
         },
         showRightNavPanel: {
             get() {
@@ -128,30 +128,30 @@ export default {
             },
             set(value) {
                 this.$store.commit(mutations.showEditTransactionPanel, value);
-            }
+            },
         },
         hasTransaction() {
             return this.selectedTransaction !== undefined && this.loggedIn;
         },
-        ...mapGetters(["selectedTransaction"]),
+        ...mapGetters(['selectedTransaction']),
         ...mapState({
-            rightNavToggle: "showEditTransactionPanel",
-            mainNavToggle: "showMainNav"
-        })
+            rightNavToggle: 'showEditTransactionPanel',
+            mainNavToggle: 'showMainNav',
+        }),
     },
     methods: {
         toggleRightNav() {
             this.showRightNavPanel = !this.rightNavToggle;
         },
-        ...mapActions("categories", [categoryActions.loadCategories]),
-        ...mapActions("accounts", {
-            loadAccounts: accountActions.loadAccounts
+        ...mapActions('categories', [categoryActions.loadCategories]),
+        ...mapActions('accounts', {
+            loadAccounts: accountActions.loadAccounts,
         }),
-        ...mapActions("earmarks", {
-            loadEarmarks: earmarkActions.loadEarmarks
+        ...mapActions('earmarks', {
+            loadEarmarks: earmarkActions.loadEarmarks,
         }),
         ...mapActions([stateActions.showUpcoming]),
-        ...mapMutations([mutations.selectTransaction, mutations.showMainNav])
+        ...mapMutations([mutations.selectTransaction, mutations.showMainNav]),
     },
     store,
     components: {
@@ -159,7 +159,7 @@ export default {
         EditTransaction,
         Welcome,
         Logout,
-        LoadingScreen
+        LoadingScreen,
     },
     async created() {
         const state = await client.userProfile();
@@ -171,10 +171,10 @@ export default {
         this.profile = state.profile;
         this.loading = false;
         this.loggedIn = state.loggedIn;
-    }
+    },
 };
 </script>
 
 <style>
-@import "~vuetify/dist/vuetify.min.css";
+@import '~vuetify/dist/vuetify.min.css';
 </style>

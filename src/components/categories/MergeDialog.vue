@@ -27,42 +27,42 @@
     </v-dialog>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
-import { actions } from "../../store/categoryStore";
-import CategorySelector from "./CategorySelector.vue";
+import { mapState, mapGetters, mapActions } from 'vuex';
+import { actions } from '../../store/categoryStore';
+import CategorySelector from './CategorySelector.vue';
 
 export default {
-    props: ["category"],
+    props: ['category'],
     data() {
         return {
             open: false,
-            replacement: null
+            replacement: null,
         };
     },
     computed: {
         categoryName() {
-            return this.$store.getters["categories/getCategoryName"](
+            return this.$store.getters['categories/getCategoryName'](
                 this.category.id
             );
         },
-        ...mapGetters("categories", ["getCategory"])
+        ...mapGetters('categories', ['getCategory']),
     },
     methods: {
         async doDelete() {
             this.open = false;
             this.$emit(
-                "selectCategory",
+                'selectCategory',
                 this.getCategory(this.category.parentId) || { id: null }
             );
             await this[actions.deleteCategory]({
                 id: this.category.id,
-                replaceWith: this.replacement
+                replaceWith: this.replacement,
             });
         },
-        ...mapActions("categories", [actions.deleteCategory])
+        ...mapActions('categories', [actions.deleteCategory]),
     },
     components: {
-        CategorySelector
-    }
+        CategorySelector,
+    },
 };
 </script>

@@ -42,16 +42,16 @@
 </template>
 
 <script>
-import c3 from "c3";
-import client from "../../api/client";
-import formatMoney from "../util/formatMoney";
-import addMonths from "date-fns/addMonths";
-import { formatDate } from "../../api/apiFormats";
-import debounce from "debounce";
-import { mapGetters, mapState } from "vuex";
-import { summariseCategories } from "./expenseBreakdownData";
-import GraphPanel from "../util/GraphPanel.vue";
-import PieChart from "../charts/PieChart.vue";
+import c3 from 'c3';
+import client from '../../api/client';
+import formatMoney from '../util/formatMoney';
+import addMonths from 'date-fns/addMonths';
+import { formatDate } from '../../api/apiFormats';
+import debounce from 'debounce';
+import { mapGetters, mapState } from 'vuex';
+import { summariseCategories } from './expenseBreakdownData';
+import GraphPanel from '../util/GraphPanel.vue';
+import PieChart from '../charts/PieChart.vue';
 
 export default {
     data() {
@@ -60,22 +60,22 @@ export default {
             rootCategoryId: null,
             previousMonths: 6,
             historyItems: [
-                { text: "1 Month", value: 1 },
-                { text: "3 Months", value: 3 },
-                { text: "6 Months", value: 6 },
-                { text: "9 Months", value: 9 },
-                { text: "1 Year", value: 12 },
-                { text: "2 Years", value: 24 },
-                { text: "3 Years", value: 36 },
-                { text: "4 Years", value: 48 },
-                { text: "5 Years", value: 60 },
-                { text: "All", value: "All" }
-            ]
+                { text: '1 Month', value: 1 },
+                { text: '3 Months', value: 3 },
+                { text: '6 Months', value: 6 },
+                { text: '9 Months', value: 9 },
+                { text: '1 Year', value: 12 },
+                { text: '2 Years', value: 24 },
+                { text: '3 Years', value: 36 },
+                { text: '4 Years', value: 48 },
+                { text: '5 Years', value: 60 },
+                { text: 'All', value: 'All' },
+            ],
         };
     },
     computed: {
         afterDate() {
-            return this.previousMonths !== "All"
+            return this.previousMonths !== 'All'
                 ? formatDate(addMonths(new Date(), -this.previousMonths))
                 : undefined;
         },
@@ -96,11 +96,11 @@ export default {
                 crumbs.unshift(category);
                 id = category.parentId;
             }
-            crumbs.unshift({ name: "Categories", id: null });
+            crumbs.unshift({ name: 'Categories', id: null });
             return crumbs;
         },
-        ...mapGetters("categories", ["getCategoryName"]),
-        ...mapState("categories", ["categoriesById"])
+        ...mapGetters('categories', ['getCategoryName']),
+        ...mapState('categories', ['categoriesById']),
     },
     watch: {
         previousMonths() {
@@ -110,7 +110,7 @@ export default {
             if (this.$chart) {
                 this.$chart.load(this.graphData);
             }
-        }
+        },
     },
     methods: {
         onGraphClick(data) {
@@ -137,7 +137,7 @@ export default {
 
         handleResize: debounce(function() {
             this.reload();
-        }, 100)
+        }, 100),
     },
     async mounted() {
         this.expenseBreakdown = await client.expenseBreakdown(
@@ -152,8 +152,8 @@ export default {
     },
     components: {
         GraphPanel,
-        PieChart
-    }
+        PieChart,
+    },
 };
 </script>
 

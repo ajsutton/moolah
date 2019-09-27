@@ -63,65 +63,65 @@
 </template>
 
 <script>
-import MonetaryAmount from "../util/MonetaryAmount.vue";
-import client from "../../api/client";
-import { monthAsIsoDate } from "../../api/apiFormats";
-import addMonths from "date-fns/addMonths";
-import format from "date-fns/format";
-import getMonth from "date-fns/getMonth";
-import differenceInCalendarMonths from "date-fns/differenceInCalendarMonths";
-import { VCheckbox } from "vuetify";
+import MonetaryAmount from '../util/MonetaryAmount.vue';
+import client from '../../api/client';
+import { monthAsIsoDate } from '../../api/apiFormats';
+import addMonths from 'date-fns/addMonths';
+import format from 'date-fns/format';
+import getMonth from 'date-fns/getMonth';
+import differenceInCalendarMonths from 'date-fns/differenceInCalendarMonths';
+import { VCheckbox } from 'vuetify';
 
 export default {
     data() {
         return {
             headers: [
                 {
-                    text: "Month",
-                    align: "left",
+                    text: 'Month',
+                    align: 'left',
                     sortable: true,
-                    value: "end"
+                    value: 'end',
                 },
                 {
-                    text: "Income",
-                    align: "right",
+                    text: 'Income',
+                    align: 'right',
                     sortable: true,
-                    value: "income",
-                    classes: "hidden-md-and-down"
+                    value: 'income',
+                    classes: 'hidden-md-and-down',
                 },
                 {
-                    text: "Expense",
-                    align: "right",
+                    text: 'Expense',
+                    align: 'right',
                     sortable: true,
-                    value: "expense",
-                    classes: "hidden-md-and-down"
+                    value: 'expense',
+                    classes: 'hidden-md-and-down',
                 },
                 {
-                    text: "Savings",
-                    align: "right",
+                    text: 'Savings',
+                    align: 'right',
                     sortable: true,
-                    value: "profit"
+                    value: 'profit',
                 },
                 {
-                    text: "Total Savings",
-                    align: "right",
+                    text: 'Total Savings',
+                    align: 'right',
                     sortable: true,
-                    value: "cumulativeSavings",
-                    classes: "hidden-sm-and-down"
-                }
+                    value: 'cumulativeSavings',
+                    classes: 'hidden-sm-and-down',
+                },
             ],
             footerProps: {
-                "items-per-page-text": "Months per page",
-                "items-per-page-options": [6, 12, 18, 24]
+                'items-per-page-text': 'Months per page',
+                'items-per-page-options': [6, 12, 18, 24],
             },
             breakdown: [],
             pagination: {
-                sortBy: "end",
+                sortBy: 'end',
                 descending: true,
-                rowsPerPage: 12
+                rowsPerPage: 12,
             },
             includeEarmarks: false,
-            loading: true
+            loading: true,
         };
     },
     computed: {
@@ -138,9 +138,9 @@ export default {
                 ),
                 month: data.month,
                 start: data.start,
-                end: data.end
+                end: data.end,
             }));
-        }
+        },
     },
     async created() {
         const response = await client.incomeAndExpenseAnalsyis(
@@ -160,7 +160,7 @@ export default {
 
     components: {
         MonetaryAmount,
-        VCheckbox
+        VCheckbox,
     },
 
     filters: {
@@ -174,20 +174,20 @@ export default {
                 differenceInCalendarMonths(new Date(), endDate) >= 12;
             const monthLabel =
                 startMonth === endMonth
-                    ? format(startDate, "MMM")
-                    : format(startDate, "MMM") + "/" + format(endDate, "MMM");
-            const yearLabel = includeYear ? " " + format(endDate, "yyyy") : "";
+                    ? format(startDate, 'MMM')
+                    : format(startDate, 'MMM') + '/' + format(endDate, 'MMM');
+            const yearLabel = includeYear ? ' ' + format(endDate, 'yyyy') : '';
             return monthLabel + yearLabel;
         },
         monthsAgo(value) {
-            const plural = value => (value === 1 ? "" : "s");
+            const plural = value => (value === 1 ? '' : 's');
             const dayOfMonth = new Date().getDate();
             const endDate = monthAsIsoDate(value.month, dayOfMonth);
             const startDate = addMonths(endDate, -1);
             const monthsAgo =
                 differenceInCalendarMonths(new Date(), endDate) + 1;
             if (monthsAgo === 1) {
-                return "Last\xa0month";
+                return 'Last\xa0month';
             } else if (monthsAgo > 12) {
                 const yearsAgo = Math.floor(monthsAgo / 12);
                 const monthsAgoRemainer = monthsAgo % 12;
@@ -201,8 +201,8 @@ export default {
             } else {
                 return `${monthsAgo}\xa0months\xa0ago`;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 

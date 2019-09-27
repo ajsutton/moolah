@@ -1,4 +1,4 @@
-import { rootLevelId } from "./categories/rootLevelId";
+import { rootLevelId } from './categories/rootLevelId';
 
 export function summariseCategories(
     expensesByCategory,
@@ -33,7 +33,7 @@ function rollupToRootLevel(expensesByCategory, rootCategoryId, categoriesById) {
         ([categoryId, totalExpenses]) => [
             categoriesById[categoryId].name,
             -totalExpenses,
-            categoryId
+            categoryId,
         ]
     );
 }

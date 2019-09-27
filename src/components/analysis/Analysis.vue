@@ -25,11 +25,11 @@
 </template>
 
 <script>
-import NetWorthGraph from "./NetWorthGraph.vue";
-import ExpenseBreakdown from "./ExpenseBreakdown.vue";
-import CategoriesOverTime from "./CategoriesOverTime.vue";
-import UpcomingTransactions from "../transactions/UpcomingTransactions.vue";
-import IncomeAndExpenseTable from "./IncomeAndExpenseTable.vue";
+import NetWorthGraph from './NetWorthGraph.vue';
+import ExpenseBreakdown from './ExpenseBreakdown.vue';
+import CategoriesOverTime from './CategoriesOverTime.vue';
+import UpcomingTransactions from '../transactions/UpcomingTransactions.vue';
+import IncomeAndExpenseTable from './IncomeAndExpenseTable.vue';
 
 export default {
     components: {
@@ -37,14 +37,14 @@ export default {
         ExpenseBreakdown,
         CategoriesOverTime,
         UpcomingTransactions,
-        IncomeAndExpenseTable
+        IncomeAndExpenseTable,
     },
 
     computed: {
         bottomLayout() {
             return this.$vuetify.breakpoint.mdAndUp ? {} : { column: true };
-        }
-    }
+        },
+    },
 };
 </script>
 
