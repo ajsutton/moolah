@@ -119,10 +119,12 @@ export default {
 
         incrementDate() {
             this.$emit('input', formatDate(addDays(new Date(this.value), 1)));
+            this.dateMenu = false;
         },
 
         decrementDate() {
             this.$emit('input', formatDate(addDays(new Date(this.value), -1)));
+            this.dateMenu = false;
         },
     },
 };
