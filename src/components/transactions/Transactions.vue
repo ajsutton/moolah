@@ -17,7 +17,7 @@
         ></v-progress-linear>
         <v-list two-line>
             <v-list-item-group
-                v-model="selectedTransactionIndex"
+                v-model="itemGroupSelectedTransaction"
                 color="primary"
             >
                 <template v-for="transaction in transactions">
@@ -50,6 +50,7 @@ import TransactionFilters from './TransactionFilters.vue';
 import FilterNotice from './FilterNotice.vue';
 import { actions as transactionActions } from '../../store/transactions/transactionStore';
 import { mutations as stateMutations } from '../../store/store';
+import { nextTick } from 'q';
 
 export default {
     props: {
@@ -73,14 +74,12 @@ export default {
                 });
             },
         },
-        selectedTransactionIndex: {
+        itemGroupSelectedTransaction: {
             get() {
-                return this.transactions.findIndex(
-                    tx => tx == this.selectedTransaction
-                );
+                return this.highlightedTransaction;
             },
-            set(index) {
-                this.editTransaction(this.transactions[index]);
+            set(transaction) {
+                this.editTransaction(transaction);
             },
         },
         ...mapGetters(['selectedTransaction']),
@@ -97,7 +96,13 @@ export default {
     data() {
         return {
             loadingMore: false,
+            highlightedTransaction: undefined,
         };
+    },
+    watch: {
+        selectedTransaction(transaction) {
+            nextTick(() => (this.highlightedTransaction = transaction));
+        },
     },
 
     methods: {
@@ -107,6 +112,8 @@ export default {
                     id: transaction.id,
                     scheduled: false,
                 });
+            } else {
+                this.$store.commit(stateMutations.selectTransaction, null);
             }
         },
         ...mapActions('transactions', [transactionActions.loadPage]),

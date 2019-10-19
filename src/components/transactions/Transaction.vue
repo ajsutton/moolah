@@ -1,5 +1,5 @@
 <template>
-    <v-list-item ripple>
+    <v-list-item ripple :value="transaction">
         <v-list-item-action>
             <div>
                 <div>{{ dateDay }} {{ dateMonth }}</div>
@@ -42,6 +42,7 @@ import { formatDate as formatApiDate } from '../../api/apiFormats';
 import formatDate from 'date-fns/format';
 import isBefore from 'date-fns/isBefore';
 import { transactionTitle } from './transactionTitle';
+import { isAfter, startOfDay } from 'date-fns';
 
 export default {
     props: {
