@@ -22,7 +22,7 @@
         ></v-progress-linear>
         <v-list two-line>
             <v-list-item-group
-                v-model="selectedTransactionIndex"
+                v-model="itemGroupSelectedTransaction"
                 color="primary"
             >
                 <template v-for="transaction in transactionsToDisplay">
@@ -65,7 +65,9 @@ export default {
         },
     },
     data() {
-        return {};
+        return {
+            highlightedTransaction: undefined,
+        };
     },
     mixins: [AddTransactionMixin],
     computed: {
@@ -86,14 +88,12 @@ export default {
                   )
                 : this.transactions;
         },
-        selectedTransactionIndex: {
+        itemGroupSelectedTransaction: {
             get() {
-                return this.transactions.findIndex(
-                    tx => tx == this.selectedTransaction
-                );
+                return this.highlightedTransaction;
             },
-            set(index) {
-                this.editTransaction(this.transactions[index]);
+            set(transaction) {
+                this.editTransaction(transaction);
             },
         },
         ...mapGetters(['selectedTransaction']),
@@ -119,10 +119,14 @@ export default {
             });
         },
         editTransaction(transaction) {
-            this.$store.commit(stateMutations.selectTransaction, {
-                id: transaction.id,
-                scheduled: true,
-            });
+            if (transaction) {
+                this.$store.commit(stateMutations.selectTransaction, {
+                    id: transaction.id,
+                    scheduled: true,
+                });
+            } else {
+                this.$store.commit(stateMutations.selectTransaction, null);
+            }
         },
         ...mapActions([stateActions.showUpcoming]),
         ...mapActions('scheduledTransactions', [
