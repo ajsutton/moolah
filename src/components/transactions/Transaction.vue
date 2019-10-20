@@ -41,8 +41,8 @@ import {
 import { formatDate as formatApiDate } from '../../api/apiFormats';
 import formatDate from 'date-fns/format';
 import isBefore from 'date-fns/isBefore';
+import startOfDay from 'date-fns/startOfDay';
 import { transactionTitle } from './transactionTitle';
-import { isAfter, startOfDay } from 'date-fns';
 
 export default {
     props: {
@@ -60,6 +60,7 @@ export default {
     },
     computed: {
         transactionTitle() {
+            ``;
             return transactionTitle(
                 this.transaction,
                 this.accountName,
@@ -88,7 +89,8 @@ export default {
         },
         due() {
             return (
-                this.highlightOverdue && isBefore(this.parsedDate, Date.now())
+                this.highlightOverdue &&
+                isBefore(startOfDay(this.parsedDate), new Date())
             );
         },
         ...mapGetters(['selectedTransaction']),
