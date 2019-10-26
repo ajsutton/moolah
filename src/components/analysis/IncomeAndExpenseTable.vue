@@ -22,6 +22,7 @@
             :descending="true"
             :loading="loading"
             :footer-props="footerProps"
+            :items-per-page="12"
         >
             <template v-slot:body="{ items }">
                 <tbody>
@@ -115,11 +116,6 @@ export default {
                 'items-per-page-options': [6, 12, 18, 24],
             },
             breakdown: [],
-            pagination: {
-                sortBy: 'end',
-                descending: true,
-                rowsPerPage: 12,
-            },
             includeEarmarks: false,
             loading: true,
         };
