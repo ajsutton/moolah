@@ -71,7 +71,7 @@
                 v-if="loggedIn"
             ></v-app-bar-nav-icon>
         </v-app-bar>
-        <v-content>
+        <v-main>
             <loading-screen v-if="loading"></loading-screen>
             <welcome v-else-if="!loggedIn"></welcome>
             <v-container fluid v-if="loggedIn" grid-list-md>
@@ -79,7 +79,7 @@
                     <router-view></router-view>
                 </transition>
             </v-container>
-        </v-content>
+        </v-main>
     </v-app>
 </template>
 
