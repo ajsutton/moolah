@@ -37,11 +37,6 @@
                         ><img src="../../assets/auth/signin_google.png"
                     /></a>
                 </v-col>
-                <v-col class="text-center">
-                    <a href="/api/facebookauth"
-                        ><img src="../../assets/auth/signin_facebook.png"
-                    /></a>
-                </v-col>
             </v-row>
         </v-container>
     </div>

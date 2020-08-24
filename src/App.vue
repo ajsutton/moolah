@@ -41,28 +41,13 @@
             >
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <v-menu
-                    :nudge-width="100"
+                <v-btn
+                    text
+                    ripple
+                    href="/api/googleauth"
                     v-if="!loggedIn && !loading"
-                    bottom
-                    :nudge-bottom="50"
+                    >Sign In</v-btn
                 >
-                    <template v-slot:activator="{ on }">
-                        <v-btn text v-on="on"
-                            >Sign in with
-                            <v-icon>arrow_drop_down</v-icon>
-                        </v-btn>
-                    </template>
-                    <v-list>
-                        <v-list-item ripple href="/api/googleauth">
-                            <v-list-item-title>Google</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item ripple href="/api/facebookauth">
-                            <v-list-item-title>Facebook</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-
                 <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
             </v-toolbar-items>
             <v-app-bar-nav-icon
