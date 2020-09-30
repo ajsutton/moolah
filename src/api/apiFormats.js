@@ -1,4 +1,5 @@
 import dateFormat from 'date-fns/format';
+import getDaysInMonth from 'date-fns/getDaysInMonth';
 
 export function formatDate(date) {
     var value;
@@ -12,11 +13,10 @@ export function formatDate(date) {
 
 export function monthAsIsoDate(month, dayOfMonth = 1) {
     const strMonth = String(month);
-    return new Date(
-        strMonth.substring(0, strMonth.length - 2) +
-            '-' +
-            strMonth.substring(strMonth.length - 2) +
-            '-' +
-            String(dayOfMonth).padStart(2, '0')
-    );
+    const yearPart = strMonth.substring(0, strMonth.length - 2);
+    const monthPart = strMonth.substring(strMonth.length - 2);
+    const monthStart = new Date(yearPart, monthPart - 1);
+    const daysInMonth = getDaysInMonth(monthStart);
+    const dayPart = String(Math.min(dayOfMonth, daysInMonth)).padStart(2, '0');
+    return new Date(yearPart + '-' + monthPart + '-' + dayPart);
 }
