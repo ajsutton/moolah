@@ -41,6 +41,9 @@ jobs:
                       mkdir -p ~/.ssh && echo "${REMOTE_HOSTKEY}" >>
                       ~/.ssh/known_hosts
             - run:
+                  name: Install rsync
+                  command: sudo apt-get update && sudo apt-get install rsync
+            - run:
                   name: Deploy
                   command: ./deploy.sh
 workflows:
