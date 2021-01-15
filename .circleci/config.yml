@@ -4,24 +4,28 @@ executors:
         docker:
             - image: cimg/node:15.5.1
         working_directory: ~/project
-
-steps:
-    - checkout
-    - restore_cache:
-      name: Restore Yarn Package Cache
-      keys:
-          - yarn-packages-{{ checksum "yarn.lock" }}
-    - run:
-      name: Install Dependencies
-      command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
-    - save_cache:
-      name: Save Yarn Package Cache
-      key: yarn-packages-{{ checksum "yarn.lock" }}
-      paths:
-          - ~/.cache/yarn
-    - run:
-      name: Build
-      command: yarn build
-    - run:
-      name: Test
-      command: yarn test
+jobs:
+    build:
+        - checkout
+        - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+              - yarn-packages-{{ checksum "yarn.lock" }}
+        - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+        - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+              - ~/.cache/yarn
+        - run:
+          name: Build
+          command: yarn build
+        - run:
+          name: Test
+          command: yarn test
+    workflows:
+        build:
+            jobs:
+                - build
