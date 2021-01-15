@@ -2,7 +2,7 @@ version: 2.1
 executors:
     default:
         docker:
-            - image: cimg/node:15.5.1
+            - image: cimg/node:15.5.1-browsers
         working_directory: ~/project
 jobs:
     build:
