@@ -9,11 +9,11 @@
     >
         <template v-if="loggedIn">
             <wallet-list
-                title="Accounts"
-                :accounts="accounts"
+                title="Current Accounts"
+                :accounts="currentAccounts"
                 baseUrl="/account"
-                totalLabel="Net worth"
-                :totalValue="networth"
+                totalLabel="Current funds"
+                :totalValue="currentAccountsBalance"
             >
                 <create-account dark slot="titleAction"></create-account>
             </wallet-list>
@@ -26,6 +26,16 @@
             >
                 <create-earmark dark slot="titleAction"></create-earmark>
             </wallet-list>
+            <wallet-list
+                title="Investments"
+                :accounts="noncurrentAccounts"
+                baseUrl="/account"
+                totalLabel="Net worth"
+                :totalValue="networth"
+            >
+                <create-account dark slot="titleAction"></create-account>
+            </wallet-list>
+
             <v-list dense expand nav>
                 <v-list-item ripple to="/" exact>
                     <v-list-item-content>
@@ -98,8 +108,14 @@ export default {
             },
         },
         ...mapState({ mainNavToggle: 'showMainNav' }),
-        ...mapGetters('accounts', ['networth']),
-        ...mapGetters(['availableFunds']),
+        ...mapGetters('accounts', [
+            'networth',
+            'currentAccounts',
+            'noncurrentAccounts',
+            'currentAccountsBalance',
+            'noncurrentAccountsBalance',
+        ]),
+        ...mapGetters(['availableFunds', 'totalNetWorth']),
         ...mapState('earmarks', ['earmarks']),
         ...mapState('accounts', ['accounts']),
     },

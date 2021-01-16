@@ -40,6 +40,12 @@ const store = new Vuex.Store({
         },
         availableFunds(state, getters) {
             return (
+                getters['accounts/currentAccountsBalance'] -
+                getters['earmarks/totalEarmarked']
+            );
+        },
+        totalNetWorth(state, getters) {
+            return (
                 getters['accounts/networth'] -
                 getters['earmarks/totalEarmarked']
             );

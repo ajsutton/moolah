@@ -38,6 +38,7 @@
                                 { text: 'Bank Account', value: 'bank' },
                                 { text: 'Credit Card', value: 'cc' },
                                 { text: 'Asset', value: 'asset' },
+                                { text: 'Investment', value: 'investment' },
                             ]"
                         ></v-select>
 

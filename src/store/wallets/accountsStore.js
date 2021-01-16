@@ -20,26 +20,53 @@ export const actions = {
     adjustBalance: walletActions.adjustBalance,
 };
 
+const currentAccountTypes = ['bank', 'asset', 'cc'];
+const noncurrentAccountTypes = ['investment'];
+
+function accountsByType(state, types) {
+    return state.accounts.filter((account) => types.includes(account.type));
+}
+
 export default {
     namespaced: true,
     state: {
         accounts: [],
     },
     getters: {
+        currentAccounts(state) {
+            return accountsByType(state, currentAccountTypes);
+        },
+        noncurrentAccounts(state) {
+            return accountsByType(state, noncurrentAccountTypes);
+        },
         account(state) {
-            return accountId => {
-                return state.accounts.find(account => account.id === accountId);
+            return (accountId) => {
+                return state.accounts.find(
+                    (account) => account.id === accountId
+                );
             };
         },
         accountName(state, getters) {
-            return accountId => {
+            return (accountId) => {
                 const account = getters.account(accountId);
                 return account ? account.name : 'Unknown';
             };
         },
         selectedAccount(state, getters, rootState) {
             return state.accounts.find(
-                account => account.id === rootState.selectedWalletId
+                (account) => account.id === rootState.selectedWalletId
+            );
+        },
+        currentAccountsBalance(state) {
+            return accountsByType(state, currentAccountTypes).reduce(
+                (networth, account) => networth + account.balance,
+                0
+            );
+        },
+        noncurrentAccountsBalance(state) {
+            return accountsByType(state, noncurrentAccountTypes).reduce(
+                (networth, account) => networth + account.balance,
+                0
             );
         },
         networth(state) {
