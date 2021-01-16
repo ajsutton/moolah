@@ -27,6 +27,7 @@
                 <create-earmark dark slot="titleAction"></create-earmark>
             </wallet-list>
             <wallet-list
+                v-if="noncurrentAccounts.length > 0"
                 title="Investments"
                 :accounts="noncurrentAccounts"
                 baseUrl="/account"
