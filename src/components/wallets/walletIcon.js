@@ -9,6 +9,8 @@ export default function iconForType(type) {
             return 'mdi-home';
         case 'earmark':
             return 'mdi-bookmark-outline';
+        case 'investment':
+            return 'insights';
         default:
             return 'mdi-bank';
     }
