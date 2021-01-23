@@ -2,7 +2,7 @@
     <v-container class="savingsGoalNotice">
         <v-layout row wrap align-start justify-center>
             <v-flex xs12 lg4 xl2 d-flex v-if="hasStartDate || hasEndDate">
-                <v-layout column text-xs-center>
+                <v-layout column text-sm-center>
                     <v-flex>
                         <v-progress-circular
                             :value="timePercent"
@@ -21,22 +21,22 @@
                     <v-flex xs12>
                         <table class="table data-table">
                             <tr v-if="hasStartDate">
-                                <td class="text-xs-left">Start</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Start</td>
+                                <td class="text-sm-right">
                                     {{
                                         selectedAccount.savingsStartDate | date
                                     }}
                                 </td>
                             </tr>
                             <tr v-if="hasEndDate">
-                                <td class="text-xs-left">End</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">End</td>
+                                <td class="text-sm-right">
                                     {{ selectedAccount.savingsEndDate | date }}
                                 </td>
                             </tr>
                             <tr v-if="hasEndDate">
-                                <td class="text-xs-left">Time remaining</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Time remaining</td>
+                                <td class="text-sm-right">
                                     {{ daysRemaining }}
                                 </td>
                             </tr>
@@ -46,7 +46,7 @@
             </v-flex>
 
             <v-flex xs12 lg4 xl2 d-flex>
-                <v-layout column text-xs-center>
+                <v-layout column text-sm-center>
                     <v-flex>
                         <v-progress-circular
                             :value="savingsPercent"
@@ -65,24 +65,24 @@
                     <v-flex xs12>
                         <table class="table data-table">
                             <tr>
-                                <td class="text-xs-left">Saved</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Saved</td>
+                                <td class="text-sm-right">
                                     <monetary-amount
                                         :value="selectedAccount.saved"
                                     ></monetary-amount>
                                 </td>
                             </tr>
                             <tr v-if="hasSavingsTarget">
-                                <td class="text-xs-left">Budget</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Budget</td>
+                                <td class="text-sm-right">
                                     <monetary-amount
                                         :value="selectedAccount.savingsTarget"
                                     ></monetary-amount>
                                 </td>
                             </tr>
                             <tr v-if="hasSavingsTarget">
-                                <td class="text-xs-left">Remaining</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Remaining</td>
+                                <td class="text-sm-right">
                                     <monetary-amount
                                         :value="remainingAmount"
                                     ></monetary-amount>
@@ -94,7 +94,7 @@
             </v-flex>
 
             <v-flex xs12 lg4 xl2 d-flex>
-                <v-layout column text-xs-center>
+                <v-layout column text-sm-center>
                     <v-flex>
                         <v-progress-circular
                             :value="spentPercentOfEither"
@@ -113,36 +113,36 @@
                     <v-flex xs12>
                         <table class="table data-table">
                             <tr>
-                                <td class="text-xs-left">Spent</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Spent</td>
+                                <td class="text-sm-right">
                                     <monetary-amount
                                         :value="selectedAccount.spent"
                                     ></monetary-amount>
                                 </td>
                             </tr>
                             <tr v-if="hasSavingsTarget">
-                                <td class="text-xs-left">Percent of budget</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Percent of budget</td>
+                                <td class="text-sm-right">
                                     {{ Math.ceil(spentPercentOfTarget) }}%
                                 </td>
                             </tr>
                             <tr v-if="hasSaved">
-                                <td class="text-xs-left">Percent of actual</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Percent of actual</td>
+                                <td class="text-sm-right">
                                     {{ Math.ceil(spentPercentOfActual) }}%
                                 </td>
                             </tr>
                             <tr v-if="hasSavingsTarget">
-                                <td class="text-xs-left">Budget remaining:</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Budget remaining:</td>
+                                <td class="text-sm-right">
                                     <monetary-amount
                                         :value="budgetRemaining"
                                     ></monetary-amount>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-xs-left">Actual remaining</td>
-                                <td class="text-xs-right">
+                                <td class="text-sm-left">Actual remaining</td>
+                                <td class="text-sm-right">
                                     <monetary-amount
                                         :value="selectedAccount.balance"
                                     ></monetary-amount>

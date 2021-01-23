@@ -4,16 +4,16 @@
             <v-flex md6>
                 <table class="table spending-breakdown mx-auto">
                     <thead>
-                        <th class="text-xs-left">
+                        <th class="text-sm-left">
                             <add-line-item
                                 :earmark="earmark"
                                 :excludeCategories="existingCategoryIds"
                                 @add="addCategory"
                             ></add-line-item>
                         </th>
-                        <th class="text-xs-right">Actual</th>
-                        <th class="text-xs-right">Budget</th>
-                        <th class="text-xs-right">Remaining</th>
+                        <th class="text-sm-right">Actual</th>
+                        <th class="text-sm-right">Budget</th>
+                        <th class="text-sm-right">Remaining</th>
                     </thead>
                     <tbody>
                         <tr
@@ -31,7 +31,7 @@
                                     {{ category.name }}
                                 </div>
                             </td>
-                            <td class="text-xs-right">
+                            <td class="text-sm-right">
                                 <monetary-amount
                                     :value="category.subtotal"
                                     v-if="category.total"
@@ -40,12 +40,12 @@
                                     :value="category.balance"
                                     v-if="
                                         !category.total &&
-                                            (category.budget !== 0 ||
-                                                category.balance !== 0)
+                                        (category.budget !== 0 ||
+                                            category.balance !== 0)
                                     "
                                 ></monetary-amount>
                             </td>
-                            <td class="text-xs-right">
+                            <td class="text-sm-right">
                                 <monetary-amount
                                     :value="category.budgetSubtotal"
                                     v-if="category.total"
@@ -56,12 +56,12 @@
                                     persistent
                                     v-if="
                                         !category.total &&
-                                            (category.budget !== 0 ||
-                                                category.balance !== 0)
+                                        (category.budget !== 0 ||
+                                            category.balance !== 0)
                                     "
                                     return-value.sync="getBudgetEditValue(category.id)"
                                     @update:returnValue="
-                                        val => save(category.id, val)
+                                        (val) => save(category.id, val)
                                     "
                                 >
                                     <span>
@@ -79,7 +79,7 @@
                                         label="Budget"
                                         :value="getBudgetEditValue(category.id)"
                                         @input="
-                                            val =>
+                                            (val) =>
                                                 updateBudget(category.id, val)
                                         "
                                         prefix="$"
@@ -87,11 +87,11 @@
                                     ></v-text-field>
                                 </v-edit-dialog>
                             </td>
-                            <td class="text-xs-right">
+                            <td class="text-sm-right">
                                 <monetary-amount
                                     :value="
                                         category.budgetSubtotal +
-                                            category.subtotal
+                                        category.subtotal
                                     "
                                     v-if="category.total"
                                 ></monetary-amount>
@@ -99,21 +99,21 @@
                                     :value="category.budget + category.balance"
                                     v-if="
                                         !category.total &&
-                                            (category.budget !== 0 ||
-                                                category.balance !== 0)
+                                        (category.budget !== 0 ||
+                                            category.balance !== 0)
                                     "
                                 ></monetary-amount>
                             </td>
                         </tr>
                         <tr v-if="unallocatedBudget !== 0">
-                            <td class="text-xs-left">Unallocated</td>
-                            <td class="text-xs-right">-</td>
-                            <td class="text-xs-right">
+                            <td class="text-sm-left">Unallocated</td>
+                            <td class="text-sm-right">-</td>
+                            <td class="text-sm-right">
                                 <monetary-amount
                                     :value="unallocatedBudget"
                                 ></monetary-amount>
                             </td>
-                            <td class="text-xs-right">
+                            <td class="text-sm-right">
                                 <monetary-amount
                                     :value="unallocatedBudget"
                                 ></monetary-amount>
@@ -122,23 +122,23 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th class="text-xs-left">Total</th>
-                            <th class="text-xs-right">
+                            <th class="text-sm-left">Total</th>
+                            <th class="text-sm-right">
                                 <monetary-amount
                                     :value="earmark.spent"
                                 ></monetary-amount>
                             </th>
-                            <th class="text-xs-right">
+                            <th class="text-sm-right">
                                 <monetary-amount
                                     :value="totalBudget + unallocatedBudget"
                                 ></monetary-amount>
                             </th>
-                            <th class="text-xs-right">
+                            <th class="text-sm-right">
                                 <monetary-amount
                                     :value="
                                         totalBudget +
-                                            unallocatedBudget +
-                                            earmark.spent
+                                        unallocatedBudget +
+                                        earmark.spent
                                     "
                                 ></monetary-amount>
                             </th>
@@ -201,7 +201,7 @@ export default {
                 if (parentRequired) {
                     result.push(category);
                 }
-                category.children.forEach(child =>
+                category.children.forEach((child) =>
                     addCategory(
                         child,
                         parentRequired ? level + 1 : level,
@@ -220,14 +220,14 @@ export default {
                     });
                 }
             };
-            this.categories.forEach(category =>
+            this.categories.forEach((category) =>
                 addCategory(category, 0, '', this.categories.length === 1)
             );
             return result;
         },
         existingCategoryIds() {
             return Object.keys(this.categoryData).map(
-                categoryId => this.categoriesById[categoryId]
+                (categoryId) => this.categoriesById[categoryId]
             );
         },
 
@@ -245,12 +245,12 @@ export default {
         },
 
         pieChartData() {
-            return Object.entries(this.categoryData).map(
-                ([categoryId, entry]) => [
-                    this.categoriesById[categoryId].name,
-                    entry.balance,
-                ]
-            );
+            return Object.entries(
+                this.categoryData
+            ).map(([categoryId, entry]) => [
+                this.categoriesById[categoryId].name,
+                entry.balance,
+            ]);
         },
 
         ...mapState('categories', {
@@ -265,7 +265,7 @@ export default {
     },
     watch: {
         transactions: {
-            handler: debounce(function() {
+            handler: debounce(function () {
                 this.load();
             }, 250),
             deep: true,

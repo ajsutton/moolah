@@ -67,7 +67,7 @@
             :wallets="accounts"
         ></wallet-selector>
 
-        <div class="text-xs-right">
+        <div class="text-sm-right">
             <v-btn
                 v-if="!isOpeningBalance"
                 @click.native.prevent="deleteTransaction(transaction)"
@@ -182,7 +182,7 @@ export default {
             get() {
                 return this.transaction.date;
             },
-            set: function(value) {
+            set: function (value) {
                 this.updateTransaction({
                     id: this.transaction.id,
                     patch: { date: value },
@@ -221,8 +221,8 @@ export default {
         },
         category: makeModelProperty(
             'categoryId',
-            value => value || '',
-            value => (value === '' ? undefined : value)
+            (value) => value || '',
+            (value) => (value === '' ? undefined : value)
         ),
         amount: makeModelProperty(
             'amount',
@@ -264,7 +264,7 @@ export default {
     },
     watch: {
         transactionId() {
-            Object.keys(this.raw).forEach(key => (this.raw[key] = undefined));
+            Object.keys(this.raw).forEach((key) => (this.raw[key] = undefined));
             this.focus();
         },
     },

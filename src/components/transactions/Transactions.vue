@@ -31,7 +31,7 @@
                 </template>
             </v-list-item-group>
         </v-list>
-        <div class="text-xs-center">
+        <div class="text-sm-center">
             <v-pagination
                 :length="numberOfPages"
                 v-model="currentPage"

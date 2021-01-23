@@ -9,7 +9,7 @@
                 <v-switch
                     label="Earmarked funds"
                     v-model="includeEarmarks"
-                    style="min-width: 13em; margin-top: 16px;"
+                    style="min-width: 13em; margin-top: 16px"
                 ></v-switch>
             </v-toolbar-items>
         </v-app-bar>
@@ -36,22 +36,22 @@
                                 </div>
                             </v-layout>
                         </td>
-                        <td class="text-xs-right">
+                        <td class="text-sm-right">
                             <monetary-amount
                                 :value="item.income"
                             ></monetary-amount>
                         </td>
-                        <td class="text-xs-right">
+                        <td class="text-sm-right">
                             <monetary-amount
                                 :value="item.expense"
                             ></monetary-amount>
                         </td>
-                        <td class="text-xs-right">
+                        <td class="text-sm-right">
                             <monetary-amount
                                 :value="item.profit"
                             ></monetary-amount>
                         </td>
-                        <td class="text-xs-right">
+                        <td class="text-sm-right">
                             <monetary-amount
                                 :value="item.cumulativeSavings"
                             ></monetary-amount>
@@ -124,7 +124,7 @@ export default {
         tableItems() {
             const applyEarmark = (value, earmarkedValue) =>
                 this.includeEarmarks ? value : value - earmarkedValue;
-            return this.breakdown.map(data => ({
+            return this.breakdown.map((data) => ({
                 income: applyEarmark(data.income, data.earmarkedIncome),
                 expense: applyEarmark(data.expense, data.earmarkedExpense),
                 profit: applyEarmark(data.profit, data.earmarkedProfit),
@@ -144,7 +144,7 @@ export default {
         );
         let cumulativeSavings = 0;
         let cumulativeEarmarkedSavings = 0;
-        this.breakdown = response.incomeAndExpense.reverse().map(row => {
+        this.breakdown = response.incomeAndExpense.reverse().map((row) => {
             cumulativeSavings += row.profit;
             cumulativeEarmarkedSavings += row.earmarkedProfit;
             row.cumulativeSavings = cumulativeSavings;
@@ -176,7 +176,7 @@ export default {
             return monthLabel + yearLabel;
         },
         monthsAgo(value) {
-            const plural = value => (value === 1 ? '' : 's');
+            const plural = (value) => (value === 1 ? '' : 's');
             const dayOfMonth = new Date().getDate();
             const endDate = monthAsIsoDate(value.month, dayOfMonth);
             const startDate = addMonths(endDate, -1);

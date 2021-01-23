@@ -3,7 +3,7 @@
         <v-list-item-action>
             <div>
                 <div>{{ dateDay }} {{ dateMonth }}</div>
-                <div class="grey--text text-xs-center body-1">
+                <div class="grey--text text-sm-center body-1">
                     {{ dateYear }}
                 </div>
             </div>

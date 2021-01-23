@@ -2,7 +2,7 @@
     <v-container class="loading-screen" fluid fill-height>
         <v-layout column align-center justify-center>
             <v-flex>
-                <div class="loading text-xs-center">
+                <div class="loading text-sm-center">
                     <p>
                         <img
                             :src="require('../../assets/moolah.svg')"
