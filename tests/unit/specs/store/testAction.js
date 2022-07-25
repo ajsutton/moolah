@@ -1,4 +1,6 @@
-const assert = require('chai').assert;
+const chai = require('chai');
+const assert = chai.assert;
+const expect = chai.expect;
 const AssertionError = require('assertion-error');
 import sinon from 'sinon';
 
@@ -66,6 +68,6 @@ export default async (
         'Incorrect number of mutations, got: ' +
             JSON.stringify(mutationsCalled) +
             '\nexpected: ' +
-            JSON.stringify(expectedMutations.map(m => m.type))
+            JSON.stringify(expectedMutations.map((m) => m.type))
     );
 };

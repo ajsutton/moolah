@@ -50,7 +50,6 @@ import TransactionFilters from './TransactionFilters.vue';
 import FilterNotice from './FilterNotice.vue';
 import { actions as transactionActions } from '../../store/transactions/transactionStore';
 import { mutations as stateMutations } from '../../store/store';
-import { nextTick } from 'q';
 
 export default {
     props: {
@@ -101,7 +100,7 @@ export default {
     },
     watch: {
         selectedTransaction(transaction) {
-            nextTick(() => (this.highlightedTransaction = transaction));
+            this.$nextTick(() => (this.highlightedTransaction = transaction));
         },
     },
 

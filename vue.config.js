@@ -7,12 +7,14 @@ module.exports = {
         },
         plugins: [
             // copy htaccess file
-            new CopyPlugin([
-                {
-                    from: path.resolve(__dirname, '.htaccess'),
-                    to: '',
-                },
-            ]),
+            new CopyPlugin({
+                patterns: [
+                    {
+                        from: path.resolve(__dirname, '.htaccess'),
+                        to: '',
+                    },
+                ],
+            }),
         ],
     },
 
