@@ -5,6 +5,9 @@ function makeOptions(options = {}) {
         {},
         {
             credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         },
         options
     );
@@ -41,7 +44,7 @@ function formatQueryArg([key, value]) {
     if (value instanceof Array) {
         return value
             .map(
-                singleValue =>
+                (singleValue) =>
                     encodeURIComponent(key) +
                     '=' +
                     encodeURIComponent(singleValue)
