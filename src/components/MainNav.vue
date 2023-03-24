@@ -79,6 +79,7 @@
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
+            <div class="pb-16 pa-16"></div>
         </template>
     </v-navigation-drawer>
 </template>
