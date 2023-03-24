@@ -36,6 +36,7 @@
         "eslint-plugin-n": "^15.0.0",
         "eslint-plugin-promise": "^6.0.0",
         "eslint-plugin-vue": "^9.10.0",
+        "eslint-plugin-vuetify": "^1.0.0",
         "husky": "^8.0.1",
         "inject-loader": "^4.0.1",
         "mocha": "^10.0.0",
