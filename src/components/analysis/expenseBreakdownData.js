@@ -22,7 +22,7 @@ export function summariseCategories(
 
 function rollupToRootLevel(expensesByCategory, rootCategoryId, categoriesById) {
     const rootLevelCategories = {};
-    expensesByCategory.map(({ categoryId, totalExpenses }) => {
+    expensesByCategory.forEach(({ categoryId, totalExpenses }) => {
         const id = rootLevelId(categoryId, rootCategoryId, categoriesById);
         if (id) {
             rootLevelCategories[id] =

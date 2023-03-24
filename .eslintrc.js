@@ -4,6 +4,9 @@ module.exports = {
     rules: {
         'import/no-duplicates': ['off'],
         'import/no-webpack-loader-syntax': ['off'],
+        eqeqeq: ['off'],
+        'no-prototype-builtins': ['off'],
+        'no-new': ['off'],
     },
     globals: {
         describe: 'readonly',

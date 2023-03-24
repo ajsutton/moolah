@@ -157,6 +157,7 @@
 </template>
 
 <script>
+import { VProgressCircular } from 'vuetify';
 import { mapState, mapGetters, mapActions } from 'vuex';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import { VProgressCircular } from 'vuetify';

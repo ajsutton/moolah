@@ -1,5 +1,5 @@
 function parseFloatStrict(value) {
-    if (/^(\-|\+)?([0-9]+(\.[0-9]+)?)$/.test(value)) {
+    if (/^(-|\+)?([0-9]+(\.[0-9]+)?)$/.test(value)) {
         return Number(value);
     }
     return NaN;
@@ -10,7 +10,7 @@ function validate(result, errorMessage) {
 }
 
 function maxDecimalPlaces(precision) {
-    return value =>
+    return (value) =>
         validate(
             parseFloatStrict(value).toFixed(precision) ==
                 parseFloatStrict(value),
@@ -19,7 +19,7 @@ function maxDecimalPlaces(precision) {
 }
 
 function positiveInteger() {
-    return value =>
+    return (value) =>
         validate(
             parseFloatStrict(value).toFixed(0) == parseFloatStrict(value) &&
                 value > 0,
@@ -28,7 +28,7 @@ function positiveInteger() {
 }
 
 function maxLength(length) {
-    return value =>
+    return (value) =>
         validate(
             value === undefined || value.length < length,
             `Enter less than ${length} characters`
@@ -36,7 +36,7 @@ function maxLength(length) {
 }
 
 function notEmpty() {
-    return value =>
+    return (value) =>
         validate(value === undefined || value.length > 0, 'Required');
 }
 
@@ -50,5 +50,5 @@ export const rules = {
 };
 
 export function isValid(value, rules) {
-    return rules === undefined || rules.every(rule => rule(value) === true);
+    return rules === undefined || rules.every((rule) => rule(value) === true);
 }
