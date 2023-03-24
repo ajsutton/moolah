@@ -1,5 +1,5 @@
 module.exports = {
-    extends: ['semistandard', 'prettier'],
+    extends: ['semistandard', 'plugin:vue/recommended', 'prettier'],
     ignorePatterns: ['dist/**'],
     rules: {
         'import/no-duplicates': ['off'],
