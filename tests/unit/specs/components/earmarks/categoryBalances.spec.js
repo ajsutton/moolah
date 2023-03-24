@@ -1,13 +1,13 @@
 import { assert } from 'chai';
 import { buildCategoryBalanceTree } from '../../../../../src/components/earmarks/categoryBalances';
 
-describe('Category Balances', function() {
-    it('should return empty array when there are no category balances and no categories', function() {
+describe('Category Balances', function () {
+    it('should return empty array when there are no category balances and no categories', function () {
         const result = buildCategoryBalanceTree({}, []);
         assert.deepEqual(result, []);
     });
 
-    it('should return single top level entry when it has a balance', function() {
+    it('should return single top level entry when it has a balance', function () {
         const category1 = makeCategory('category1');
         const result = buildCategoryBalanceTree(
             { category1: { balance: 1000, budget: 2000 } },
@@ -27,7 +27,7 @@ describe('Category Balances', function() {
         ]);
     });
 
-    it('should filter out top level entries with no balance', function() {
+    it('should filter out top level entries with no balance', function () {
         const category1 = makeCategory('category1');
         const category2 = makeCategory('category2');
         const result = buildCategoryBalanceTree(
@@ -48,7 +48,7 @@ describe('Category Balances', function() {
         ]);
     });
 
-    it('should include balance for child categories', function() {
+    it('should include balance for child categories', function () {
         const childCategory = makeCategory('childCategory', 'parentCategory');
         const parentCategory = makeCategory('parentCategory', null, [
             childCategory,
@@ -85,7 +85,7 @@ describe('Category Balances', function() {
         ]);
     });
 
-    it('should include multiple child categories in subtotal', function() {
+    it('should include multiple child categories in subtotal', function () {
         const childCategory1 = makeCategory('childCategory1', 'parentCategory');
         const childCategory2 = makeCategory('childCategory2', 'parentCategory');
         const parentCategory = makeCategory('parentCategory', null, [
@@ -137,7 +137,7 @@ describe('Category Balances', function() {
         ]);
     });
 
-    it('should include arbitrarily nested child categories in subtotal', function() {
+    it('should include arbitrarily nested child categories in subtotal', function () {
         const childCategory1 = makeCategory('childCategory1', 'parentCategory');
         const grandchildCategory1 = makeCategory(
             'grandchildCategory1',
@@ -213,6 +213,6 @@ describe('Category Balances', function() {
     });
 
     function makeCategory(id, parentId = null, children = []) {
-        return { id: id, name: 'Name ' + id, parentId, children };
+        return { id, name: 'Name ' + id, parentId, children };
     }
 });

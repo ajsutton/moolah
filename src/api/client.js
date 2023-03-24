@@ -199,7 +199,7 @@ export default {
     async setEarmarkBudget(earmarkId, categoryId, amount) {
         return json(`/api/earmarks/${earmarkId}/budget/${categoryId}/`, {
             method: 'PUT',
-            body: JSON.stringify({ amount: amount }),
+            body: JSON.stringify({ amount }),
         });
     },
 

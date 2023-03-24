@@ -29,7 +29,7 @@ const findTransaction = (state, transactionId) => {
 };
 
 const findTransactionIndex = (state, transaction) => {
-    let insertIndex = search(
+    const insertIndex = search(
         state.transactions,
         transaction,
         reverseScheduledTransactionComparator
@@ -77,7 +77,7 @@ export function ensureAllFieldsPresent(transaction) {
         'recurEvery',
         'toAccountId',
         'earmark',
-    ].forEach(key => {
+    ].forEach((key) => {
         if (!transaction.hasOwnProperty(key)) {
             transaction[key] = undefined;
         }
@@ -145,7 +145,7 @@ export default {
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
             const transactionsById = {};
-            transactionsResponse.transactions.forEach(transaction => {
+            transactionsResponse.transactions.forEach((transaction) => {
                 ensureAllFieldsPresent(transaction);
                 transactionsById[transaction.id] = transaction;
             });
@@ -208,7 +208,7 @@ export default {
                     payload.patch.date !== undefined ||
                     payload.patch.id !== undefined
                 ) {
-                    let insertIndex = findInsertIndex(state, transaction);
+                    const insertIndex = findInsertIndex(state, transaction);
                     state.transactions.splice(insertIndex, 0, transaction);
                     updateBalanceFrom = Math.max(index, insertIndex);
                 } else if (affectsBalance(payload.patch)) {

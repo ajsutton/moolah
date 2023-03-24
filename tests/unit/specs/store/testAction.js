@@ -1,8 +1,8 @@
+import sinon from 'sinon';
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;
 const AssertionError = require('assertion-error');
-import sinon from 'sinon';
 
 export default async (
     module,
@@ -10,9 +10,9 @@ export default async (
     options = { state: {}, rootGetters: {} },
     expectedMutations = []
 ) => {
-    let mutationsCalled = [];
-    let state = JSON.parse(JSON.stringify(options.state));
-    let rootState = options.rootState
+    const mutationsCalled = [];
+    const state = JSON.parse(JSON.stringify(options.state));
+    const rootState = options.rootState
         ? JSON.parse(JSON.stringify(options.rootState))
         : undefined;
 
@@ -48,7 +48,7 @@ export default async (
         await module.actions[action](
             {
                 commit,
-                state: state,
+                state,
                 rootState,
                 rootGetters: options.rootGetters,
                 dispatch: options.dispatch || sinon.spy(),

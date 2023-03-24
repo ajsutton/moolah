@@ -1,10 +1,10 @@
 import { assert } from 'chai';
 import changeTypePatch from '../../../../../src/components/transactions/changeType';
 
-describe('Change Type', function() {
+describe('Change Type', function () {
     let transaction;
     let accounts;
-    beforeEach(function() {
+    beforeEach(function () {
         transaction = {
             id: 1,
             payee: 'John',
@@ -22,7 +22,7 @@ describe('Change Type', function() {
         ];
     });
 
-    describe('Invert amount', function() {
+    describe('Invert amount', function () {
         [
             ['income', 'expense', true, null],
             ['income', 'transfer', true, 'account-2'],
@@ -33,14 +33,14 @@ describe('Change Type', function() {
         ].forEach(([originalType, newType, negateAmount, toAccountId]) => {
             it(`should ${
                 negateAmount ? 'negate' : 'not negate'
-            } amount when changing from ${originalType} to ${newType}`, function() {
+            } amount when changing from ${originalType} to ${newType}`, function () {
                 transaction.type = originalType;
                 const result = changeTypePatch(transaction, newType, accounts);
                 const expected = {
                     id: transaction.id,
                     patch: {
                         type: newType,
-                        toAccountId: toAccountId,
+                        toAccountId,
                     },
                 };
                 if (negateAmount) {

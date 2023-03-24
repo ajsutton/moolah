@@ -10,7 +10,7 @@ export function categoriesOverTimeGraphData(
 ) {
     const rootLevelCategories = {};
     const allMonths = new Set();
-    expensesByCategory.map(({ categoryId, month, totalExpenses }) => {
+    expensesByCategory.forEach(({ categoryId, month, totalExpenses }) => {
         const id = rootLevelId(categoryId, null, categoriesById);
         if (id) {
             allMonths.add(month);
@@ -26,7 +26,7 @@ export function categoriesOverTimeGraphData(
     const columns = Object.entries(rootLevelCategories)
         .map(([categoryId, months]) => {
             return [getCategoryName(categoryId)].concat(
-                orderedMonths.map(month => {
+                orderedMonths.map((month) => {
                     const actualValue = Math.max(0, months[month] || 0);
                     return actualValues
                         ? actualValue
@@ -56,15 +56,15 @@ export function categoriesOverTimeGraphData(
         type: 'area',
         columns,
         x: 'months',
-        groups: [columns.map(category => category[0]).reverse()],
+        groups: [columns.map((category) => category[0]).reverse()],
         unload: true,
     };
 }
 
 function calculateMonthTotals(rootLevelCategories, orderedMonths) {
     const totals = {};
-    Object.values(rootLevelCategories).forEach(months => {
-        orderedMonths.forEach(month => {
+    Object.values(rootLevelCategories).forEach((months) => {
+        orderedMonths.forEach((month) => {
             totals[month] =
                 (totals[month] || 0) + Math.max(0, months[month] || 0);
         });

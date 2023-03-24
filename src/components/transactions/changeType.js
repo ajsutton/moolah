@@ -9,11 +9,11 @@ export default function changeTypePatch(transaction, value, accounts) {
         patch.toAccountId = null;
     } else {
         patch.toAccountId = accounts.find(
-            account => account.id !== transaction.accountId
+            (account) => account.id !== transaction.accountId
         ).id;
     }
     return {
         id: transaction.id,
-        patch: patch,
+        patch,
     };
 }

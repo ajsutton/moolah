@@ -2,7 +2,7 @@ import dateFormat from 'date-fns/format';
 import getDaysInMonth from 'date-fns/getDaysInMonth';
 
 export function formatDate(date) {
-    var value;
+    let value;
     if (date === undefined) {
         value = undefined;
     } else {

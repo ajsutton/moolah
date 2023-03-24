@@ -17,15 +17,15 @@ function processCategory(categoryData, category, level) {
     return Object.assign(
         { balance, subtotal, budget, budgetSubtotal, level },
         category,
-        { children: children }
+        { children }
     );
 }
 
 export function buildCategoryBalanceTree(categoryData, categories, level = 0) {
     return categories
-        .map(category => processCategory(categoryData, category, level))
+        .map((category) => processCategory(categoryData, category, level))
         .filter(
-            category =>
+            (category) =>
                 category.balance !== 0 ||
                 category.subtotal !== 0 ||
                 category.budget !== 0 ||
