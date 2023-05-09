@@ -107,7 +107,7 @@ export default {
             rules: {
                 name: rules.walletName,
                 endDate: [
-                    value => {
+                    (value) => {
                         if (
                             this.savingsStartDate &&
                             isBefore(
@@ -115,7 +115,6 @@ export default {
                                 new Date(this.savingsStartDate)
                             )
                         ) {
-                            console.log(value, this.savingsEndDate);
                             return 'Must be after start date';
                         }
                         return true;

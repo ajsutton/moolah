@@ -42,7 +42,6 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
-import client from '../../api/client';
 import Transaction from './Transaction.vue';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import CreateAccount from '../accounts/CreateAccount.vue';

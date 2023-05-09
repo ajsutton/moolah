@@ -6,6 +6,7 @@ import transactionsModule, {
     actions as transactionActions,
 } from './transactions/transactionStore';
 import categoryModule from './categoryStore';
+import valuesModule from './wallets/valuesStore';
 
 Vue.use(Vuex);
 
@@ -103,6 +104,7 @@ const store = new Vuex.Store({
         transactions: transactionsModule,
         scheduledTransactions: transactionsModule,
         categories: categoryModule,
+        values: valuesModule,
     },
 });
 

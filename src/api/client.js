@@ -73,6 +73,37 @@ export default {
                 body: JSON.stringify(account),
             });
         },
+
+        async getValues(accountId, offset = 0, pageSize = 100) {
+            return json(
+                `/api/accounts/${encodeURIComponent(
+                    accountId
+                )}/values/?offset=${offset}&pageSize=${pageSize}`
+            );
+        },
+
+        async setValue(accountId, value) {
+            return request(
+                `/api/accounts/${encodeURIComponent(
+                    accountId
+                )}/values/${encodeURIComponent(value.date)}`,
+                {
+                    method: 'PUT',
+                    body: JSON.stringify(value.value),
+                }
+            );
+        },
+
+        async deleteValue(accountId, date) {
+            return request(
+                `/api/accounts/${encodeURIComponent(
+                    accountId
+                )}/values/${encodeURIComponent(date)}`,
+                {
+                    method: 'DELETE',
+                }
+            );
+        },
     },
 
     earmarks: {
