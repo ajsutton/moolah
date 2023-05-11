@@ -7,14 +7,16 @@
         </v-app-bar>
         <v-container fluid>
             <v-row>
-                <v-col :cols="12" :lg="8">GRAPH!</v-col>
+                <v-col :cols="12" :lg="8">
+                    <investment-value-graph></investment-value-graph>
+                </v-col>
                 <v-col :cols="12" :lg="4">
                     <v-data-table
                         dense
                         :headers="headers"
                         :items="values"
+                        :items-per-page="5"
                         :options.sync="options"
-                        :server-items-length="totalValues"
                         :loading="loading"
                         class="actions-table"
                     >
@@ -42,6 +44,7 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import { actions as valueActions } from '../../store/wallets/valuesStore';
 import EditInvestmentValue from './EditInvestmentValue.vue';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
+import InvestmentValueGraph from './InvestmentValueGraph.vue';
 
 export default {
     props: {
@@ -75,16 +78,32 @@ export default {
         totalValues() {
             return this.values !== undefined ? this.values.length : 0;
         },
+        graphData() {
+            return {
+                type: 'step',
+                json: this.values,
+                keys: {
+                    x: 'date',
+                    value: ['value'],
+                },
+                names: {
+                    value: 'Investment Value',
+                },
+                colors: {
+                    value: '#2196F3',
+                },
+                unload: true,
+            };
+        },
         ...mapState('values', ['values']),
         ...mapGetters('values', ['loading']),
     },
 
     watch: {
-        options(options) {
-            const pageSize =
-                options.itemsPerPage > 0 ? options.itemsPerPage : 1000000000;
+        accountId(accountId) {
+            const pageSize = 1000000000;
             this[valueActions.loadValues]({
-                accountId: this.accountId,
+                accountId,
                 page: options.page,
                 pageSize,
             });
@@ -107,6 +126,7 @@ export default {
     components: {
         EditInvestmentValue,
         MonetaryAmount,
+        InvestmentValueGraph,
     },
 };
 </script>

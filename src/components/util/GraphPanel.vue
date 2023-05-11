@@ -1,6 +1,6 @@
 <template>
     <v-card v-resize="handleResize">
-        <v-app-bar flat class="white">
+        <v-app-bar flat class="white" v-if="title != ''">
             <v-toolbar-title class="body-2 grey--text">{{
                 title
             }}</v-toolbar-title>
@@ -79,9 +79,6 @@ export default {
     .c3-ygrid {
         stroke-dasharray: none;
         stroke: #ddd;
-    }
-
-    .c3-axis-x-label {
     }
 }
 </style>

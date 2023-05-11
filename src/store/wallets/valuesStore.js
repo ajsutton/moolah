@@ -17,9 +17,9 @@ export const mutations = {
 
 const valueComparator = (v1, v2) => {
     if (v1.date < v2.date) {
-        return -1;
-    } else if (v1.date > v2.date) {
         return 1;
+    } else if (v1.date > v2.date) {
+        return -1;
     } else {
         return 0;
     }
@@ -83,7 +83,7 @@ export default {
         [mutations.setValue](state, value) {
             const insertIndex = findInsertIndex(state, value);
             if (insertIndex < 0) {
-                state.values.splice(insertIndex, 0, value);
+                state.values.splice(-(insertIndex + 1), 0, value);
             } else {
                 Vue.set(state.values, insertIndex, value);
             }

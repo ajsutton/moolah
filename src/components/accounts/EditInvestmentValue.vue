@@ -117,7 +117,6 @@ export default {
                     }
                     await this[actions.setValue](value);
                     this.dialog = false;
-                    console.log('Sync', this.input);
                     this.syncFromValue(this.input);
                 } catch (error) {
                     this.dialog = true;
