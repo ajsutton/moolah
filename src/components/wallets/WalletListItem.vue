@@ -6,7 +6,7 @@
                 {{ account.name }}
                 <monetary-amount
                     class="float-right"
-                    :value="account.balance"
+                    :value="balance"
                 ></monetary-amount>
             </v-list-item-title>
         </v-list-item-content>
@@ -16,6 +16,7 @@
 <script>
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import iconForType from './walletIcon';
+import { accountValue } from '../../store/wallets/accountsStore';
 
 export default {
     props: {
@@ -39,6 +40,9 @@ export default {
             return this.account.hidden
                 ? 'mdi-eye-off-outline'
                 : this.icon || iconForType(this.account.type);
+        },
+        balance() {
+            return accountValue(this.account);
         },
     },
     components: {

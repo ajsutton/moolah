@@ -99,17 +99,6 @@ export default {
         ...mapGetters('values', ['loading']),
     },
 
-    watch: {
-        accountId(accountId) {
-            const pageSize = 1000000000;
-            this[valueActions.loadValues]({
-                accountId,
-                page: options.page,
-                pageSize,
-            });
-        },
-    },
-
     methods: {
         deleteItem(item) {
             this[valueActions.deleteValue]({

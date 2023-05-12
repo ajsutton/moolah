@@ -20,6 +20,13 @@ export const actions = {
     adjustBalance: walletActions.adjustBalance,
 };
 
+export function accountValue(account) {
+    if (account.value !== undefined && account.type === 'investment') {
+        return account.value;
+    }
+    return account.balance;
+}
+
 const currentAccountTypes = ['bank', 'asset', 'cc'];
 const noncurrentAccountTypes = ['investment'];
 
@@ -71,7 +78,7 @@ export default {
         },
         networth(state) {
             return state.accounts.reduce(
-                (networth, account) => networth + account.balance,
+                (networth, account) => networth + accountValue(account),
                 0
             );
         },

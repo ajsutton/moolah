@@ -102,6 +102,7 @@ export default {
                     loadingState: LOADING,
                 });
                 const pageSize = searchOptions.pageSize || PAGE_SIZE;
+
                 const response = await client.accounts.getValues(
                     searchOptions.accountId,
                     ((searchOptions.page || 1) - 1) * pageSize,

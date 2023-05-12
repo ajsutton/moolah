@@ -76,7 +76,10 @@ export default {
             );
             if (this.isInvestment) {
                 // Load values
-                this[valueActions.loadValues]({ accountId: this.accountId });
+                this[valueActions.loadValues]({
+                    accountId: this.accountId,
+                    pageSize: 1000000000,
+                });
             } else {
                 // Clear values
             }
