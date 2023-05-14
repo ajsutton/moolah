@@ -18,6 +18,7 @@ export const actions = {
     createAccount: walletActions.create,
     updateAccount: walletActions.update,
     adjustBalance: walletActions.adjustBalance,
+    setValue: walletActions.setValue,
 };
 
 export function accountValue(account) {

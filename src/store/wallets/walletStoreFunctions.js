@@ -10,6 +10,7 @@ export const walletActions = {
     create: 'CREATE',
     update: 'UPDATE',
     adjustBalance: 'ADJUST_BALANCE',
+    setValue: 'SET_VALUE',
 };
 
 export function createWalletStoreActions(
@@ -67,6 +68,17 @@ export function createWalletStoreActions(
             if (changes.spent !== undefined) {
                 patch.spent = wallet.spent + changes.spent;
             }
+            if (changes.value !== undefined) {
+                patch.spent = wallet.spent + changes.spent;
+            }
+            commit(walletMutations.update, { id: wallet.id, patch });
+        },
+
+        async [walletActions.setValue]({ state, commit }, changes) {
+            const wallet = state[propertyName].find(
+                (candidate) => candidate.id === changes.id
+            );
+            const patch = { value: changes.value };
             commit(walletMutations.update, { id: wallet.id, patch });
         },
     };

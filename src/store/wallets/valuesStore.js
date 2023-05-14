@@ -1,6 +1,7 @@
 import client from '../../api/client';
 import search from 'binary-search';
 import Vue from 'vue';
+import { actions as accountActions } from '../wallets/accountsStore';
 
 const PAGE_SIZE = 100;
 
@@ -122,7 +123,7 @@ export default {
             }
         },
 
-        async [actions.setValue]({ commit, state }, value) {
+        async [actions.setValue]({ commit, state, dispatch }, value) {
             const index = findInsertIndex(state, value);
             const orig = index >= 0 ? state.values[index] : null;
             commit(mutations.setValue, value);
@@ -130,6 +131,17 @@ export default {
                 await client.accounts.setValue(
                     state.searchOptions.accountId,
                     value
+                );
+                dispatch(
+                    'accounts/' + accountActions.setValue,
+                    {
+                        id: state.searchOptions.accountId,
+                        value:
+                            state.values.length > 0
+                                ? state.values[0].value
+                                : undefined,
+                    },
+                    { root: true }
                 );
             } catch (error) {
                 if (orig !== null) {
@@ -141,12 +153,23 @@ export default {
             }
         },
 
-        async [actions.deleteValue]({ commit, state }, value) {
+        async [actions.deleteValue]({ commit, state, dispatch }, value) {
             commit(mutations.removeValue, value);
             try {
                 await client.accounts.deleteValue(
                     state.searchOptions.accountId,
                     value.date
+                );
+                dispatch(
+                    'accounts/' + accountActions.setValue,
+                    {
+                        id: state.searchOptions.accountId,
+                        value:
+                            state.values.length > 0
+                                ? state.values[0].value
+                                : undefined,
+                    },
+                    { root: true }
                 );
             } catch (error) {
                 commit(mutations.setValue, value);
