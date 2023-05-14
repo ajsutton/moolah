@@ -1,5 +1,5 @@
 <template>
-    <span :class="colour">{{ amount }}</span>
+    <span :class="valueColor">{{ amount }}</span>
 </template>
 
 <script>
@@ -19,9 +19,16 @@ export default {
             type: Boolean,
             default: false,
         },
+        color: {
+            type: String,
+            default: undefined,
+        },
     },
     computed: {
-        colour() {
+        valueColor() {
+            if (this.color !== undefined) {
+                return this.color + '--text';
+            }
             return this.value >= 0 !== this.invertColors
                 ? 'green--text'
                 : 'red--text';

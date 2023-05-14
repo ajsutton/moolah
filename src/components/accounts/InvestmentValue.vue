@@ -7,15 +7,20 @@
         </v-app-bar>
         <v-container fluid>
             <v-row v-if="account.value !== undefined">
-                <v-card :elevation="0">
-                    <v-card-subtitle class="pb-1">Profit/Loss</v-card-subtitle>
-                    <v-card-text
-                        ><profit-amount
-                            :value="account.value"
-                            :balance="account.balance"
-                        ></profit-amount
-                    ></v-card-text>
-                </v-card>
+                <value-panel
+                    label="Current Value"
+                    valueColor="blue"
+                    :value="account.value"
+                    :percent="profitLossPercent"
+                ></value-panel>
+                <v-spacer></v-spacer>
+                <value-panel
+                    label="Invested Amount"
+                    valueColor="gray"
+                    :value="account.balance"
+                ></value-panel>
+                <v-spacer></v-spacer>
+                <value-panel label="Profit" :value="profitLoss"></value-panel>
             </v-row>
             <v-row>
                 <v-col :cols="12" :lg="8">
@@ -56,7 +61,8 @@ import { actions as valueActions } from '../../store/wallets/valuesStore';
 import EditInvestmentValue from './EditInvestmentValue.vue';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import InvestmentValueGraph from './InvestmentValueGraph.vue';
-import ProfitAmount from '../util/ProfitAmount.vue';
+import MonetaryAmountAndProfit from '../util/MonetaryAmountAndProfit.vue';
+import ValuePanel from './ValuePanel.vue';
 
 export default {
     props: {
@@ -139,8 +145,9 @@ export default {
     components: {
         EditInvestmentValue,
         MonetaryAmount,
-        ProfitAmount,
+        MonetaryAmountAndProfit,
         InvestmentValueGraph,
+        ValuePanel,
     },
 };
 </script>
