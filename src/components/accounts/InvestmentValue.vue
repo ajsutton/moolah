@@ -6,21 +6,29 @@
             <edit-investment-value></edit-investment-value>
         </v-app-bar>
         <v-container fluid>
-            <v-row v-if="account.value !== undefined">
-                <value-panel
-                    label="Current Value"
-                    valueColor="blue"
-                    :value="account.value"
-                    :percent="profitLossPercent"
-                ></value-panel>
-                <v-spacer></v-spacer>
-                <value-panel
-                    label="Invested Amount"
-                    valueColor="gray"
-                    :value="account.balance"
-                ></value-panel>
-                <v-spacer></v-spacer>
-                <value-panel label="Profit" :value="profitLoss"></value-panel>
+            <v-row v-if="hasProfitLoss">
+                <v-col :cols="4">
+                    <value-panel
+                        label="Current Value"
+                        valueColor="blue"
+                        :value="account.value"
+                        :percent="profitLossPercent"
+                    ></value-panel>
+                </v-col>
+                <v-col :cols="4">
+                    <value-panel
+                        class="text-center"
+                        label="Invested Amount"
+                        valueColor="gray"
+                        :value="account.balance"
+                    ></value-panel>
+                </v-col>
+                <v-col :cols="4" class="text-right">
+                    <value-panel
+                        label="Profit"
+                        :value="profitLoss"
+                    ></value-panel>
+                </v-col>
             </v-row>
             <v-row>
                 <v-col :cols="12" :lg="8">
