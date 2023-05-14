@@ -32,7 +32,9 @@
             </v-row>
             <v-row>
                 <v-col :cols="12" :lg="8">
-                    <investment-value-graph></investment-value-graph>
+                    <investment-value-graph
+                        :account="account"
+                    ></investment-value-graph>
                 </v-col>
                 <v-col :cols="12" :lg="4">
                     <v-data-table

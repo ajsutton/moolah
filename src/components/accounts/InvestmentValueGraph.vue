@@ -13,27 +13,77 @@ import addDays from 'date-fns/addDays';
 import isBefore from 'date-fns/isBefore';
 import parseISO from 'date-fns/parseISO';
 import debounce from 'debounce';
+import client from '../../api/client';
 
 const maxTicks = (width) => Math.floor(width / 160);
 
 export default {
+    props: {
+        account: {
+            type: Object,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            balances: [],
+        };
+    },
     computed: {
         graphData() {
             return {
                 type: 'step',
-                json: this.values,
+                json: this.dataPoints,
                 keys: {
                     x: 'date',
-                    value: ['value'],
+                    value: ['value', 'balance'],
                 },
                 names: {
                     value: 'Investment Value',
+                    balance: 'Invested Amount',
                 },
                 colors: {
                     value: '#2196F3',
+                    balance: 'gray',
                 },
                 unload: true,
             };
+        },
+        dataPoints() {
+            var data = {};
+            this.values.forEach((value) => {
+                const item = data[value.date] || {
+                    date: value.date,
+                };
+                item.value = value.value;
+                data[value.date] = item;
+            });
+            this.balances.forEach((balance) => {
+                const item = data[balance.date] || {
+                    date: balance.date,
+                };
+                item.balance = balance.balance;
+                data[balance.date] = item;
+            });
+            data = Object.values(data);
+            data.sort((a, b) => {
+                return a.date < b.date ? -1 : 1;
+            });
+            var value = undefined;
+            var balance = undefined;
+            data.forEach((item) => {
+                if (item.value !== undefined) {
+                    value = item.value;
+                } else {
+                    item.value = value;
+                }
+                if (item.balance !== undefined) {
+                    balance = item.balance;
+                } else {
+                    item.balance = balance;
+                }
+            });
+            return data;
         },
         tickValues() {
             if (this.values.length == 0) {
@@ -56,6 +106,7 @@ export default {
             return ticks;
         },
         ...mapState('values', ['values']),
+        ...mapState('transactions', ['transactions']),
         ...mapGetters('values', ['loading']),
     },
 
@@ -90,7 +141,7 @@ export default {
                     connectNull: true,
                 },
                 legend: {
-                    show: false,
+                    show: true,
                 },
                 grid: {
                     y: {
@@ -110,6 +161,13 @@ export default {
             this.$chart.internal.config.axis_x_tick_values = this.tickValues;
             this.$chart.load(this.graphData);
         },
+
+        async updateBalances() {
+            this.balances = await client.accounts.dailyBalances(
+                this.account.id
+            );
+            this.update();
+        },
     },
 
     watch: {
@@ -118,9 +176,16 @@ export default {
                 this.update();
             }, 500),
         },
+        transactions: {
+            handler: debounce(async function () {
+                this.updateBalances();
+            }, 500),
+            deep: true,
+        },
     },
 
-    mounted() {
+    async mounted() {
+        this.updateBalances();
         this.maxTicks = maxTicks(this.$refs.chartPanel.chart.offsetWidth);
         const args = this.getArgs();
         this.$chart = c3.generate({

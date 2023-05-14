@@ -104,6 +104,12 @@ export default {
                 }
             );
         },
+
+        async dailyBalances(accountId) {
+            return json(
+                `/api/accounts/${encodeURIComponent(accountId)}/balances`
+            );
+        },
     },
 
     earmarks: {
