@@ -12,6 +12,7 @@ import addMonths from 'date-fns/addMonths';
 import addDays from 'date-fns/addDays';
 import isBefore from 'date-fns/isBefore';
 import parseISO from 'date-fns/parseISO';
+import debounce from 'debounce';
 
 const maxTicks = (width) => Math.floor(width / 160);
 
@@ -112,8 +113,10 @@ export default {
     },
 
     watch: {
-        values() {
-            this.update();
+        values: {
+            handler: debounce(function () {
+                this.update();
+            }, 100),
         },
     },
 
