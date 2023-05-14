@@ -1,8 +1,7 @@
 <template>
     <div>
         <investment-value
-            :accountName="accountName"
-            :accountId="accountId"
+            :account="selectedAccount"
             v-if="isInvestment"
         ></investment-value>
         <transactions :searchOptions="searchOptions" :title="title">

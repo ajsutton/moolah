@@ -85,12 +85,11 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import WalletList from './wallets/WalletList.vue';
 import CreateAccount from './accounts/CreateAccount.vue';
 import CreateEarmark from './earmarks/CreateEarmark.vue';
-import client from '../api/client';
-import store, { mutations } from '../store/store';
+import { mutations } from '../store/store';
 
 export default {
     props: {

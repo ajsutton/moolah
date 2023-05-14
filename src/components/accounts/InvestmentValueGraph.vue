@@ -116,7 +116,7 @@ export default {
         values: {
             handler: debounce(function () {
                 this.update();
-            }, 100),
+            }, 500),
         },
     },
 
