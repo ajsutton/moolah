@@ -25,8 +25,9 @@
                 </v-col>
                 <v-col :cols="4" class="text-right">
                     <value-panel
-                        label="Profit"
+                        label="ROI"
                         :value="profitLoss"
+                        :percent="earningRates"
                     ></value-panel>
                 </v-col>
             </v-row>
@@ -34,6 +35,7 @@
                 <v-col :cols="12" :lg="8">
                     <investment-value-graph
                         :account="account"
+                        :balances="balances"
                     ></investment-value-graph>
                 </v-col>
                 <v-col :cols="12" :lg="4">
@@ -73,6 +75,10 @@ import MonetaryAmount from '../util/MonetaryAmount.vue';
 import InvestmentValueGraph from './InvestmentValueGraph.vue';
 import MonetaryAmountAndProfit from '../util/MonetaryAmountAndProfit.vue';
 import ValuePanel from './ValuePanel.vue';
+import client from '../../api/client';
+import debounce from 'debounce';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import parseISO from 'date-fns/parseISO';
 
 export default {
     props: {
@@ -98,29 +104,13 @@ export default {
                 { text: '', align: 'end', value: 'actions', sortable: false },
             ],
             options: {},
+            balances: [],
         };
     },
 
     computed: {
         totalValues() {
             return this.values !== undefined ? this.values.length : 0;
-        },
-        graphData() {
-            return {
-                type: 'step',
-                json: this.values,
-                keys: {
-                    x: 'date',
-                    value: ['value'],
-                },
-                names: {
-                    value: 'Investment Value',
-                },
-                colors: {
-                    value: '#2196F3',
-                },
-                unload: true,
-            };
         },
         hasProfitLoss() {
             return this.account.value !== undefined;
@@ -135,8 +125,88 @@ export default {
                 ? (this.profitLoss / this.account.balance) * 100
                 : 0;
         },
+
+        earningRates() {
+            if (this.balances.length == 0 || this.values.length == 0) {
+                return 0;
+            }
+            const calculateFutureValue = function (rate, balances, finalDate) {
+                var prevBalance = balances[0].balance;
+                var val = prevBalance;
+                var date = parseISO(balances[0].date);
+                for (var i = 1; i <= balances.length; i++) {
+                    const nextDate =
+                        i < balances.length
+                            ? parseISO(balances[i].date)
+                            : parseISO(finalDate);
+                    const nextBalance =
+                        i < balances.length ? balances[i].balance : prevBalance;
+                    const days = differenceInCalendarDays(nextDate, date);
+                    if (days > 0) {
+                        const interest =
+                            val * Math.pow(1 + rate / 12, days / 30);
+                        const deposits = nextBalance - prevBalance;
+                        prevBalance = nextBalance;
+                        val = interest + deposits;
+                        date = nextDate;
+                    }
+                }
+
+                return val;
+            };
+            var low = -1;
+            var high = 1;
+            const target = this.values[0].value;
+            // Ensure high is above the maximum possible return
+            while (
+                calculateFutureValue(high, this.balances, this.values[0].date) <
+                target
+            ) {
+                high = high * 2;
+            }
+            // Ensure low is below the minimum possible return
+            while (
+                calculateFutureValue(low, this.balances, this.values[0].date) >
+                target
+            ) {
+                low = low * 2;
+            }
+            while (true) {
+                const guess = (high + low) / 2;
+                const fv = calculateFutureValue(
+                    guess,
+                    this.balances,
+                    this.values[0].date
+                );
+                if (low > high) {
+                    return guess * 100;
+                } else if (fv == target) {
+                    // Close enough
+                    return guess * 100;
+                } else if (fv > target) {
+                    // Guess too high
+                    high = guess - 0.0001;
+                } else {
+                    low = guess + 0.0001;
+                }
+            }
+        },
+
         ...mapState('values', ['values']),
+        ...mapState('transactions', ['transactions']),
         ...mapGetters('values', ['loading']),
+    },
+
+    watch: {
+        transactions: {
+            handler: debounce(async function () {
+                this.updateBalances();
+            }, 100),
+            deep: true,
+        },
+        accountId: debounce(async function () {
+            this.updateBalances();
+        }, 100),
     },
 
     methods: {
@@ -146,6 +216,17 @@ export default {
                 value: item.value,
             });
         },
+
+        async updateBalances() {
+            this.balances = await client.accounts.dailyBalances(
+                this.account.id
+            );
+        },
+
+        async mounted() {
+            await this.updateBalances();
+        },
+
         ...mapActions('values', [
             valueActions.loadValues,
             valueActions.deleteValue,
