@@ -6,7 +6,12 @@
             </v-btn>
         </template>
         <v-card>
-            <v-form v-model="valid" ref="form" lazy-validation>
+            <v-form
+                v-model="valid"
+                ref="form"
+                lazy-validation
+                @submit.prevent="submit()"
+            >
                 <v-card-title>Set Investment Value</v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert error :value="true">{{ errorMessage }}</v-alert>
@@ -22,6 +27,7 @@
                             </v-flex>
                             <v-flex sm6 xs12>
                                 <v-text-field
+                                    autofocus
                                     name="value"
                                     label="Value"
                                     v-model="displayValue"
@@ -42,6 +48,7 @@
                         >Close</v-btn
                     >
                     <v-btn
+                        type="submit"
                         class="blue--text darken-1"
                         text
                         @click.native="submit"
