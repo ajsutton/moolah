@@ -24,7 +24,7 @@
                         <v-text-field
                             label="Initial Balance"
                             prefix="$"
-                            type="number"
+                            type="text"
                             v-model="balance"
                             name="balance"
                             :rules="rules.balance"
@@ -72,11 +72,12 @@
 
 <script>
 import { mapActions } from 'vuex';
-import client from '../../api/client';
 import { actions } from '../../store/wallets/accountsStore';
 import { rules } from '../validation';
 import { VForm, VCheckbox } from 'vuetify';
 import DatePickerField from '../util/DatePickerField.vue';
+import parseMoney from '../util/parseMoney';
+import formatMoney from '../util/formatMoney';
 
 export default {
     props: ['account'],
@@ -142,7 +143,7 @@ export default {
                         await this[actions.createAccount]({
                             name: this.name,
                             type: this.type,
-                            balance: Math.round(this.balance * 100),
+                            balance: parseMoney(this.balance),
                         });
                         this.syncFromAccount(undefined);
                     }
@@ -155,12 +156,12 @@ export default {
         },
         syncFromAccount(newAccount) {
             if (newAccount) {
-                this.balance = newAccount.balance / 100;
+                this.balance = formatMoney(newAccount.balance, false, true);
                 this.type = newAccount.type;
                 this.name = newAccount.name;
                 this.hidden = newAccount.hidden;
             } else {
-                this.balance = 0;
+                this.balance = formatMoney(0, false, true);
                 this.type = 'bank';
                 this.name = 'Unnamed account';
                 this.hidden = false;

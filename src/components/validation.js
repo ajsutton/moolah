@@ -1,3 +1,5 @@
+import parseMoney from './util/parseMoney';
+
 function parseFloatStrict(value) {
     if (/^(-|\+)?([0-9]+(\.[0-9]+)?)$/.test(value)) {
         return Number(value);
@@ -9,13 +11,14 @@ function validate(result, errorMessage) {
     return result ? true : errorMessage;
 }
 
-function maxDecimalPlaces(precision) {
-    return (value) =>
-        validate(
-            parseFloatStrict(value).toFixed(precision) ==
-                parseFloatStrict(value),
-            `Enter a number wth up to ${precision} decimal places`
+function money() {
+    return (value) => {
+        const parsed = parseMoney(value);
+        return validate(
+            !isNaN(parsed) && parsed == Math.round(parsed),
+            'Enter a number with up to 2 decimal places'
         );
+    };
 }
 
 function positiveInteger() {
@@ -43,10 +46,10 @@ function notEmpty() {
 export const rules = {
     walletName: [maxLength(255), notEmpty()],
     payee: [maxLength(255)],
-    amount: [maxDecimalPlaces(2)],
+    amount: [money()],
     notes: [maxLength(10000)],
     recurEvery: [positiveInteger()],
-    savingsTarget: [maxDecimalPlaces(2)],
+    savingsTarget: [money()],
 };
 
 export function isValid(value, rules) {

@@ -90,7 +90,8 @@ import Recurrence from './RecurranceControls.vue';
 import DatePickerField from '../util/DatePickerField.vue';
 import createTypeChangePatch from './changeType';
 import { makeModelProperty, onBlur } from './modelProperty';
-import debounce from 'debounce';
+import parseMoney from '../util/parseMoney';
+import formatMoney from '../util/formatMoney';
 
 function typeMultiplier(transaction) {
     return transaction.type === 'expense' || transaction.type === 'transfer'
@@ -227,9 +228,9 @@ export default {
         amount: makeModelProperty(
             'amount',
             (amount, transaction) =>
-                ((typeMultiplier(transaction) * amount) / 100).toFixed(2),
+                formatMoney(typeMultiplier(transaction) * amount, false, true),
             (value, transaction) =>
-                typeMultiplier(transaction) * Math.round(value * 100)
+                typeMultiplier(transaction) * parseMoney(value)
         ),
         showEarmarkSelector() {
             return (

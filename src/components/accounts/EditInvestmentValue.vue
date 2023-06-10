@@ -26,7 +26,7 @@
                                     label="Value"
                                     v-model="displayValue"
                                     prefix="$"
-                                    :rules="rules.value"
+                                    :rules="rules.amount"
                                     ref="value"
                                 ></v-text-field>
                             </v-flex>
@@ -60,6 +60,8 @@ import { rules } from '../validation';
 import { VForm, VCheckbox } from 'vuetify';
 import DatePickerField from '../util/DatePickerField.vue';
 import { formatDate } from '../../api/apiFormats';
+import parseMoney from '../util/parseMoney';
+import formatMoney from '../util/formatMoney';
 
 export default {
     props: ['input'],
@@ -89,7 +91,7 @@ export default {
         displayValue: {
             set(newValue) {
                 this.rawValue = newValue;
-                this.value = Math.round(newValue * 100);
+                this.value = parseMoney(newValue);
             },
             get() {
                 return this.rawValue;
@@ -129,7 +131,7 @@ export default {
                 this.origDate = value.date;
                 this.date = value.date;
                 this.value = value.value;
-                this.rawValue = (value.value / 100).toFixed(2);
+                this.rawValue = formatMoney(value.value, false, true);
             } else {
                 this.origDate = null;
                 this.date = formatDate(new Date());

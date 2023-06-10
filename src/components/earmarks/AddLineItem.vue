@@ -7,9 +7,7 @@
         </v-template>
 
         <v-card>
-            <v-card-title>
-                Add Budget Line Item
-            </v-card-title>
+            <v-card-title> Add Budget Line Item </v-card-title>
             <v-card-text>
                 <category-selector
                     v-model="category"
@@ -41,6 +39,7 @@
 import CategorySelector from '../categories/CategorySelector.vue';
 import { rules, isValid } from '../validation.js';
 import client from '../../api/client';
+import parseMoney from '../util/parseMoney';
 
 export default {
     props: {
@@ -72,7 +71,7 @@ export default {
         async add() {
             if (this.valid) {
                 try {
-                    const parsedAmount = parseFloat(this.amount) * 100;
+                    const parsedAmount = parseMoney(this.amount);
                     await client.setEarmarkBudget(
                         this.earmark.id,
                         this.category,

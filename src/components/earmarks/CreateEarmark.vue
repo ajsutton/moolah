@@ -29,7 +29,7 @@
                                 <v-text-field
                                     label="Savings target"
                                     prefix="$"
-                                    type="number"
+                                    type="text"
                                     v-model="savingsTarget"
                                     name="savingsTarget"
                                     :rules="rules.savingsTarget"
@@ -83,12 +83,13 @@
 
 <script>
 import { mapActions } from 'vuex';
-import client from '../../api/client';
 import { actions } from '../../store/wallets/earmarksStore';
 import { rules } from '../validation';
 import { VForm, VCheckbox } from 'vuetify';
 import DatePickerField from '../util/DatePickerField.vue';
 import isBefore from 'date-fns/isBefore';
+import formatMoney from '../util/formatMoney';
+import parseMoney from '../util/parseMoney';
 
 export default {
     props: ['earmark'],
@@ -162,9 +163,7 @@ export default {
                                 name: this.name,
                                 type: this.type,
                                 hidden: this.hidden,
-                                savingsTarget: Math.round(
-                                    this.savingsTarget * 100
-                                ),
+                                savingsTarget: parseMoney(this.savingsTarget),
                                 savingsStartDate:
                                     this.savingsStartDate || undefined,
                                 savingsEndDate:
@@ -175,7 +174,7 @@ export default {
                         await this[actions.createEarmark]({
                             name: this.name,
                             type: this.type,
-                            savingsTarget: Math.round(this.savingsTarget * 100),
+                            savingsTarget: parseMoney(this.savingsTarget),
                             savingsStartDate:
                                 this.savingsStartDate || undefined,
                             savingsEndDate: this.savingsEndDate || undefined,
@@ -192,7 +191,11 @@ export default {
         syncFromEarmark(newEarmark) {
             if (newEarmark) {
                 this.name = newEarmark.name;
-                this.savingsTarget = newEarmark.savingsTarget / 100;
+                this.savingsTarget = formatMoney(
+                    newEarmark.savingsTarget,
+                    false,
+                    true
+                );
                 this.savingsStartDate = newEarmark.savingsStartDate;
                 this.savingsEndDate = newEarmark.savingsEndDate;
                 this.hidden = newEarmark.hidden;

@@ -163,6 +163,8 @@ import debounce from 'debounce';
 import { rules } from '../validation.js';
 import AddLineItem from './AddLineItem.vue';
 import Vue from 'vue';
+import parseMoney from '../util/parseMoney';
+import formatMoney from '../util/formatMoney';
 
 export default {
     props: {
@@ -245,12 +247,12 @@ export default {
         },
 
         pieChartData() {
-            return Object.entries(
-                this.categoryData
-            ).map(([categoryId, entry]) => [
-                this.categoriesById[categoryId].name,
-                entry.balance,
-            ]);
+            return Object.entries(this.categoryData).map(
+                ([categoryId, entry]) => [
+                    this.categoriesById[categoryId].name,
+                    entry.balance,
+                ]
+            );
         },
 
         ...mapState('categories', {
@@ -300,16 +302,14 @@ export default {
             this.categoryData = categoryData;
         },
         updateBudget(categoryId, value) {
-            this.categoryData[categoryId].editValue = Math.round(
-                parseFloat(value) * 100
-            );
+            this.categoryData[categoryId].editValue = parseMoney(value);
         },
         getBudgetEditValue(categoryId) {
             const category = this.categoryData[categoryId];
             if (category.editValue !== undefined) {
                 return category.editValue;
             } else {
-                return (category.budget / 100).toFixed(2);
+                return formatMoney(category.budget, false, true);
             }
         },
         addCategory(categoryId, budget) {
@@ -318,7 +318,7 @@ export default {
         async save(categoryId, newBudget) {
             const category = this.categoryData[categoryId];
             const originalBudget = category.budget;
-            category.budget = Math.round(parseFloat(newBudget) * 100);
+            category.budget = parseMoney(newBudget);
             category.editValue = undefined;
             try {
                 await client.setEarmarkBudget(
