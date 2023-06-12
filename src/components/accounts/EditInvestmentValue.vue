@@ -143,7 +143,7 @@ export default {
                 this.origDate = null;
                 this.date = formatDate(new Date());
                 this.value = 0;
-                this.rawValue = '0.00';
+                this.rawValue = '';
             }
             this.errorMessage = null;
         },
