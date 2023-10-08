@@ -44,7 +44,7 @@ function formatQueryArg([key, value]) {
     if (value instanceof Array) {
         return value
             .map(
-                (singleValue) =>
+                singleValue =>
                     encodeURIComponent(key) +
                     '=' +
                     encodeURIComponent(singleValue)

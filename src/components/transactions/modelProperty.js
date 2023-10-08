@@ -17,7 +17,7 @@ export function makeModelProperty(
                 return this.raw[propertyName];
             }
         },
-        set: debounce(function(value) {
+        set: debounce(function (value) {
             this.raw[propertyName] = value;
             if (isValid(value, this.rules[propertyName])) {
                 this.updateTransaction({

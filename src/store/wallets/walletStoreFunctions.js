@@ -16,7 +16,7 @@ export const walletActions = {
 export function createWalletStoreActions(
     propertyName,
     client,
-    newWalletFilter = (wallet) => wallet
+    newWalletFilter = wallet => wallet
 ) {
     return {
         async [walletActions.load]({ commit }) {
@@ -42,7 +42,7 @@ export function createWalletStoreActions(
 
         async [walletActions.update]({ commit, state }, changes) {
             const wallet = state[propertyName].find(
-                (wallet) => wallet.id === changes.id
+                wallet => wallet.id === changes.id
             );
             const originalAccount = Object.assign({}, wallet);
             commit(walletMutations.update, changes);
@@ -59,7 +59,7 @@ export function createWalletStoreActions(
 
         async [walletActions.adjustBalance]({ state, commit }, changes) {
             const wallet = state[propertyName].find(
-                (candidate) => candidate.id === changes.id
+                candidate => candidate.id === changes.id
             );
             const patch = { balance: wallet.balance + changes.balance };
             if (changes.saved !== undefined) {
@@ -76,7 +76,7 @@ export function createWalletStoreActions(
 
         async [walletActions.setValue]({ state, commit }, changes) {
             const wallet = state[propertyName].find(
-                (candidate) => candidate.id === changes.id
+                candidate => candidate.id === changes.id
             );
             const patch = { value: changes.value };
             commit(walletMutations.update, { id: wallet.id, patch });
@@ -94,12 +94,12 @@ export function createWalletStoreMutations(propertyName) {
         },
         [walletMutations.remove](state, wallet) {
             state[propertyName] = state[propertyName].filter(
-                (existingWallet) => existingWallet.id !== wallet.id
+                existingWallet => existingWallet.id !== wallet.id
             );
         },
         [walletMutations.update](state, changes) {
             const walletx = state[propertyName].find(
-                (candidate) => candidate.id === changes.id
+                candidate => candidate.id === changes.id
             );
             Object.assign(walletx, changes.patch);
         },

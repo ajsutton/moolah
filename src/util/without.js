@@ -1,4 +1,4 @@
-export default function(object, ...forbiddenProps) {
+export default function (object, ...forbiddenProps) {
     const result = {};
     Object.entries(object)
         .filter(([key, value]) => !forbiddenProps.includes(key))

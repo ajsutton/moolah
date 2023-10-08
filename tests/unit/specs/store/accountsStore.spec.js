@@ -7,10 +7,10 @@ import {
 import accountsStoreLoader from 'inject-loader!babel-loader!../../../../src/store/wallets/accountsStore';
 import testAction from './testAction';
 
-describe('accountsStore', function() {
+describe('accountsStore', function () {
     let client;
     let accountsStore;
-    beforeEach(function() {
+    beforeEach(function () {
         client = {
             accounts: {
                 get: sinon.stub(),
@@ -23,8 +23,8 @@ describe('accountsStore', function() {
         }).default;
     });
 
-    describe('Actions', function() {
-        it('should load accounts', async function() {
+    describe('Actions', function () {
+        it('should load accounts', async function () {
             const account1 = { name: 'Account1', type: 'bank', balance: 2300 };
             const expectedAccounts = [account1];
             client.accounts.get.resolves({ accounts: expectedAccounts });
@@ -36,8 +36,8 @@ describe('accountsStore', function() {
             );
         });
 
-        describe('Create Account', function() {
-            it('should create a new account', async function() {
+        describe('Create Account', function () {
+            it('should create a new account', async function () {
                 const newAccount = {
                     name: 'New Account',
                     type: 'cc',
@@ -70,7 +70,7 @@ describe('accountsStore', function() {
                 );
             });
 
-            it('should remove account again if create fails', async function() {
+            it('should remove account again if create fails', async function () {
                 const newAccount = {
                     name: 'New Account',
                     type: 'cc',
@@ -99,8 +99,8 @@ describe('accountsStore', function() {
             });
         });
 
-        describe('Update Account', function() {
-            it('should update account and notify server', async function() {
+        describe('Update Account', function () {
+            it('should update account and notify server', async function () {
                 const originalAccount = {
                     id: 'abc',
                     name: 'Old Name',
@@ -134,7 +134,7 @@ describe('accountsStore', function() {
                 );
             });
 
-            it('should rollback account change if server rejects it', async function() {
+            it('should rollback account change if server rejects it', async function () {
                 const originalAccount = {
                     id: 'abc',
                     name: 'Old Name',
@@ -173,8 +173,8 @@ describe('accountsStore', function() {
             });
         });
 
-        describe('Adjust Balance', function() {
-            it('should update account with new balance', async function() {
+        describe('Adjust Balance', function () {
+            it('should update account with new balance', async function () {
                 const originalAccount = {
                     id: 'abc',
                     name: 'Account Name',
@@ -200,15 +200,15 @@ describe('accountsStore', function() {
         });
     });
 
-    describe('Mutations', function() {
-        it('should replace accounts', function() {
+    describe('Mutations', function () {
+        it('should replace accounts', function () {
             const state = { accounts: [{ name: '1' }, { name: '2' }] };
             const newAccounts = [{ name: '3' }];
             accountsStore.mutations[mutations.setAccounts](state, newAccounts);
             assert.deepEqual(state.accounts, newAccounts);
         });
 
-        it('should add an account to start of list', function() {
+        it('should add an account to start of list', function () {
             const state = { accounts: [{ name: '1' }, { name: '2' }] };
             const newAccount = { name: '3' };
             accountsStore.mutations[mutations.addAccount](state, newAccount);
@@ -219,7 +219,7 @@ describe('accountsStore', function() {
             ]);
         });
 
-        it('should remove accounts based on ID', function() {
+        it('should remove accounts based on ID', function () {
             const state = {
                 accounts: [
                     { id: '1', name: 'old name' },
@@ -233,7 +233,7 @@ describe('accountsStore', function() {
             assert.deepEqual(state.accounts, [{ id: '2', name: 'name2' }]);
         });
 
-        it('should update an account id', function() {
+        it('should update an account id', function () {
             const state = {
                 accounts: [
                     { id: '1', name: 'old name', type: 'bank' },

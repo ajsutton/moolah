@@ -1,7 +1,7 @@
 import { expenseByCategoryReportData } from '../../../../../src/components/reports/expenseByCategoryReportData';
 import { assert } from 'chai';
 
-describe('Expense by Category Report Data', function() {
+describe('Expense by Category Report Data', function () {
     const categoriesById = {
         c1: {
             id: 'c1',
@@ -44,7 +44,7 @@ describe('Expense by Category Report Data', function() {
         return 'Name: ' + categoriesById[id].name;
     }
 
-    it('should sum category month data', function() {
+    it('should sum category month data', function () {
         const result = expenseByCategoryReportData(
             {
                 c1: -1500,
@@ -81,7 +81,7 @@ describe('Expense by Category Report Data', function() {
         ]);
     });
 
-    it('should add root id and name for sub-categories', function() {
+    it('should add root id and name for sub-categories', function () {
         const result = expenseByCategoryReportData(
             {
                 c1: -1500,

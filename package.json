@@ -56,11 +56,7 @@
         }
     },
     "lint-staged": {
-        "*.js": ["lint", "prettier"],
-        "*.vue": ["lint", "prettier"],
-        "*.css": ["prettier"],
-        "*.html": ["prettier"],
-        "*.svg": ["prettier"],
-        "*.xml": ["prettier"]
+        "*.js": ["yarn lint", "prettier --write"],
+        "*.vue": ["yarn lint", "prettier --write"]
     }
 }

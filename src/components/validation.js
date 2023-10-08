@@ -12,7 +12,7 @@ function validate(result, errorMessage) {
 }
 
 function money() {
-    return (value) => {
+    return value => {
         const parsed = parseMoney(value);
         return validate(
             !isNaN(parsed) && parsed == Math.round(parsed),
@@ -22,7 +22,7 @@ function money() {
 }
 
 function positiveInteger() {
-    return (value) =>
+    return value =>
         validate(
             parseFloatStrict(value).toFixed(0) == parseFloatStrict(value) &&
                 value > 0,
@@ -31,7 +31,7 @@ function positiveInteger() {
 }
 
 function maxLength(length) {
-    return (value) =>
+    return value =>
         validate(
             value === undefined || value.length < length,
             `Enter less than ${length} characters`
@@ -39,7 +39,7 @@ function maxLength(length) {
 }
 
 function notEmpty() {
-    return (value) =>
+    return value =>
         validate(value === undefined || value.length > 0, 'Required');
 }
 
@@ -53,5 +53,5 @@ export const rules = {
 };
 
 export function isValid(value, rules) {
-    return rules === undefined || rules.every((rule) => rule(value) === true);
+    return rules === undefined || rules.every(rule => rule(value) === true);
 }

@@ -4,11 +4,11 @@ import { mutations, actions } from '../../../../src/store/categoryStore';
 import categoryStoreLoader from 'inject-loader!babel-loader!../../../../src/store/categoryStore';
 import testAction from './testAction';
 
-describe('Category Store', function() {
+describe('Category Store', function () {
     let nextId = 0;
     let client;
     let categoryStore;
-    beforeEach(function() {
+    beforeEach(function () {
         client = {
             categories: sinon.stub(),
             createCategory: sinon.stub(),
@@ -19,8 +19,8 @@ describe('Category Store', function() {
         }).default;
     });
 
-    describe('Getters', function() {
-        it('should get catgory by id', function() {
+    describe('Getters', function () {
+        it('should get catgory by id', function () {
             const categoryA = makeCategory();
             const categoryB = makeCategory();
             const state = createState(categoryA, categoryB);
@@ -34,7 +34,7 @@ describe('Category Store', function() {
             );
         });
 
-        it('should get category full name', function() {
+        it('should get category full name', function () {
             const categoryA = makeCategory({ name: 'Parent' });
             const categoryB = makeCategory({
                 name: 'SubCategory',
@@ -66,9 +66,9 @@ describe('Category Store', function() {
         });
     });
 
-    describe('Mutations', function() {
-        describe('addCategory', function() {
-            it('should add category', function() {
+    describe('Mutations', function () {
+        describe('addCategory', function () {
+            it('should add category', function () {
                 const category = makeCategory();
                 const state = createState();
                 categoryStore.mutations[mutations.addCategory](state, category);
@@ -79,7 +79,7 @@ describe('Category Store', function() {
                 });
             });
 
-            it('should keep categories sorted by name', function() {
+            it('should keep categories sorted by name', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
                 const categoryC = makeCategory({ name: 'C' });
@@ -95,7 +95,7 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should add child categories', function() {
+            it('should add child categories', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({
                     name: 'B',
@@ -116,8 +116,8 @@ describe('Category Store', function() {
             });
         });
 
-        describe('setCategories', function() {
-            it('should replace categories', function() {
+        describe('setCategories', function () {
+            it('should replace categories', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({
                     name: 'B',
@@ -141,8 +141,8 @@ describe('Category Store', function() {
             });
         });
 
-        describe('updateCategory', function() {
-            it('should change category name and ID', function() {
+        describe('updateCategory', function () {
+            it('should change category name and ID', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const state = createState(categoryA);
                 categoryStore.mutations[mutations.updateCategory](state, {
@@ -157,7 +157,7 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should add a parent to a category', function() {
+            it('should add a parent to a category', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
                 const state = createState(categoryA, categoryB);
@@ -173,7 +173,7 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should move category to top level', function() {
+            it('should move category to top level', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({
                     name: 'B',
@@ -195,7 +195,7 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should move category to a different parent', function() {
+            it('should move category to a different parent', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
                 const categoryC = makeCategory({
@@ -219,7 +219,7 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should maintain sort order when moving category to a different parent', function() {
+            it('should maintain sort order when moving category to a different parent', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
                 const categoryC = makeCategory({
@@ -244,7 +244,7 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should maintain alphabetical order when name changes', function() {
+            it('should maintain alphabetical order when name changes', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
                 const categoryC = makeCategory({ name: 'C' });
@@ -265,9 +265,9 @@ describe('Category Store', function() {
         });
     });
 
-    describe('Actions', function() {
-        describe('loadCategories', function() {
-            it('should load categories from server', async function() {
+    describe('Actions', function () {
+        describe('loadCategories', function () {
+            it('should load categories from server', async function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({
                     name: 'B',
@@ -294,8 +294,8 @@ describe('Category Store', function() {
             });
         });
 
-        describe('addCategory', function() {
-            it('should create a new top level category', async function() {
+        describe('addCategory', function () {
+            it('should create a new top level category', async function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
                 client.createCategory
@@ -321,7 +321,7 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should create child category', async function() {
+            it('should create child category', async function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({
                     name: 'B',
@@ -354,7 +354,7 @@ describe('Category Store', function() {
                 );
             });
 
-            it('should remove new category when server rejects creation', async function() {
+            it('should remove new category when server rejects creation', async function () {
                 const categoryA = makeCategory({ name: 'A' });
                 client.createCategory
                     .withArgs({ name: 'B', parentId: categoryA.id })
@@ -390,8 +390,8 @@ describe('Category Store', function() {
             });
         });
 
-        describe('updateCategory', function() {
-            it('should update category and notify server', async function() {
+        describe('updateCategory', function () {
+            it('should update category and notify server', async function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const modifiedA = {
                     id: categoryA.id,
@@ -415,7 +415,7 @@ describe('Category Store', function() {
                 sinon.assert.calledWith(client.updateCategory, modifiedA);
             });
 
-            it('should rollback changes when server rejects creation', async function() {
+            it('should rollback changes when server rejects creation', async function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const modifiedA = {
                     id: categoryA.id,

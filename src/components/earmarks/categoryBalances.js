@@ -23,9 +23,9 @@ function processCategory(categoryData, category, level) {
 
 export function buildCategoryBalanceTree(categoryData, categories, level = 0) {
     return categories
-        .map((category) => processCategory(categoryData, category, level))
+        .map(category => processCategory(categoryData, category, level))
         .filter(
-            (category) =>
+            category =>
                 category.balance !== 0 ||
                 category.subtotal !== 0 ||
                 category.budget !== 0 ||

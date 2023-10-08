@@ -77,7 +77,7 @@ export function ensureAllFieldsPresent(transaction) {
         'recurEvery',
         'toAccountId',
         'earmark',
-    ].forEach((key) => {
+    ].forEach(key => {
         if (!transaction.hasOwnProperty(key)) {
             transaction[key] = undefined;
         }
@@ -145,7 +145,7 @@ export default {
     mutations: {
         [mutations.setTransactions](state, transactionsResponse) {
             const transactionsById = {};
-            transactionsResponse.transactions.forEach((transaction) => {
+            transactionsResponse.transactions.forEach(transaction => {
                 ensureAllFieldsPresent(transaction);
                 transactionsById[transaction.id] = transaction;
             });

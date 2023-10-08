@@ -68,6 +68,6 @@ export default async (
         'Incorrect number of mutations, got: ' +
             JSON.stringify(mutationsCalled) +
             '\nexpected: ' +
-            JSON.stringify(expectedMutations.map((m) => m.type))
+            JSON.stringify(expectedMutations.map(m => m.type))
     );
 };

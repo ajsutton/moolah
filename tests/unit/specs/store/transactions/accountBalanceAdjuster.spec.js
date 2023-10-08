@@ -2,14 +2,14 @@ import accountBalanceAdjuster from '../../../../../src/store/transactions/accoun
 import { actions as accountActions } from '../../../../../src/store/wallets/accountsStore';
 import sinon from 'sinon';
 
-describe('Account Balance Adjuster', function() {
+describe('Account Balance Adjuster', function () {
     let dispatch;
-    beforeEach(function() {
+    beforeEach(function () {
         dispatch = sinon.spy();
     });
 
-    describe('Basic Transactions', function() {
-        it('should adjust account balance when amount changes', function() {
+    describe('Basic Transactions', function () {
+        it('should adjust account balance when amount changes', function () {
             assertAdjustments(
                 { amount: 10 },
                 { amount: 20 },
@@ -17,7 +17,7 @@ describe('Account Balance Adjuster', function() {
             );
         });
 
-        it('should adjust account balance when transaction added', function() {
+        it('should adjust account balance when transaction added', function () {
             assertAdjustments(
                 null,
                 { amount: 20 },
@@ -25,14 +25,14 @@ describe('Account Balance Adjuster', function() {
             );
         });
 
-        it('should adjust account balance when transaction removed', function() {
+        it('should adjust account balance when transaction removed', function () {
             assertAdjustments({ amount: 20 }, null, {
                 accountId: 'account1',
                 balance: -20,
             });
         });
 
-        it('should adjust account balance when transaction changes account', function() {
+        it('should adjust account balance when transaction changes account', function () {
             assertAdjustments(
                 { accountId: 'account1', amount: 20 },
                 { accountId: 'account2', amount: 20 },
@@ -42,9 +42,9 @@ describe('Account Balance Adjuster', function() {
         });
     });
 
-    describe('Earmark Transactions', function() {
-        describe('Expenses', function() {
-            it('should adjust earmark balance, earmark balance and earmark spent when expense amount changes', function() {
+    describe('Earmark Transactions', function () {
+        describe('Expenses', function () {
+            it('should adjust earmark balance, earmark balance and earmark spent when expense amount changes', function () {
                 assertAdjustments(
                     { amount: 10, type: 'expense', earmark: 'earmark1' },
                     { amount: 20, type: 'expense', earmark: 'earmark1' },
@@ -53,7 +53,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when expense added', function() {
+            it('should adjust earmark balance when expense added', function () {
                 assertAdjustments(
                     null,
                     { amount: 20, type: 'expense', earmark: 'earmark1' },
@@ -62,7 +62,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when expense transaction removed', function() {
+            it('should adjust earmark balance when expense transaction removed', function () {
                 assertAdjustments(
                     { amount: 20, type: 'expense', earmark: 'earmark1' },
                     null,
@@ -76,7 +76,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when expense added to earmark', function() {
+            it('should adjust earmark balance when expense added to earmark', function () {
                 assertAdjustments(
                     { amount: 20, type: 'expense' },
                     { amount: 20, type: 'expense', earmark: 'earmark1' },
@@ -84,7 +84,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when expense transaction removed from earmark', function() {
+            it('should adjust earmark balance when expense transaction removed from earmark', function () {
                 assertAdjustments(
                     { amount: 20, type: 'expense', earmark: 'earmark1' },
                     { amount: 20, type: 'expense' },
@@ -97,7 +97,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when expense transaction changes earmark', function() {
+            it('should adjust earmark balance when expense transaction changes earmark', function () {
                 assertAdjustments(
                     {
                         accountId: 'account1',
@@ -122,8 +122,8 @@ describe('Account Balance Adjuster', function() {
             });
         });
 
-        describe('Income', function() {
-            it('should adjust earmark balance, earmark balance and earmark spent when income amount changes', function() {
+        describe('Income', function () {
+            it('should adjust earmark balance, earmark balance and earmark spent when income amount changes', function () {
                 assertAdjustments(
                     { amount: 10, type: 'income', earmark: 'earmark1' },
                     { amount: 20, type: 'income', earmark: 'earmark1' },
@@ -132,7 +132,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when income added', function() {
+            it('should adjust earmark balance when income added', function () {
                 assertAdjustments(
                     null,
                     { amount: 20, type: 'income', earmark: 'earmark1' },
@@ -141,7 +141,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when income transaction removed', function() {
+            it('should adjust earmark balance when income transaction removed', function () {
                 assertAdjustments(
                     { amount: 20, type: 'income', earmark: 'earmark1' },
                     null,
@@ -155,7 +155,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when income added to earmark', function() {
+            it('should adjust earmark balance when income added to earmark', function () {
                 assertAdjustments(
                     { amount: 20, type: 'income' },
                     { amount: 20, type: 'income', earmark: 'earmark1' },
@@ -163,7 +163,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when income transaction removed from earmark', function() {
+            it('should adjust earmark balance when income transaction removed from earmark', function () {
                 assertAdjustments(
                     { amount: 20, type: 'income', earmark: 'earmark1' },
                     { amount: 20, type: 'income' },
@@ -176,7 +176,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when income transaction changes earmark', function() {
+            it('should adjust earmark balance when income transaction changes earmark', function () {
                 assertAdjustments(
                     {
                         accountId: 'account1',
@@ -200,7 +200,7 @@ describe('Account Balance Adjuster', function() {
                 );
             });
 
-            it('should adjust earmark balance when income without account changes', function() {
+            it('should adjust earmark balance when income without account changes', function () {
                 assertAdjustments(
                     {
                         accountId: undefined,
@@ -225,7 +225,7 @@ describe('Account Balance Adjuster', function() {
             });
         });
 
-        it('should update saved and spent when transaction changes from income to expense', function() {
+        it('should update saved and spent when transaction changes from income to expense', function () {
             assertAdjustments(
                 {
                     accountId: 'account1',
@@ -243,7 +243,7 @@ describe('Account Balance Adjuster', function() {
             );
         });
 
-        it('should update saved and spent when transaction changes from expense to income', function() {
+        it('should update saved and spent when transaction changes from expense to income', function () {
             assertAdjustments(
                 {
                     accountId: 'account1',
@@ -262,8 +262,8 @@ describe('Account Balance Adjuster', function() {
         });
     });
 
-    describe('Transfers', function() {
-        it('should adjust both accounts when amount changes', function() {
+    describe('Transfers', function () {
+        it('should adjust both accounts when amount changes', function () {
             assertAdjustments(
                 { amount: 10, toAccountId: 'account2' },
                 { amount: 20, toAccountId: 'account2' },
@@ -272,7 +272,7 @@ describe('Account Balance Adjuster', function() {
             );
         });
 
-        it('should adjust both accounts when transfer added', function() {
+        it('should adjust both accounts when transfer added', function () {
             assertAdjustments(
                 null,
                 { amount: 20, toAccountId: 'account2' },
@@ -281,7 +281,7 @@ describe('Account Balance Adjuster', function() {
             );
         });
 
-        it('should adjust both accounts when transfer removed', function() {
+        it('should adjust both accounts when transfer removed', function () {
             assertAdjustments(
                 { amount: 20, toAccountId: 'account2' },
                 null,
@@ -290,7 +290,7 @@ describe('Account Balance Adjuster', function() {
             );
         });
 
-        it('should update toAccounts when toAccountId changes', function() {
+        it('should update toAccounts when toAccountId changes', function () {
             assertAdjustments(
                 { amount: 20, toAccountId: 'account2' },
                 { amount: 20, toAccountId: 'account3' },
@@ -300,7 +300,7 @@ describe('Account Balance Adjuster', function() {
         });
     });
 
-    it('should ignore scheduled transactions', function() {
+    it('should ignore scheduled transactions', function () {
         assertAdjustments(
             { amount: 10, toAccountId: 'account2', recurPeriod: 'ONCE' },
             { balance: 20, toAccountId: 'account2', recurPeriod: 'ONCE' }

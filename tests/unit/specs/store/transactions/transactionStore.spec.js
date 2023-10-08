@@ -23,10 +23,10 @@ const addIdLookup = state => {
     return state;
 };
 
-describe('transactionStore', function() {
+describe('transactionStore', function () {
     let client;
     let transactionStore;
-    beforeEach(function() {
+    beforeEach(function () {
         client = {
             transactions: sinon.stub(),
             createTransaction: sinon.stub(),
@@ -38,46 +38,49 @@ describe('transactionStore', function() {
         }).default;
     });
 
-    describe('Getters', function() {
-        describe('selectedTransaction', function() {
-            it('should find selected transaction', function() {
-                const selectedTransaction = transactionStore.getters.selectedTransaction(
-                    addIdLookup({
-                        transactions: [{ id: 1 }, { id: 2 }, { id: 3 }],
-                    }),
-                    {},
-                    { selectedTransactionId: 2 }
-                );
+    describe('Getters', function () {
+        describe('selectedTransaction', function () {
+            it('should find selected transaction', function () {
+                const selectedTransaction =
+                    transactionStore.getters.selectedTransaction(
+                        addIdLookup({
+                            transactions: [{ id: 1 }, { id: 2 }, { id: 3 }],
+                        }),
+                        {},
+                        { selectedTransactionId: 2 }
+                    );
                 assert.deepEqual(selectedTransaction, { id: 2 });
             });
 
-            it('should have undefined selected transaction when no transaction id is set', function() {
-                const selectedTransaction = transactionStore.getters.selectedTransaction(
-                    addIdLookup({
-                        transactions: [{ id: 1 }, { id: 2 }, { id: 3 }],
-                    }),
-                    {},
-                    { selectedTransactionId: null }
-                );
+            it('should have undefined selected transaction when no transaction id is set', function () {
+                const selectedTransaction =
+                    transactionStore.getters.selectedTransaction(
+                        addIdLookup({
+                            transactions: [{ id: 1 }, { id: 2 }, { id: 3 }],
+                        }),
+                        {},
+                        { selectedTransactionId: null }
+                    );
                 assert.isUndefined(selectedTransaction);
             });
 
-            it('should have undefined selected transaction when transaction does not exist', function() {
-                const selectedTransaction = transactionStore.getters.selectedTransaction(
-                    addIdLookup({
-                        transactions: [{ id: 1 }, { id: 3 }],
-                    }),
-                    {},
-                    { selectedTransactionId: 2 }
-                );
+            it('should have undefined selected transaction when transaction does not exist', function () {
+                const selectedTransaction =
+                    transactionStore.getters.selectedTransaction(
+                        addIdLookup({
+                            transactions: [{ id: 1 }, { id: 3 }],
+                        }),
+                        {},
+                        { selectedTransactionId: 2 }
+                    );
                 assert.isUndefined(selectedTransaction);
             });
         });
     });
 
-    describe('Mutations', function() {
-        describe('setTransactions', function() {
-            it('should calculate balances', function() {
+    describe('Mutations', function () {
+        describe('setTransactions', function () {
+            it('should calculate balances', function () {
                 const state = {
                     transactions: [],
                     transactionsById: {},
@@ -120,8 +123,8 @@ describe('transactionStore', function() {
             });
         });
 
-        describe('addTransaction', function() {
-            it('should keep transactions sorted by date when inserting at start', function() {
+        describe('addTransaction', function () {
+            it('should keep transactions sorted by date when inserting at start', function () {
                 const state = addIdLookup({
                     transactions: expandFields([
                         { id: 2, amount: 10, date: '2017-07-02', balance: 60 },
@@ -162,7 +165,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should keep transactions sorted by date when inserting in middle', function() {
+            it('should keep transactions sorted by date when inserting in middle', function () {
                 const state = addIdLookup({
                     transactions: expandFields([
                         { id: 2, amount: 10, date: '2017-07-03', balance: 70 },
@@ -203,7 +206,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should keep transactions sorted by date when inserting at end', function() {
+            it('should keep transactions sorted by date when inserting at end', function () {
                 const state = addIdLookup({
                     transactions: expandFields([
                         { id: 2, amount: 10, date: '2017-07-03', balance: 70 },
@@ -245,8 +248,8 @@ describe('transactionStore', function() {
             });
         });
 
-        describe('updateTransaction', function() {
-            it('should update matching transaction details', function() {
+        describe('updateTransaction', function () {
+            it('should update matching transaction details', function () {
                 const state = addIdLookup({
                     transactions: [
                         {
@@ -281,7 +284,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should throw error when transaction is not found', function() {
+            it('should throw error when transaction is not found', function () {
                 try {
                     transactionStore.mutations[mutations.updateTransaction](
                         addIdLookup({ transactions: [] }),
@@ -294,8 +297,8 @@ describe('transactionStore', function() {
                 assert.fail('Should have thrown an error');
             });
 
-            describe('Amount Changes', function() {
-                it('should update balances when amount changes', function() {
+            describe('Amount Changes', function () {
+                it('should update balances when amount changes', function () {
                     const state = addIdLookup({
                         transactions: [
                             { id: 1, amount: 30, balance: 100 },
@@ -325,8 +328,8 @@ describe('transactionStore', function() {
                 });
             });
 
-            describe('Date Changes', function() {
-                it('should maintain sort order and balances when date is made more recent', function() {
+            describe('Date Changes', function () {
+                it('should maintain sort order and balances when date is made more recent', function () {
                     const state = addIdLookup({
                         transactions: [
                             {
@@ -375,7 +378,7 @@ describe('transactionStore', function() {
                     );
                 });
 
-                it('should maintain sort order and balances when date is made less recent', function() {
+                it('should maintain sort order and balances when date is made less recent', function () {
                     const state = addIdLookup({
                         transactions: [
                             {
@@ -426,8 +429,8 @@ describe('transactionStore', function() {
             });
         });
 
-        describe('removeTransaction', function() {
-            it('should remove the transaction', function() {
+        describe('removeTransaction', function () {
+            it('should remove the transaction', function () {
                 const state = addIdLookup({ transactions: [{ id: 1 }] });
                 transactionStore.mutations[mutations.removeTransaction](state, {
                     id: 1,
@@ -435,7 +438,7 @@ describe('transactionStore', function() {
                 assert.deepEqual(state, addIdLookup({ transactions: [] }));
             });
 
-            it('should update balances after the removed transaction', function() {
+            it('should update balances after the removed transaction', function () {
                 const state = addIdLookup({
                     transactions: [
                         { id: 3, amount: 10, balance: 50 },
@@ -457,7 +460,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should update balances using prior balance when the first transaction is removed', function() {
+            it('should update balances using prior balance when the first transaction is removed', function () {
                 const state = addIdLookup({
                     transactions: expandFields([
                         { id: 3, amount: 10, balance: 50, date: '2017-07-03' },
@@ -504,9 +507,9 @@ describe('transactionStore', function() {
         });
     });
 
-    describe('Actions', function() {
-        describe('loadTransactions', function() {
-            it('should load transactions from server', async function() {
+    describe('Actions', function () {
+        describe('loadTransactions', function () {
+            it('should load transactions from server', async function () {
                 const response = {
                     transactions: [{ id: 3 }, { id: 4 }],
                     priorBalance: 12300,
@@ -541,11 +544,11 @@ describe('transactionStore', function() {
             });
         });
 
-        describe('addTransaction', function() {
+        describe('addTransaction', function () {
             let newTransaction;
             let initialTransactionProperties;
             let serverTransaction;
-            beforeEach(function() {
+            beforeEach(function () {
                 initialTransactionProperties = {
                     payee: '',
                     amount: 0,
@@ -566,7 +569,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should add new transaction and notify server', async function() {
+            it('should add new transaction and notify server', async function () {
                 client.createTransaction
                     .withArgs(initialTransactionProperties)
                     .resolves(serverTransaction);
@@ -610,7 +613,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should remove transaction again if create fails', async function() {
+            it('should remove transaction again if create fails', async function () {
                 client.createTransaction.rejects('Invalid transaction');
                 await testAction(
                     transactionStore,
@@ -648,8 +651,8 @@ describe('transactionStore', function() {
             });
         });
 
-        describe('updateTransaction', function() {
-            it('should modify transaction', async function() {
+        describe('updateTransaction', function () {
+            it('should modify transaction', async function () {
                 const transaction = {
                     id: 1,
                     amount: 10,
@@ -689,7 +692,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should rollback transaction update if server rejects change', async function() {
+            it('should rollback transaction update if server rejects change', async function () {
                 const transaction = {
                     id: 1,
                     amount: 10,
@@ -723,7 +726,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should not update balance of toAccount when updating a scheduled transfer', async function() {
+            it('should not update balance of toAccount when updating a scheduled transfer', async function () {
                 const transaction = {
                     id: 1,
                     amount: -10,
@@ -880,7 +883,7 @@ describe('transactionStore', function() {
                     ],
                 },
             ].forEach(scenario => {
-                it(`should update balance of other account when a transaction ${scenario.name}`, async function() {
+                it(`should update balance of other account when a transaction ${scenario.name}`, async function () {
                     const transaction = ensureAllFieldsPresent(
                         scenario.transaction
                     );
@@ -928,8 +931,8 @@ describe('transactionStore', function() {
             });
         });
 
-        describe('deleteTransaction', function() {
-            it('should remove the transaction', async function() {
+        describe('deleteTransaction', function () {
+            it('should remove the transaction', async function () {
                 const transaction = {
                     id: 1,
                     amount: 10,
@@ -958,7 +961,7 @@ describe('transactionStore', function() {
                 sinon.assert.calledWith(client.deleteTransaction, transaction);
             });
 
-            it('should re-add transaction if server rejects deletion', async function() {
+            it('should re-add transaction if server rejects deletion', async function () {
                 const transaction = {
                     id: 1,
                     amount: 10,
@@ -992,8 +995,8 @@ describe('transactionStore', function() {
             });
         });
 
-        describe('payTransaction', function() {
-            it('should remove scheduled transaction if it is once off', async function() {
+        describe('payTransaction', function () {
+            it('should remove scheduled transaction if it is once off', async function () {
                 const scheduledTransaction = {
                     id: 1,
                     amount: 10,
@@ -1067,7 +1070,7 @@ describe('transactionStore', function() {
                     nextScheduledDate: '2020-10-13',
                 },
             ].forEach(params => {
-                it(`should move date of scheduled transaction to next repeat when ${params.description}`, async function() {
+                it(`should move date of scheduled transaction to next repeat when ${params.description}`, async function () {
                     const scheduledTransaction = {
                         id: 1,
                         amount: 10,
@@ -1122,7 +1125,7 @@ describe('transactionStore', function() {
                 });
             });
 
-            it('should update balance of account', async function() {
+            it('should update balance of account', async function () {
                 const scheduledTransaction = {
                     id: 1,
                     amount: 10,
@@ -1163,7 +1166,7 @@ describe('transactionStore', function() {
                 );
             });
 
-            it('should update balance of both accounts when transaction is a transfer', async function() {
+            it('should update balance of both accounts when transaction is a transfer', async function () {
                 const scheduledTransaction = {
                     id: 1,
                     amount: 10,

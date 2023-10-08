@@ -42,13 +42,13 @@ export function expenseByCategoryReportData(
     });
 
     return Object.values(roots)
-        .map((root) => {
+        .map(root => {
             const children = Object.values(root.children).sort(sortByExpenses);
             return {
                 categoryId: root.categoryId,
                 name: root.name,
                 totalExpenses: children
-                    .map((child) => child.totalExpenses)
+                    .map(child => child.totalExpenses)
                     .reduce((a, b) => a + b),
                 children,
             };

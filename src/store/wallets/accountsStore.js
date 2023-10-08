@@ -32,7 +32,7 @@ const currentAccountTypes = ['bank', 'asset', 'cc'];
 const noncurrentAccountTypes = ['investment'];
 
 function accountsByType(state, types) {
-    return state.accounts.filter((account) => types.includes(account.type));
+    return state.accounts.filter(account => types.includes(account.type));
 }
 
 export default {
@@ -48,21 +48,19 @@ export default {
             return accountsByType(state, noncurrentAccountTypes);
         },
         account(state) {
-            return (accountId) => {
-                return state.accounts.find(
-                    (account) => account.id === accountId
-                );
+            return accountId => {
+                return state.accounts.find(account => account.id === accountId);
             };
         },
         accountName(state, getters) {
-            return (accountId) => {
+            return accountId => {
                 const account = getters.account(accountId);
                 return account ? account.name : 'Unknown';
             };
         },
         selectedAccount(state, getters, rootState) {
             return state.accounts.find(
-                (account) => account.id === rootState.selectedWalletId
+                account => account.id === rootState.selectedWalletId
             );
         },
         currentAccountsBalance(state) {
