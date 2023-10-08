@@ -41,7 +41,6 @@
         "inject-loader": "^4.0.1",
         "mocha": "^10.0.0",
         "prettier": "^2.7.1",
-        "pretty-quick": "^3.0.2",
         "sass": "^1.26.11",
         "sass-loader": "^13.0.2",
         "sinon": "^16.1.0",
@@ -51,7 +50,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "pretty-quick --staged && lint"
+            "pre-commit": "lint"
         }
     }
 }
