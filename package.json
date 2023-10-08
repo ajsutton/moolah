@@ -16,6 +16,8 @@
         "core-js": "^3.24.0",
         "date-fns": "2.30.0",
         "debounce": "^1.2.0",
+        "lint-staged": "^14.0.1",
+        "save-dev": "^0.0.1-security",
         "vue": "^2.3.3",
         "vue-router": "^3.0.3",
         "vuetify": "^2.3.10",
@@ -50,7 +52,15 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint"
+            "pre-commit": "lint-staged"
         }
+    },
+    "lint-staged": {
+        "*.js": ["lint", "prettier"],
+        "*.vue": ["lint", "prettier"],
+        "*.css": ["prettier"],
+        "*.html": ["prettier"],
+        "*.svg": ["prettier"],
+        "*.xml": ["prettier"]
     }
 }
