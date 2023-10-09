@@ -89,8 +89,8 @@ export default {
                     ],
                 },
                 names: {
-                    balance: 'Net Worth',
-                    scheduled: 'Scheduled Net Worth',
+                    balance: 'Current Funds',
+                    scheduled: 'Scheduled Current Funds',
                     scheduledAvailableFunds: 'Scheduled Available Funds',
                     bestFit: 'Best Fit',
                     availableFunds: 'Available Funds',
@@ -192,6 +192,7 @@ export default {
                 grid: {
                     y: {
                         show: true,
+                        lines: [{ value: 0, class: 'zero-line' }],
                     },
                     x: {
                         lines: [{ value: this.today, text: 'Today' }],
@@ -269,6 +270,11 @@ export default {
     .c3-legend-background {
         fill: transparent;
         stroke: none;
+    }
+
+    .zero-line {
+        color: black;
+        stroke-width: 2px;
     }
 }
 </style>
