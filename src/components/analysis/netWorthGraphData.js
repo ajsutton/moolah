@@ -46,13 +46,7 @@ function extendBackTo(forecastBalances, balances, startDate) {
     if (forecastBalances[0].date !== startDate) {
         const lastBalance = balances[balances.length - 1];
         return [].concat(
-            [
-                {
-                    date: startDate,
-                    balance: lastBalance.balance,
-                    availableFunds: lastBalance.availableFunds,
-                },
-            ],
+            [Object.assign({}, lastBalance, { date: startDate })],
             forecastBalances
         );
     }

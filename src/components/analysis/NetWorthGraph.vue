@@ -83,6 +83,8 @@ export default {
                     value: [
                         'balance',
                         'availableFunds',
+                        'investments',
+                        'netWorth',
                         'bestFit',
                         'scheduled',
                         'scheduledAvailableFunds',
@@ -91,6 +93,8 @@ export default {
                 names: {
                     balance: 'Current Funds',
                     scheduled: 'Scheduled Current Funds',
+                    investments: 'Investments',
+                    netWorth: 'Net Worth',
                     scheduledAvailableFunds: 'Scheduled Available Funds',
                     bestFit: 'Best Fit',
                     availableFunds: 'Available Funds',
@@ -100,6 +104,8 @@ export default {
                     scheduledAvailableFunds: '#A5D6A7',
                     bestFit: 'gray',
                     balance: '#2196F3',
+                    investments: 'rgba(165, 42, 35, 0.7)',
+                    netWorth: 'rgb(31, 119, 180)',
                     scheduled: '#90CAF9',
                 },
                 unload: true,
