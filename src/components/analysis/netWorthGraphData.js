@@ -33,11 +33,7 @@ function extendUntil(balances, until) {
     const lastBalance = balances[balances.length - 1];
     if (lastBalance.date !== until) {
         return [].concat(balances, [
-            {
-                date: until,
-                balance: lastBalance.balance,
-                availableFunds: lastBalance.availableFunds,
-            },
+            Object.assign({}, lastBalance, { date: until }),
         ]);
     }
     return balances;

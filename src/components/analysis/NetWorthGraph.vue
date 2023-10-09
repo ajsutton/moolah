@@ -57,7 +57,7 @@ export default {
             historyItems: items('All'),
             forecastItems: items('None'),
             today: formatDate(new Date()),
-            previousMonths: 6,
+            previousMonths: 12,
             forecastMonths: 1,
             maxTicks: 1000,
         };
@@ -144,7 +144,7 @@ export default {
             this.update();
         },
         scheduledTransactions: {
-            handler: debounce(function() {
+            handler: debounce(function () {
                 this.update();
             }, 500),
             deep: true,
@@ -218,7 +218,8 @@ export default {
             if (this.$chart) {
                 this.$chart.unload();
                 this.$nextTick(() => {
-                    this.$chart.internal.config.axis_x_tick_values = this.tickValues;
+                    this.$chart.internal.config.axis_x_tick_values =
+                        this.tickValues;
                     this.$chart.load(this.graphData);
                 });
             }
