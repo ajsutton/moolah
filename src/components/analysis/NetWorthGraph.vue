@@ -67,6 +67,7 @@ export default {
             return extrapolateBalances(
                 this.dailyBalances,
                 this.scheduledBalances,
+                this.investmentValues,
                 this.today,
                 this.untilDate
             );
@@ -88,23 +89,26 @@ export default {
                         'bestFit',
                         'scheduled',
                         'scheduledAvailableFunds',
+                        'investmentValue',
                     ],
                 },
                 names: {
                     balance: 'Current Funds',
                     scheduled: 'Scheduled Current Funds',
-                    investments: 'Investments',
+                    investments: 'Invested Amount',
                     netWorth: 'Net Worth',
                     scheduledAvailableFunds: 'Scheduled Available Funds',
                     bestFit: 'Best Fit',
                     availableFunds: 'Available Funds',
+                    investmentValue: 'Investment Value',
                 },
                 colors: {
                     availableFunds: '#4CAF50',
                     scheduledAvailableFunds: '#A5D6A7',
                     bestFit: 'gray',
                     balance: '#2196F3',
-                    investments: 'rgba(165, 42, 35, 0.7)',
+                    investments: 'lightgray',
+                    investmentValue: 'gray',
                     netWorth: 'rgb(31, 119, 180)',
                     scheduled: '#90CAF9',
                 },
