@@ -1,6 +1,7 @@
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import distanceInWords from 'date-fns/formatDistance';
 import startOfToday from 'date-fns/startOfToday';
+import { parseDate } from '../../api/apiFormats';
 
 export default {
     props: {
@@ -139,20 +140,20 @@ export default {
         daysElapsed() {
             return distanceInWords(
                 startOfToday(),
-                new Date(this.selectedAccount.savingsStartDate)
+                parseDate(this.selectedAccount.savingsStartDate)
             );
         },
         daysRemaining() {
             return distanceInWords(
                 startOfToday(),
-                new Date(this.selectedAccount.savingsEndDate)
+                parseDate(this.selectedAccount.savingsEndDate)
             );
         },
         dueToday() {
             return (
                 this.selectedAccount.savingsEndDate &&
                 differenceInCalendarDays(
-                    new Date(this.selectedAccount.savingsEndDate),
+                    parseDate(this.selectedAccount.savingsEndDate),
                     startOfToday()
                 ) === 0
             );
@@ -161,7 +162,7 @@ export default {
             return (
                 this.selectedAccount.savingsEndDate &&
                 differenceInCalendarDays(
-                    new Date(this.selectedAccount.savingsEndDate),
+                    parseDate(this.selectedAccount.savingsEndDate),
                     startOfToday()
                 ) < 0
             );
@@ -171,12 +172,12 @@ export default {
                 return 0;
             }
             const totalDays = differenceInCalendarDays(
-                new Date(this.selectedAccount.savingsEndDate),
-                new Date(this.selectedAccount.savingsStartDate)
+                parseDate(this.selectedAccount.savingsEndDate),
+                parseDate(this.selectedAccount.savingsStartDate)
             );
             const elapsedDays = differenceInCalendarDays(
                 new Date(),
-                new Date(this.selectedAccount.savingsStartDate)
+                parseDate(this.selectedAccount.savingsStartDate)
             );
             return Math.max(0, (elapsedDays / totalDays) * 100);
         },

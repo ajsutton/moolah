@@ -1,12 +1,20 @@
 import dateFormat from 'date-fns/format';
 import getDaysInMonth from 'date-fns/getDaysInMonth';
 
+export function parseDate(val) {
+    if (val instanceof Date) {
+        return val;
+    }
+    // Use an explicit time to avoid timezone issues.
+    return new Date(val + 'T00:00');
+}
+
 export function formatDate(date) {
     let value;
     if (date === undefined) {
         value = undefined;
     } else {
-        value = new Date(date);
+        value = parseDate(date);
     }
     return date === undefined ? undefined : dateFormat(value, 'yyyy-MM-dd');
 }
@@ -15,8 +23,8 @@ export function monthAsIsoDate(month, dayOfMonth = 1) {
     const strMonth = String(month);
     const yearPart = strMonth.substring(0, strMonth.length - 2);
     const monthPart = strMonth.substring(strMonth.length - 2);
-    const monthStart = new Date(yearPart, monthPart - 1);
+    const monthStart = parseDate(yearPart, monthPart - 1);
     const daysInMonth = getDaysInMonth(monthStart);
     const dayPart = String(Math.min(dayOfMonth, daysInMonth)).padStart(2, '0');
-    return new Date(yearPart + '-' + monthPart + '-' + dayPart);
+    return parseDate(yearPart + '-' + monthPart + '-' + dayPart);
 }

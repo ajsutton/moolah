@@ -29,7 +29,7 @@
 
 <script>
 import addDays from 'date-fns/addDays';
-import { formatDate } from '../../api/apiFormats';
+import { formatDate, parseDate } from '../../api/apiFormats';
 
 export default {
     props: {
@@ -75,7 +75,7 @@ export default {
                     this.invalidText = null;
                     this.onInput(undefined);
                 } else {
-                    const parsedValue = new Date(value);
+                    const parsedValue = parseDate(value);
                     if (
                         !isNaN(parsedValue) &&
                         formatDate(parsedValue) === value
@@ -118,12 +118,12 @@ export default {
         },
 
         incrementDate() {
-            this.$emit('input', formatDate(addDays(new Date(this.value), 1)));
+            this.$emit('input', formatDate(addDays(parseDate(this.value), 1)));
             this.dateMenu = false;
         },
 
         decrementDate() {
-            this.$emit('input', formatDate(addDays(new Date(this.value), -1)));
+            this.$emit('input', formatDate(addDays(parseDate(this.value), -1)));
             this.dateMenu = false;
         },
     },

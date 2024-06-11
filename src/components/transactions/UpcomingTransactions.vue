@@ -53,6 +53,7 @@ import {
 } from '../../store/store';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import AddTransactionMixin from '../util/AddTransactionMixin';
+import { parseDate } from '../../api/apiFormats';
 
 export default {
     props: {
@@ -82,7 +83,7 @@ export default {
                 ? this.transactions.filter(
                       transaction =>
                           differenceInCalendarDays(
-                              new Date(transaction.date),
+                              parseDate(transaction.date),
                               new Date()
                           ) < 14
                   )

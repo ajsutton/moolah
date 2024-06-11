@@ -90,6 +90,7 @@ import DatePickerField from '../util/DatePickerField.vue';
 import isBefore from 'date-fns/isBefore';
 import formatMoney from '../util/formatMoney';
 import parseMoney from '../util/parseMoney';
+import parseDate from '../../api/apiFormats'
 
 export default {
     props: ['earmark'],
@@ -112,8 +113,8 @@ export default {
                         if (
                             this.savingsStartDate &&
                             isBefore(
-                                new Date(this.savingsEndDate),
-                                new Date(this.savingsStartDate)
+                                parseDate(this.savingsEndDate),
+                                parseDate(this.savingsStartDate)
                             )
                         ) {
                             return 'Must be after start date';
