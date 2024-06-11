@@ -1,48 +1,48 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
-        <template v-slot:activator="{ on }">
-            <v-btn v-on="on" text icon :color="isFiltered ? 'primary' : null">
+        <template #activator="{ on }">
+            <v-btn text icon :color="isFiltered ? 'primary' : null" v-on="on">
                 <v-icon>search</v-icon>
             </v-btn>
         </template>
 
         <v-card>
             <v-card-title>
-                <span class="headline">Show Transactions</span>
+                <span class="text-h5">Show Transactions</span>
             </v-card-title>
             <v-card-text>
                 <v-container grid-list-md>
-                    <v-layout wrap>
-                        <v-flex xs12 sm6>
+                    <v-row >
+                        <v-col cols="12" sm="6">
                             <date-picker-field
-                                label="From"
                                 v-model="from"
+                                label="From"
                                 :optional="true"
                             ></date-picker-field>
-                        </v-flex>
-                        <v-flex xs12 sm6>
+                        </v-col>
+                        <v-col cols="12" sm="6">
                             <date-picker-field
-                                label="To"
                                 v-model="to"
+                                label="To"
                                 :optional="true"
                             ></date-picker-field>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout wrap>
-                        <v-flex xs12>
+                        </v-col>
+                    </v-row>
+                    <v-row >
+                        <v-col cols="12">
                             <category-selector
-                                multiple
                                 v-model="categories"
+                                multiple
                                 label="Categories"
                             ></category-selector>
-                        </v-flex>
-                    </v-layout>
+                        </v-col>
+                    </v-row>
                 </v-container>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text @click.native="close">Close</v-btn>
-                <v-btn text @click.native="search" color="primary"
+                <v-btn text color="primary" @click.native="search"
                     >Search</v-btn
                 >
             </v-card-actions>
@@ -69,14 +69,14 @@ export default {
         ...mapState('transactions', ['searchOptions']),
         ...mapGetters('transactions', ['isFiltered']),
     },
-    created() {
-        this.reset();
-    },
     watch: {
         searchOptions: {
             handler: 'reset',
             deep: true,
         },
+    },
+    created() {
+        this.reset();
     },
     methods: {
         reset() {

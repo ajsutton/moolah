@@ -1,12 +1,12 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
             <v-btn icon v-on="on">
                 <v-icon :title="title">{{ icon }}</v-icon>
             </v-btn>
         </template>
         <v-card>
-            <v-form v-model="valid" ref="form" lazy-validation>
+            <v-form ref="form" v-model="valid" lazy-validation>
                 <v-card-title>{{ title }}</v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert error :value="true">{{ errorMessage }}</v-alert>
@@ -14,26 +14,26 @@
                 <v-card-text>
                     <v-container fluid>
                         <v-text-field
-                            label="Name"
                             v-model="name"
+                            label="Name"
                             name="name"
                             :rules="rules.name"
                             required
                             autofocus
                         ></v-text-field>
                         <v-text-field
+                            v-if="!editing"
+                            v-model="balance"
                             label="Initial Balance"
                             prefix="$"
                             type="text"
-                            v-model="balance"
                             name="balance"
                             :rules="rules.balance"
-                            v-if="!editing"
                         ></v-text-field>
                         <v-select
+                            v-model="type"
                             label="Account Type"
                             required
-                            v-model="type"
                             :items="[
                                 { text: 'Bank Account', value: 'bank' },
                                 { text: 'Credit Card', value: 'cc' },
@@ -43,9 +43,9 @@
                         ></v-select>
 
                         <v-checkbox
-                            label="Closed"
-                            v-model="hidden"
                             v-if="canHide"
+                            v-model="hidden"
+                            label="Closed"
                         ></v-checkbox>
                         <small>*indicates required field</small>
                     </v-container>
@@ -116,14 +116,14 @@ export default {
         },
     },
 
-    created() {
-        this.syncFromAccount(this.account);
-    },
-
     watch: {
         account(newAccount) {
             this.syncFromAccount(newAccount);
         },
+    },
+
+    created() {
+        this.syncFromAccount(this.account);
     },
 
     methods: {

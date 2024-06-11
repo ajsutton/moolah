@@ -15,14 +15,14 @@
                     </v-col>
                     <v-col cols="12" lg="2">
                         <date-picker-field
-                            label="From"
                             v-model="from"
+                            label="From"
                         ></date-picker-field>
                     </v-col>
                     <v-col cols="12" lg="2">
                         <date-picker-field
-                            label="To"
                             v-model="to"
+                            label="To"
                         ></date-picker-field>
                     </v-col>
                 </v-row>
@@ -53,6 +53,10 @@ function range(text, from, to) {
     return { text, value: { from: formatDate(from), to: formatDate(to) } };
 }
 export default {
+    components: {
+        ExpensesByCategoryReport,
+        DatePickerField,
+    },
     data() {
         const today = new Date();
         return {
@@ -98,10 +102,6 @@ export default {
                 }
             },
         },
-    },
-    components: {
-        ExpensesByCategoryReport,
-        DatePickerField,
     },
 };
 </script>

@@ -1,24 +1,24 @@
 <template>
     <v-card class="upcoming-transactions">
         <v-app-bar flat class="white">
-            <v-toolbar-title class="body-2 grey--text"
+            <v-toolbar-title class="text-body-2 grey--text"
                 >Upcoming Transactions</v-toolbar-title
             >
             <v-spacer></v-spacer>
-            <v-btn icon @click.native.stop="addEarmark" :disabled="noEarmarks">
+            <v-btn icon :disabled="noEarmarks" @click.native.stop="addEarmark">
                 <v-icon>mdi-bookmark-outline</v-icon>
             </v-btn>
             <v-btn
                 icon
-                @click.native.stop="addTransaction"
                 :disabled="noAccounts"
+                @click.native.stop="addTransaction"
             >
                 <v-icon>add</v-icon>
             </v-btn>
         </v-app-bar>
         <v-progress-linear
-            v-bind:indeterminate="true"
             v-if="loading"
+            :indeterminate="true"
         ></v-progress-linear>
         <v-list two-line>
             <v-list-item-group
@@ -27,10 +27,10 @@
             >
                 <template v-for="transaction in transactionsToDisplay">
                     <transaction
-                        :transaction="transaction"
                         :key="transaction.id"
-                        :showBalance="false"
-                        highlightOverdue
+                        :transaction="transaction"
+                        :show-balance="false"
+                        highlight-overdue
                     >
                     </transaction>
                     <v-divider></v-divider>
@@ -56,6 +56,7 @@ import AddTransactionMixin from '../util/AddTransactionMixin';
 import { parseDate } from '../../api/apiFormats';
 
 export default {
+    mixins: [AddTransactionMixin],
     props: {
         height: {
             default: '',
@@ -70,7 +71,6 @@ export default {
             highlightedTransaction: undefined,
         };
     },
-    mixins: [AddTransactionMixin],
     computed: {
         noAccounts() {
             return this.accounts.length === 0;

@@ -1,10 +1,10 @@
 <template>
     <div>
         <investment-value
-            :account="selectedAccount"
             v-if="isInvestment"
+            :account="selectedAccount"
         ></investment-value>
-        <transactions :searchOptions="searchOptions" :title="title">
+        <transactions :search-options="searchOptions" :title="title">
             <template v-if="selectedAccount" slot="buttons">
                 <create-account :account="selectedAccount"></create-account>
                 <v-btn icon @click.native.stop="addTransaction">
@@ -26,6 +26,8 @@ import InvestmentValue from './InvestmentValue.vue';
 import AddTransactionMixin from '../util/AddTransactionMixin';
 
 export default {
+
+    mixins: [AddTransactionMixin],
     props: {
         accountId: String,
         searchOptions: Object,
@@ -37,16 +39,14 @@ export default {
         };
     },
 
-    mixins: [AddTransactionMixin],
-
-    created() {
-        this.loadTransactions();
-    },
-
     watch: {
         $route() {
             this.loadTransactions();
         },
+    },
+
+    created() {
+        this.loadTransactions();
     },
 
     computed: {

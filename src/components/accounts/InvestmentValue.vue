@@ -10,7 +10,7 @@
                 <v-col :cols="4">
                     <value-panel
                         label="Current Value"
-                        valueColor="blue"
+                        value-color="blue"
                         :value="account.value"
                         :percent="profitLossPercent"
                     ></value-panel>
@@ -19,7 +19,7 @@
                     <value-panel
                         class="text-center"
                         label="Invested Amount"
-                        valueColor="gray"
+                        value-color="gray"
                         :value="account.balance"
                     ></value-panel>
                 </v-col>
@@ -48,12 +48,12 @@
                         :loading="loading"
                         class="actions-table"
                     >
-                        <template v-slot:item.value="{ item }">
+                        <template #item.value="{ item }">
                             <monetary-amount
                                 :value="item.value"
                             ></monetary-amount>
                         </template>
-                        <template v-slot:item.actions="{ item }">
+                        <template #item.actions="{ item }">
                             <edit-investment-value
                                 :input="item"
                             ></edit-investment-value>
@@ -131,10 +131,10 @@ export default {
                 return 0;
             }
             const calculateFutureValue = function (rate, balances, finalDate) {
-                var prevBalance = balances[0].balance;
-                var val = prevBalance;
-                var date = parseISO(balances[0].date);
-                for (var i = 1; i <= balances.length; i++) {
+                let prevBalance = balances[0].balance;
+                let val = prevBalance;
+                let date = parseISO(balances[0].date);
+                for (let i = 1; i <= balances.length; i++) {
                     const nextDate =
                         i < balances.length
                             ? parseISO(balances[i].date)
@@ -154,8 +154,8 @@ export default {
 
                 return val;
             };
-            var low = -1;
-            var high = 1;
+            let low = -1;
+            let high = 1;
             const target = this.values[0].value;
             // Ensure high is above the maximum possible return
             while (

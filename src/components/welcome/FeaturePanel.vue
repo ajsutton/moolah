@@ -4,7 +4,7 @@
             <v-card-text>
                 <v-icon large>{{ icon }}</v-icon>
             </v-card-text>
-            <v-card-text class="headline">{{ headline }}</v-card-text>
+            <v-card-text class="text-h5">{{ headline }}</v-card-text>
             <v-card-text><slot /></v-card-text>
         </v-card>
     </v-col>

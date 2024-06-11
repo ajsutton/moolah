@@ -13,6 +13,9 @@ import formatPercent from './formatPercent';
 import MonetaryAmount from './MonetaryAmount.vue';
 
 export default {
+    components: {
+        MonetaryAmount,
+    },
     props: {
         value: {
             type: Number,
@@ -37,9 +40,6 @@ export default {
         icon() {
             return this.percent >= 0 ? 'trending_up' : 'trending_down';
         },
-    },
-    components: {
-        MonetaryAmount,
     },
 };
 </script>

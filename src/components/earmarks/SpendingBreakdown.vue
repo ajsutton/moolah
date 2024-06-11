@@ -1,13 +1,13 @@
 <template>
     <v-container>
-        <v-layout wrap>
-            <v-flex md6>
+        <v-row >
+            <v-col md="6">
                 <table class="table spending-breakdown mx-auto">
                     <thead>
                         <th class="text-sm-left">
                             <add-line-item
                                 :earmark="earmark"
-                                :excludeCategories="existingCategoryIds"
+                                :exclude-categories="existingCategoryIds"
                                 @add="addCategory"
                             ></add-line-item>
                         </th>
@@ -33,32 +33,32 @@
                             </td>
                             <td class="text-sm-right">
                                 <monetary-amount
-                                    :value="category.subtotal"
                                     v-if="category.total"
+                                    :value="category.subtotal"
                                 ></monetary-amount>
                                 <monetary-amount
-                                    :value="category.balance"
                                     v-if="
                                         !category.total &&
                                         (category.budget !== 0 ||
                                             category.balance !== 0)
                                     "
+                                    :value="category.balance"
                                 ></monetary-amount>
                             </td>
                             <td class="text-sm-right">
                                 <monetary-amount
-                                    :value="category.budgetSubtotal"
                                     v-if="category.total"
+                                    :value="category.budgetSubtotal"
                                 ></monetary-amount>
                                 <v-edit-dialog
-                                    large
-                                    lazy
-                                    persistent
                                     v-if="
                                         !category.total &&
                                         (category.budget !== 0 ||
                                             category.balance !== 0)
                                     "
+                                    large
+                                    lazy
+                                    persistent
                                     return-value.sync="getBudgetEditValue(category.id)"
                                     @update:returnValue="
                                         (val) => save(category.id, val)
@@ -78,30 +78,30 @@
                                         name="amount"
                                         label="Budget"
                                         :value="getBudgetEditValue(category.id)"
+                                        prefix="$"
+                                        :rules="rules.amount"
                                         @input="
                                             (val) =>
                                                 updateBudget(category.id, val)
                                         "
-                                        prefix="$"
-                                        :rules="rules.amount"
                                     ></v-text-field>
                                 </v-edit-dialog>
                             </td>
                             <td class="text-sm-right">
                                 <monetary-amount
+                                    v-if="category.total"
                                     :value="
                                         category.budgetSubtotal +
                                         category.subtotal
                                     "
-                                    v-if="category.total"
                                 ></monetary-amount>
                                 <monetary-amount
-                                    :value="category.budget + category.balance"
                                     v-if="
                                         !category.total &&
                                         (category.budget !== 0 ||
                                             category.balance !== 0)
                                     "
+                                    :value="category.budget + category.balance"
                                 ></monetary-amount>
                             </td>
                         </tr>
@@ -145,11 +145,11 @@
                         </tr>
                     </tfoot>
                 </table>
-            </v-flex>
-            <v-flex md6>
+            </v-col>
+            <v-col md="6">
                 <pie-chart :data="pieChartData"></pie-chart>
-            </v-flex>
-        </v-layout>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -217,7 +217,7 @@ export default {
                         balance: 0,
                         budget: 0,
                         budgetSubtotal: category.budgetSubtotal,
-                        level: level,
+                        level,
                         total: true,
                     });
                 }
@@ -287,7 +287,7 @@ export default {
             const categoryData = {};
             Object.entries(categoryBalanceById).forEach(
                 ([categoryId, balance]) =>
-                    (categoryData[categoryId] = { balance: balance, budget: 0 })
+                    (categoryData[categoryId] = { balance, budget: 0 })
             );
             Object.entries(categoryBudgetById).forEach(
                 ([categoryId, budget]) => {

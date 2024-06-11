@@ -1,7 +1,7 @@
 <template>
-    <v-container class="loading-screen" fluid fill-height>
-        <v-layout column align-center justify-center>
-            <v-flex>
+    <v-container class="loading-screen fill-height" fluid>
+        <v-row column align="center" justify="center">
+            <v-col>
                 <div class="loading text-sm-center">
                     <p>
                         <img
@@ -15,8 +15,8 @@
                         color="accent"
                     ></v-progress-linear>
                 </div>
-            </v-flex>
-        </v-layout>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

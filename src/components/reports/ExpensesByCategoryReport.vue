@@ -78,6 +78,9 @@ export default {
             this.update();
         },
     },
+    async mounted() {
+        this.update();
+    },
     methods: {
         async update() {
             this.loading = true;
@@ -91,9 +94,6 @@ export default {
                 this.loading = false;
             }
         },
-    },
-    async mounted() {
-        this.update();
     },
     components: {
         MonetaryAmount,

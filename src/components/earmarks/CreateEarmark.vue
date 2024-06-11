@@ -1,12 +1,12 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
             <v-btn icon v-on="on">
                 <v-icon :title="title">{{ icon }}</v-icon>
             </v-btn>
         </template>
         <v-card>
-            <v-form v-model="valid" ref="form" lazy-validation>
+            <v-form ref="form" v-model="valid" lazy-validation>
                 <v-card-title>{{ title }}</v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert error :value="true">{{ errorMessage }}</v-alert>
@@ -14,8 +14,8 @@
                 <v-card-text>
                     <v-container>
                         <v-text-field
-                            label="Name"
                             v-model="name"
+                            label="Name"
                             name="name"
                             :rules="rules.name"
                             required
@@ -24,39 +24,39 @@
 
                         <div class="subheading mt-4">Savings goal</div>
 
-                        <v-layout row wrap>
-                            <v-flex sm4 xs12>
+                        <v-row  >
+                            <v-col sm="4" cols="12">
                                 <v-text-field
+                                    v-model="savingsTarget"
                                     label="Savings target"
                                     prefix="$"
                                     type="text"
-                                    v-model="savingsTarget"
                                     name="savingsTarget"
                                     :rules="rules.savingsTarget"
                                     clearable
                                 ></v-text-field>
-                            </v-flex>
-                            <v-flex sm3 offset-sm1 xs12>
+                            </v-col>
+                            <v-col sm="3" offset-sm="1" cols="12">
                                 <date-picker-field
-                                    label="Start"
                                     v-model="savingsStartDate"
+                                    label="Start"
                                     :optional="true"
                                 ></date-picker-field>
-                            </v-flex>
-                            <v-flex sm3 offset-sm1 xs12>
+                            </v-col>
+                            <v-col sm="3" offset-sm="1" cols="12">
                                 <date-picker-field
-                                    label="End"
                                     v-model="savingsEndDate"
+                                    label="End"
                                     :optional="true"
                                     :rules="rules.endDate"
                                 ></date-picker-field>
-                            </v-flex>
-                        </v-layout>
+                            </v-col>
+                        </v-row>
 
                         <v-checkbox
-                            label="Closed"
-                            v-model="hidden"
                             v-if="canHide"
+                            v-model="hidden"
+                            label="Closed"
                         ></v-checkbox>
                         <small>*indicates required field</small>
                     </v-container>
@@ -143,14 +143,14 @@ export default {
         },
     },
 
-    created() {
-        this.syncFromEarmark(this.earmark);
-    },
-
     watch: {
         earmark(newEarmark) {
             this.syncFromEarmark(newEarmark);
         },
+    },
+
+    created() {
+        this.syncFromEarmark(this.earmark);
     },
 
     methods: {

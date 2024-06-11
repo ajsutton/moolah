@@ -1,7 +1,7 @@
 <template>
     <v-navigation-drawer
-        clipped
         v-model="showMainNav"
+        clipped
         dark
         app
         fixed
@@ -11,30 +11,30 @@
             <wallet-list
                 title="Current Accounts"
                 :accounts="currentAccounts"
-                baseUrl="/account"
-                totalLabel="Current funds"
-                :totalValue="currentAccountsBalance"
+                base-url="/account"
+                total-label="Current funds"
+                :total-value="currentAccountsBalance"
             >
-                <create-account dark slot="titleAction"></create-account>
+                <create-account slot="titleAction" dark></create-account>
             </wallet-list>
             <wallet-list
                 title="Earmarked"
                 :accounts="earmarks"
-                baseUrl="/earmark"
-                totalLabel="Available funds"
-                :totalValue="availableFunds"
+                base-url="/earmark"
+                total-label="Available funds"
+                :total-value="availableFunds"
             >
-                <create-earmark dark slot="titleAction"></create-earmark>
+                <create-earmark slot="titleAction" dark></create-earmark>
             </wallet-list>
             <wallet-list
                 v-if="noncurrentAccounts.length > 0"
                 title="Investments"
                 :accounts="noncurrentAccounts"
-                baseUrl="/account"
-                totalLabel="Net worth"
-                :totalValue="networth"
+                base-url="/account"
+                total-label="Net worth"
+                :total-value="networth"
             >
-                <create-account dark slot="titleAction"></create-account>
+                <create-account slot="titleAction" dark></create-account>
             </wallet-list>
 
             <v-list dense expand nav>

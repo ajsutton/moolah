@@ -1,9 +1,9 @@
 <template>
     <v-container class="savingsGoalNotice">
-        <v-layout row wrap align-start justify-center>
-            <v-flex xs12 lg4 xl2 d-flex v-if="hasStartDate || hasEndDate">
-                <v-layout column text-sm-center>
-                    <v-flex>
+        <v-row   align="start" justify="center">
+            <v-col v-if="hasStartDate || hasEndDate" class="d-flex" cols="12" lg="4" xl="2">
+                <v-row class="text-sm-center" column>
+                    <v-col>
                         <v-progress-circular
                             :value="timePercent"
                             :size="progressSize"
@@ -12,13 +12,13 @@
                             :color="timeColor"
                         >
                             Time<br />
-                            <span class="headline" v-if="hasTargetDates"
+                            <span v-if="hasTargetDates" class="text-h5"
                                 >{{ Math.floor(timePercent) }}%</span
                             >
                         </v-progress-circular>
-                    </v-flex>
+                    </v-col>
 
-                    <v-flex xs12>
+                    <v-col cols="12">
                         <table class="table data-table">
                             <tr v-if="hasStartDate">
                                 <td class="text-sm-left">Start</td>
@@ -41,13 +41,13 @@
                                 </td>
                             </tr>
                         </table>
-                    </v-flex>
-                </v-layout>
-            </v-flex>
+                    </v-col>
+                </v-row>
+            </v-col>
 
-            <v-flex xs12 lg4 xl2 d-flex>
-                <v-layout column text-sm-center>
-                    <v-flex>
+            <v-col class="d-flex" cols="12" lg="4" xl="2">
+                <v-row class="text-sm-center" column>
+                    <v-col>
                         <v-progress-circular
                             :value="savingsPercent"
                             :size="progressSize"
@@ -56,13 +56,13 @@
                             :color="savingsColor"
                         >
                             Saved<br />
-                            <span class="headline" v-if="hasSavingsTarget"
+                            <span v-if="hasSavingsTarget" class="text-h5"
                                 >{{ Math.floor(savingsPercent) }}%</span
                             >
                         </v-progress-circular>
-                    </v-flex>
+                    </v-col>
 
-                    <v-flex xs12>
+                    <v-col cols="12">
                         <table class="table data-table">
                             <tr>
                                 <td class="text-sm-left">Saved</td>
@@ -89,13 +89,13 @@
                                 </td>
                             </tr>
                         </table>
-                    </v-flex>
-                </v-layout>
-            </v-flex>
+                    </v-col>
+                </v-row>
+            </v-col>
 
-            <v-flex xs12 lg4 xl2 d-flex>
-                <v-layout column text-sm-center>
-                    <v-flex>
+            <v-col class="d-flex" cols="12" lg="4" xl="2">
+                <v-row class="text-sm-center" column>
+                    <v-col>
                         <v-progress-circular
                             :value="spentPercentOfEither"
                             :size="progressSize"
@@ -104,13 +104,13 @@
                             :color="savingsColor"
                         >
                             Spent<br />
-                            <span class="headline" v-if="hasSaved"
+                            <span v-if="hasSaved" class="text-h5"
                                 >{{ Math.ceil(spentPercentOfEither) }}%</span
                             >
                         </v-progress-circular>
-                    </v-flex>
+                    </v-col>
 
-                    <v-flex xs12>
+                    <v-col cols="12">
                         <table class="table data-table">
                             <tr>
                                 <td class="text-sm-left">Spent</td>
@@ -149,10 +149,10 @@
                                 </td>
                             </tr>
                         </table>
-                    </v-flex>
-                </v-layout>
-            </v-flex>
-        </v-layout>
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -163,6 +163,13 @@ import SavingsGoalMixin from './SavingsGoalMixin';
 import { formatDate } from '../util/formatDate';
 
 export default {
+    filters: {
+        date: formatDate,
+    },
+    components: {
+        VProgressCircular,
+        MonetaryAmount,
+    },
     mixins: [SavingsGoalMixin],
     data() {
         return {
@@ -173,13 +180,6 @@ export default {
         progressWidth() {
             return Math.floor(this.progressSize / 10);
         },
-    },
-    filters: {
-        date: formatDate,
-    },
-    components: {
-        VProgressCircular,
-        MonetaryAmount,
     },
 };
 </script>

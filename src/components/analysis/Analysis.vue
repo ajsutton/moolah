@@ -14,12 +14,12 @@
         <v-row>
             <v-col :cols="12" :lg="6">
                 <upcoming-transactions
-                    :shortTerm="true"
                     v-if="showScheduledTransactions"
+                    :short-term="true"
                 ></upcoming-transactions>
                 <expense-breakdown v-if="hasHistory"></expense-breakdown>
             </v-col>
-            <v-col :cols="12" :lg="6" v-if="hasHistory">
+            <v-col v-if="hasHistory" :cols="12" :lg="6">
                 <income-and-expense-table></income-and-expense-table>
             </v-col>
         </v-row>

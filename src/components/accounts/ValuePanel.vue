@@ -5,7 +5,7 @@
             ><monetary-amount-and-profit
                 class="text-h5"
                 :value="value"
-                :valueColor="valueColor"
+                :value-color="valueColor"
                 :percent="percent"
             ></monetary-amount-and-profit
         ></v-card-text>
@@ -15,6 +15,9 @@
 import MonetaryAmountAndProfit from '../util/MonetaryAmountAndProfit.vue';
 
 export default {
+    components: {
+        MonetaryAmountAndProfit,
+    },
     props: {
         label: {
             type: String,
@@ -33,9 +36,6 @@ export default {
             required: false,
             default: undefined,
         },
-    },
-    components: {
-        MonetaryAmountAndProfit,
     },
 };
 </script>

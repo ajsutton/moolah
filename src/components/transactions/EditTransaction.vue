@@ -2,24 +2,24 @@
     <div class="pl-2 pr-2">
         <p v-if="isEarmarkAccount" class="subheading">Earmark funds</p>
         <auto-complete-payee
-            name="payee"
-            label="Payee"
-            v-model="payee"
-            :rules="rules.payee"
-            @blur="onBlur('payee')"
             v-else-if="!isOpeningBalance"
             ref="payee"
+            v-model="payee"
+            name="payee"
+            label="Payee"
+            :rules="rules.payee"
+            @blur="onBlur('payee')"
             @autofill="autofill"
         ></auto-complete-payee>
 
         <v-text-field
+            ref="amount"
+            v-model="amount"
             name="amount"
             label="Amount"
-            v-model="amount"
             prefix="$"
             :rules="rules.amount"
             @blur="onBlur('amount')"
-            ref="amount"
         ></v-text-field>
 
         <date-picker-field v-model="date"></date-picker-field>
@@ -28,34 +28,34 @@
             <category-selector v-model="category"></category-selector>
 
             <v-select
-                label="Type"
                 v-if="!isOpeningBalance"
                 v-model="type"
+                label="Type"
                 :items="validTransactionTypes"
             ></v-select>
             <wallet-selector
-                :label="toAccountLabel"
                 v-if="type === 'transfer'"
+                :label="toAccountLabel"
                 :wallets="accounts"
-                v-bind:value.sync="toAccountId"
-                :excludeAccountId="accountId"
+                :value.sync="toAccountId"
+                :exclude-account-id="accountId"
             ></wallet-selector>
         </template>
 
         <wallet-selector
+            v-if="showEarmarkSelector"
             label="Earmark"
-            v-bind:value.sync="earmark"
+            :value.sync="earmark"
             :wallets="earmarks"
             :clearable="!isEarmarkAccount"
-            v-if="showEarmarkSelector"
         ></wallet-selector>
 
         <recurrence v-if="scheduled" :transaction="transaction"></recurrence>
 
         <v-textarea
+            v-model="notes"
             name="notes"
             label="Notes"
-            v-model="notes"
             :rules="rules.notes"
             @blur="onBlur('notes')"
         ></v-textarea>
@@ -63,7 +63,7 @@
         <wallet-selector
             v-if="scheduled && !isEarmarkAccount"
             label="Account"
-            v-bind:value.sync="accountId"
+            :value.sync="accountId"
             :wallets="accounts"
         ></wallet-selector>
 

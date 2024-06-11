@@ -4,10 +4,10 @@
             :src="require('../../assets/jumbo-background.jpg')"
             height="250"
         >
-            <v-container fill-height>
-                <v-row align-center>
+            <v-container class="fill-height">
+                <v-row align="center">
                     <v-col>
-                        <h1 class="white--text display-3 text-center">
+                        <h1 class="white--text text-h2 text-center">
                             Moolah
                         </h1>
                     </v-col>
@@ -15,7 +15,7 @@
             </v-container>
         </v-parallax>
         <v-container>
-            <v-row fill-height>
+            <v-row class="fill-height">
                 <feature-panel icon="account_balance" headline="Businessy">
                     We've got a fancy looking icon and pretty pictures.<br />
                     Why wouldn't you love us?
@@ -46,12 +46,12 @@
 import FeaturePanel from './FeaturePanel.vue';
 
 export default {
-    name: 'hello',
-    data() {
-        return {};
-    },
+    name: 'Hello',
     components: {
         FeaturePanel,
+    },
+    data() {
+        return {};
     },
 };
 </script>

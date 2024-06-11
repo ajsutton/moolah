@@ -1,22 +1,22 @@
 <template>
     <graph-panel
+        ref="chartPanel"
         title="Expenses by Category Over Time"
         class="expense-category-time-graph"
         @resize="handleResize"
-        ref="chartPanel"
     >
         <v-spacer></v-spacer>
 
-        <v-radio-group row v-model="actualValues" class="mt-4">
+        <v-radio-group v-model="actualValues" row class="mt-4">
             <v-radio label="Percentage" :value="false"></v-radio>
             <v-radio label="Actual" :value="true"></v-radio>
         </v-radio-group>
         <v-toolbar-items>
             <v-select
+                v-model="previousMonths"
                 class="mt-4"
                 label="History"
                 :items="historyItems"
-                v-model="previousMonths"
             ></v-select>
         </v-toolbar-items>
     </graph-panel>

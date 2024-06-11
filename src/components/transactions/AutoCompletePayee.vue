@@ -1,9 +1,9 @@
 <template>
     <v-combobox
         ref="field"
+        v-model="content"
         :label="label"
         :rules="rules"
-        v-model="content"
         item-text="payee"
         return-object
         :items="transactions"

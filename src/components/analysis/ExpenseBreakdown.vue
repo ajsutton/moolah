@@ -1,29 +1,29 @@
 <template>
     <graph-panel
+        ref="chartPanel"
         title="Expenses by Category"
         class="expense-breakdown-graph"
         @resize="handleResize"
-        ref="chartPanel"
     >
         <v-spacer></v-spacer>
         <v-toolbar-items>
             <v-select
+                v-model="previousMonths"
                 class="mt-4"
                 label="History"
                 :items="historyItems"
-                v-model="previousMonths"
             ></v-select>
         </v-toolbar-items>
         <v-breadcrumbs
-            icons
             v-if="breadcrumbs.length > 1"
             slot="footer"
+            icons
             :items="breadcrumbs"
         >
-            <template v-slot:divider>
+            <template #divider>
                 <v-icon>mdi-chevron-right</v-icon>
             </template>
-            <template v-slot:item="props">
+            <template #item="props">
                 <v-breadcrumbs-item
                     :key="props.item.id"
                     @click.native="rootCategoryId = props.item.id"
@@ -34,8 +34,8 @@
         </v-breadcrumbs>
 
         <pie-chart
-            :data="categories"
             slot="chart"
+            :data="categories"
             @click="onGraphClick"
         ></pie-chart>
     </graph-panel>

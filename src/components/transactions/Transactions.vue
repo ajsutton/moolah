@@ -7,13 +7,13 @@
             <slot name="buttons"></slot>
         </v-app-bar>
         <filter-notice></filter-notice>
-        <v-alert type="error" v-model="error"
+        <v-alert v-model="error" type="error"
             >Failed to load transactions</v-alert
         >
         <v-divider></v-divider>
         <v-progress-linear
-            v-bind:indeterminate="true"
             v-if="loading"
+            :indeterminate="true"
         ></v-progress-linear>
         <v-list two-line>
             <v-list-item-group
@@ -22,8 +22,8 @@
             >
                 <template v-for="transaction in transactions">
                     <transaction
-                        :transaction="transaction"
                         :key="transaction.id"
+                        :transaction="transaction"
                         @selected="editTransaction"
                     >
                     </transaction>
@@ -33,8 +33,8 @@
         </v-list>
         <div class="text-sm-center">
             <v-pagination
-                :length="numberOfPages"
                 v-model="currentPage"
+                :length="numberOfPages"
             ></v-pagination>
         </div>
     </v-card>

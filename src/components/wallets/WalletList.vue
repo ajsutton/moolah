@@ -4,10 +4,10 @@
             {{ title }}
             <div class="flex-grow-1"></div>
             <v-btn
-                icon
-                @click.prevent="showHidden = !showHidden"
-                class="mx-1"
                 v-if="hasHiddenWallets"
+                icon
+                class="mx-1"
+                @click.prevent="showHidden = !showHidden"
             >
                 <v-icon v-if="showHidden">visibility</v-icon>
                 <v-icon v-else>visibility_off</v-icon>
@@ -16,14 +16,14 @@
         </v-subheader>
 
         <wallet-list-item
-            :account="wallet"
-            :baseUrl="baseUrl"
             v-for="wallet in visibleWallets"
             :key="wallet.id"
+            :account="wallet"
+            :base-url="baseUrl"
         ></wallet-list-item>
         <v-divider></v-divider>
 
-        <v-list-item no-action v-if="accounts.length > 0">
+        <v-list-item v-if="accounts.length > 0" no-action>
             <v-list-item-content>
                 <v-list-item-title>
                     {{ totalLabel }}
@@ -45,6 +45,10 @@ import WalletListItem from './WalletListItem.vue';
 const hiddenFilter = wallet => !wallet.hidden || wallet.balance !== 0;
 
 export default {
+    components: {
+        MonetaryAmount,
+        WalletListItem,
+    },
     props: {
         title: {
             type: String,
@@ -81,10 +85,6 @@ export default {
         hasHiddenWallets() {
             return !this.accounts.every(hiddenFilter);
         },
-    },
-    components: {
-        MonetaryAmount,
-        WalletListItem,
     },
 };
 </script>

@@ -1,23 +1,23 @@
 <template>
     <graph-panel
+        ref="chartPanel"
         title="Net Worth"
         class="networth-graph"
         @resize="handleResize"
-        ref="chartPanel"
     >
         <v-spacer></v-spacer>
         <v-toolbar-items>
             <v-select
+                v-model="previousMonths"
                 class="mt-4"
                 label="History"
                 :items="historyItems"
-                v-model="previousMonths"
             ></v-select>
             <v-select
+                v-model="forecastMonths"
                 class="mt-4"
                 label="Forecast"
                 :items="forecastItems"
-                v-model="forecastMonths"
             ></v-select>
         </v-toolbar-items>
     </graph-panel>
@@ -160,6 +160,25 @@ export default {
             deep: true,
         },
     },
+    async mounted() {
+        const response = await client.dailyBalances(
+            this.afterDate,
+            this.untilDate
+        );
+        this.dailyBalances = response.dailyBalances;
+        this.scheduledBalances = response.scheduledBalances || [];
+        this.maxTicks = maxTicks(this.$refs.chartPanel.chart.offsetWidth);
+        const args = this.getArgs();
+        this.$chart = c3.generate({
+            bindto: this.$refs.chartPanel.chart,
+            ...args,
+        });
+    },
+    beforeDestroy() {
+        if (this.$chart) {
+            this.$chart = this.$chart.destroy();
+        }
+    },
     methods: {
         getArgs() {
             return {
@@ -244,25 +263,6 @@ export default {
             }
             this.reload();
         },
-    },
-    async mounted() {
-        const response = await client.dailyBalances(
-            this.afterDate,
-            this.untilDate
-        );
-        this.dailyBalances = response.dailyBalances;
-        this.scheduledBalances = response.scheduledBalances || [];
-        this.maxTicks = maxTicks(this.$refs.chartPanel.chart.offsetWidth);
-        const args = this.getArgs();
-        this.$chart = c3.generate({
-            bindto: this.$refs.chartPanel.chart,
-            ...args,
-        });
-    },
-    beforeDestroy() {
-        if (this.$chart) {
-            this.$chart = this.$chart.destroy();
-        }
     },
     components: {
         GraphPanel,

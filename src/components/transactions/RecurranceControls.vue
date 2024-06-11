@@ -1,29 +1,29 @@
 <template>
     <div>
         <v-switch
+            v-model="repeating"
             class="tight-input-group"
             label="Repeat"
-            v-model="repeating"
             hide-details
         ></v-switch>
-        <v-layout row v-if="repeating">
-            <v-flex xs4>
+        <v-row  v-if="repeating">
+            <v-col cols="4">
                 <v-text-field
+                    v-model="recurEvery"
                     label="Every"
                     type="number"
                     :rules="rules.recurEvery"
                     @blur="onBlur('recurEvery')"
-                    v-model="recurEvery"
                 ></v-text-field>
-            </v-flex>
-            <v-flex xs8>
+            </v-col>
+            <v-col cols="8">
                 <v-select
-                    single-line
                     v-model="recurPeriod"
+                    single-line
                     :items="periodItems"
                 ></v-select>
-            </v-flex>
-        </v-layout>
+            </v-col>
+        </v-row>
     </div>
 </template>
 

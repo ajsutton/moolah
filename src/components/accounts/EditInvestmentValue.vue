@@ -1,14 +1,14 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
             <v-btn icon v-on="on">
                 <v-icon title="Set Investment Value">{{ icon }}</v-icon>
             </v-btn>
         </template>
         <v-card>
             <v-form
-                v-model="valid"
                 ref="form"
+                v-model="valid"
                 lazy-validation
                 @submit.prevent="submit()"
             >
@@ -18,25 +18,25 @@
                 </template>
                 <v-card-text>
                     <v-container>
-                        <v-layout row wrap>
-                            <v-flex sm6 xs12>
+                        <v-row  >
+                            <v-col sm="6" cols="12">
                                 <date-picker-field
-                                    label="Date"
                                     v-model="date"
+                                    label="Date"
                                 ></date-picker-field>
-                            </v-flex>
-                            <v-flex sm6 xs12>
+                            </v-col>
+                            <v-col sm="6" cols="12">
                                 <v-text-field
+                                    ref="value"
+                                    v-model="displayValue"
                                     autofocus
                                     name="value"
                                     label="Value"
-                                    v-model="displayValue"
                                     prefix="$"
                                     :rules="rules.amount"
-                                    ref="value"
                                 ></v-text-field>
-                            </v-flex>
-                        </v-layout>
+                            </v-col>
+                        </v-row>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
@@ -106,14 +106,14 @@ export default {
         },
     },
 
-    created() {
-        this.syncFromValue(this.input);
-    },
-
     watch: {
         input(newValue) {
             this.syncFromValue(newValue);
         },
+    },
+
+    created() {
+        this.syncFromValue(this.input);
     },
 
     methods: {

@@ -1,16 +1,16 @@
 <template>
     <v-dialog v-model="open" width="50%">
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
             <v-btn text class="red--text" v-on="on">Delete&hellip;</v-btn>
         </template>
         <v-card>
             <v-card-title>
-                <span class="headline">Delete Category {{ categoryName }}</span>
+                <span class="text-h5">Delete Category {{ categoryName }}</span>
             </v-card-title>
             <v-card-text>
                 <category-selector
-                    label="Replace with"
                     v-model="replacement"
+                    label="Replace with"
                     :exclude="[category]"
                 ></category-selector>
             </v-card-text>

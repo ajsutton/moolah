@@ -1,6 +1,6 @@
 <template>
     <v-app light>
-        <main-nav :profile="profile" :loggedIn="loggedIn"></main-nav>
+        <main-nav :profile="profile" :logged-in="loggedIn"></main-nav>
         <v-navigation-drawer
             v-model="showRightNavPanel"
             floating
@@ -22,44 +22,44 @@
             </v-card>
         </v-navigation-drawer>
         <v-app-bar
+            v-if="!loading"
             dark
             class="primary"
             fixed
             app
             clipped-left
             clipped-right
-            v-if="!loading"
         >
             <v-app-bar-nav-icon
                 v-if="loggedIn"
                 @click.native.stop="showMainNav = !showMainNav"
             ></v-app-bar-nav-icon>
             <v-toolbar-title
-                class="hidden-sm-and-down white--text"
                 v-if="loggedIn"
+                class="hidden-sm-and-down white--text"
                 >Moolah</v-toolbar-title
             >
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-btn
+                    v-if="!loggedIn && !loading"
                     text
                     ripple
                     href="/api/googleauth"
-                    v-if="!loggedIn && !loading"
                     >Sign In</v-btn
                 >
                 <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
             </v-toolbar-items>
             <v-app-bar-nav-icon
-                @click.native.prevent="toggleRightNav"
-                :disabled="!hasTransaction"
                 v-if="loggedIn"
+                :disabled="!hasTransaction"
+                @click.native.prevent="toggleRightNav"
             ></v-app-bar-nav-icon>
         </v-app-bar>
         <v-main>
             <loading-screen v-if="loading"></loading-screen>
             <welcome v-else-if="!loggedIn"></welcome>
-            <v-container fluid v-if="loggedIn" grid-list-md>
+            <v-container v-if="loggedIn" fluid grid-list-md>
                 <transition name="slide-x-reverse-transition">
                     <router-view></router-view>
                 </transition>
@@ -84,7 +84,7 @@ import store from './store/store';
 import { actions as categoryActions } from './store/categoryStore';
 
 export default {
-    name: 'app',
+    name: 'App',
     data() {
         return {
             loading: true,

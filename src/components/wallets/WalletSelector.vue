@@ -1,22 +1,22 @@
 <template>
     <v-select
+        v-model="selectedWalletId"
         :label="label"
         :items="filteredWallets"
         :clearable="clearable"
-        v-model="selectedWalletId"
         item-text="name"
         item-value="id"
     >
         <template slot="item" slot-scope="wallet">
-            <v-list-tile-action>
+            <v-list-item-action>
                 <v-icon>{{ icon(wallet.item) }}</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-                <v-list-tile-title>{{ wallet.item.name }}</v-list-tile-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
+            </v-list-item-action>
+            <v-list-item-content>
+                <v-list-item-title>{{ wallet.item.name }}</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action>
                 <monetary-amount :value="wallet.item.balance"></monetary-amount>
-            </v-list-tile-action>
+            </v-list-item-action>
         </template>
     </v-select>
 </template>
@@ -27,6 +27,9 @@ import iconForType from './walletIcon';
 import MonetaryAmount from '../util/MonetaryAmount';
 
 export default {
+    components: {
+        MonetaryAmount,
+    },
     props: {
         label: String,
         wallets: {
@@ -66,9 +69,6 @@ export default {
         icon(wallet) {
             return iconForType(wallet.type);
         },
-    },
-    components: {
-        MonetaryAmount,
     },
 };
 </script>

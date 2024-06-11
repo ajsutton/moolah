@@ -1,7 +1,7 @@
 <template>
-    <v-dialog max-width="400px" persistent v-model="visible">
-        <v-template v-slot:activator="{ on }">
-            <v-btn v-on="on" small fab color="primary"
+    <v-dialog v-model="visible" max-width="400px" persistent>
+        <v-template #activator="{ on }">
+            <v-btn small fab color="primary" v-on="on"
                 ><v-icon>add</v-icon></v-btn
             >
         </v-template>
@@ -15,9 +15,9 @@
                     required
                 ></category-selector>
                 <v-text-field
+                    v-model="amount"
                     class="input"
                     name="amount"
-                    v-model="amount"
                     label="Budget"
                     prefix="$"
                     required
@@ -26,8 +26,8 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="secondary" flat @click.stop="close">Close</v-btn>
-                <v-btn color="primary" flat @click.stop="add" :disabled="!valid"
+                <v-btn color="secondary" text @click.stop="close">Close</v-btn>
+                <v-btn color="primary" text :disabled="!valid" @click.stop="add"
                     >Add</v-btn
                 >
             </v-card-actions>
@@ -42,6 +42,9 @@ import client from '../../api/client';
 import parseMoney from '../util/parseMoney';
 
 export default {
+    components: {
+        CategorySelector,
+    },
     props: {
         earmark: {
             type: Object,
@@ -87,9 +90,6 @@ export default {
         close() {
             this.visible = false;
         },
-    },
-    components: {
-        CategorySelector,
     },
 };
 </script>

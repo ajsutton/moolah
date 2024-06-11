@@ -4,8 +4,8 @@
         <v-card-actions>
             <v-btn
                 text
-                @click.native.stop="addCategory(null)"
                 class="primary--text"
+                @click.native.stop="addCategory(null)"
             >
                 Add category
             </v-btn>
@@ -27,7 +27,7 @@
                         <v-scroll-y-transition mode="out-in">
                             <div
                                 v-if="!category"
-                                class="title grey--text text--lighten-1 font-weight-light"
+                                class="text-h6 grey--text text--lighten-1 font-weight-light"
                                 style="align-self: center;"
                             >
                                 Select a Category
@@ -41,29 +41,29 @@
                             >
                                 <v-card-text>
                                     <v-avatar size="88">
-                                        <v-icon xLarge>folder_open</v-icon>
+                                        <v-icon x-large>folder_open</v-icon>
                                     </v-avatar>
-                                    <h3 class="headline mb-2">
+                                    <h3 class="text-h5 mb-2">
                                         {{ categoryName }}
                                     </h3>
                                     <category-name
+                                        ref="categoryName"
                                         :category="category"
                                         :editable="true"
-                                        ref="categoryName"
                                     ></category-name>
                                 </v-card-text>
                                 <v-card-actions class="pt-0">
                                     <v-btn
                                         text
+                                        class="primary--text"
                                         @click.native.stop="
                                             addCategory(category.id)
                                         "
-                                        class="primary--text"
                                         >Add sub-category</v-btn
                                     >
                                     <merge-dialog
-                                        :category="category"
                                         v-if="category.children.length === 0"
+                                        :category="category"
                                         @selectCategory="selectCategory"
                                     ></merge-dialog>
                                 </v-card-actions>

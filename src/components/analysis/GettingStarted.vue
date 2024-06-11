@@ -9,7 +9,7 @@
                             To get started tracking your moolah, we need to do a
                             little setup work. Don't worry, it won't take long.
                         </p>
-                        <div class="title">Accounts</div>
+                        <div class="text-h6">Accounts</div>
                         <p>
                             Accounts are the basic container of money (or debt)
                             in Moolah. Things like your bank accounts, credit
@@ -35,7 +35,7 @@
                             transactions going forward.
                         </p>
 
-                        <div class="title">Transactions</div>
+                        <div class="text-h6">Transactions</div>
                         <p>
                             Once you have at least one account created, you can
                             start tracking transactions for each payment into or
@@ -49,7 +49,7 @@
                             right.
                         </p>
 
-                        <div class="title">Categories</div>
+                        <div class="text-h6">Categories</div>
                         <p>
                             To allow you to understand where you're money is
                             coming from and what it's being spent on, you can

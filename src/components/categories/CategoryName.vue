@@ -1,8 +1,8 @@
 <template>
     <v-text-field
-        :disabled="!editable"
-        v-model="name"
         ref="nameField"
+        v-model="name"
+        :disabled="!editable"
         :label="editable ? 'Name' : null"
         class="category-name"
     ></v-text-field>

@@ -1,9 +1,9 @@
 <template>
     <v-autocomplete
-        v-bind:items="flattenedCategories"
+        v-model="valueProxy"
+        :items="flattenedCategories"
         item-text="name"
         item-value="id"
-        v-model="valueProxy"
         :label="label"
         no-data-text="No matching categories"
         :multiple="multiple"

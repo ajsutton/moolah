@@ -1,5 +1,5 @@
 <template>
-    <graph-panel title="" class="elevation-0" ref="chartPanel"> </graph-panel>
+    <graph-panel ref="chartPanel" title="" class="elevation-0"> </graph-panel>
 </template>
 
 <script>
@@ -52,7 +52,7 @@ export default {
             };
         },
         dataPoints() {
-            var data = {};
+            let data = {};
             this.values.forEach((value) => {
                 const item = data[value.date] || {
                     date: value.date,
@@ -71,8 +71,8 @@ export default {
             data.sort((a, b) => {
                 return a.date < b.date ? -1 : 1;
             });
-            var value = undefined;
-            var balance = undefined;
+            let value;
+            let balance;
             data.forEach((item) => {
                 if (item.value !== undefined) {
                     value = item.value;
@@ -92,7 +92,7 @@ export default {
                 return [];
             }
             let date = parseISO(this.values[this.values.length - 1].date);
-            let endDate = parseISO(this.values[0].date);
+            const endDate = parseISO(this.values[0].date);
             let increment = addMonths;
             if (!isBefore(addMonths(date, 1), endDate)) {
                 increment = addDays;
@@ -109,6 +109,20 @@ export default {
         },
         ...mapState('values', ['values']),
         ...mapGetters('values', ['loading']),
+    },
+
+    watch: {
+        values: doUpdate,
+        balances: doUpdate,
+    },
+
+    async mounted() {
+        this.maxTicks = maxTicks(this.$refs.chartPanel.chart.offsetWidth);
+        const args = this.getArgs();
+        this.$chart = c3.generate({
+            bindto: this.$refs.chartPanel.chart,
+            ...args,
+        });
     },
 
     methods: {
@@ -162,20 +176,6 @@ export default {
             this.$chart.internal.config.axis_x_tick_values = this.tickValues;
             this.$chart.load(this.graphData);
         },
-    },
-
-    watch: {
-        values: doUpdate,
-        balances: doUpdate,
-    },
-
-    async mounted() {
-        this.maxTicks = maxTicks(this.$refs.chartPanel.chart.offsetWidth);
-        const args = this.getArgs();
-        this.$chart = c3.generate({
-            bindto: this.$refs.chartPanel.chart,
-            ...args,
-        });
     },
     components: {
         GraphPanel,

@@ -7,10 +7,10 @@
                 <create-earmark :earmark="selectedEarmark"></create-earmark>
 
                 <v-tabs
-                    slider-color="primary"
-                    centered
                     slot="extension"
                     v-model="selectedTab"
+                    slider-color="primary"
+                    centered
                 >
                     <v-tab href="#overview">Overview</v-tab>
                     <v-tab href="#breakdown">Spending Breakdown</v-tab>
@@ -20,7 +20,7 @@
                 <v-tab-item value="overview">
                     <savings-goal-notice
                         v-if="selectedEarmark !== undefined"
-                        :selectedAccount="selectedEarmark"
+                        :selected-account="selectedEarmark"
                     ></savings-goal-notice>
                 </v-tab-item>
                 <v-tab-item value="breakdown">
@@ -31,7 +31,7 @@
             </v-tabs-items>
         </v-card>
 
-        <transactions :searchOptions="searchOptions" title="Transactions">
+        <transactions :search-options="searchOptions" title="Transactions">
             <template slot="buttons">
                 <v-btn icon @click.native.stop="addTransaction">
                     <v-icon>add</v-icon>
@@ -52,6 +52,8 @@ import AddTransactionMixin from '../util/AddTransactionMixin';
 import SpendingBreakdown from './SpendingBreakdown.vue';
 
 export default {
+
+    mixins: [AddTransactionMixin],
     props: {
         earmarkId: String,
         searchOptions: Object,
@@ -63,16 +65,14 @@ export default {
         };
     },
 
-    mixins: [AddTransactionMixin],
-
-    created() {
-        this.loadTransactions();
-    },
-
     watch: {
         $route() {
             this.loadTransactions();
         },
+    },
+
+    created() {
+        this.loadTransactions();
     },
 
     computed: {

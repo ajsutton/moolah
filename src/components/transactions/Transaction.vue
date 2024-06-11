@@ -3,16 +3,16 @@
         <v-list-item-action>
             <div>
                 <div>{{ dateDay }} {{ dateMonth }}</div>
-                <div class="grey--text text-sm-center body-1">
+                <div class="grey--text text-sm-center text-body-1">
                     {{ dateYear }}
                 </div>
             </div>
         </v-list-item-action>
         <v-chip
+            v-if="highlightOverdue"
             label
             :class="{ 'primary white--text': true, invisible: !due }"
             :aria-hidden="due"
-            v-if="highlightOverdue"
             >Due</v-chip
         >
         <v-list-item-content>
@@ -22,8 +22,8 @@
         <v-list-item-action>
             <monetary-amount :value="transaction.amount"></monetary-amount>
             <monetary-amount
-                :value="transaction.balance"
                 v-if="showBalance"
+                :value="transaction.balance"
             ></monetary-amount>
         </v-list-item-action>
     </v-list-item>

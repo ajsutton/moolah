@@ -1,6 +1,6 @@
 <template>
     <transactions
-        :searchOptions="searchOptions"
+        :search-options="searchOptions"
         title="All Transactions"
     ></transactions>
 </template>
@@ -18,14 +18,14 @@ export default {
         searchOptions: Object,
     },
 
-    created() {
-        this.loadTransactions();
-    },
-
     watch: {
         $route() {
             this.loadTransactions();
         },
+    },
+
+    created() {
+        this.loadTransactions();
     },
 
     methods: {

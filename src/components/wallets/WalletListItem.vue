@@ -19,6 +19,9 @@ import iconForType from './walletIcon';
 import { accountValue } from '../../store/wallets/accountsStore';
 
 export default {
+    components: {
+        MonetaryAmount,
+    },
     props: {
         account: {
             type: Object,
@@ -44,9 +47,6 @@ export default {
         balance() {
             return accountValue(this.account);
         },
-    },
-    components: {
-        MonetaryAmount,
     },
 };
 </script>

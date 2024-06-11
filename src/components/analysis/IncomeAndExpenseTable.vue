@@ -1,20 +1,20 @@
 <template>
     <v-card class="income-expense-table" height="">
         <v-app-bar flat>
-            <v-toolbar-title class="body-2 grey--text"
+            <v-toolbar-title class="text-body-2 grey--text"
                 >Monthly Income and Expense</v-toolbar-title
             >
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-switch
-                    label="Earmarked funds"
                     v-model="includeEarmarks"
+                    label="Earmarked funds"
                     style="min-width: 13em; margin-top: 16px"
                 ></v-switch>
             </v-toolbar-items>
         </v-app-bar>
         <v-data-table
-            v-bind:headers="headers"
+            :headers="headers"
             :items="tableItems"
             sort-by="end"
             disable-sort
@@ -24,17 +24,17 @@
             :footer-props="footerProps"
             :items-per-page="12"
         >
-            <template v-slot:body="{ items }">
+            <template #body="{ items }">
                 <tbody>
                     <tr v-for="item in items" :key="item.name">
                         <td>
-                            <v-layout row-lg column>
+                            <v-row class="row-lg" column>
                                 <div>{{ item | monthsAgo }}</div>
                                 <v-spacer></v-spacer>
                                 <div class="grey--text">
                                     {{ item | monthName }}
                                 </div>
-                            </v-layout>
+                            </v-row>
                         </td>
                         <td class="text-sm-right">
                             <monetary-amount
@@ -74,6 +74,52 @@ import differenceInCalendarMonths from 'date-fns/differenceInCalendarMonths';
 import { VCheckbox } from 'vuetify';
 
 export default {
+
+    components: {
+        MonetaryAmount,
+        VCheckbox,
+    },
+
+    filters: {
+        monthName(value) {
+            const dayOfMonth = new Date().getDate();
+            const endDate = monthAsIsoDate(value.month, dayOfMonth);
+            const startDate = addMonths(endDate, -1);
+            const startMonth = getMonth(startDate);
+            const endMonth = getMonth(endDate);
+            const includeYear =
+                differenceInCalendarMonths(new Date(), endDate) >= 12;
+            const monthLabel =
+                startMonth === endMonth
+                    ? format(startDate, 'MMM')
+                    : format(startDate, 'MMM') + '/' + format(endDate, 'MMM');
+            const yearLabel = includeYear ? ' ' + format(endDate, 'yyyy') : '';
+            return monthLabel + yearLabel;
+        },
+        monthsAgo(value) {
+            const plural = (value) => (value === 1 ? '' : 's');
+            const dayOfMonth = new Date().getDate();
+            const endDate = monthAsIsoDate(value.month, dayOfMonth);
+            const startDate = addMonths(endDate, -1);
+            const monthsAgo =
+                differenceInCalendarMonths(new Date(), endDate) + 1;
+            if (monthsAgo === 1) {
+                return 'Last\xa0month';
+            } else if (monthsAgo > 12) {
+                const yearsAgo = Math.floor(monthsAgo / 12);
+                const monthsAgoRemainer = monthsAgo % 12;
+                return monthsAgoRemainer === 0
+                    ? `${yearsAgo}\xa0year${plural(yearsAgo)}\xa0ago`
+                    : `${yearsAgo}\xa0year${plural(
+                          yearsAgo
+                      )}, ${monthsAgoRemainer}\xa0month${plural(
+                          monthsAgoRemainer
+                      )}\xa0ago`;
+            } else {
+                return `${monthsAgo}\xa0months\xa0ago`;
+            }
+        },
+    },
     data() {
         return {
             headers: [
@@ -152,52 +198,6 @@ export default {
             return row;
         });
         this.loading = false;
-    },
-
-    components: {
-        MonetaryAmount,
-        VCheckbox,
-    },
-
-    filters: {
-        monthName(value) {
-            const dayOfMonth = new Date().getDate();
-            const endDate = monthAsIsoDate(value.month, dayOfMonth);
-            const startDate = addMonths(endDate, -1);
-            const startMonth = getMonth(startDate);
-            const endMonth = getMonth(endDate);
-            const includeYear =
-                differenceInCalendarMonths(new Date(), endDate) >= 12;
-            const monthLabel =
-                startMonth === endMonth
-                    ? format(startDate, 'MMM')
-                    : format(startDate, 'MMM') + '/' + format(endDate, 'MMM');
-            const yearLabel = includeYear ? ' ' + format(endDate, 'yyyy') : '';
-            return monthLabel + yearLabel;
-        },
-        monthsAgo(value) {
-            const plural = (value) => (value === 1 ? '' : 's');
-            const dayOfMonth = new Date().getDate();
-            const endDate = monthAsIsoDate(value.month, dayOfMonth);
-            const startDate = addMonths(endDate, -1);
-            const monthsAgo =
-                differenceInCalendarMonths(new Date(), endDate) + 1;
-            if (monthsAgo === 1) {
-                return 'Last\xa0month';
-            } else if (monthsAgo > 12) {
-                const yearsAgo = Math.floor(monthsAgo / 12);
-                const monthsAgoRemainer = monthsAgo % 12;
-                return monthsAgoRemainer === 0
-                    ? `${yearsAgo}\xa0year${plural(yearsAgo)}\xa0ago`
-                    : `${yearsAgo}\xa0year${plural(
-                          yearsAgo
-                      )}, ${monthsAgoRemainer}\xa0month${plural(
-                          monthsAgoRemainer
-                      )}\xa0ago`;
-            } else {
-                return `${monthsAgo}\xa0months\xa0ago`;
-            }
-        },
     },
 };
 </script>
