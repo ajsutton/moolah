@@ -1,5 +1,6 @@
 import format from 'date-fns/format';
+import { parseDate } from '../../api/apiFormats';
 
 export function formatDate(value) {
-    return format(new Date(value), 'dd MMM yyyy');
+    return format(parseDate(value), 'dd MMM yyyy');
 }

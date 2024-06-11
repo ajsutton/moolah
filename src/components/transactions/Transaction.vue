@@ -30,15 +30,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
-import client from '../../api/client';
+import { mapGetters } from 'vuex';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
-import { actions as transactionActions } from '../../store/transactions/transactionStore';
-import {
-    actions as stateActions,
-    mutations as stateMutations,
-} from '../../store/store';
-import { formatDate as formatApiDate } from '../../api/apiFormats';
+import { parseDate } from '../../api/apiFormats';
 import formatDate from 'date-fns/format';
 import isBefore from 'date-fns/isBefore';
 import startOfDay from 'date-fns/startOfDay';
@@ -76,7 +70,7 @@ export default {
             return this.transaction === this.selectedTransaction;
         },
         parsedDate() {
-            return new Date(this.transaction.date);
+            return parseDate(this.transaction.date);
         },
         dateDay() {
             return formatDate(this.parsedDate, 'dd');
