@@ -1,8 +1,6 @@
 import sinon from 'sinon';
-const chai = require('chai');
-const assert = chai.assert;
-const expect = chai.expect;
-const AssertionError = require('assertion-error');
+import { assert, expect } from 'chai';
+import { AssertionError } from 'assertion-error';
 
 export default async (
     module,

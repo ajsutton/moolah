@@ -29,7 +29,7 @@
         "@vue/cli-plugin-unit-mocha": "^5.0.8",
         "@vue/cli-service": "^5.0.8",
         "@vue/test-utils": "^2.0.2",
-        "chai": "^4.2.0",
+        "chai": "^5.1.1",
         "eslint": "^8.36.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-config-semistandard": "^17.0.0",
@@ -45,7 +45,7 @@
         "prettier": "^2.7.1",
         "sass": "^1.26.11",
         "sass-loader": "^13.0.2",
-        "sinon": "^16.1.0",
+        "sinon": "^18.0.0",
         "vue-cli-plugin-vuetify": "~2.5.1",
         "vue-template-compiler": "^2.6.10",
         "vuetify-loader": "^1.3.0"
