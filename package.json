@@ -15,7 +15,7 @@
         "c3": "^0.7.9",
         "core-js": "^3.24.0",
         "date-fns": "2.30.0",
-        "debounce": "^1.2.0",
+        "debounce": "^2.1.0",
         "save-dev": "^0.0.1-security",
         "vue": "^2.3.3",
         "vue-router": "^3.0.3",
