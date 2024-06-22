@@ -285,9 +285,8 @@ export default {
             commit(mutations.addTransaction, transaction);
             accountBalanceAdjuster(dispatch, null, transaction);
             try {
-                const serverTransaction = await client.createTransaction(
-                    initialProperties
-                );
+                const serverTransaction =
+                    await client.createTransaction(initialProperties);
                 commit(mutations.updateTransaction, {
                     id: transaction.id,
                     patch: serverTransaction,
