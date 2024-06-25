@@ -68,8 +68,11 @@
     </v-card>
 </template>
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
-import { actions as valueActions } from '../../store/wallets/valuesStore';
+import { mapState, mapActions, mapGetters } from 'pinia';
+import {
+    useValuesStore,
+    actions as valueActions,
+} from '../../stores/valuesStore';
 import EditInvestmentValue from './EditInvestmentValue.vue';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import InvestmentValueGraph from './InvestmentValueGraph.vue';
@@ -79,6 +82,7 @@ import client from '../../api/client';
 import debounce from 'debounce';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import parseISO from 'date-fns/parseISO';
+import { useTransactionsStore } from '../../stores/transactions/transactionStore';
 
 export default {
     props: {
@@ -192,9 +196,8 @@ export default {
             }
         },
 
-        ...mapState('values', ['values']),
-        ...mapState('transactions', ['transactions']),
-        ...mapGetters('values', ['loading']),
+        ...mapState(useValuesStore, ['values', 'loading']),
+        ...mapState(useTransactionsStore, ['transactions']),
     },
 
     watch: {
@@ -227,7 +230,7 @@ export default {
             await this.updateBalances();
         },
 
-        ...mapActions('values', [
+        ...mapActions(useValuesStore, [
             valueActions.loadValues,
             valueActions.deleteValue,
         ]),

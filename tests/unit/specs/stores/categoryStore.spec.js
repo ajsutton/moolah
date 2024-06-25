@@ -1,14 +1,15 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import { mutations, actions } from '../../../../src/store/categoryStore';
-import categoryStoreLoader from 'inject-loader!babel-loader!../../../../src/store/categoryStore';
-import testAction from './testAction';
+import { mutations, actions } from '../../../../src/stores/categoryStore';
+import categoryStoreLoader from 'inject-loader!babel-loader!../../../../src/stores/categoryStore';
+import { createPinia, setActivePinia } from 'pinia';
 
 describe('Category Store', function () {
     let nextId = 0;
     let client;
     let categoryStore;
     beforeEach(function () {
+        setActivePinia(createPinia());
         client = {
             categories: sinon.stub(),
             createCategory: sinon.stub(),
@@ -16,20 +17,20 @@ describe('Category Store', function () {
         };
         categoryStore = categoryStoreLoader({
             '../api/client': client,
-        }).default;
+        }).useCategoryStore();
     });
 
     describe('Getters', function () {
         it('should get catgory by id', function () {
             const categoryA = makeCategory();
             const categoryB = makeCategory();
-            const state = createState(categoryA, categoryB);
+            createState(categoryA, categoryB);
             assert.deepEqual(
-                categoryStore.getters.getCategory(state)(categoryA.id),
+                categoryStore.getCategory(categoryA.id),
                 categoryA
             );
             assert.deepEqual(
-                categoryStore.getters.getCategory(state)(categoryB.id),
+                categoryStore.getCategory(categoryB.id),
                 categoryB
             );
         });
@@ -44,7 +45,7 @@ describe('Category Store', function () {
                 name: 'Leaf',
                 parentId: categoryB.id,
             });
-            const state = createState(
+            createState(
                 Object.assign({}, categoryA, {
                     children: [
                         Object.assign({}, categoryB, { children: [categoryC] }),
@@ -52,15 +53,15 @@ describe('Category Store', function () {
                 })
             );
             assert.deepEqual(
-                categoryStore.getters.getCategoryName(state)(categoryA.id),
+                categoryStore.getCategoryName(categoryA.id),
                 'Parent'
             );
             assert.deepEqual(
-                categoryStore.getters.getCategoryName(state)(categoryB.id),
+                categoryStore.getCategoryName(categoryB.id),
                 'Parent:SubCategory'
             );
             assert.deepEqual(
-                categoryStore.getters.getCategoryName(state)(categoryC.id),
+                categoryStore.getCategoryName(categoryC.id),
                 'Parent:SubCategory:Leaf'
             );
         });
@@ -70,10 +71,10 @@ describe('Category Store', function () {
         describe('addCategory', function () {
             it('should add category', function () {
                 const category = makeCategory();
-                const state = createState();
-                categoryStore.mutations[mutations.addCategory](state, category);
+                createState();
+                categoryStore[mutations.addCategory](category);
 
-                assert.deepEqual(state, {
+                assert.deepEqual(currentState(), {
                     categories: [category],
                     categoriesById: { [category.id]: category },
                 });
@@ -83,15 +84,12 @@ describe('Category Store', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
                 const categoryC = makeCategory({ name: 'C' });
-                const state = createState(categoryA, categoryC);
-                categoryStore.mutations[mutations.addCategory](
-                    state,
-                    categoryB
-                );
+                createState(categoryA, categoryC);
+                categoryStore[mutations.addCategory](categoryB);
 
                 assert.deepEqual(
-                    state,
-                    createState(categoryA, categoryB, categoryC)
+                    currentState(),
+                    expectedState(categoryA, categoryB, categoryC)
                 );
             });
 
@@ -101,15 +99,12 @@ describe('Category Store', function () {
                     name: 'B',
                     parentId: categoryA.id,
                 });
-                const state = createState(categoryA);
-                categoryStore.mutations[mutations.addCategory](
-                    state,
-                    categoryB
-                );
+                createState(categoryA);
+                categoryStore[mutations.addCategory](categoryB);
 
                 assert.deepEqual(
-                    state,
-                    createState(
+                    currentState(),
+                    expectedState(
                         Object.assign({}, categoryA, { children: [categoryB] })
                     )
                 );
@@ -124,16 +119,16 @@ describe('Category Store', function () {
                     parentId: categoryA.id,
                 });
                 const categoryC = makeCategory({ name: 'C' });
-                const state = createState();
-                categoryStore.mutations[mutations.setCategories](state, [
+                createState();
+                categoryStore[mutations.setCategories]([
                     categoryB,
                     categoryC,
                     categoryA,
                 ]);
 
                 assert.deepEqual(
-                    state,
-                    createState(
+                    currentState(),
+                    expectedState(
                         Object.assign({}, categoryA, { children: [categoryB] }),
                         categoryC
                     )
@@ -144,14 +139,14 @@ describe('Category Store', function () {
         describe('updateCategory', function () {
             it('should change category name and ID', function () {
                 const categoryA = makeCategory({ name: 'A' });
-                const state = createState(categoryA);
-                categoryStore.mutations[mutations.updateCategory](state, {
+                createState(categoryA);
+                categoryStore[mutations.updateCategory]({
                     id: categoryA.id,
                     patch: { id: 'new-id', name: 'New name' },
                 });
                 assert.deepEqual(
-                    state,
-                    createState(
+                    currentState(),
+                    expectedState(
                         makeCategory({ id: 'new-id', name: 'New name' })
                     )
                 );
@@ -160,14 +155,14 @@ describe('Category Store', function () {
             it('should add a parent to a category', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
-                const state = createState(categoryA, categoryB);
-                categoryStore.mutations[mutations.updateCategory](state, {
+                createState(categoryA, categoryB);
+                categoryStore[mutations.updateCategory]({
                     id: categoryA.id,
                     patch: { parentId: categoryB.id },
                 });
                 assert.deepEqual(
-                    state,
-                    createState(
+                    currentState(),
+                    expectedState(
                         Object.assign({}, categoryB, { children: [categoryA] })
                     )
                 );
@@ -179,16 +174,16 @@ describe('Category Store', function () {
                     name: 'B',
                     parentId: categoryA.id,
                 });
-                const state = createState(
+                createState(
                     Object.assign({}, categoryA, { children: [categoryB] })
                 );
-                categoryStore.mutations[mutations.updateCategory](state, {
+                categoryStore[mutations.updateCategory]({
                     id: categoryB.id,
                     patch: { parentId: null },
                 });
                 assert.deepEqual(
-                    state,
-                    createState(
+                    currentState(),
+                    expectedState(
                         categoryA,
                         Object.assign({}, categoryB, { parentId: null })
                     )
@@ -202,17 +197,17 @@ describe('Category Store', function () {
                     name: 'C',
                     parentId: categoryA.id,
                 });
-                const state = createState(
+                createState(
                     Object.assign({}, categoryA, { children: [categoryC] }),
                     categoryB
                 );
-                categoryStore.mutations[mutations.updateCategory](state, {
+                categoryStore[mutations.updateCategory]({
                     id: categoryC.id,
                     patch: { parentId: categoryB.id },
                 });
                 assert.deepEqual(
-                    state,
-                    createState(
+                    currentState(),
+                    expectedState(
                         categoryA,
                         Object.assign({}, categoryB, { children: [categoryC] })
                     )
@@ -226,17 +221,17 @@ describe('Category Store', function () {
                     name: 'C',
                     parentId: categoryA.id,
                 });
-                const state = createState(
+                createState(
                     Object.assign({}, categoryA, { children: [categoryC] }),
                     categoryB
                 );
-                categoryStore.mutations[mutations.updateCategory](state, {
+                categoryStore[mutations.updateCategory]({
                     id: categoryB.id,
                     patch: { parentId: categoryA.id },
                 });
                 assert.deepEqual(
-                    state,
-                    createState(
+                    currentState(),
+                    expectedState(
                         Object.assign({}, categoryA, {
                             children: [categoryB, categoryC],
                         })
@@ -248,14 +243,14 @@ describe('Category Store', function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
                 const categoryC = makeCategory({ name: 'C' });
-                const state = createState(categoryA, categoryB, categoryC);
-                categoryStore.mutations[mutations.updateCategory](state, {
+                createState(categoryA, categoryB, categoryC);
+                categoryStore[mutations.updateCategory]({
                     id: categoryB.id,
                     patch: { name: 'G' },
                 });
                 assert.deepEqual(
-                    state,
-                    createState(
+                    currentState(),
+                    expectedState(
                         categoryA,
                         categoryC,
                         Object.assign({}, categoryB, { name: 'G' })
@@ -278,18 +273,11 @@ describe('Category Store', function () {
                     categories: [categoryA, categoryB, categoryC],
                 };
                 client.categories.resolves(response);
-                await testAction(
-                    categoryStore,
-                    actions.loadCategories,
-                    {
-                        state: createState(),
-                    },
-                    [
-                        {
-                            type: mutations.setCategories,
-                            payload: [categoryA, categoryB, categoryC],
-                        },
-                    ]
+                createState();
+                await categoryStore[actions.loadCategories]();
+                assert.deepEqual(
+                    currentState(),
+                    expectedState(categoryA, categoryC)
                 );
             });
         });
@@ -301,23 +289,12 @@ describe('Category Store', function () {
                 client.createCategory
                     .withArgs({ name: 'B' })
                     .resolves(categoryB);
-                await testAction(
-                    categoryStore,
-                    actions.addCategory,
-                    {
-                        state: createState(categoryA),
-                        payload: { name: 'B' },
-                    },
-                    [
-                        {
-                            type: mutations.addCategory,
-                            payload: { id: 'new-category', name: 'B' },
-                        },
-                        {
-                            type: mutations.updateCategory,
-                            payload: { id: 'new-category', patch: categoryB },
-                        },
-                    ]
+                createState(categoryA);
+                await categoryStore[actions.addCategory]({ name: 'B' });
+
+                assert.deepEqual(
+                    currentState(),
+                    expectedState(categoryA, categoryB)
                 );
             });
 
@@ -330,27 +307,17 @@ describe('Category Store', function () {
                 client.createCategory
                     .withArgs({ name: 'B', parentId: categoryA.id })
                     .resolves(categoryB);
-                await testAction(
-                    categoryStore,
-                    actions.addCategory,
-                    {
-                        state: createState(categoryA),
-                        payload: { name: 'B', parentId: categoryA.id },
-                    },
-                    [
-                        {
-                            type: mutations.addCategory,
-                            payload: {
-                                id: 'new-category',
-                                name: 'B',
-                                parentId: categoryA.id,
-                            },
-                        },
-                        {
-                            type: mutations.updateCategory,
-                            payload: { id: 'new-category', patch: categoryB },
-                        },
-                    ]
+                createState(categoryA);
+                await categoryStore[actions.addCategory]({
+                    name: 'B',
+                    parentId: categoryA.id,
+                });
+
+                assert.deepEqual(
+                    currentState(),
+                    expectedState(
+                        Object.assign({}, categoryA, { children: [categoryB] })
+                    )
                 );
             });
 
@@ -359,34 +326,18 @@ describe('Category Store', function () {
                 client.createCategory
                     .withArgs({ name: 'B', parentId: categoryA.id })
                     .rejects('Failed');
-                await testAction(
-                    categoryStore,
-                    actions.addCategory,
-                    {
-                        state: createState(categoryA),
-                        payload: { name: 'B', parentId: categoryA.id },
-                        ignoreFailures: true,
-                    },
-                    [
-                        {
-                            type: mutations.addCategory,
-                            payload: {
-                                id: 'new-category',
-                                name: 'B',
-                                parentId: categoryA.id,
-                            },
-                        },
-                        {
-                            type: mutations.removeCategory,
-                            payload: {
-                                id: 'new-category',
-                                name: 'B',
-                                parentId: categoryA.id,
-                                children: [],
-                            },
-                        },
-                    ]
-                );
+                createState(Object.assign({}, categoryA));
+                let err = null;
+                try {
+                    await categoryStore[actions.addCategory]({
+                        name: 'B',
+                        parentId: categoryA.id,
+                    });
+                } catch (error) {
+                    err = error;
+                }
+                assert.isNotNull(err);
+                assert.deepEqual(currentState(), expectedState(categoryA));
             });
         });
 
@@ -403,14 +354,11 @@ describe('Category Store', function () {
                     patch: { name: 'New Name' },
                 };
                 client.updateCategory.withArgs(modifiedA).resolves(modifiedA);
-                await testAction(
-                    categoryStore,
-                    actions.updateCategory,
-                    {
-                        state: createState(categoryA),
-                        payload: changes,
-                    },
-                    [{ type: mutations.updateCategory, payload: changes }]
+                createState(Object.assign({}, categoryA));
+                await categoryStore[actions.updateCategory](changes);
+                assert.deepEqual(
+                    currentState(),
+                    expectedState(makeCategory(modifiedA))
                 );
                 sinon.assert.calledWith(client.updateCategory, modifiedA);
             });
@@ -427,22 +375,15 @@ describe('Category Store', function () {
                     patch: { name: 'New Name' },
                 };
                 client.updateCategory.withArgs(modifiedA).rejects('Failed');
-                await testAction(
-                    categoryStore,
-                    actions.updateCategory,
-                    {
-                        state: createState(categoryA),
-                        payload: changes,
-                        ignoreFailures: true,
-                    },
-                    [
-                        { type: mutations.updateCategory, payload: changes },
-                        {
-                            type: mutations.updateCategory,
-                            payload: { id: categoryA.id, patch: categoryA },
-                        },
-                    ]
-                );
+                createState(categoryA);
+                let err = null;
+                try {
+                    await categoryStore[actions.updateCategory](changes);
+                } catch (error) {
+                    err = error;
+                }
+                assert.isNotNull(err);
+                assert.deepEqual(currentState(), expectedState(categoryA));
             });
         });
     });
@@ -461,6 +402,15 @@ describe('Category Store', function () {
     }
 
     function createState(...topLevelCategories) {
+        categoryStore.categories = topLevelCategories;
+        const addCategory = category => {
+            categoryStore.categoriesById[category.id] = category;
+            category.children.forEach(addCategory);
+        };
+        topLevelCategories.forEach(addCategory);
+    }
+
+    function expectedState(...topLevelCategories) {
         const state = {
             categories: topLevelCategories,
             categoriesById: {},
@@ -471,5 +421,12 @@ describe('Category Store', function () {
         };
         topLevelCategories.forEach(addCategory);
         return state;
+    }
+
+    function currentState() {
+        return {
+            categories: categoryStore.categories,
+            categoriesById: categoryStore.categoriesById,
+        };
     }
 });

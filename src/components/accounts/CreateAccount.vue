@@ -71,8 +71,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import { actions } from '../../store/wallets/accountsStore';
+import { mapActions } from 'pinia';
+import { actions, useAccountsStore } from '../../stores/accountsStore';
 import { rules } from '../validation';
 import { VForm, VCheckbox } from 'vuetify';
 import DatePickerField from '../util/DatePickerField.vue';
@@ -168,7 +168,7 @@ export default {
             }
             this.errorMessage = null;
         },
-        ...mapActions('accounts', [
+        ...mapActions(useAccountsStore, [
             actions.createAccount,
             actions.updateAccount,
         ]),

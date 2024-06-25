@@ -41,14 +41,17 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'pinia';
 import Transaction from './Transaction.vue';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import CreateAccount from '../accounts/CreateAccount.vue';
 import TransactionFilters from './TransactionFilters.vue';
 import FilterNotice from './FilterNotice.vue';
-import { actions as transactionActions } from '../../store/transactions/transactionStore';
-import { mutations as stateMutations } from '../../store/store';
+import {
+    useTransactionsStore,
+    actions as transactionActions,
+} from '../../stores/transactions/transactionStore';
+import { useRootStore, mutations as stateMutations } from '../../stores/root';
 
 export default {
     props: {
@@ -80,8 +83,8 @@ export default {
                 this.editTransaction(transaction);
             },
         },
-        ...mapGetters(['selectedTransaction']),
-        ...mapGetters('transactions', [
+        ...mapGetters(useRootStore, ['selectedTransaction']),
+        ...mapGetters(useTransactionsStore, [
             'hasNext',
             'hasPrevious',
             'numberOfPages',
@@ -89,7 +92,7 @@ export default {
             'loading',
             'error',
         ]),
-        ...mapState('transactions', ['transactions']),
+        ...mapState(useTransactionsStore, ['transactions']),
     },
     data() {
         return {
@@ -106,15 +109,16 @@ export default {
     methods: {
         editTransaction(transaction) {
             if (transaction) {
-                this.$store.commit(stateMutations.selectTransaction, {
+                this[stateMutations.selectTransaction]({
                     id: transaction.id,
                     scheduled: false,
                 });
             } else {
-                this.$store.commit(stateMutations.selectTransaction, null);
+                this[stateMutations.selectTransaction](null);
             }
         },
-        ...mapActions('transactions', [transactionActions.loadPage]),
+        ...mapActions(useRootStore, [stateMutations.selectTransaction]),
+        ...mapActions(useTransactionsStore, [transactionActions.loadPage]),
     },
 
     components: {

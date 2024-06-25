@@ -18,7 +18,7 @@
                 </template>
                 <v-card-text>
                     <v-container>
-                        <v-row  >
+                        <v-row>
                             <v-col sm="6" cols="12">
                                 <date-picker-field
                                     v-model="date"
@@ -61,14 +61,14 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import { actions } from '../../store/wallets/valuesStore';
+import { mapActions } from 'pinia';
 import { rules } from '../validation';
 import { VForm, VCheckbox } from 'vuetify';
 import DatePickerField from '../util/DatePickerField.vue';
 import { formatDate } from '../../api/apiFormats';
 import parseMoney from '../util/parseMoney';
 import formatMoney from '../util/formatMoney';
+import { useValuesStore, actions } from '../../stores/valuesStore';
 
 export default {
     props: ['input'],
@@ -147,7 +147,7 @@ export default {
             }
             this.errorMessage = null;
         },
-        ...mapActions('values', [actions.setValue, actions.deleteValue]),
+        ...mapActions(useValuesStore, [actions.setValue, actions.deleteValue]),
     },
     components: {
         VForm,

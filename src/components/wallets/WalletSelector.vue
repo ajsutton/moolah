@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
 import iconForType from './walletIcon';
 import MonetaryAmount from '../util/MonetaryAmount';
 

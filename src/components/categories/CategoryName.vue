@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import { actions } from '../../store/categoryStore';
+import { mapActions } from 'pinia';
+import { useCategoryStore, actions } from '../../stores/categoryStore';
 
 export default {
     props: {
@@ -35,7 +35,7 @@ export default {
             this.$refs.nameField.$refs.input.focus();
             this.$refs.nameField.$refs.input.select();
         },
-        ...mapActions('categories', [actions.updateCategory]),
+        ...mapActions(useCategoryStore, [actions.updateCategory]),
     },
 };
 </script>

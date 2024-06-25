@@ -24,7 +24,7 @@
 
                         <div class="subheading mt-4">Savings goal</div>
 
-                        <v-row  >
+                        <v-row>
                             <v-col sm="4" cols="12">
                                 <v-text-field
                                     v-model="savingsTarget"
@@ -82,15 +82,15 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import { actions } from '../../store/wallets/earmarksStore';
+import { mapActions } from 'pinia';
+import { useEarmarksStore, actions } from '../../stores/earmarksStore';
 import { rules } from '../validation';
 import { VForm, VCheckbox } from 'vuetify';
 import DatePickerField from '../util/DatePickerField.vue';
 import isBefore from 'date-fns/isBefore';
 import formatMoney from '../util/formatMoney';
 import parseMoney from '../util/parseMoney';
-import parseDate from '../../api/apiFormats'
+import parseDate from '../../api/apiFormats';
 
 export default {
     props: ['earmark'],
@@ -109,7 +109,7 @@ export default {
             rules: {
                 name: rules.walletName,
                 endDate: [
-                    (value) => {
+                    value => {
                         if (
                             this.savingsStartDate &&
                             isBefore(
@@ -209,7 +209,7 @@ export default {
             }
             this.errorMessage = null;
         },
-        ...mapActions('earmarks', [
+        ...mapActions(useEarmarksStore, [
             actions.createEarmark,
             actions.updateEarmark,
         ]),

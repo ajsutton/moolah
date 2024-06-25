@@ -32,13 +32,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
 import NetWorthGraph from './NetWorthGraph.vue';
 import ExpenseBreakdown from './ExpenseBreakdown.vue';
 import CategoriesOverTime from './CategoriesOverTime.vue';
 import UpcomingTransactions from '../transactions/UpcomingTransactions.vue';
 import IncomeAndExpenseTable from './IncomeAndExpenseTable.vue';
 import GettingStarted from './GettingStarted.vue';
+import {
+    useTransactionsStore,
+    useScheduledTransactionsStore,
+} from '../../stores/transactions/transactionStore';
+import { useAccountsStore } from '../../stores/accountsStore';
 
 export default {
     computed: {
@@ -51,11 +56,11 @@ export default {
         showScheduledTransactions() {
             return this.hasHistory || this.scheduledTransactions.length > 0;
         },
-        ...mapState('transactions', ['transactions']),
-        ...mapState('scheduledTransactions', {
+        ...mapState(useTransactionsStore, ['transactions']),
+        ...mapState(useScheduledTransactionsStore, {
             scheduledTransactions: 'transactions',
         }),
-        ...mapState('accounts', ['accounts']),
+        ...mapState(useAccountsStore, ['accounts']),
     },
     components: {
         NetWorthGraph,

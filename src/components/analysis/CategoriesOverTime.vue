@@ -29,7 +29,8 @@ import formatMoney from '../util/formatMoney';
 import addMonths from 'date-fns/addMonths';
 import { formatDate } from '../../api/apiFormats';
 import debounce from 'debounce';
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'pinia';
+import { useCategoryStore } from '../../stores/categoryStore';
 import { categoriesOverTimeGraphData } from './categories/categoryOverTimeData';
 import GraphPanel from '../util/GraphPanel.vue';
 
@@ -70,8 +71,7 @@ export default {
             );
         },
 
-        ...mapGetters('categories', ['getCategoryName']),
-        ...mapState('categories', ['categoriesById']),
+        ...mapState(useCategoryStore, ['getCategoryName', 'categoriesById']),
     },
     watch: {
         actualValues() {
@@ -154,7 +154,7 @@ export default {
             }
         },
 
-        handleResize: debounce(function() {
+        handleResize: debounce(function () {
             this.reload();
         }, 100),
     },

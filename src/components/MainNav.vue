@@ -1,6 +1,6 @@
 <template>
     <v-navigation-drawer
-        v-model="showMainNav"
+        v-model="mainNavVisible"
         clipped
         dark
         app
@@ -85,11 +85,13 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'pinia';
 import WalletList from './wallets/WalletList.vue';
 import CreateAccount from './accounts/CreateAccount.vue';
 import CreateEarmark from './earmarks/CreateEarmark.vue';
-import { mutations } from '../store/store';
+import { useAccountsStore } from '../stores/accountsStore';
+import { useEarmarksStore } from '../stores/earmarksStore';
+import { useRootStore } from '../stores/root';
 
 export default {
     props: {
@@ -100,25 +102,23 @@ export default {
         return {};
     },
     computed: {
-        showMainNav: {
+        mainNavVisible: {
             get() {
-                return this.mainNavToggle && this.loggedIn;
+                return this.showMainNav && this.loggedIn;
             },
-            set(value) {
-                this.$store.commit(mutations.showMainNav, value);
-            },
+            set() {},
         },
-        ...mapState({ mainNavToggle: 'showMainNav' }),
-        ...mapGetters('accounts', [
+        ...mapState(useRootStore, ['showMainNav']),
+        ...mapState(useRootStore, ['availableFunds', 'totalNetWorth']),
+        ...mapState(useEarmarksStore, ['earmarks']),
+        ...mapState(useAccountsStore, [
+            'accounts',
             'networth',
             'currentAccounts',
             'noncurrentAccounts',
             'currentAccountsBalance',
             'noncurrentAccountsBalance',
         ]),
-        ...mapGetters(['availableFunds', 'totalNetWorth']),
-        ...mapState('earmarks', ['earmarks']),
-        ...mapState('accounts', ['accounts']),
     },
     components: {
         WalletList,

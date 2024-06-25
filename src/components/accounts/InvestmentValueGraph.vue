@@ -4,7 +4,7 @@
 
 <script>
 import c3 from 'c3';
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'pinia';
 import GraphPanel from '../util/GraphPanel.vue';
 import formatMoney from '../util/formatMoney';
 import { formatDate } from '../../api/apiFormats';
@@ -13,8 +13,9 @@ import addDays from 'date-fns/addDays';
 import isBefore from 'date-fns/isBefore';
 import parseISO from 'date-fns/parseISO';
 import debounce from 'debounce';
+import { useValuesStore } from '../../stores/valuesStore';
 
-const maxTicks = (width) => Math.floor(width / 160);
+const maxTicks = width => Math.floor(width / 160);
 
 const doUpdate = debounce(function () {
     this.update();
@@ -53,14 +54,14 @@ export default {
         },
         dataPoints() {
             let data = {};
-            this.values.forEach((value) => {
+            this.values.forEach(value => {
                 const item = data[value.date] || {
                     date: value.date,
                 };
                 item.value = value.value;
                 data[value.date] = item;
             });
-            this.balances.forEach((balance) => {
+            this.balances.forEach(balance => {
                 const item = data[balance.date] || {
                     date: balance.date,
                 };
@@ -73,7 +74,7 @@ export default {
             });
             let value;
             let balance;
-            data.forEach((item) => {
+            data.forEach(item => {
                 if (item.value !== undefined) {
                     value = item.value;
                 } else {
@@ -107,8 +108,7 @@ export default {
             }
             return ticks;
         },
-        ...mapState('values', ['values']),
-        ...mapGetters('values', ['loading']),
+        ...mapState(useValuesStore, ['values', 'loading']),
     },
 
     watch: {

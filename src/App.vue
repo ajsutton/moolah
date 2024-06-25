@@ -32,7 +32,7 @@
         >
             <v-app-bar-nav-icon
                 v-if="loggedIn"
-                @click.native.stop="showMainNav = !showMainNav"
+                @click.native.stop="mainNavVisible = !mainNavVisible"
             ></v-app-bar-nav-icon>
             <v-toolbar-title
                 v-if="loggedIn"
@@ -69,19 +69,30 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
-import { actions as transactionActions } from './store/transactions/transactionStore';
-import { actions as accountActions } from './store/wallets/accountsStore';
-import { actions as earmarkActions } from './store/wallets/earmarksStore';
-import { mutations, actions as stateActions } from './store/store';
+import { mapActions, mapState } from 'pinia';
+import {
+    useRootStore,
+    mutations,
+    actions as stateActions,
+} from './stores/root';
+import {
+    useCategoryStore,
+    actions as categoryActions,
+} from './stores/categoryStore';
+import {
+    useAccountsStore,
+    actions as accountActions,
+} from './stores/accountsStore';
+import {
+    useEarmarksStore,
+    actions as earmarkActions,
+} from './stores/earmarksStore';
 import MainNav from './components/MainNav.vue';
 import EditTransaction from './components/transactions/EditTransaction';
 import Welcome from './components/welcome/Welcome';
 import LoadingScreen from './components/welcome/LoadingScreen.vue';
 import Logout from './components/Logout';
 import client from './api/client';
-import store from './store/store';
-import { actions as categoryActions } from './store/categoryStore';
 
 export default {
     name: 'App',
@@ -99,46 +110,49 @@ export default {
         };
     },
     computed: {
-        showMainNav: {
+        mainNavVisible: {
             get() {
-                return this.mainNavToggle && this.loggedIn;
+                return this.showMainNav && this.loggedIn;
             },
             set(value) {
-                this.$store.commit(mutations.showMainNav, value);
+                this[mutations.showMainNav](value);
             },
         },
         showRightNavPanel: {
             get() {
-                return this.hasTransaction && this.rightNavToggle;
+                return this.hasTransaction && this.showEditTransactionPanel;
             },
             set(value) {
-                this.$store.commit(mutations.showEditTransactionPanel, value);
+                this[mutations.showEditTransactionPanel](value);
             },
         },
         hasTransaction() {
             return this.selectedTransaction !== undefined && this.loggedIn;
         },
-        ...mapGetters(['selectedTransaction']),
-        ...mapState({
-            rightNavToggle: 'showEditTransactionPanel',
-            mainNavToggle: 'showMainNav',
-        }),
+        ...mapState(useRootStore, [
+            'selectedTransaction',
+            'showEditTransactionPanel',
+            'showMainNav',
+        ]),
     },
     methods: {
         toggleRightNav() {
-            this.showRightNavPanel = !this.rightNavToggle;
+            this.showRightNavPanael = !this.showEditTransactionPanel;
         },
-        ...mapActions('categories', [categoryActions.loadCategories]),
-        ...mapActions('accounts', {
+        ...mapActions(useCategoryStore, [categoryActions.loadCategories]),
+        ...mapActions(useAccountsStore, {
             loadAccounts: accountActions.loadAccounts,
         }),
-        ...mapActions('earmarks', {
+        ...mapActions(useEarmarksStore, {
             loadEarmarks: earmarkActions.loadEarmarks,
         }),
-        ...mapActions([stateActions.showUpcoming]),
-        ...mapMutations([mutations.selectTransaction, mutations.showMainNav]),
+        ...mapActions(useRootStore, [
+            stateActions.showUpcoming,
+            mutations.selectTransaction,
+            mutations.showEditTransactionPanel,
+            mutations.showMainNav,
+        ]),
     },
-    store,
     components: {
         MainNav,
         EditTransaction,

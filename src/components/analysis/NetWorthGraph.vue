@@ -32,7 +32,8 @@ import { formatDate } from '../../api/apiFormats';
 import debounce from 'debounce';
 import extrapolateBalances from './netWorthGraphData';
 import GraphPanel from '../util/GraphPanel.vue';
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
+import { useScheduledTransactionsStore } from '../../stores/transactions/transactionStore';
 
 const maxTicks = width => Math.floor(width / 160);
 
@@ -142,7 +143,7 @@ export default {
             }
             return ticks;
         },
-        ...mapState('scheduledTransactions', {
+        ...mapState(useScheduledTransactionsStore, {
             scheduledTransactions: 'transactions',
         }),
     },

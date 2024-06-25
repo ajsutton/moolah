@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row >
+        <v-row>
             <v-col md="6">
                 <table class="table spending-breakdown mx-auto">
                     <thead>
@@ -61,7 +61,7 @@
                                     persistent
                                     return-value.sync="getBudgetEditValue(category.id)"
                                     @update:returnValue="
-                                        (val) => save(category.id, val)
+                                        val => save(category.id, val)
                                     "
                                 >
                                     <span>
@@ -81,7 +81,7 @@
                                         prefix="$"
                                         :rules="rules.amount"
                                         @input="
-                                            (val) =>
+                                            val =>
                                                 updateBudget(category.id, val)
                                         "
                                     ></v-text-field>
@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'pinia';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import client from '../../api/client';
 import { buildCategoryBalanceTree } from './categoryBalances';
@@ -165,6 +165,8 @@ import AddLineItem from './AddLineItem.vue';
 import Vue from 'vue';
 import parseMoney from '../util/parseMoney';
 import formatMoney from '../util/formatMoney';
+import { useCategoryStore } from '../../stores/categoryStore';
+import { useTransactionsStore } from '../../stores/transactions/transactionStore';
 
 export default {
     props: {
@@ -203,7 +205,7 @@ export default {
                 if (parentRequired) {
                     result.push(category);
                 }
-                category.children.forEach((child) =>
+                category.children.forEach(child =>
                     addCategory(
                         child,
                         parentRequired ? level + 1 : level,
@@ -222,14 +224,14 @@ export default {
                     });
                 }
             };
-            this.categories.forEach((category) =>
+            this.categories.forEach(category =>
                 addCategory(category, 0, '', this.categories.length === 1)
             );
             return result;
         },
         existingCategoryIds() {
             return Object.keys(this.categoryData).map(
-                (categoryId) => this.categoriesById[categoryId]
+                categoryId => this.categoriesById[categoryId]
             );
         },
 
@@ -255,12 +257,12 @@ export default {
             );
         },
 
-        ...mapState('categories', {
+        ...mapState(useCategoryStore, {
             rawCategories: 'categories',
             categoriesById: 'categoriesById',
         }),
-        ...mapGetters('categories', ['getCategoryName']),
-        ...mapState('transactions', ['transactions']),
+        ...mapState(useCategoryStore, ['getCategoryName']),
+        ...mapState(useTransactionsStore, ['transactions']),
     },
     created() {
         this.load();

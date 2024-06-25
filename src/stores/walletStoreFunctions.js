@@ -2,7 +2,7 @@ export const walletMutations = {
     set: 'SET',
     add: 'ADD',
     remove: 'REMOVE',
-    update: 'UPDATE',
+    update: 'UPDATE_MUTATION',
 };
 
 export const walletActions = {
@@ -19,37 +19,37 @@ export function createWalletStoreActions(
     newWalletFilter = wallet => wallet
 ) {
     return {
-        async [walletActions.load]({ commit }) {
+        async [walletActions.load]() {
             const response = await client.get();
-            commit(walletMutations.set, response[propertyName]);
+            this[walletMutations.set](response[propertyName]);
         },
 
-        async [walletActions.create]({ commit }, wallet) {
+        async [walletActions.create](wallet) {
             const id = 'new-wallet';
             const walletToAdd = newWalletFilter({ id, ...wallet });
-            commit(walletMutations.add, walletToAdd);
+            this[walletMutations.add](walletToAdd);
             try {
                 const createdAccount = await client.create(wallet);
-                commit(walletMutations.update, {
+                this[walletMutations.update]({
                     id: 'new-wallet',
                     patch: { id: createdAccount.id },
                 });
             } catch (error) {
-                commit(walletMutations.remove, walletToAdd);
+                this[walletMutations.remove](walletToAdd);
                 throw error;
             }
         },
 
-        async [walletActions.update]({ commit, state }, changes) {
-            const wallet = state[propertyName].find(
+        async [walletActions.update](changes) {
+            const wallet = this[propertyName].find(
                 wallet => wallet.id === changes.id
             );
             const originalAccount = Object.assign({}, wallet);
-            commit(walletMutations.update, changes);
+            this[walletMutations.update](changes);
             try {
                 await client.update(wallet);
             } catch (error) {
-                commit(walletMutations.update, {
+                this[walletMutations.update]({
                     id: changes.id,
                     patch: originalAccount,
                 });
@@ -57,8 +57,8 @@ export function createWalletStoreActions(
             }
         },
 
-        async [walletActions.adjustBalance]({ state, commit }, changes) {
-            const wallet = state[propertyName].find(
+        async [walletActions.adjustBalance](changes) {
+            const wallet = this[propertyName].find(
                 candidate => candidate.id === changes.id
             );
             const patch = { balance: wallet.balance + changes.balance };
@@ -71,34 +71,30 @@ export function createWalletStoreActions(
             if (changes.value !== undefined) {
                 patch.spent = wallet.spent + changes.spent;
             }
-            commit(walletMutations.update, { id: wallet.id, patch });
+            this[walletMutations.update]({ id: wallet.id, patch });
         },
 
-        async [walletActions.setValue]({ state, commit }, changes) {
-            const wallet = state[propertyName].find(
+        async [walletActions.setValue](changes) {
+            const wallet = this[propertyName].find(
                 candidate => candidate.id === changes.id
             );
             const patch = { value: changes.value };
-            commit(walletMutations.update, { id: wallet.id, patch });
+            this[walletMutations.update]({ id: wallet.id, patch });
         },
-    };
-}
 
-export function createWalletStoreMutations(propertyName) {
-    return {
-        [walletMutations.set](state, wallets) {
-            state[propertyName] = wallets;
+        [walletMutations.set](wallets) {
+            this[propertyName] = wallets;
         },
-        [walletMutations.add](state, wallet) {
-            state[propertyName].unshift(wallet);
+        [walletMutations.add](wallet) {
+            this[propertyName].unshift(wallet);
         },
-        [walletMutations.remove](state, wallet) {
-            state[propertyName] = state[propertyName].filter(
+        [walletMutations.remove](wallet) {
+            this[propertyName] = this[propertyName].filter(
                 existingWallet => existingWallet.id !== wallet.id
             );
         },
-        [walletMutations.update](state, changes) {
-            const walletx = state[propertyName].find(
+        [walletMutations.update](changes) {
+            const walletx = this[propertyName].find(
                 candidate => candidate.id === changes.id
             );
             Object.assign(walletx, changes.patch);

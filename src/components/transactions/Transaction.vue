@@ -30,13 +30,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import { parseDate } from '../../api/apiFormats';
 import formatDate from 'date-fns/format';
 import isBefore from 'date-fns/isBefore';
 import startOfDay from 'date-fns/startOfDay';
 import { transactionTitle } from './transactionTitle';
+import { useRootStore } from '../../stores/root';
+import { useAccountsStore } from '../../stores/accountsStore';
+import { useEarmarksStore } from '../../stores/earmarksStore';
+import { useCategoryStore } from '../../stores/categoryStore';
 
 export default {
     props: {
@@ -87,10 +91,10 @@ export default {
                 isBefore(startOfDay(this.parsedDate), new Date())
             );
         },
-        ...mapGetters(['selectedTransaction']),
-        ...mapGetters('categories', ['getCategoryName']),
-        ...mapGetters('accounts', ['accountName']),
-        ...mapGetters('earmarks', ['earmarkName']),
+        ...mapState(useRootStore, ['selectedTransaction']),
+        ...mapState(useCategoryStore, ['getCategoryName']),
+        ...mapState(useAccountsStore, ['accountName']),
+        ...mapState(useEarmarksStore, ['earmarkName']),
     },
 
     methods: {

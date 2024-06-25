@@ -28,7 +28,7 @@
                             <div
                                 v-if="!category"
                                 class="text-h6 grey--text text--lighten-1 font-weight-light"
-                                style="align-self: center;"
+                                style="align-self: center"
                             >
                                 Select a Category
                             </div>
@@ -77,10 +77,10 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
-import { actions } from '../../store/categoryStore';
+import { mapState, mapActions } from 'pinia';
 import MergeDialog from './MergeDialog.vue';
 import CategoryName from './CategoryName.vue';
+import { useCategoryStore, actions } from '../../stores/categoryStore';
 
 export default {
     data() {
@@ -100,8 +100,11 @@ export default {
         categoryName() {
             return this.getCategoryName(this.category.id);
         },
-        ...mapState('categories', ['categories']),
-        ...mapGetters('categories', ['getCategory', 'getCategoryName']),
+        ...mapState(useCategoryStore, [
+            'categories',
+            'getCategory',
+            'getCategoryName',
+        ]),
     },
     methods: {
         async addCategory(parentId) {
@@ -118,7 +121,7 @@ export default {
         selectCategory(category) {
             this.selectedCategory = [category.id];
         },
-        ...mapActions('categories', [actions.addCategory]),
+        ...mapActions(useCategoryStore, [actions.addCategory]),
     },
     components: {
         CategoryName,

@@ -27,8 +27,8 @@
     </v-dialog>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
-import { actions } from '../../store/categoryStore';
+import { mapState, mapActions } from 'pinia';
+import { useCategoryStore, actions } from '../../stores/categoryStore';
 import CategorySelector from './CategorySelector.vue';
 
 export default {
@@ -45,7 +45,7 @@ export default {
                 this.category.id
             );
         },
-        ...mapGetters('categories', ['getCategory']),
+        ...mapState(useCategoryStore, ['getCategory']),
     },
     methods: {
         async doDelete() {
@@ -59,7 +59,7 @@ export default {
                 replaceWith: this.replacement,
             });
         },
-        ...mapActions('categories', [actions.deleteCategory]),
+        ...mapActions(useCategoryStore, [actions.deleteCategory]),
     },
     components: {
         CategorySelector,

@@ -41,19 +41,24 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
-import client from '../../api/client';
+import { mapState, mapActions } from 'pinia';
+import {
+    useScheduledTransactionsStore,
+    actions as transactionActions,
+} from '../../stores/transactions/transactionStore';
+import { useAccountsStore } from '../../stores/accountsStore';
 import Transaction from './Transaction.vue';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import CreateAccount from '../accounts/CreateAccount.vue';
-import { actions as transactionActions } from '../../store/transactions/transactionStore';
 import {
+    useRootStore,
     actions as stateActions,
     mutations as stateMutations,
-} from '../../store/store';
+} from '../../stores/root';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import AddTransactionMixin from '../util/AddTransactionMixin';
 import { parseDate } from '../../api/apiFormats';
+import { useEarmarksStore } from '../../stores/earmarksStore';
 
 export default {
     mixins: [AddTransactionMixin],
@@ -97,10 +102,10 @@ export default {
                 this.editTransaction(transaction);
             },
         },
-        ...mapGetters(['selectedTransaction']),
-        ...mapState('scheduledTransactions', ['transactions', 'loading']),
-        ...mapState('accounts', ['accounts']),
-        ...mapState('earmarks', ['earmarks']),
+        ...mapState(useRootStore, ['selectedTransaction']),
+        ...mapState(useScheduledTransactionsStore, ['transactions', 'loading']),
+        ...mapState(useAccountsStore, ['accounts']),
+        ...mapState(useEarmarksStore, ['earmarks']),
     },
 
     methods: {
@@ -121,16 +126,19 @@ export default {
         },
         editTransaction(transaction) {
             if (transaction) {
-                this.$store.commit(stateMutations.selectTransaction, {
+                this[stateMutations.selectTransaction]({
                     id: transaction.id,
                     scheduled: true,
                 });
             } else {
-                this.$store.commit(stateMutations.selectTransaction, null);
+                this[stateMutations.selectTransaction](null);
             }
         },
-        ...mapActions([stateActions.showUpcoming]),
-        ...mapActions('scheduledTransactions', [
+        ...mapActions(useRootStore, [
+            stateActions.showUpcoming,
+            stateMutations.selectTransaction,
+        ]),
+        ...mapActions(useScheduledTransactionsStore, [
             transactionActions.addTransaction,
         ]),
     },

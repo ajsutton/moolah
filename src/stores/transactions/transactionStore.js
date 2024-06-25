@@ -7,6 +7,9 @@ import { formatDate } from '../../api/apiFormats';
 import nextDueDate from './nextDueDate';
 import accountBalanceAdjuster from './accountBalanceAdjuster';
 import transactionComparator from './transactionComparator';
+import { defineStore } from 'pinia';
+import { useRootStore } from '../root';
+import { useAccountsStore } from '../accountsStore';
 
 const PAGE_SIZE = 100;
 
@@ -19,8 +22,8 @@ export const actions = {
 };
 export const mutations = {
     setTransactions: 'SET_TRANSACTIONS',
-    addTransaction: 'ADD_TRANSACTION',
-    updateTransaction: 'UPDATE_TRANSACTION',
+    addTransaction: 'ADD_TRANSACTION_MUTATION',
+    updateTransaction: 'UPDATE_TRANSACTION_MUTATION',
     removeTransaction: 'REMOVE_TRANSACTION',
 };
 
@@ -99,8 +102,7 @@ function isSingleAccount(state) {
     );
 }
 
-export default {
-    namespaced: true,
+const options = {
     state() {
         return {
             transactions: [],
@@ -115,7 +117,8 @@ export default {
         };
     },
     getters: {
-        selectedTransaction(state, getters, rootState) {
+        selectedTransaction(state) {
+            const rootState = useRootStore();
             return findTransaction(state, rootState.selectedTransactionId);
         },
         hasNext(state) {
@@ -142,8 +145,8 @@ export default {
             return state.loadingState === ERROR;
         },
     },
-    mutations: {
-        [mutations.setTransactions](state, transactionsResponse) {
+    actions: {
+        [mutations.setTransactions](transactionsResponse) {
             const transactionsById = {};
             transactionsResponse.transactions.forEach(transaction => {
                 ensureAllFieldsPresent(transaction);
@@ -155,82 +158,80 @@ export default {
                 transactionsResponse.priorBalance,
                 !isSingleAccount(transactionsResponse)
             );
-            state.transactions = transactionsResponse.transactions;
-            state.priorBalance = transactionsResponse.priorBalance;
-            state.searchOptions = transactionsResponse.searchOptions;
-            state.loadingState = transactionsResponse.loadingState || IDLE;
-            state.transactionsById = transactionsById;
-            state.hasMore = transactionsResponse.hasMore;
-            state.totalNumberOfTransactions =
+            this.transactions = transactionsResponse.transactions;
+            this.priorBalance = transactionsResponse.priorBalance;
+            this.searchOptions = transactionsResponse.searchOptions;
+            this.loadingState = transactionsResponse.loadingState || IDLE;
+            this.transactionsById = transactionsById;
+            this.hasMore = transactionsResponse.hasMore;
+            this.totalNumberOfTransactions =
                 transactionsResponse.totalNumberOfTransactions;
         },
-        [mutations.addTransaction](state, transaction) {
-            const insertIndex = findInsertIndex(state, transaction);
-            state.transactions.splice(
+        [mutations.addTransaction](transaction) {
+            const insertIndex = findInsertIndex(this, transaction);
+            this.transactions.splice(
                 insertIndex,
                 0,
                 ensureAllFieldsPresent(transaction)
             );
             updateBalance(
-                state.transactions,
+                this.transactions,
                 insertIndex,
-                state.priorBalance,
-                !isSingleAccount(state)
+                this.priorBalance,
+                !isSingleAccount(this)
             );
-            Vue.set(state.transactionsById, transaction.id, transaction);
+            Vue.set(this.transactionsById, transaction.id, transaction);
         },
-        [mutations.removeTransaction](state, transaction) {
-            const transactionIndex = findTransactionIndex(state, transaction);
-            state.transactions.splice(transactionIndex, 1);
+        [mutations.removeTransaction](transaction) {
+            const transactionIndex = findTransactionIndex(this, transaction);
+            this.transactions.splice(transactionIndex, 1);
             updateBalance(
-                state.transactions,
+                this.transactions,
                 transactionIndex - 1,
-                state.priorBalance,
-                !isSingleAccount(state)
+                this.priorBalance,
+                !isSingleAccount(this)
             );
-            Vue.delete(state.transactionsById, transaction.id);
+            Vue.delete(this.transactionsById, transaction.id);
         },
-        [mutations.updateTransaction](state, payload) {
-            const transaction = findTransaction(state, payload.id);
+        [mutations.updateTransaction](payload) {
+            const transaction = findTransaction(this, payload.id);
             if (transaction !== undefined) {
-                const index = findTransactionIndex(state, transaction);
+                const index = findTransactionIndex(this, transaction);
                 let updateBalanceFrom = -1;
-                Vue.delete(state.transactionsById, transaction.id);
+                Vue.delete(this.transactionsById, transaction.id);
                 if (
                     payload.patch.date !== undefined ||
                     payload.patch.id !== undefined
                 ) {
-                    state.transactions.splice(index, 1);
+                    this.transactions.splice(index, 1);
                 }
                 Object.assign(transaction, payload.patch);
-                Vue.set(state.transactionsById, transaction.id, transaction);
+                Vue.set(this.transactionsById, transaction.id, transaction);
                 if (
                     payload.patch.date !== undefined ||
                     payload.patch.id !== undefined
                 ) {
-                    const insertIndex = findInsertIndex(state, transaction);
-                    state.transactions.splice(insertIndex, 0, transaction);
+                    const insertIndex = findInsertIndex(this, transaction);
+                    this.transactions.splice(insertIndex, 0, transaction);
                     updateBalanceFrom = Math.max(index, insertIndex);
                 } else if (affectsBalance(payload.patch)) {
                     updateBalanceFrom = index;
                 }
                 if (updateBalanceFrom !== -1) {
                     updateBalance(
-                        state.transactions,
+                        this.transactions,
                         updateBalanceFrom,
-                        state.priorBalance,
-                        !isSingleAccount(state)
+                        this.priorBalance,
+                        !isSingleAccount(this)
                     );
                 }
             } else {
                 throw Error(`No transaction with ID ${payload.id}`);
             }
         },
-    },
-    actions: {
-        async [actions.loadTransactions]({ commit }, searchOptions) {
+        async [actions.loadTransactions](searchOptions) {
             try {
-                commit(mutations.setTransactions, {
+                this[mutations.setTransactions]({
                     transactions: [],
                     priorBalance: 0,
                     searchOptions,
@@ -244,12 +245,11 @@ export default {
                 if (searchOptions.scheduled) {
                     response.transactions = response.transactions.reverse();
                 }
-                commit(
-                    mutations.setTransactions,
+                this[mutations.setTransactions](
                     Object.assign(response, { searchOptions })
                 );
             } catch (error) {
-                commit(mutations.setTransactions, {
+                this[mutations.setTransactions]({
                     transactions: [],
                     priorBalance: 0,
                     loadingState: ERROR,
@@ -259,13 +259,11 @@ export default {
             }
         },
 
-        async [actions.addTransaction](
-            { commit, rootState, rootGetters, dispatch },
-            attributes = {}
-        ) {
+        async [actions.addTransaction](attributes = {}) {
+            const rootStore = useRootStore();
+            const accountsStore = useAccountsStore();
             const account =
-                rootGetters['accounts/selectedAccount'] ||
-                rootState.accounts.accounts[0];
+                accountsStore.selectedAccount || accountsStore.accounts[0];
             const initialProperties = Object.assign(
                 {
                     amount: 0,
@@ -282,73 +280,62 @@ export default {
                 { id: 'new-transaction' },
                 initialProperties
             );
-            commit(mutations.addTransaction, transaction);
-            accountBalanceAdjuster(dispatch, null, transaction);
+            this[mutations.addTransaction](transaction);
+            accountBalanceAdjuster(null, transaction);
             try {
                 const serverTransaction =
                     await client.createTransaction(initialProperties);
-                commit(mutations.updateTransaction, {
+                this[mutations.updateTransaction]({
                     id: transaction.id,
                     patch: serverTransaction,
                 });
-                dispatch(
-                    'SELECT_TRANSACTION',
-                    {
-                        id: serverTransaction.id,
-                        scheduled: transaction.recurPeriod !== undefined,
-                    },
-                    { root: true }
-                );
+                rootStore.SELECT_TRANSACTION({
+                    id: serverTransaction.id,
+                    scheduled: transaction.recurPeriod !== undefined,
+                });
             } catch (error) {
-                commit(mutations.removeTransaction, transaction);
-                accountBalanceAdjuster(dispatch, transaction, null);
+                this[mutations.removeTransaction](transaction);
+                accountBalanceAdjuster(transaction, null);
                 throw error;
             }
         },
 
-        async [actions.updateTransaction](
-            { commit, state, dispatch },
-            changes
-        ) {
+        async [actions.updateTransaction](changes) {
             const transactionId = changes.id;
             const transaction = Object.assign(
                 {},
-                findTransaction(state, transactionId)
+                findTransaction(this, transactionId)
             );
-            commit(mutations.updateTransaction, changes);
-            const modifiedTransaction = findTransaction(state, transactionId);
-            accountBalanceAdjuster(dispatch, transaction, modifiedTransaction);
+            this[mutations.updateTransaction](changes);
+            const modifiedTransaction = findTransaction(this, transactionId);
+            accountBalanceAdjuster(transaction, modifiedTransaction);
             try {
                 await client.updateTransaction(modifiedTransaction);
             } catch (error) {
-                commit(mutations.updateTransaction, {
+                this[mutations.updateTransaction]({
                     id: transactionId,
                     patch: transaction,
                 });
-                accountBalanceAdjuster(
-                    dispatch,
-                    modifiedTransaction,
-                    transaction
-                );
+                accountBalanceAdjuster(modifiedTransaction, transaction);
                 throw error;
             }
         },
 
-        async [actions.deleteTransaction]({ commit, dispatch }, transaction) {
-            commit(mutations.removeTransaction, transaction);
-            accountBalanceAdjuster(dispatch, transaction, null);
+        async [actions.deleteTransaction](transaction) {
+            this[mutations.removeTransaction](transaction);
+            accountBalanceAdjuster(transaction, null);
             try {
                 await client.deleteTransaction(transaction);
             } catch (error) {
-                commit(mutations.addTransaction, transaction);
-                accountBalanceAdjuster(dispatch, null, transaction);
+                this[mutations.addTransaction](transaction);
+                accountBalanceAdjuster(null, transaction);
                 throw error;
             }
         },
 
-        async [actions.payTransaction]({ commit, state, dispatch }, payload) {
+        async [actions.payTransaction](payload) {
             const asyncOperations = [];
-            const transaction = findTransaction(state, payload.id);
+            const transaction = findTransaction(this, payload.id);
             const appliedTransaction = without(
                 transaction,
                 'recurEvery',
@@ -357,16 +344,16 @@ export default {
                 'id'
             );
             try {
-                accountBalanceAdjuster(dispatch, null, appliedTransaction);
+                accountBalanceAdjuster(null, appliedTransaction);
                 asyncOperations.push(
                     client.createTransaction(appliedTransaction)
                 );
                 if (transaction.recurPeriod === 'ONCE') {
-                    commit(mutations.removeTransaction, transaction);
+                    this[mutations.removeTransaction](transaction);
                     asyncOperations.push(client.deleteTransaction(transaction));
                 } else {
                     const nextDate = nextDueDate(transaction);
-                    commit(mutations.updateTransaction, {
+                    this[mutations.updateTransaction]({
                         id: transaction.id,
                         patch: { date: nextDate },
                     });
@@ -374,10 +361,16 @@ export default {
                 }
                 await Promise.all(asyncOperations);
             } catch (error) {
-                dispatch(actions.loadTransactions, { scheduled: true });
-                accountBalanceAdjuster(dispatch, appliedTransaction, null);
+                this[actions.loadTransactions]({ scheduled: true });
+                accountBalanceAdjuster(appliedTransaction, null);
                 throw error;
             }
         },
     },
 };
+
+export const useTransactionsStore = defineStore('transactions', options);
+export const useScheduledTransactionsStore = defineStore(
+    'scheduledTransactions',
+    options
+);

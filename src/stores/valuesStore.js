@@ -1,7 +1,8 @@
-import client from '../../api/client';
+import client from '../api/client';
 import search from 'binary-search';
 import Vue from 'vue';
-import { actions as accountActions } from '../wallets/accountsStore';
+import useAccountsStore, { actions as accountActions } from './accountsStore';
+import { defineStore } from 'pinia';
 
 const PAGE_SIZE = 100;
 
@@ -43,8 +44,7 @@ const LOADING = 'loading';
 const ERROR = 'error';
 export const loadingStates = { IDLE, LOADING, ERROR };
 
-export default {
-    namespaced: true,
+export const useValuesStore = defineStore('values', {
     state() {
         return {
             values: [],
@@ -73,31 +73,30 @@ export default {
             return state.loadingState === ERROR;
         },
     },
-    mutations: {
-        [mutations.setValues](state, valuesResponse) {
-            state.values = valuesResponse.values;
-            state.searchOptions = valuesResponse.searchOptions;
-            state.loadingState = valuesResponse.loadingState || IDLE;
-            state.hasMore = valuesResponse.hasMore;
-            state.totalNumberOfValues = valuesResponse.totalNumberOfValues;
+    actions: {
+        [mutations.setValues](valuesResponse) {
+            this.values = valuesResponse.values;
+            this.searchOptions = valuesResponse.searchOptions;
+            this.loadingState = valuesResponse.loadingState || IDLE;
+            this.hasMore = valuesResponse.hasMore;
+            this.totalNumberOfValues = valuesResponse.totalNumberOfValues;
         },
-        [mutations.setValue](state, value) {
-            const insertIndex = findInsertIndex(state, value);
+        [mutations.setValue](value) {
+            const insertIndex = findInsertIndex(this, value);
             if (insertIndex < 0) {
-                state.values.splice(-(insertIndex + 1), 0, value);
+                this.values.splice(-(insertIndex + 1), 0, value);
             } else {
-                Vue.set(state.values, insertIndex, value);
+                Vue.set(this.values, insertIndex, value);
             }
         },
-        [mutations.removeValue](state, value) {
-            const index = findIndex(state, value);
-            state.values.splice(index, 1);
+        [mutations.removeValue](value) {
+            const index = findIndex(this, value);
+            this.values.splice(index, 1);
         },
-    },
-    actions: {
-        async [actions.loadValues]({ commit }, searchOptions) {
+
+        async [actions.loadValues](searchOptions) {
             try {
-                commit(mutations.setValues, {
+                this[mutations.setValues]({
                     values: [],
                     searchOptions,
                     loadingState: LOADING,
@@ -109,12 +108,11 @@ export default {
                     ((searchOptions.page || 1) - 1) * pageSize,
                     pageSize
                 );
-                commit(
-                    mutations.setValues,
+                this[mutations.setValues](
                     Object.assign(response, { searchOptions })
                 );
             } catch (error) {
-                commit(mutations.setValues, {
+                this[mutations.setValues]({
                     values: [],
                     loadingState: ERROR,
                     searchOptions,
@@ -123,58 +121,52 @@ export default {
             }
         },
 
-        async [actions.setValue]({ commit, state, dispatch }, value) {
-            const index = findInsertIndex(state, value);
-            const orig = index >= 0 ? state.values[index] : null;
-            commit(mutations.setValue, value);
+        async [actions.setValue](value) {
+            const index = findInsertIndex(this, value);
+            const orig = index >= 0 ? this.values[index] : null;
+            this[mutations.setValue](value);
             try {
                 await client.accounts.setValue(
-                    state.searchOptions.accountId,
+                    this.searchOptions.accountId,
                     value
                 );
-                dispatch(
-                    'accounts/' + accountActions.setValue,
-                    {
-                        id: state.searchOptions.accountId,
-                        value:
-                            state.values.length > 0
-                                ? state.values[0].value
-                                : undefined,
-                    },
-                    { root: true }
-                );
+                const accountsStore = useAccountsStore();
+                accountsStore[accountActions.setValue]({
+                    id: this.searchOptions.accountId,
+                    value:
+                        this.values.length > 0
+                            ? this.values[0].value
+                            : undefined,
+                });
             } catch (error) {
                 if (orig !== null) {
-                    commit(mutations.updateValue, orig);
+                    this[mutations.updateValue](orig);
                 } else {
-                    commit(mutations.removeValue, value);
+                    this[mutations.removeValue](value);
                 }
                 throw error;
             }
         },
 
-        async [actions.deleteValue]({ commit, state, dispatch }, value) {
-            commit(mutations.removeValue, value);
+        async [actions.deleteValue](value) {
+            this[mutations.removeValue](value);
             try {
                 await client.accounts.deleteValue(
-                    state.searchOptions.accountId,
+                    this.searchOptions.accountId,
                     value.date
                 );
-                dispatch(
-                    'accounts/' + accountActions.setValue,
-                    {
-                        id: state.searchOptions.accountId,
-                        value:
-                            state.values.length > 0
-                                ? state.values[0].value
-                                : undefined,
-                    },
-                    { root: true }
-                );
+                const accountsStore = useAccountsStore();
+                accountsStore[accountActions.setValue]({
+                    id: this.searchOptions.accountId,
+                    value:
+                        this.values.length > 0
+                            ? this.values[0].value
+                            : undefined,
+                });
             } catch (error) {
-                commit(mutations.setValue, value);
+                this[mutations.setValue](value);
                 throw error;
             }
         },
     },
-};
+});

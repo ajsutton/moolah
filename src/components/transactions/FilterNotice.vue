@@ -2,7 +2,9 @@
     <v-alert v-model="active" type="info" dismissible>{{ message }}</v-alert>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState } from 'pinia';
+import { useTransactionsStore } from '../../stores/transactions/transactionStore';
+import { useCategoryStore } from '../../stores/categoryStore';
 
 export default {
     computed: {
@@ -51,9 +53,8 @@ export default {
             }
             return message;
         },
-        ...mapGetters('transactions', ['isFiltered']),
-        ...mapState('transactions', ['searchOptions']),
-        ...mapGetters('categories', ['getCategoryName']),
+        ...mapState(useTransactionsStore, ['searchOptions', 'isFiltered']),
+        ...mapState(useCategoryStore, ['getCategoryName']),
     },
 };
 </script>

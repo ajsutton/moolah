@@ -6,11 +6,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
-import {
-    actions as stateActions,
-    mutations as stateMutations,
-} from '../../store/store';
+import { mapActions } from 'pinia';
+import { useRootStore, actions as stateActions } from '../../stores/root';
 import Transactions from '../transactions/Transactions.vue';
 
 export default {
@@ -32,7 +29,7 @@ export default {
         async loadTransactions() {
             await this[stateActions.loadTransactions](this.searchOptions);
         },
-        ...mapActions([stateActions.loadTransactions]),
+        ...mapActions(useRootStore, [stateActions.loadTransactions]),
     },
 
     components: {

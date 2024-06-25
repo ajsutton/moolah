@@ -16,17 +16,23 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { actions as stateActions } from '../../store/store';
-import { actions as transactionActions } from '../../store/transactions/transactionStore';
-import { actions as valueActions } from '../../store/wallets/valuesStore';
+import { mapState, mapActions } from 'pinia';
+import { useRootStore, actions as stateActions } from '../../stores/root';
+import {
+    useTransactionsStore,
+    actions as transactionActions,
+} from '../../stores/transactions/transactionStore';
+import {
+    useValuesStore,
+    actions as valueActions,
+} from '../../stores/valuesStore';
+import { useAccountsStore } from '../../stores/accountsStore';
 import Transactions from '../transactions/Transactions.vue';
 import CreateAccount from '../accounts/CreateAccount.vue';
 import InvestmentValue from './InvestmentValue.vue';
 import AddTransactionMixin from '../util/AddTransactionMixin';
 
 export default {
-
     mixins: [AddTransactionMixin],
     props: {
         accountId: String,
@@ -65,7 +71,7 @@ export default {
                 this.selectedAccount.type == 'investment'
             );
         },
-        ...mapGetters('accounts', { findAccountById: 'account' }),
+        ...mapState(useAccountsStore, { findAccountById: 'account' }),
     },
 
     methods: {
@@ -89,9 +95,11 @@ export default {
                 accountId: this.accountId,
             });
         },
-        ...mapActions([stateActions.loadTransactions]),
-        ...mapActions('transactions', [transactionActions.addTransaction]),
-        ...mapActions('values', [valueActions.loadValues]),
+        ...mapActions(useRootStore, [stateActions.loadTransactions]),
+        ...mapActions(useTransactionsStore, [
+            transactionActions.addTransaction,
+        ]),
+        ...mapActions(useValuesStore, [valueActions.loadValues]),
     },
 
     components: {

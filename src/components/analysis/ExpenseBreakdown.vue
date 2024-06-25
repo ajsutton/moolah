@@ -42,13 +42,12 @@
 </template>
 
 <script>
-import c3 from 'c3';
 import client from '../../api/client';
-import formatMoney from '../util/formatMoney';
 import addMonths from 'date-fns/addMonths';
 import { formatDate } from '../../api/apiFormats';
 import debounce from 'debounce';
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'pinia';
+import { useCategoryStore } from '../../stores/categoryStore';
 import { summariseCategories } from './expenseBreakdownData';
 import GraphPanel from '../util/GraphPanel.vue';
 import PieChart from '../charts/PieChart.vue';
@@ -99,8 +98,7 @@ export default {
             crumbs.unshift({ name: 'Categories', id: null });
             return crumbs;
         },
-        ...mapGetters('categories', ['getCategoryName']),
-        ...mapState('categories', ['categoriesById']),
+        ...mapState(useCategoryStore, ['getCategoryName', 'categoriesById']),
     },
     watch: {
         previousMonths() {
@@ -135,7 +133,7 @@ export default {
             }
         },
 
-        handleResize: debounce(function() {
+        handleResize: debounce(function () {
             this.reload();
         }, 100),
     },

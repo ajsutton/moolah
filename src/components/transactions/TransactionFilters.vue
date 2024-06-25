@@ -12,7 +12,7 @@
             </v-card-title>
             <v-card-text>
                 <v-container grid-list-md>
-                    <v-row >
+                    <v-row>
                         <v-col cols="12" sm="6">
                             <date-picker-field
                                 v-model="from"
@@ -28,7 +28,7 @@
                             ></date-picker-field>
                         </v-col>
                     </v-row>
-                    <v-row >
+                    <v-row>
                         <v-col cols="12">
                             <category-selector
                                 v-model="categories"
@@ -53,8 +53,11 @@
 <script>
 import DatePickerField from '../util/DatePickerField.vue';
 import CategorySelector from '../categories/CategorySelector.vue';
-import { mapState, mapActions, mapGetters } from 'vuex';
-import { actions as transactionActions } from '../../store/transactions/transactionStore';
+import { mapState, mapActions } from 'pinia';
+import {
+    useTransactionsStore,
+    actions as transactionActions,
+} from '../../stores/transactions/transactionStore';
 
 export default {
     data() {
@@ -66,8 +69,7 @@ export default {
         };
     },
     computed: {
-        ...mapState('transactions', ['searchOptions']),
-        ...mapGetters('transactions', ['isFiltered']),
+        ...mapState(useTransactionsStore, ['searchOptions', 'isFiltered']),
     },
     watch: {
         searchOptions: {
@@ -99,7 +101,9 @@ export default {
             });
             this.dialog = false;
         },
-        ...mapActions('transactions', [transactionActions.loadTransactions]),
+        ...mapActions(useTransactionsStore, [
+            transactionActions.loadTransactions,
+        ]),
     },
     components: {
         DatePickerField,

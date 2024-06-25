@@ -80,9 +80,14 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
-import { actions as transactionActions } from '../../store/transactions/transactionStore';
-import { rules, isValid } from '../validation';
+import { mapState, mapActions } from 'pinia';
+import {
+    actions as transactionActions,
+    useScheduledTransactionsStore,
+} from '../../stores/transactions/transactionStore';
+import { useAccountsStore } from '../../stores/accountsStore';
+import { useEarmarksStore } from '../../stores/earmarksStore';
+import { rules } from '../validation';
 import WalletSelector from '../wallets/WalletSelector.vue';
 import CategorySelector from '../categories/CategorySelector.vue';
 import AutoCompletePayee from './AutoCompletePayee.vue';
@@ -92,6 +97,7 @@ import createTypeChangePatch from './changeType';
 import { makeModelProperty, onBlur } from './modelProperty';
 import parseMoney from '../util/parseMoney';
 import formatMoney from '../util/formatMoney';
+import { useRootStore } from '../../stores/root';
 
 function typeMultiplier(transaction) {
     return transaction.type === 'expense' || transaction.type === 'transfer'
@@ -128,13 +134,13 @@ export default {
         account() {
             return this.accountById(this.transaction.accountId);
         },
-        ...mapGetters({
+        ...mapState(useRootStore, {
             transaction: 'selectedTransaction',
         }),
-        ...mapGetters('accounts', { accountById: 'account' }),
-        ...mapGetters('earmarks', ['hasEarmarks']),
-        ...mapState('accounts', ['accounts']),
-        ...mapState('earmarks', ['earmarks']),
+        ...mapState(useAccountsStore, { accountById: 'account' }),
+        ...mapState(useEarmarksStore, ['hasEarmarks']),
+        ...mapState(useAccountsStore, ['accounts']),
+        ...mapState(useEarmarksStore, ['earmarks']),
         accountId: {
             get() {
                 return this.transaction.accountId;
@@ -222,8 +228,8 @@ export default {
         },
         category: makeModelProperty(
             'categoryId',
-            (value) => value || '',
-            (value) => (value === '' ? undefined : value)
+            value => value || '',
+            value => (value === '' ? undefined : value)
         ),
         amount: makeModelProperty(
             'amount',
@@ -252,11 +258,11 @@ export default {
             });
         },
         onBlur,
-        ...mapActions({
+        ...mapActions(useRootStore, {
             updateTransaction: transactionActions.updateTransaction,
             deleteTransaction: transactionActions.deleteTransaction,
         }),
-        ...mapActions('scheduledTransactions', {
+        ...mapActions(useScheduledTransactionsStore, {
             pay: transactionActions.payTransaction,
         }),
         focus() {
@@ -265,7 +271,7 @@ export default {
     },
     watch: {
         transactionId() {
-            Object.keys(this.raw).forEach((key) => (this.raw[key] = undefined));
+            Object.keys(this.raw).forEach(key => (this.raw[key] = undefined));
             this.focus();
         },
     },

@@ -6,7 +6,7 @@
             label="Repeat"
             hide-details
         ></v-switch>
-        <v-row  v-if="repeating">
+        <v-row v-if="repeating">
             <v-col cols="4">
                 <v-text-field
                     v-model="recurEvery"
@@ -28,8 +28,11 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
-import { actions as transactionActions } from '../../store/transactions/transactionStore';
+import { mapActions } from 'pinia';
+import {
+    useScheduledTransactionsStore,
+    actions as transactionActions,
+} from '../../stores/transactions/transactionStore';
 import { rules, isValid } from '../validation';
 import { makeModelProperty, onBlur } from './modelProperty';
 
@@ -94,7 +97,7 @@ export default {
     },
     methods: {
         onBlur,
-        ...mapActions('scheduledTransactions', {
+        ...mapActions(useScheduledTransactionsStore, {
             updateTransaction: transactionActions.updateTransaction,
         }),
     },

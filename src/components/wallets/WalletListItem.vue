@@ -16,7 +16,7 @@
 <script>
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import iconForType from './walletIcon';
-import { accountValue } from '../../store/wallets/accountsStore';
+import { accountValue } from '../../stores/accountsStore';
 
 export default {
     components: {

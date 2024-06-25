@@ -14,8 +14,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
 import debounce from 'debounce';
+import { useRootStore } from '../../stores/root';
 
 export default {
     props: {
@@ -33,7 +34,7 @@ export default {
         chart() {
             return this.$refs.chart;
         },
-        ...mapState(['showEditTransactionPanel', 'showMainNav']),
+        ...mapState(useRootStore, ['showEditTransactionPanel', 'showMainNav']),
     },
     watch: {
         showEditTransactionPanel() {

@@ -1,11 +1,27 @@
-import accountBalanceAdjuster from '../../../../../src/store/transactions/accountBalanceAdjuster';
-import { actions as accountActions } from '../../../../../src/store/wallets/accountsStore';
-import sinon from 'sinon';
+import accountBalanceAdjuster from '../../../../../src/stores/transactions/accountBalanceAdjuster';
+import { useAccountsStore } from '../../../../../src/stores/accountsStore';
+import { useEarmarksStore } from '../../../../../src/stores/earmarksStore';
+import { assert } from 'chai';
+import { createPinia, setActivePinia } from 'pinia';
 
 describe('Account Balance Adjuster', function () {
-    let dispatch;
+    let accountsStore;
+    let earmarksStore;
     beforeEach(function () {
-        dispatch = sinon.spy();
+        setActivePinia(createPinia());
+        accountsStore = useAccountsStore();
+        earmarksStore = useEarmarksStore();
+        accountsStore.accounts = [
+            { id: 'account1', balance: 0 },
+            { id: 'account2', balance: 0 },
+            { id: 'account3', balance: 0 },
+        ];
+
+        earmarksStore.earmarks = [
+            { id: 'earmark1', balance: 0, spent: 0, saved: 0 },
+            { id: 'earmark2', balance: 0, spent: 0, saved: 0 },
+            { id: 'earmark3', balance: 0, spent: 0, saved: 0 },
+        ];
     });
 
     describe('Basic Transactions', function () {
@@ -313,25 +329,22 @@ describe('Account Balance Adjuster', function () {
         ...adjustments
     ) {
         accountBalanceAdjuster(
-            dispatch,
             makeTransaction(originalTransaction),
             makeTransaction(modifiedTransaction)
         );
         adjustments.forEach(adjustment => {
-            const expectedAdjustment = Object.assign({}, adjustment, {
-                id: adjustment.accountId || adjustment.earmarkId,
-            });
-            delete expectedAdjustment.accountId;
-            delete expectedAdjustment.earmarkId;
-            return sinon.assert.calledWith(
-                dispatch,
-                (adjustment.earmarkId ? 'earmarks/' : 'accounts/') +
-                    accountActions.adjustBalance,
-                expectedAdjustment,
-                { root: true }
-            );
+            if (adjustment.accountId !== undefined) {
+                const account = accountsStore.account(adjustment.accountId);
+                assert.equal(account.balance, adjustment.balance);
+            } else if (adjustment.earmarkId !== undefined) {
+                const earmark = earmarksStore.earmark(adjustment.earmarkId);
+                assert.equal(earmark.balance, adjustment.balance);
+                assert.equal(earmark.spent, adjustment.spent);
+                assert.equal(earmark.saved, adjustment.saved);
+            } else {
+                assert.fail('Unexpected adjustment');
+            }
         });
-        sinon.assert.callCount(dispatch, adjustments.length);
     }
 
     function makeTransaction(properties) {

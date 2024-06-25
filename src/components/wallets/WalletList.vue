@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import WalletListItem from './WalletListItem.vue';
 

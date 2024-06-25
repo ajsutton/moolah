@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import client from '../api/client';
 import search from 'binary-search';
 import Vue from 'vue';
@@ -10,10 +11,10 @@ export const actions = {
 };
 
 export const mutations = {
-    addCategory: 'ADD_CATEGORY',
+    addCategory: 'ADD_CATEGORY_MUTATION',
     setCategories: 'SET_CATEGORIES',
-    updateCategory: 'UPDATE_CATEGORY',
-    removeCategory: 'REMOVE_CATEGORY',
+    updateCategory: 'UPDATE_CATEGORY_MUTATION',
+    removeCategory: 'REMOVE_CATEGORY_MUTATION',
 };
 
 const categoryFields = () => ({
@@ -67,13 +68,11 @@ const insertCategory = (categories, categoriesById, category) => {
     insertInto.splice(insertIndex, 0, category);
 };
 
-export default {
-    namespaced: true,
-
-    state: {
+export const useCategoryStore = defineStore('categories', {
+    state: state => ({
         categories: [],
         categoriesById: {},
-    },
+    }),
 
     getters: {
         getCategory(state) {
@@ -93,14 +92,14 @@ export default {
         },
     },
 
-    mutations: {
-        [mutations.addCategory](state, category) {
+    actions: {
+        [mutations.addCategory](category) {
             ensureAllFieldsPresent(category);
-            insertCategory(state.categories, state.categoriesById, category);
-            Vue.set(state.categoriesById, category.id, category);
+            insertCategory(this.categories, this.categoriesById, category);
+            Vue.set(this.categoriesById, category.id, category);
         },
 
-        [mutations.setCategories](state, newCategories) {
+        [mutations.setCategories](newCategories) {
             const categories = [];
             const categoriesById = {};
             newCategories.forEach(category => {
@@ -110,71 +109,70 @@ export default {
             newCategories.forEach(category =>
                 insertCategory(categories, categoriesById, category)
             );
-            state.categories = categories;
-            state.categoriesById = categoriesById;
+            this.categories = categories;
+            this.categoriesById = categoriesById;
         },
 
-        [mutations.updateCategory](state, changes) {
-            const category = state.categoriesById[changes.id];
+        [mutations.updateCategory](changes) {
+            const category = this.categoriesById[changes.id];
             if (
                 changes.patch.id !== undefined &&
                 changes.patch.id !== category.id
             ) {
-                Vue.delete(state.categoriesById, category.id);
-                Vue.set(state.categoriesById, changes.patch.id, category);
+                Vue.delete(this.categoriesById, category.id);
+                Vue.set(this.categoriesById, changes.patch.id, category);
             }
             const currentList =
                 category.parentId === null
-                    ? state.categories
-                    : state.categoriesById[category.parentId].children;
+                    ? this.categories
+                    : this.categoriesById[category.parentId].children;
             const index = search(currentList, category, categoryComparator);
             currentList.splice(index, 1);
             Object.assign(category, changes.patch);
-            insertCategory(state.categories, state.categoriesById, category);
+            insertCategory(this.categories, this.categoriesById, category);
         },
 
-        [mutations.removeCategory](state, category) {
+        [mutations.removeCategory](category) {
             const currentList =
                 category.parentId === null
-                    ? state.categories
-                    : state.categoriesById[category.parentId].children;
+                    ? this.categories
+                    : this.categoriesById[category.parentId].children;
             const index = search(currentList, category, categoryComparator);
             currentList.splice(index, 1);
+            delete this.categoriesById[category.id];
         },
-    },
 
-    actions: {
-        async [actions.loadCategories]({ commit }) {
+        async [actions.loadCategories]() {
             const response = await client.categories();
-            commit(mutations.setCategories, response.categories);
+            this[mutations.setCategories](response.categories);
         },
 
-        async [actions.addCategory]({ commit, state }, category) {
+        async [actions.addCategory](category) {
             const newCategory = Object.assign({ id: 'new-category' }, category);
-            commit(mutations.addCategory, newCategory);
+            this[mutations.addCategory](newCategory);
             try {
                 const createdCategory = await client.createCategory(category);
-                commit(mutations.updateCategory, {
+                this[mutations.updateCategory]({
                     id: newCategory.id,
                     patch: createdCategory,
                 });
-                return state.categoriesById[createdCategory.id];
+                return this.categoriesById[createdCategory.id];
             } catch (error) {
-                commit(mutations.removeCategory, newCategory);
+                this[mutations.removeCategory](newCategory);
                 throw error;
             }
         },
 
-        async [actions.updateCategory]({ commit, state }, changes) {
-            const category = state.categoriesById[changes.id];
+        async [actions.updateCategory](changes) {
+            const category = this.categoriesById[changes.id];
             const original = Object.assign({}, category);
-            commit(mutations.updateCategory, changes);
+            this[mutations.updateCategory](changes);
             try {
                 await client.updateCategory(
-                    apiCategory(state.categoriesById[changes.id])
+                    apiCategory(this.categoriesById[changes.id])
                 );
             } catch (error) {
-                commit(mutations.updateCategory, {
+                this[mutations.updateCategory]({
                     id: category.id,
                     patch: original,
                 });
@@ -182,16 +180,16 @@ export default {
             }
         },
 
-        async [actions.deleteCategory]({ commit, state }, options) {
-            const category = state.categoriesById[options.id];
-            const replacement = state.categoriesById[options.replaceWith];
-            commit(mutations.removeCategory, category);
+        async [actions.deleteCategory](options) {
+            const category = this.categoriesById[options.id];
+            const replacement = this.categoriesById[options.replaceWith];
+            this[mutations.removeCategory](category);
             try {
                 await client.deleteCategory(category, replacement);
             } catch (error) {
-                commit(mutations.addCategory, category);
+                this[mutations.addCategory](category);
                 throw error;
             }
         },
     },
-};
+});

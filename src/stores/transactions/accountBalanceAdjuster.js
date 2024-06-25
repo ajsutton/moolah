@@ -1,4 +1,5 @@
-import { actions } from '../wallets/accountsStore';
+import { actions, useAccountsStore } from '../accountsStore';
+import { useEarmarksStore } from '../earmarksStore';
 
 function addChange(changes, accountId, amount, saved = false, spent = false) {
     const change = changes[accountId] || { balance: 0, saved: 0, spent: 0 };
@@ -13,7 +14,6 @@ function addChange(changes, accountId, amount, saved = false, spent = false) {
 }
 
 export default function updateAccountBalances(
-    dispatch,
     originalTransaction,
     modifiedTransaction
 ) {
@@ -69,31 +69,28 @@ export default function updateAccountBalances(
             );
         }
     }
+    const accountStore = useAccountsStore();
     Object.entries(accountChanges)
         .filter(([accountId, change]) => change.balance !== 0)
         .forEach(([accountId, change]) =>
-            dispatch(
-                'accounts/' + actions.adjustBalance,
-                { id: accountId, balance: change.balance },
-                { root: true }
-            )
+            accountStore[actions.adjustBalance]({
+                id: accountId,
+                balance: change.balance,
+            })
         );
 
+    const earmarksStore = useEarmarksStore();
     Object.entries(earmarkChanges)
         .filter(
             ([earmarkId, change]) =>
                 change.balance !== 0 || change.saved !== 0 || change.spent !== 0
         )
         .forEach(([earmarkId, change]) =>
-            dispatch(
-                'earmarks/' + actions.adjustBalance,
-                {
-                    id: earmarkId,
-                    balance: change.balance,
-                    saved: change.saved,
-                    spent: change.spent,
-                },
-                { root: true }
-            )
+            earmarksStore[actions.adjustBalance]({
+                id: earmarkId,
+                balance: change.balance,
+                saved: change.saved,
+                spent: change.spent,
+            })
         );
 }

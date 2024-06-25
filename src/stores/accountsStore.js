@@ -1,10 +1,11 @@
-import client from '../../api/client';
+import client from '../api/client';
+import { defineStore } from 'pinia';
 import {
     createWalletStoreActions,
-    createWalletStoreMutations,
     walletActions,
     walletMutations,
 } from './walletStoreFunctions';
+import { useRootStore } from './root';
 
 export const mutations = {
     setAccounts: walletMutations.set,
@@ -35,11 +36,10 @@ function accountsByType(state, types) {
     return state.accounts.filter(account => types.includes(account.type));
 }
 
-export default {
-    namespaced: true,
-    state: {
+export const useAccountsStore = defineStore('acconts', {
+    state: state => ({
         accounts: [],
-    },
+    }),
     getters: {
         currentAccounts(state) {
             return accountsByType(state, currentAccountTypes);
@@ -52,13 +52,14 @@ export default {
                 return state.accounts.find(account => account.id === accountId);
             };
         },
-        accountName(state, getters) {
+        accountName(state) {
             return accountId => {
-                const account = getters.account(accountId);
+                const account = this.account(accountId);
                 return account ? account.name : 'Unknown';
             };
         },
-        selectedAccount(state, getters, rootState) {
+        selectedAccount(state) {
+            const rootState = useRootStore();
             return state.accounts.find(
                 account => account.id === rootState.selectedWalletId
             );
@@ -82,6 +83,5 @@ export default {
             );
         },
     },
-    mutations: createWalletStoreMutations('accounts'),
     actions: createWalletStoreActions('accounts', client.accounts),
-};
+});

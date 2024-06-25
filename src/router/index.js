@@ -8,7 +8,7 @@ import Earmark from '../components/earmarks/Earmark.vue';
 import UpcomingTransactions from '../components/transactions/UpcomingTransactions.vue';
 import Categories from '../components/categories/Categories.vue';
 import Reports from '../components/reports/Reports.vue';
-import store, { mutations } from '../store/store';
+import { useRootStore, mutations } from '../stores/root';
 
 Vue.use(Router);
 
@@ -59,8 +59,9 @@ const router = new Router({
     },
 });
 router.beforeEach((to, from, next) => {
-    if (store.state.selectedTransactionId) {
-        store.commit(mutations.selectTransaction, null);
+    const store = useRootStore();
+    if (store.selectedTransactionId) {
+        store[mutations.selectTransaction](null);
     }
     next();
 });

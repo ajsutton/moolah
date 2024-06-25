@@ -1,7 +1,7 @@
-import client from '../../api/client';
+import client from '../api/client';
+import { defineStore } from 'pinia';
 import {
     createWalletStoreActions,
-    createWalletStoreMutations,
     walletMutations,
     walletActions,
 } from './walletStoreFunctions';
@@ -15,20 +15,19 @@ export const actions = {
     adjustBalance: walletActions.adjustBalance,
 };
 
-export default {
-    namespaced: true,
-    state: {
+export const useEarmarksStore = defineStore('earmarks', {
+    state: state => ({
         earmarks: [],
-    },
+    }),
     getters: {
         earmark(state) {
             return earmarkId => {
                 return state.earmarks.find(earmark => earmark.id === earmarkId);
             };
         },
-        earmarkName(state, getters) {
+        earmarkName(state) {
             return earmarkId => {
-                const earmark = getters.earmark(earmarkId);
+                const earmark = state.earmark(earmarkId);
                 return earmark ? earmark.name : 'Unknown';
             };
         },
@@ -42,8 +41,7 @@ export default {
             return state.earmarks.length > 0;
         },
     },
-    mutations: createWalletStoreMutations('earmarks'),
     actions: createWalletStoreActions('earmarks', client.earmarks, newEarmark =>
         Object.assign({ balance: 0, saved: 0, spent: 0 }, newEarmark)
     ),
-};
+});

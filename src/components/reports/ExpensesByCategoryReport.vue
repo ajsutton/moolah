@@ -35,13 +35,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
+import { mapState } from 'pinia';
 import client from '../../api/client';
-import store from '../../store/store';
 import { formatDate } from '../../api/apiFormats';
 import addMonths from 'date-fns/addMonths';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import { expenseByCategoryReportData } from './expenseByCategoryReportData';
+import { useCategoryStore } from '../../stores/categoryStore';
 
 export default {
     props: {
@@ -67,8 +67,7 @@ export default {
                 this.getCategoryName
             );
         },
-        ...mapGetters('categories', ['getCategoryName']),
-        ...mapState('categories', ['categoriesById']),
+        ...mapState(useCategoryStore, ['categoriesById', 'getCategoryName']),
     },
     watch: {
         from() {

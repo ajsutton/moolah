@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'pinia';
+import { useTransactionsStore } from '../../stores/transactions/transactionStore';
 
 export default {
     props: {
@@ -29,7 +30,7 @@ export default {
     },
 
     computed: {
-        ...mapState('transactions', ['transactions']),
+        ...mapState(useTransactionsStore, ['transactions']),
     },
 
     methods: {

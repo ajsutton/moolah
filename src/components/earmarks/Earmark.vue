@@ -42,9 +42,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { actions as stateActions } from '../../store/store';
-import { actions as transactionActions } from '../../store/transactions/transactionStore';
+import { mapState, mapActions } from 'pinia';
+import { useRootStore, actions as stateActions } from '../../stores/root';
+import {
+    useTransactionsStore,
+    actions as transactionActions,
+} from '../../stores/transactions/transactionStore';
+import { useEarmarksStore } from '../../stores/earmarksStore';
 import Transactions from '../transactions/Transactions.vue';
 import SavingsGoalNotice from './SavingsGoalNotice.vue';
 import CreateEarmark from './CreateEarmark.vue';
@@ -52,7 +56,6 @@ import AddTransactionMixin from '../util/AddTransactionMixin';
 import SpendingBreakdown from './SpendingBreakdown.vue';
 
 export default {
-
     mixins: [AddTransactionMixin],
     props: {
         earmarkId: String,
@@ -82,7 +85,7 @@ export default {
         earmarkName() {
             return this.selectedEarmark ? this.selectedEarmark.name : '';
         },
-        ...mapGetters('earmarks', { findEarmarkById: 'earmark' }),
+        ...mapState(useEarmarksStore, { findEarmarkById: 'earmark' }),
     },
 
     methods: {
@@ -96,8 +99,10 @@ export default {
                 type: 'income',
             });
         },
-        ...mapActions([stateActions.loadTransactions]),
-        ...mapActions('transactions', [transactionActions.addTransaction]),
+        ...mapActions(useRootStore, [stateActions.loadTransactions]),
+        ...mapActions(useTransactionsStore, [
+            transactionActions.addTransaction,
+        ]),
     },
 
     components: {

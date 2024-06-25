@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
+import { useCategoryStore } from '../../stores/categoryStore';
 
 export default {
     props: {
@@ -62,7 +63,7 @@ export default {
             this.categories.forEach(addCategory);
             return categories;
         },
-        ...mapState('categories', ['categories']),
+        ...mapState(useCategoryStore, ['categories']),
     },
 };
 </script>
