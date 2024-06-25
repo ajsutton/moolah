@@ -40,7 +40,7 @@
         "husky": "^9.0.11",
         "inject-loader": "^4.0.1",
         "lint-staged": "^15.2.7",
-        "mocha": "^10.0.0",
+        "mocha": "^10.5.1",
         "prettier": "^3.3.2",
         "sass": "^1.26.11",
         "sass-loader": "^13.0.2",
