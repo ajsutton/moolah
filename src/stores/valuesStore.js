@@ -1,7 +1,7 @@
 import client from '../api/client';
 import search from 'binary-search';
 import Vue from 'vue';
-import useAccountsStore, { actions as accountActions } from './accountsStore';
+import { useAccountsStore, actions as accountActions } from './accountsStore';
 import { defineStore } from 'pinia';
 
 const PAGE_SIZE = 100;
@@ -13,7 +13,7 @@ export const actions = {
 };
 export const mutations = {
     setValues: 'SET_VALUES',
-    setValue: 'SET_VALUE',
+    setValue: 'SET_VALUE_MUTATION',
     removeValue: 'REMOVE_VALUE',
 };
 
@@ -140,7 +140,7 @@ export const useValuesStore = defineStore('values', {
                 });
             } catch (error) {
                 if (orig !== null) {
-                    this[mutations.updateValue](orig);
+                    this[mutations.setValue](orig);
                 } else {
                     this[mutations.removeValue](value);
                 }
