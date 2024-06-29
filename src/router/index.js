@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 import NotFound from '../components/NotFound.vue';
 import Analysis from '../components/analysis/Analysis.vue';
 import AllTransactions from '../components/transactions/AllTransactions.vue';

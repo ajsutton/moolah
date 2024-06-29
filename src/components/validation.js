@@ -40,7 +40,10 @@ function maxLength(length) {
 
 function notEmpty() {
     return value =>
-        validate(value === undefined || value === null || value.length > 0, 'Required');
+        validate(
+            value === undefined || value === null || value.length > 0,
+            'Required'
+        );
 }
 
 export const rules = {
