@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import IconSearch from '~icons/mdi/search'
+import IconSearch from '~icons/mdi/search';
 </script>
 
 <script>

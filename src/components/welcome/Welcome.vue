@@ -1,9 +1,6 @@
 <template>
     <div>
-        <v-parallax
-            src="@/assets/jumbo-background.jpg"
-            height="250"
-        >
+        <v-parallax src="@/assets/jumbo-background.jpg" height="250">
             <v-container class="fill-height">
                 <v-row align="center">
                     <v-col>

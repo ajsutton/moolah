@@ -15,12 +15,14 @@
             v-if="loading"
             :indeterminate="true"
         ></v-progress-linear>
-        <v-list lines="two" :selectable="true" :selected="itemGroupSelectedTransaction" color="primary">
-            <template
-                v-for="transaction in transactions"
-                :key="transaction.id"
-            >
-            <transaction
+        <v-list
+            lines="two"
+            :selectable="true"
+            :selected="itemGroupSelectedTransaction"
+            color="primary"
+        >
+            <template v-for="transaction in transactions" :key="transaction.id">
+                <transaction
                     :transaction="transaction"
                     @selected="editTransaction"
                 >

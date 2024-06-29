@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import IconEyeOffOutline from '~icons/mdi/eyeOffOutline'
+import IconEyeOffOutline from '~icons/mdi/eyeOffOutline';
 </script>
 
 <script>

@@ -62,9 +62,7 @@
                                     <v-btn
                                         variant="text"
                                         class="text-primary"
-                                        @click.stop="
-                                            addCategory(category.id)
-                                        "
+                                        @click.stop="addCategory(category.id)"
                                         >Add sub-category</v-btn
                                     >
                                     <merge-dialog
@@ -87,7 +85,7 @@ import { mapState, mapActions } from 'pinia';
 import MergeDialog from './MergeDialog.vue';
 import CategoryName from './CategoryName.vue';
 import { useCategoryStore, actions } from '../../stores/categoryStore';
-import { VTreeview } from 'vuetify/labs/VTreeview'
+import { VTreeview } from 'vuetify/labs/VTreeview';
 
 export default {
     data() {

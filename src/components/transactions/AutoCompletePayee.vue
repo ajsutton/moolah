@@ -34,8 +34,13 @@ export default {
         uniqueTransactions() {
             const payeeToTx = {};
             this.transactions.forEach(tx => {
-                if (payeeToTx[tx.payee] === undefined && tx.payee !== "" && tx.payee !== undefined && tx.payee !== null) {
-                    payeeToTx[tx.payee] = tx
+                if (
+                    payeeToTx[tx.payee] === undefined &&
+                    tx.payee !== '' &&
+                    tx.payee !== undefined &&
+                    tx.payee !== null
+                ) {
+                    payeeToTx[tx.payee] = tx;
                 }
             });
             return Object.values(payeeToTx);

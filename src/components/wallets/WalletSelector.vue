@@ -8,7 +8,7 @@
         item-value="id"
         :item-props="true"
     >
-        <template v-slot:item="{props, item}" >
+        <template v-slot:item="{ props, item }">
             <v-list-item v-bind="props">
                 <template v-slot:prepend>
                     <v-list-item-action>
@@ -20,7 +20,9 @@
 
                 <template v-slot:append>
                     <v-list-item-action>
-                        <monetary-amount :value="props.balance"></monetary-amount>
+                        <monetary-amount
+                            :value="props.balance"
+                        ></monetary-amount>
                     </v-list-item-action>
                 </template>
             </v-list-item>

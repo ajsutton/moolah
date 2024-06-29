@@ -38,8 +38,8 @@
 </template>
 
 <script setup>
-import IconVisibility from '~icons/mdi/visibility'
-import IconVisibilityOff from '~icons/mdi/visibilityOff'
+import IconVisibility from '~icons/mdi/visibility';
+import IconVisibilityOff from '~icons/mdi/visibilityOff';
 </script>
 
 <script>

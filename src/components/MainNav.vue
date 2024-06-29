@@ -1,5 +1,10 @@
 <template>
-    <v-navigation-drawer v-model="mainNavVisible" theme="dark" permanent width="300">
+    <v-navigation-drawer
+        v-model="mainNavVisible"
+        theme="dark"
+        permanent
+        width="300"
+    >
         <template v-if="loggedIn">
             <wallet-list
                 title="Current Accounts"
@@ -81,7 +86,7 @@ import CreateEarmark from './earmarks/CreateEarmark.vue';
 import { useAccountsStore } from '../stores/accountsStore';
 import { useEarmarksStore } from '../stores/earmarksStore';
 import { useRootStore } from '../stores/root';
-  
+
 export default {
     props: {
         profile: Object,

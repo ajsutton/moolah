@@ -27,7 +27,7 @@ export default {
     computed: {
         valueColor() {
             if (this.color !== undefined) {
-                return "text-" + this.color;
+                return 'text-' + this.color;
             }
             return this.value >= 0 !== this.invertColors
                 ? 'text-green'

@@ -71,8 +71,8 @@
 </template>
 
 <script setup>
-import IconAdd from '~icons/mdi/add'
-import IconEdit from '~icons/mdi/edit'
+import IconAdd from '~icons/mdi/add';
+import IconEdit from '~icons/mdi/edit';
 </script>
 
 <script>

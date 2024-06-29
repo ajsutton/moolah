@@ -1,9 +1,8 @@
 <template>
     <v-list-item :value="transaction" @click="editTransaction(transaction)">
-        
         <v-list-item-title>{{ transactionTitle }}</v-list-item-title>
         <v-list-item-subtitle>{{ categoryName }}</v-list-item-subtitle>
-        
+
         <template v-slot:prepend>
             <v-list-item-action>
                 <div>
@@ -24,11 +23,17 @@
         <template v-slot:append>
             <v-list-item-action>
                 <div>
-                    <div class="text-right"><monetary-amount :value="transaction.amount"></monetary-amount></div>
-                    <div class="text-right"><monetary-amount
-                        v-if="showBalance"
-                        :value="transaction.balance"
-                    ></monetary-amount></div>
+                    <div class="text-right">
+                        <monetary-amount
+                            :value="transaction.amount"
+                        ></monetary-amount>
+                    </div>
+                    <div class="text-right">
+                        <monetary-amount
+                            v-if="showBalance"
+                            :value="transaction.balance"
+                        ></monetary-amount>
+                    </div>
                 </div>
             </v-list-item-action>
         </template>

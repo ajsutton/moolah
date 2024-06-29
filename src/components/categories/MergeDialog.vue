@@ -18,10 +18,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                    class="text-primary"
-                    variant="text"
-                    @click="open = false"
+                <v-btn class="text-primary" variant="text" @click="open = false"
                     >Cancel</v-btn
                 >
                 <v-btn class="text-red" variant="text" @click="doDelete"

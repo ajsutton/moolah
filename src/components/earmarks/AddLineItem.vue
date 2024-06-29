@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="visible" max-width="400px" persistent>
-        <v-template #activator="{ on }"> 
+        <v-template #activator="{ on }">
             <v-btn size="small" fab color="primary" v-on="on"
                 ><v-icon>add</v-icon></v-btn
             >

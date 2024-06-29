@@ -6,11 +6,7 @@
             <v-btn icon :disabled="noEarmarks" @click.stop="addEarmark">
                 <v-icon :icon="IconBookmarkOutline"></v-icon>
             </v-btn>
-            <v-btn
-                icon
-                :disabled="noAccounts"
-                @click.stop="addTransaction"
-            >
+            <v-btn icon :disabled="noAccounts" @click.stop="addTransaction">
                 <v-icon :icon="IconAdd"></v-icon>
             </v-btn>
         </v-toolbar>
@@ -18,7 +14,12 @@
             v-if="loading"
             :indeterminate="true"
         ></v-progress-linear>
-        <v-list lines="two" :selectable="true" :selected="itemGroupSelectedTransaction" color="primary">
+        <v-list
+            lines="two"
+            :selectable="true"
+            :selected="itemGroupSelectedTransaction"
+            color="primary"
+        >
             <template
                 v-for="transaction in transactionsToDisplay"
                 :key="transaction.id"
@@ -38,7 +39,7 @@
 
 <script setup>
 import IconAdd from '~icons/mdi/add';
-import IconBookmarkOutline from '~icons/mdi/bookmarkOutline'
+import IconBookmarkOutline from '~icons/mdi/bookmarkOutline';
 </script>
 
 <script>
