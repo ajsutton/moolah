@@ -1,10 +1,10 @@
 <template>
     <v-dialog v-model="visible" max-width="400px" persistent>
-        <v-template #activator="{ on }">
-            <v-btn size="small" fab color="primary" v-on="on"
-                ><v-icon>add</v-icon></v-btn
-            >
-        </v-template>
+        <template v-slot:activator="{ props: activatorProps }">
+            <v-btn size="small" icon color="primary" v-bind="activatorProps"
+                ><v-icon :icon="IconAdd"></v-icon
+            ></v-btn>
+        </template>
 
         <v-card>
             <v-card-title> Add Budget Line Item </v-card-title>
@@ -26,9 +26,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="secondary" variant="text" @click.stop="close"
-                    >Close</v-btn
-                >
+                <v-btn variant="text" @click.stop="close">Close</v-btn>
                 <v-btn
                     color="primary"
                     variant="text"
@@ -40,6 +38,10 @@
         </v-card>
     </v-dialog>
 </template>
+
+<script setup>
+import IconAdd from '~icons/mdi/add';
+</script>
 
 <script>
 import CategorySelector from '../categories/CategorySelector.vue';
