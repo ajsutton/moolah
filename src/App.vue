@@ -1,16 +1,40 @@
 <template>
-    <v-app light>
+    <v-app>
+        <v-app-bar v-if="!loading" class="bg-primary">
+            <v-app-bar-nav-icon
+                v-if="loggedIn"
+                @click.stop="mainNavVisible = !mainNavVisible"
+            ></v-app-bar-nav-icon>
+            <v-toolbar-title
+                v-if="loggedIn"
+                class="hidden-sm-and-down text-white"
+                >Moolah</v-toolbar-title
+            >
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+                <v-btn
+                    v-if="!loggedIn && !loading"
+                    variant="text"
+                    href="/api/googleauth"
+                    >Sign In</v-btn
+                >
+                <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
+            </v-toolbar-items>
+            <v-app-bar-nav-icon
+                v-if="loggedIn"
+                :disabled="!hasTransaction"
+                @click.prevent="toggleRightNav"
+            ></v-app-bar-nav-icon>
+        </v-app-bar>
         <main-nav :profile="profile" :logged-in="loggedIn"></main-nav>
         <v-navigation-drawer
-            v-model="showRightNavPanel"
+            v-if="showRightNavPanel"
             floating
-            right
-            clipped
+            permanent
+            location="right"
             disable-route-watcher
             disable-resize-watcher
-            app
-            fixed
-            width="300px"
+            width="300"
         >
             <v-card class="ma-3">
                 <v-card-text>
@@ -21,48 +45,11 @@
                 </v-card-text>
             </v-card>
         </v-navigation-drawer>
-        <v-app-bar
-            v-if="!loading"
-            dark
-            class="primary"
-            fixed
-            app
-            clipped-left
-            clipped-right
-        >
-            <v-app-bar-nav-icon
-                v-if="loggedIn"
-                @click.native.stop="mainNavVisible = !mainNavVisible"
-            ></v-app-bar-nav-icon>
-            <v-toolbar-title
-                v-if="loggedIn"
-                class="hidden-sm-and-down white--text"
-                >Moolah</v-toolbar-title
-            >
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-                <v-btn
-                    v-if="!loggedIn && !loading"
-                    text
-                    ripple
-                    href="/api/googleauth"
-                    >Sign In</v-btn
-                >
-                <logout v-if="loggedIn" @logOut="loggedIn = false"></logout>
-            </v-toolbar-items>
-            <v-app-bar-nav-icon
-                v-if="loggedIn"
-                :disabled="!hasTransaction"
-                @click.native.prevent="toggleRightNav"
-            ></v-app-bar-nav-icon>
-        </v-app-bar>
         <v-main>
             <loading-screen v-if="loading"></loading-screen>
             <welcome v-else-if="!loggedIn"></welcome>
             <v-container v-if="loggedIn" fluid grid-list-md>
-                <transition name="slide-x-reverse-transition">
-                    <router-view></router-view>
-                </transition>
+                <router-view></router-view>
             </v-container>
         </v-main>
     </v-app>
@@ -88,10 +75,10 @@ import {
     actions as earmarkActions,
 } from './stores/earmarksStore';
 import MainNav from './components/MainNav.vue';
-import EditTransaction from './components/transactions/EditTransaction';
-import Welcome from './components/welcome/Welcome';
+import EditTransaction from './components/transactions/EditTransaction.vue';
+import Welcome from './components/welcome/Welcome.vue';
 import LoadingScreen from './components/welcome/LoadingScreen.vue';
-import Logout from './components/Logout';
+import Logout from './components/Logout.vue';
 import client from './api/client';
 
 export default {
@@ -173,7 +160,3 @@ export default {
     },
 };
 </script>
-
-<style>
-@import '~vuetify/dist/vuetify.min.css';
-</style>

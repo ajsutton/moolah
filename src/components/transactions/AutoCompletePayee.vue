@@ -4,11 +4,11 @@
         v-model="content"
         :label="label"
         :rules="rules"
-        item-text="payee"
+        item-title="payee"
         return-object
-        :items="transactions"
+        :items="uniqueTransactions"
         @blur="$emit('blur')"
-        @change="change"
+        @update:modelValue="change"
     ></v-combobox>
 </template>
 
@@ -23,6 +23,7 @@ export default {
         name: { required: true },
         label: { required: true },
     },
+    emits: ['update:modelValue', 'autofill'],
     data() {
         return {
             content: this.value,
@@ -30,6 +31,15 @@ export default {
     },
 
     computed: {
+        uniqueTransactions() {
+            const payeeToTx = {};
+            this.transactions.forEach(tx => {
+                if (payeeToTx[tx.payee] === undefined && tx.payee !== "" && tx.payee !== undefined && tx.payee !== null) {
+                    payeeToTx[tx.payee] = tx
+                }
+            });
+            return Object.values(payeeToTx);
+        },
         ...mapState(useTransactionsStore, ['transactions']),
     },
 
@@ -47,7 +57,7 @@ export default {
             if (typeof value === 'object') {
                 this.select(value);
             } else {
-                this.$emit('input', value);
+                this.$emit('update:modelValue', value);
             }
         },
     },

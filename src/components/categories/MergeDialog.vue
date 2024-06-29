@@ -1,7 +1,9 @@
 <template>
     <v-dialog v-model="open" width="50%">
-        <template #activator="{ on }">
-            <v-btn text class="red--text" v-on="on">Delete&hellip;</v-btn>
+        <template #activator="{ props }">
+            <v-btn variant="text" class="text-red" v-bind="props"
+                >Delete&hellip;</v-btn
+            >
         </template>
         <v-card>
             <v-card-title>
@@ -16,10 +18,13 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="primary--text" text @click.native="open = false"
+                <v-btn
+                    class="text-primary"
+                    variant="text"
+                    @click="open = false"
                     >Cancel</v-btn
                 >
-                <v-btn class="red--text" text @click.native="doDelete"
+                <v-btn class="text-red" variant="text" @click="doDelete"
                     >Delete</v-btn
                 >
             </v-card-actions>

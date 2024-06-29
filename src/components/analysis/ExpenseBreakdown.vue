@@ -14,30 +14,29 @@
                 :items="historyItems"
             ></v-select>
         </v-toolbar-items>
-        <v-breadcrumbs
-            v-if="breadcrumbs.length > 1"
-            slot="footer"
-            icons
-            :items="breadcrumbs"
-        >
-            <template #divider>
-                <v-icon>mdi-chevron-right</v-icon>
-            </template>
-            <template #item="props">
-                <v-breadcrumbs-item
-                    :key="props.item.id"
-                    @click.native="rootCategoryId = props.item.id"
-                >
-                    {{ props.item.name }}
-                </v-breadcrumbs-item>
-            </template>
-        </v-breadcrumbs>
+        <template v-slot:footer>
+            <v-breadcrumbs
+                v-if="breadcrumbs.length > 1"
+                icons
+                :items="breadcrumbs"
+            >
+                <template #divider>
+                    <v-icon>mdi-chevron-right</v-icon>
+                </template>
+                <template #item="props">
+                    <v-breadcrumbs-item
+                        :key="props.item.id"
+                        @click="rootCategoryId = props.item.id"
+                    >
+                        {{ props.item.name }}
+                    </v-breadcrumbs-item>
+                </template>
+            </v-breadcrumbs>
+        </template>
 
-        <pie-chart
-            slot="chart"
-            :data="categories"
-            @click="onGraphClick"
-        ></pie-chart>
+        <template v-slot:chart>
+            <pie-chart :data="categories" @click="onGraphClick"></pie-chart>
+        </template>
     </graph-panel>
 </template>
 
@@ -143,7 +142,7 @@ export default {
             this.afterDate
         );
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.$chart) {
             this.$chart = this.$chart.destroy();
         }

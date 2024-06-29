@@ -1,17 +1,19 @@
 <template>
-    <v-list-item ripple :to="accountLink">
-        <v-list-item-content>
-            <v-list-item-title>
-                <v-icon>{{ walletIcon }}</v-icon>
-                {{ account.name }}
-                <monetary-amount
-                    class="float-right"
-                    :value="balance"
-                ></monetary-amount>
-            </v-list-item-title>
-        </v-list-item-content>
+    <v-list-item :to="accountLink">
+        <v-list-item-title>
+            <v-icon :icon="walletIcon"></v-icon>
+            {{ account.name }}
+            <monetary-amount
+                class="float-right"
+                :value="balance"
+            ></monetary-amount>
+        </v-list-item-title>
     </v-list-item>
 </template>
+
+<script setup>
+import IconEyeOffOutline from '~icons/mdi/eyeOffOutline'
+</script>
 
 <script>
 import MonetaryAmount from '../util/MonetaryAmount.vue';
@@ -41,7 +43,7 @@ export default {
         },
         walletIcon() {
             return this.account.hidden
-                ? 'mdi-eye-off-outline'
+                ? IconEyeOffOutline
                 : this.icon || iconForType(this.account.type);
         },
         balance() {

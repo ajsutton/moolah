@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
-        <template #activator="{ on }">
-            <v-btn icon v-on="on">
+        <template #activator="{ props }">
+            <v-btn icon v-bind="props">
                 <v-icon title="Set Investment Value">{{ icon }}</v-icon>
             </v-btn>
         </template>
@@ -42,16 +42,16 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                        class="blue--text darken-1"
-                        text
-                        @click.native="dialog = false"
+                        class="text-primary"
+                        variant="text"
+                        @click="dialog = false"
                         >Close</v-btn
                     >
                     <v-btn
                         type="submit"
-                        class="blue--text darken-1"
-                        text
-                        @click.native="submit"
+                        class="text-primary"
+                        variant="text"
+                        @click="submit"
                         >Set</v-btn
                     >
                 </v-card-actions>
@@ -63,7 +63,6 @@
 <script>
 import { mapActions } from 'pinia';
 import { rules } from '../validation';
-import { VForm, VCheckbox } from 'vuetify';
 import DatePickerField from '../util/DatePickerField.vue';
 import { formatDate } from '../../api/apiFormats';
 import parseMoney from '../util/parseMoney';
@@ -150,9 +149,7 @@ export default {
         ...mapActions(useValuesStore, [actions.setValue, actions.deleteValue]),
     },
     components: {
-        VForm,
         DatePickerField,
-        VCheckbox,
     },
 };
 </script>

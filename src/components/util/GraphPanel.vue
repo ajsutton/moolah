@@ -1,7 +1,7 @@
 <template>
     <v-card v-resize="handleResize">
-        <v-app-bar v-if="title != ''" flat class="white">
-            <v-toolbar-title class="text-body-2 grey--text">{{
+        <v-app-bar v-if="title != ''" flat class="bg-white">
+            <v-toolbar-title class="text-body-2 text-grey">{{
                 title
             }}</v-toolbar-title>
             <slot></slot>
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~c3/c3.css';
+@import 'c3/c3.css';
 
 .chart {
     svg {

@@ -33,14 +33,14 @@ function positiveInteger() {
 function maxLength(length) {
     return value =>
         validate(
-            value === undefined || value.length < length,
+            value === undefined || value === null || value.length < length,
             `Enter less than ${length} characters`
         );
 }
 
 function notEmpty() {
     return value =>
-        validate(value === undefined || value.length > 0, 'Required');
+        validate(value === undefined || value === null || value.length > 0, 'Required');
 }
 
 export const rules = {

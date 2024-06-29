@@ -49,8 +49,8 @@ import startOfMonth from 'date-fns/startOfMonth';
 import startOfQuarter from 'date-fns/startOfQuarter';
 import startOfYear from 'date-fns/startOfYear';
 
-function range(text, from, to) {
-    return { text, value: { from: formatDate(from), to: formatDate(to) } };
+function range(title, from, to) {
+    return { title, value: { from: formatDate(from), to: formatDate(to) } };
 }
 export default {
     components: {
@@ -71,7 +71,7 @@ export default {
                 range('Month to date', startOfMonth(today), today),
                 range('Quarter to date', startOfQuarter(today), today),
                 range('Year to date', startOfYear(today), today),
-                { text: 'Custom', value: null },
+                { title: 'Custom', value: null },
             ],
         };
     },

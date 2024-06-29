@@ -1,5 +1,5 @@
 <template>
-    <v-alert v-model="active" type="info" dismissible>{{ message }}</v-alert>
+    <v-alert v-model="active" type="info" closable>{{ message }}</v-alert>
 </template>
 <script>
 import { mapState } from 'pinia';

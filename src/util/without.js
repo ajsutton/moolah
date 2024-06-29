@@ -1,7 +1,7 @@
 export default function (object, ...forbiddenProps) {
     const result = {};
     Object.entries(object)
-        .filter(([key, value]) => !forbiddenProps.includes(key))
+        .filter(([key]) => !forbiddenProps.includes(key))
         .forEach(([key, value]) => (result[key] = value));
     return result;
 }

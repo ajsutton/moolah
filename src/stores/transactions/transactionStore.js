@@ -1,7 +1,6 @@
 import client from '../../api/client';
 import updateBalance from './updateBalance';
 import search from 'binary-search';
-import Vue from 'vue';
 import without from '../../util/without';
 import { formatDate } from '../../api/apiFormats';
 import nextDueDate from './nextDueDate';
@@ -180,7 +179,7 @@ const options = {
                 this.priorBalance,
                 !isSingleAccount(this)
             );
-            Vue.set(this.transactionsById, transaction.id, transaction);
+            this.transactionsById[transaction.id] = transaction;
         },
         [mutations.removeTransaction](transaction) {
             const transactionIndex = findTransactionIndex(this, transaction);
@@ -191,14 +190,14 @@ const options = {
                 this.priorBalance,
                 !isSingleAccount(this)
             );
-            Vue.delete(this.transactionsById, transaction.id);
+            delete this.transactionsById[transaction.id];
         },
         [mutations.updateTransaction](payload) {
             const transaction = findTransaction(this, payload.id);
             if (transaction !== undefined) {
                 const index = findTransactionIndex(this, transaction);
                 let updateBalanceFrom = -1;
-                Vue.delete(this.transactionsById, transaction.id);
+                delete this.transactionsById[transaction.id];
                 if (
                     payload.patch.date !== undefined ||
                     payload.patch.id !== undefined
@@ -206,7 +205,7 @@ const options = {
                     this.transactions.splice(index, 1);
                 }
                 Object.assign(transaction, payload.patch);
-                Vue.set(this.transactionsById, transaction.id, transaction);
+                this.transactionsById[transaction.id] = transaction;
                 if (
                     payload.patch.date !== undefined ||
                     payload.patch.id !== undefined

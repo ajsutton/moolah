@@ -175,7 +175,7 @@ export default {
             ...args,
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.$chart) {
             this.$chart = this.$chart.destroy();
         }

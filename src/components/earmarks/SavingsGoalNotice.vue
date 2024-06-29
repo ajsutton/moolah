@@ -1,11 +1,17 @@
 <template>
     <v-container class="savingsGoalNotice">
-        <v-row   align="start" justify="center">
-            <v-col v-if="hasStartDate || hasEndDate" class="d-flex" cols="12" lg="4" xl="2">
+        <v-row align="start" justify="center">
+            <v-col
+                v-if="hasStartDate || hasEndDate"
+                class="d-flex"
+                cols="12"
+                lg="4"
+                xl="2"
+            >
                 <v-row class="text-sm-center" column>
                     <v-col>
                         <v-progress-circular
-                            :value="timePercent"
+                            :model-value="timePercent"
                             :size="progressSize"
                             :width="progressWidth"
                             :rotate="180"
@@ -24,14 +30,20 @@
                                 <td class="text-sm-left">Start</td>
                                 <td class="text-sm-right">
                                     {{
-                                        selectedAccount.savingsStartDate | date
+                                        formatDate(
+                                            selectedAccount.savingsStartDate
+                                        )
                                     }}
                                 </td>
                             </tr>
                             <tr v-if="hasEndDate">
                                 <td class="text-sm-left">End</td>
                                 <td class="text-sm-right">
-                                    {{ selectedAccount.savingsEndDate | date }}
+                                    {{
+                                        formatDate(
+                                            selectedAccount.savingsEndDate
+                                        )
+                                    }}
                                 </td>
                             </tr>
                             <tr v-if="hasEndDate">
@@ -49,7 +61,7 @@
                 <v-row class="text-sm-center" column>
                     <v-col>
                         <v-progress-circular
-                            :value="savingsPercent"
+                            :model-value="savingsPercent"
                             :size="progressSize"
                             :width="progressWidth"
                             :rotate="180"
@@ -97,7 +109,7 @@
                 <v-row class="text-sm-center" column>
                     <v-col>
                         <v-progress-circular
-                            :value="spentPercentOfEither"
+                            :model-value="spentPercentOfEither"
                             :size="progressSize"
                             :width="progressWidth"
                             :rotate="180"
@@ -157,17 +169,15 @@
 </template>
 
 <script>
-import { VProgressCircular } from 'vuetify';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import SavingsGoalMixin from './SavingsGoalMixin';
 import { formatDate } from '../util/formatDate';
 
 export default {
-    filters: {
-        date: formatDate,
+    methods: {
+        formatDate,
     },
     components: {
-        VProgressCircular,
         MonetaryAmount,
     },
     mixins: [SavingsGoalMixin],

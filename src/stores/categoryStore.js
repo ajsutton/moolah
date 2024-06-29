@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import client from '../api/client';
 import search from 'binary-search';
-import Vue from 'vue';
 
 export const actions = {
     loadCategories: 'LOAD_CATEGORIES',
@@ -96,7 +95,7 @@ export const useCategoryStore = defineStore('categories', {
         [mutations.addCategory](category) {
             ensureAllFieldsPresent(category);
             insertCategory(this.categories, this.categoriesById, category);
-            Vue.set(this.categoriesById, category.id, category);
+            this.categoriesById[category.id] = category;
         },
 
         [mutations.setCategories](newCategories) {
@@ -119,8 +118,8 @@ export const useCategoryStore = defineStore('categories', {
                 changes.patch.id !== undefined &&
                 changes.patch.id !== category.id
             ) {
-                Vue.delete(this.categoriesById, category.id);
-                Vue.set(this.categoriesById, changes.patch.id, category);
+                delete this.categoriesById[category.id];
+                this.categoriesById[changes.patch.id] = category;
             }
             const currentList =
                 category.parentId === null

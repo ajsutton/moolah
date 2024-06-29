@@ -1,44 +1,45 @@
 <template>
     <v-card class="upcoming-transactions">
-        <v-app-bar flat class="white">
-            <v-toolbar-title class="text-body-2 grey--text"
-                >Upcoming Transactions</v-toolbar-title
-            >
+        <v-toolbar flat>
+            <v-toolbar-title>Upcoming Transactions</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon :disabled="noEarmarks" @click.native.stop="addEarmark">
-                <v-icon>mdi-bookmark-outline</v-icon>
+            <v-btn icon :disabled="noEarmarks" @click.stop="addEarmark">
+                <v-icon :icon="IconBookmarkOutline"></v-icon>
             </v-btn>
             <v-btn
                 icon
                 :disabled="noAccounts"
-                @click.native.stop="addTransaction"
+                @click.stop="addTransaction"
             >
-                <v-icon>add</v-icon>
+                <v-icon :icon="IconAdd"></v-icon>
             </v-btn>
-        </v-app-bar>
+        </v-toolbar>
         <v-progress-linear
             v-if="loading"
             :indeterminate="true"
         ></v-progress-linear>
-        <v-list two-line>
-            <v-list-item-group
-                v-model="itemGroupSelectedTransaction"
-                color="primary"
+        <v-list lines="two" :selectable="true" :selected="itemGroupSelectedTransaction" color="primary">
+            <template
+                v-for="transaction in transactionsToDisplay"
+                :key="transaction.id"
             >
-                <template v-for="transaction in transactionsToDisplay">
-                    <transaction
-                        :key="transaction.id"
-                        :transaction="transaction"
-                        :show-balance="false"
-                        highlight-overdue
-                    >
-                    </transaction>
-                    <v-divider></v-divider>
-                </template>
-            </v-list-item-group>
+                <transaction
+                    :transaction="transaction"
+                    :show-balance="false"
+                    highlight-overdue
+                    @selected="editTransaction"
+                >
+                </transaction>
+                <v-divider></v-divider>
+            </template>
         </v-list>
     </v-card>
 </template>
+
+<script setup>
+import IconAdd from '~icons/mdi/add';
+import IconBookmarkOutline from '~icons/mdi/bookmarkOutline'
+</script>
 
 <script>
 import { mapState, mapActions } from 'pinia';
@@ -48,8 +49,6 @@ import {
 } from '../../stores/transactions/transactionStore';
 import { useAccountsStore } from '../../stores/accountsStore';
 import Transaction from './Transaction.vue';
-import MonetaryAmount from '../util/MonetaryAmount.vue';
-import CreateAccount from '../accounts/CreateAccount.vue';
 import {
     useRootStore,
     actions as stateActions,
@@ -96,7 +95,7 @@ export default {
         },
         itemGroupSelectedTransaction: {
             get() {
-                return this.highlightedTransaction;
+                return [this.highlightedTransaction];
             },
             set(transaction) {
                 this.editTransaction(transaction);
@@ -144,9 +143,7 @@ export default {
     },
 
     components: {
-        MonetaryAmount,
         Transaction,
-        CreateAccount,
     },
 };
 </script>

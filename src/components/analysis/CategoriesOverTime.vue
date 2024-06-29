@@ -7,7 +7,7 @@
     >
         <v-spacer></v-spacer>
 
-        <v-radio-group v-model="actualValues" row class="mt-4">
+        <v-radio-group v-model="actualValues" inline class="mt-4">
             <v-radio label="Percentage" :value="false"></v-radio>
             <v-radio label="Actual" :value="true"></v-radio>
         </v-radio-group>
@@ -169,7 +169,7 @@ export default {
             ...args,
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.$chart = this.$chart.destroy();
     },
     components: {

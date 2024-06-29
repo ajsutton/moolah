@@ -1,5 +1,5 @@
 <template>
-    <v-simple-table>
+    <v-table>
         <tbody v-if="loading">
             <tr>
                 <td
@@ -12,7 +12,7 @@
             </tr>
         </tbody>
         <tbody>
-            <template v-for="item in reportData">
+            <template v-for="item in reportData" :key="item.categoryId">
                 <tr class="v-row-group__header">
                     <td class="font-weight-bold">{{ item.name }}</td>
                     <td class="font-weight-bold text-right">
@@ -21,7 +21,7 @@
                         ></monetary-amount>
                     </td>
                 </tr>
-                <tr v-for="child in item.children">
+                <tr v-for="child in item.children" :key="child.categoryId">
                     <td>{{ child.name }}</td>
                     <td class="text-right">
                         <monetary-amount
@@ -31,7 +31,7 @@
                 </tr>
             </template>
         </tbody>
-    </v-simple-table>
+    </v-table>
 </template>
 
 <script>

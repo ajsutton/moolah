@@ -33,7 +33,7 @@ import {
     useScheduledTransactionsStore,
     actions as transactionActions,
 } from '../../stores/transactions/transactionStore';
-import { rules, isValid } from '../validation';
+import { rules } from '../validation';
 import { makeModelProperty, onBlur } from './modelProperty';
 
 export default {

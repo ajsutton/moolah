@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '../components/NotFound.vue';
 import Analysis from '../components/analysis/Analysis.vue';
 import AllTransactions from '../components/transactions/AllTransactions.vue';
@@ -9,8 +8,6 @@ import UpcomingTransactions from '../components/transactions/UpcomingTransaction
 import Categories from '../components/categories/Categories.vue';
 import Reports from '../components/reports/Reports.vue';
 import { useRootStore, mutations } from '../stores/root';
-
-Vue.use(Router);
 
 function createTransactionProps(route) {
     return {
@@ -28,8 +25,8 @@ function createTransactionProps(route) {
     };
 }
 
-const router = new Router({
-    mode: 'history',
+const router = createRouter({
+    history: createWebHistory(),
     routes: [
         { path: '/', name: 'analysis', component: Analysis },
         {
@@ -52,7 +49,7 @@ const router = new Router({
         { path: '/upcoming/', component: UpcomingTransactions },
         { path: '/categories/', component: Categories },
         { path: '/reports/', component: Reports },
-        { path: '*', component: NotFound },
+        { path: '/:pathMatch(.*)*', component: NotFound },
     ],
     scrollBehavior(to, from, savedPosition) {
         return savedPosition || { x: 0, y: 0 };

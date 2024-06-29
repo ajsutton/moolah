@@ -1,8 +1,13 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
-        <template #activator="{ on }">
-            <v-btn text icon :color="isFiltered ? 'primary' : null" v-on="on">
-                <v-icon>search</v-icon>
+        <template #activator="{ props }">
+            <v-btn
+                variant="text"
+                icon
+                :color="isFiltered ? 'primary' : null"
+                v-bind="props"
+            >
+                <v-icon :icon="IconSearch"></v-icon>
             </v-btn>
         </template>
 
@@ -41,14 +46,18 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click.native="close">Close</v-btn>
-                <v-btn text color="primary" @click.native="search"
+                <v-btn variant="text" @click="close">Close</v-btn>
+                <v-btn variant="text" color="primary" @click="search"
                     >Search</v-btn
                 >
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
+
+<script setup>
+import IconSearch from '~icons/mdi/search'
+</script>
 
 <script>
 import DatePickerField from '../util/DatePickerField.vue';

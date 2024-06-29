@@ -1,19 +1,21 @@
 <template>
-    <v-list dense expand nav>
-        <v-subheader>
-            {{ title }}
-            <div class="flex-grow-1"></div>
-            <v-btn
-                v-if="hasHiddenWallets"
-                icon
-                class="mx-1"
-                @click.prevent="showHidden = !showHidden"
-            >
-                <v-icon v-if="showHidden">visibility</v-icon>
-                <v-icon v-else>visibility_off</v-icon>
-            </v-btn>
-            <slot name="titleAction"></slot>
-        </v-subheader>
+    <v-list density="compact" nav>
+        <v-list-item>
+            <v-list-subheader>{{ title }}</v-list-subheader>
+            <template v-slot:append>
+                <v-btn
+                    v-if="hasHiddenWallets"
+                    icon
+                    variant="flat"
+                    class="mx-1"
+                    @click.prevent="showHidden = !showHidden"
+                >
+                    <v-icon v-if="showHidden" :icon="IconVisibility"></v-icon>
+                    <v-icon v-else :icon="IconVisibilityOff"></v-icon>
+                </v-btn>
+                <slot name="titleAction"></slot>
+            </template>
+        </v-list-item>
 
         <wallet-list-item
             v-for="wallet in visibleWallets"
@@ -24,18 +26,21 @@
         <v-divider></v-divider>
 
         <v-list-item v-if="accounts.length > 0" no-action>
-            <v-list-item-content>
-                <v-list-item-title>
-                    {{ totalLabel }}
-                    <monetary-amount
-                        class="float-right"
-                        :value="totalValue"
-                    ></monetary-amount>
-                </v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-title>
+                {{ totalLabel }}
+                <monetary-amount
+                    class="float-right"
+                    :value="totalValue"
+                ></monetary-amount>
+            </v-list-item-title>
         </v-list-item>
     </v-list>
 </template>
+
+<script setup>
+import IconVisibility from '~icons/mdi/visibility'
+import IconVisibilityOff from '~icons/mdi/visibilityOff'
+</script>
 
 <script>
 import MonetaryAmount from '../util/MonetaryAmount.vue';

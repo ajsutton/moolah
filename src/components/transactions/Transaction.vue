@@ -1,31 +1,37 @@
 <template>
-    <v-list-item ripple :value="transaction">
-        <v-list-item-action>
-            <div>
-                <div>{{ dateDay }} {{ dateMonth }}</div>
-                <div class="grey--text text-sm-center text-body-1">
-                    {{ dateYear }}
+    <v-list-item :value="transaction" @click="editTransaction(transaction)">
+        
+        <v-list-item-title>{{ transactionTitle }}</v-list-item-title>
+        <v-list-item-subtitle>{{ categoryName }}</v-list-item-subtitle>
+        
+        <template v-slot:prepend>
+            <v-list-item-action>
+                <div>
+                    <div>{{ dateDay }} {{ dateMonth }}</div>
+                    <div class="text-grey text-sm-center text-body-1">
+                        {{ dateYear }}
+                    </div>
                 </div>
-            </div>
-        </v-list-item-action>
-        <v-chip
-            v-if="highlightOverdue"
-            label
-            :class="{ 'primary white--text': true, invisible: !due }"
-            :aria-hidden="due"
-            >Due</v-chip
-        >
-        <v-list-item-content>
-            <v-list-item-title>{{ transactionTitle }}</v-list-item-title>
-            <v-list-item-subtitle>{{ categoryName }}</v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-            <monetary-amount :value="transaction.amount"></monetary-amount>
-            <monetary-amount
-                v-if="showBalance"
-                :value="transaction.balance"
-            ></monetary-amount>
-        </v-list-item-action>
+            </v-list-item-action>
+            <v-chip
+                v-if="highlightOverdue"
+                label
+                :class="{ 'bg-primary text-white ms-4': true, invisible: !due }"
+                :aria-hidden="due"
+                >Due</v-chip
+            >
+        </template>
+        <template v-slot:append>
+            <v-list-item-action>
+                <div>
+                    <div class="text-right"><monetary-amount :value="transaction.amount"></monetary-amount></div>
+                    <div class="text-right"><monetary-amount
+                        v-if="showBalance"
+                        :value="transaction.balance"
+                    ></monetary-amount></div>
+                </div>
+            </v-list-item-action>
+        </template>
     </v-list-item>
 </template>
 
@@ -56,9 +62,9 @@ export default {
             default: false,
         },
     },
+    emits: ['selected'],
     computed: {
         transactionTitle() {
-            ``;
             return transactionTitle(
                 this.transaction,
                 this.accountName,

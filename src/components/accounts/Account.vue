@@ -5,15 +5,19 @@
             :account="selectedAccount"
         ></investment-value>
         <transactions :search-options="searchOptions" :title="title">
-            <template v-if="selectedAccount" slot="buttons">
+            <template v-if="selectedAccount" v-slot:buttons>
                 <create-account :account="selectedAccount"></create-account>
-                <v-btn icon @click.native.stop="addTransaction">
-                    <v-icon>add</v-icon>
+                <v-btn icon @click.stop="addTransaction">
+                    <v-icon :icon="IconAdd"></v-icon>
                 </v-btn>
             </template>
         </transactions>
     </div>
 </template>
+
+<script setup>
+import IconAdd from '~icons/mdi/add';
+</script>
 
 <script>
 import { mapState, mapActions } from 'pinia';

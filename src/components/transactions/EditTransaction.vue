@@ -37,7 +37,7 @@
                 v-if="type === 'transfer'"
                 :label="toAccountLabel"
                 :wallets="accounts"
-                :value.sync="toAccountId"
+                v-model:value="toAccountId"
                 :exclude-account-id="accountId"
             ></wallet-selector>
         </template>
@@ -45,7 +45,7 @@
         <wallet-selector
             v-if="showEarmarkSelector"
             label="Earmark"
-            :value.sync="earmark"
+            v-model:value="earmark"
             :wallets="earmarks"
             :clearable="!isEarmarkAccount"
         ></wallet-selector>
@@ -63,17 +63,17 @@
         <wallet-selector
             v-if="scheduled && !isEarmarkAccount"
             label="Account"
-            :value.sync="accountId"
+            v-model:value="accountId"
             :wallets="accounts"
         ></wallet-selector>
 
         <div class="text-sm-right">
             <v-btn
                 v-if="!isOpeningBalance"
-                @click.native.prevent="deleteTransaction(transaction)"
+                @click.prevent="deleteTransaction(transaction)"
                 >Delete</v-btn
             >
-            <v-btn v-if="scheduled" @click.native.prevent="pay(transaction)"
+            <v-btn v-if="scheduled" @click.prevent="pay(transaction)"
                 >Pay</v-btn
             >
         </div>
@@ -172,11 +172,11 @@ export default {
         },
         validTransactionTypes() {
             const types = [
-                { text: 'Expense', value: 'expense' },
-                { text: 'Income', value: 'income' },
+                { title: 'Expense', value: 'expense' },
+                { title: 'Income', value: 'income' },
             ];
             if (this.accounts.length > 1) {
-                types.push({ text: 'Transfer', value: 'transfer' });
+                types.push({ title: 'Transfer', value: 'transfer' });
             }
             return types;
         },

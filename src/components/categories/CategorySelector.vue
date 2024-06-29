@@ -2,7 +2,7 @@
     <v-autocomplete
         v-model="valueProxy"
         :items="flattenedCategories"
-        item-text="name"
+        item-title="name"
         item-value="id"
         :label="label"
         no-data-text="No matching categories"

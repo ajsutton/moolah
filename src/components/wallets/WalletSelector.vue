@@ -4,19 +4,26 @@
         :label="label"
         :items="filteredWallets"
         :clearable="clearable"
-        item-text="name"
+        item-title="name"
         item-value="id"
+        :item-props="true"
     >
-        <template slot="item" slot-scope="wallet">
-            <v-list-item-action>
-                <v-icon>{{ icon(wallet.item) }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-                <v-list-item-title>{{ wallet.item.name }}</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-action>
-                <monetary-amount :value="wallet.item.balance"></monetary-amount>
-            </v-list-item-action>
+        <template v-slot:item="{props, item}" >
+            <v-list-item v-bind="props">
+                <template v-slot:prepend>
+                    <v-list-item-action>
+                        <v-icon :icon="icon(props)"></v-icon>
+                    </v-list-item-action>
+                </template>
+
+                <v-list-item-title>{{ item.name }}</v-list-item-title>
+
+                <template v-slot:append>
+                    <v-list-item-action>
+                        <monetary-amount :value="props.balance"></monetary-amount>
+                    </v-list-item-action>
+                </template>
+            </v-list-item>
         </template>
     </v-select>
 </template>
@@ -65,8 +72,8 @@ export default {
         },
     },
     methods: {
-        icon(wallet) {
-            return iconForType(wallet.type);
+        icon(props) {
+            return iconForType(props.type);
         },
     },
 };

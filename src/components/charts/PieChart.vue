@@ -71,7 +71,7 @@ export default {
             ...this.graphOptions,
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.$chart = this.$chart.destroy();
     },
 };

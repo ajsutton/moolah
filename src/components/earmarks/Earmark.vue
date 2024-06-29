@@ -6,15 +6,16 @@
                 <v-spacer></v-spacer>
                 <create-earmark :earmark="selectedEarmark"></create-earmark>
 
-                <v-tabs
-                    slot="extension"
-                    v-model="selectedTab"
-                    slider-color="primary"
-                    centered
-                >
-                    <v-tab href="#overview">Overview</v-tab>
-                    <v-tab href="#breakdown">Spending Breakdown</v-tab>
-                </v-tabs>
+                <template v-slot:extension>
+                    <v-tabs
+                        v-model="selectedTab"
+                        slider-color="primary"
+                        align-tabs="center"
+                    >
+                        <v-tab href="#overview">Overview</v-tab>
+                        <v-tab href="#breakdown">Spending Breakdown</v-tab>
+                    </v-tabs>
+                </template>
             </v-app-bar>
             <v-tabs-items v-model="selectedTab">
                 <v-tab-item value="overview">
@@ -32,8 +33,8 @@
         </v-card>
 
         <transactions :search-options="searchOptions" title="Transactions">
-            <template slot="buttons">
-                <v-btn icon @click.native.stop="addTransaction">
+            <template v-slot:buttons>
+                <v-btn icon @click.stop="addTransaction">
                     <v-icon>add</v-icon>
                 </v-btn>
             </template>

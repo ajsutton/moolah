@@ -68,23 +68,29 @@
                                         <monetary-amount
                                             :value="category.budget"
                                         ></monetary-amount>
-                                        <v-icon small class="edit-icon"
+                                        <v-icon size="small" class="edit-icon"
                                             >edit</v-icon
                                         >
                                     </span>
-                                    <v-text-field
-                                        slot="input"
-                                        class="input"
-                                        name="amount"
-                                        label="Budget"
-                                        :value="getBudgetEditValue(category.id)"
-                                        prefix="$"
-                                        :rules="rules.amount"
-                                        @input="
-                                            val =>
-                                                updateBudget(category.id, val)
-                                        "
-                                    ></v-text-field>
+                                    <template v-slot:input>
+                                        <v-text-field
+                                            class="input"
+                                            name="amount"
+                                            label="Budget"
+                                            :model-value="
+                                                getBudgetEditValue(category.id)
+                                            "
+                                            prefix="$"
+                                            :rules="rules.amount"
+                                            @update:model-value="
+                                                val =>
+                                                    updateBudget(
+                                                        category.id,
+                                                        val
+                                                    )
+                                            "
+                                        ></v-text-field>
+                                    </template>
                                 </v-edit-dialog>
                             </td>
                             <td class="text-sm-right">
@@ -162,7 +168,6 @@ import PieChart from '../charts/PieChart.vue';
 import debounce from 'debounce';
 import { rules } from '../validation.js';
 import AddLineItem from './AddLineItem.vue';
-import Vue from 'vue';
 import parseMoney from '../util/parseMoney';
 import formatMoney from '../util/formatMoney';
 import { useCategoryStore } from '../../stores/categoryStore';
@@ -315,7 +320,7 @@ export default {
             }
         },
         addCategory(categoryId, budget) {
-            Vue.set(this.categoryData, categoryId, { balance: 0, budget });
+            this.categoryData[categoryId] = { balance: 0, budget };
         },
         async save(categoryId, newBudget) {
             const category = this.categoryData[categoryId];

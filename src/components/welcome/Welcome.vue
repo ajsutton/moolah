@@ -1,15 +1,13 @@
 <template>
     <div>
         <v-parallax
-            :src="require('../../assets/jumbo-background.jpg')"
+            src="@/assets/jumbo-background.jpg"
             height="250"
         >
             <v-container class="fill-height">
                 <v-row align="center">
                     <v-col>
-                        <h1 class="white--text text-h2 text-center">
-                            Moolah
-                        </h1>
+                        <h1 class="text-white text-h2 text-center">Moolah</h1>
                     </v-col>
                 </v-row>
             </v-container>
@@ -46,7 +44,7 @@
 import FeaturePanel from './FeaturePanel.vue';
 
 export default {
-    name: 'Hello',
+    name: 'welcome-hello',
     components: {
         FeaturePanel,
     },

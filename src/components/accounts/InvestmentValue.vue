@@ -44,7 +44,7 @@
                         :headers="headers"
                         :items="values"
                         :items-per-page="5"
-                        :options.sync="options"
+                        v-model:options="options"
                         :loading="loading"
                         class="actions-table"
                     >
@@ -57,7 +57,7 @@
                             <edit-investment-value
                                 :input="item"
                             ></edit-investment-value>
-                            <v-icon small @click="deleteItem(item)">
+                            <v-icon size="small" @click="deleteItem(item)">
                                 mdi-delete
                             </v-icon>
                         </template>
@@ -68,7 +68,7 @@
     </v-card>
 </template>
 <script>
-import { mapState, mapActions, mapGetters } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import {
     useValuesStore,
     actions as valueActions,
@@ -76,7 +76,6 @@ import {
 import EditInvestmentValue from './EditInvestmentValue.vue';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import InvestmentValueGraph from './InvestmentValueGraph.vue';
-import MonetaryAmountAndProfit from '../util/MonetaryAmountAndProfit.vue';
 import ValuePanel from './ValuePanel.vue';
 import client from '../../api/client';
 import debounce from 'debounce';
@@ -239,7 +238,6 @@ export default {
     components: {
         EditInvestmentValue,
         MonetaryAmount,
-        MonetaryAmountAndProfit,
         InvestmentValueGraph,
         ValuePanel,
     },

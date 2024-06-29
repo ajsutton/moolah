@@ -1,6 +1,5 @@
 import client from '../api/client';
 import search from 'binary-search';
-import Vue from 'vue';
 import { useAccountsStore, actions as accountActions } from './accountsStore';
 import { defineStore } from 'pinia';
 
@@ -86,7 +85,7 @@ export const useValuesStore = defineStore('values', {
             if (insertIndex < 0) {
                 this.values.splice(-(insertIndex + 1), 0, value);
             } else {
-                Vue.set(this.values, insertIndex, value);
+                this.values[insertIndex] = value;
             }
         },
         [mutations.removeValue](value) {

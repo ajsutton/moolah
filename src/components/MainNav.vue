@@ -1,12 +1,5 @@
 <template>
-    <v-navigation-drawer
-        v-model="mainNavVisible"
-        clipped
-        dark
-        app
-        fixed
-        width="300px"
-    >
+    <v-navigation-drawer v-model="mainNavVisible" theme="dark" permanent width="300">
         <template v-if="loggedIn">
             <wallet-list
                 title="Current Accounts"
@@ -15,7 +8,9 @@
                 total-label="Current funds"
                 :total-value="currentAccountsBalance"
             >
-                <create-account slot="titleAction" dark></create-account>
+                <template v-slot:titleAction>
+                    <create-account></create-account>
+                </template>
             </wallet-list>
             <wallet-list
                 title="Earmarked"
@@ -24,7 +19,9 @@
                 total-label="Available funds"
                 :total-value="availableFunds"
             >
-                <create-earmark slot="titleAction" dark></create-earmark>
+                <template v-slot:titleAction>
+                    <create-earmark theme="dark"></create-earmark>
+                </template>
             </wallet-list>
             <wallet-list
                 v-if="noncurrentAccounts.length > 0"
@@ -34,49 +31,41 @@
                 total-label="Net worth"
                 :total-value="networth"
             >
-                <create-account slot="titleAction" dark></create-account>
+                <template v-slot:titleAction>
+                    <create-account dark></create-account>
+                </template>
             </wallet-list>
 
-            <v-list dense expand nav>
-                <v-list-item ripple to="/" exact>
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <v-icon>trending_up</v-icon>
-                            Analysis
-                        </v-list-item-title>
-                    </v-list-item-content>
+            <v-list density="compact" nav>
+                <v-list-item to="/" exact>
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-trending-up"></v-icon>
+                    </template>
+                    <v-list-item-title>Analysis</v-list-item-title>
                 </v-list-item>
-                <v-list-item ripple to="/reports/">
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <v-icon>mdi-file-chart</v-icon>
-                            Reports
-                        </v-list-item-title>
-                    </v-list-item-content>
+                <v-list-item to="/reports/">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-file-chart"></v-icon>
+                    </template>
+                    <v-list-item-title>Reports</v-list-item-title>
                 </v-list-item>
-                <v-list-item ripple to="/categories/">
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <v-icon>folder_open</v-icon>
-                            Categories
-                        </v-list-item-title>
-                    </v-list-item-content>
+                <v-list-item to="/categories/">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-folder-open"></v-icon>
+                    </template>
+                    <v-list-item-title>Categories</v-list-item-title>
                 </v-list-item>
-                <v-list-item ripple to="/upcoming/">
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <v-icon>schedule</v-icon>
-                            Upcoming transactions
-                        </v-list-item-title>
-                    </v-list-item-content>
+                <v-list-item to="/upcoming/">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-clock-outline"></v-icon>
+                    </template>
+                    <v-list-item-title>Upcoming transactions</v-list-item-title>
                 </v-list-item>
-                <v-list-item ripple to="/transactions/">
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <v-icon>list</v-icon>
-                            All transactions
-                        </v-list-item-title>
-                    </v-list-item-content>
+                <v-list-item to="/transactions/">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-list-box"></v-icon>
+                    </template>
+                    <v-list-item-title>All transactions</v-list-item-title>
                 </v-list-item>
             </v-list>
             <div class="pb-16 pa-16"></div>
@@ -92,7 +81,7 @@ import CreateEarmark from './earmarks/CreateEarmark.vue';
 import { useAccountsStore } from '../stores/accountsStore';
 import { useEarmarksStore } from '../stores/earmarksStore';
 import { useRootStore } from '../stores/root';
-
+  
 export default {
     props: {
         profile: Object,

@@ -1,8 +1,8 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
-        <template #activator="{ on }">
-            <v-btn icon v-on="on">
-                <v-icon :title="title">{{ icon }}</v-icon>
+        <template #activator="{ props }">
+            <v-btn icon v-bind="props">
+                <v-icon :title="title" :icon="icon"></v-icon>
             </v-btn>
         </template>
         <v-card>
@@ -64,15 +64,15 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                        class="blue--text darken-1"
-                        text
-                        @click.native="dialog = false"
+                        class="text-primary"
+                        variant="text"
+                        @click="dialog = false"
                         >Close</v-btn
                     >
                     <v-btn
-                        class="blue--text darken-1"
-                        text
-                        @click.native="submit"
+                        class="text-primary"
+                        variant="text"
+                        @click="submit"
                         >{{ action }}</v-btn
                     >
                 </v-card-actions>
@@ -81,16 +81,20 @@
     </v-dialog>
 </template>
 
+<script setup>
+import IconAdd from '~icons/mdi/add'
+import IconEdit from '~icons/mdi/edit'
+</script>
+
 <script>
 import { mapActions } from 'pinia';
 import { useEarmarksStore, actions } from '../../stores/earmarksStore';
 import { rules } from '../validation';
-import { VForm, VCheckbox } from 'vuetify';
 import DatePickerField from '../util/DatePickerField.vue';
 import isBefore from 'date-fns/isBefore';
 import formatMoney from '../util/formatMoney';
 import parseMoney from '../util/parseMoney';
-import parseDate from '../../api/apiFormats';
+import { parseDate } from '../../api/apiFormats';
 
 export default {
     props: ['earmark'],
@@ -130,7 +134,7 @@ export default {
             return this.editing ? 'Edit Earmark' : 'Create Earmark';
         },
         icon() {
-            return this.editing ? 'edit' : 'add';
+            return this.editing ? IconEdit : IconAdd;
         },
         action() {
             return this.editing ? 'Save' : 'Create';
@@ -215,9 +219,7 @@ export default {
         ]),
     },
     components: {
-        VForm,
         DatePickerField,
-        VCheckbox,
     },
 };
 </script>

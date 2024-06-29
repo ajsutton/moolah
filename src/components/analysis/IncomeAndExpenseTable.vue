@@ -1,7 +1,7 @@
 <template>
     <v-card class="income-expense-table" height="">
         <v-app-bar flat>
-            <v-toolbar-title class="text-body-2 grey--text"
+            <v-toolbar-title class="text-body-2 text-grey"
                 >Monthly Income and Expense</v-toolbar-title
             >
             <v-spacer></v-spacer>
@@ -29,10 +29,10 @@
                     <tr v-for="item in items" :key="item.name">
                         <td>
                             <v-row class="row-lg" column>
-                                <div>{{ item | monthsAgo }}</div>
+                                <div>{{ monthsAgo(item) }}</div>
                                 <v-spacer></v-spacer>
-                                <div class="grey--text">
-                                    {{ item | monthName }}
+                                <div class="text-grey">
+                                    {{ monthName(item) }}
                                 </div>
                             </v-row>
                         </td>
@@ -71,16 +71,13 @@ import addMonths from 'date-fns/addMonths';
 import format from 'date-fns/format';
 import getMonth from 'date-fns/getMonth';
 import differenceInCalendarMonths from 'date-fns/differenceInCalendarMonths';
-import { VCheckbox } from 'vuetify';
 
 export default {
-
     components: {
         MonetaryAmount,
-        VCheckbox,
     },
 
-    filters: {
+    methods: {
         monthName(value) {
             const dayOfMonth = new Date().getDate();
             const endDate = monthAsIsoDate(value.month, dayOfMonth);
@@ -97,10 +94,9 @@ export default {
             return monthLabel + yearLabel;
         },
         monthsAgo(value) {
-            const plural = (value) => (value === 1 ? '' : 's');
+            const plural = value => (value === 1 ? '' : 's');
             const dayOfMonth = new Date().getDate();
             const endDate = monthAsIsoDate(value.month, dayOfMonth);
-            const startDate = addMonths(endDate, -1);
             const monthsAgo =
                 differenceInCalendarMonths(new Date(), endDate) + 1;
             if (monthsAgo === 1) {
@@ -170,7 +166,7 @@ export default {
         tableItems() {
             const applyEarmark = (value, earmarkedValue) =>
                 this.includeEarmarks ? value : value - earmarkedValue;
-            return this.breakdown.map((data) => ({
+            return this.breakdown.map(data => ({
                 income: applyEarmark(data.income, data.earmarkedIncome),
                 expense: applyEarmark(data.expense, data.earmarkedExpense),
                 profit: applyEarmark(data.profit, data.earmarkedProfit),
@@ -190,7 +186,7 @@ export default {
         );
         let cumulativeSavings = 0;
         let cumulativeEarmarkedSavings = 0;
-        this.breakdown = response.incomeAndExpense.reverse().map((row) => {
+        this.breakdown = response.incomeAndExpense.reverse().map(row => {
             cumulativeSavings += row.profit;
             cumulativeEarmarkedSavings += row.earmarkedProfit;
             row.cumulativeSavings = cumulativeSavings;

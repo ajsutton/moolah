@@ -3,9 +3,9 @@
         <v-card-title>Categories</v-card-title>
         <v-card-actions>
             <v-btn
-                text
-                class="primary--text"
-                @click.native.stop="addCategory(null)"
+                variant="text"
+                class="text-primary"
+                @click.stop="addCategory(null)"
             >
                 Add category
             </v-btn>
@@ -16,10 +16,14 @@
                     <v-col :cols="12" :sm="6" :md="3">
                         <v-treeview
                             activatable
+                            selection-type="independent"
+                            return-object
+                            selectable
                             :items="categories"
                             item-disabled="disabled"
-                            :active.sync="selectedCategory"
-                            :open.sync="opened"
+                            item-title="name"
+                            v-model="selectedCategory"
+                            v-model:open="opened"
                         ></v-treeview>
                     </v-col>
                     <v-divider vertical></v-divider>
@@ -27,7 +31,7 @@
                         <v-scroll-y-transition mode="out-in">
                             <div
                                 v-if="!category"
-                                class="text-h6 grey--text text--lighten-1 font-weight-light"
+                                class="text-h6 text-grey-lighten-1 font-weight-light"
                                 style="align-self: center"
                             >
                                 Select a Category
@@ -41,7 +45,9 @@
                             >
                                 <v-card-text>
                                     <v-avatar size="88">
-                                        <v-icon x-large>folder_open</v-icon>
+                                        <v-icon size="x-large"
+                                            >folder_open</v-icon
+                                        >
                                     </v-avatar>
                                     <h3 class="text-h5 mb-2">
                                         {{ categoryName }}
@@ -54,9 +60,9 @@
                                 </v-card-text>
                                 <v-card-actions class="pt-0">
                                     <v-btn
-                                        text
-                                        class="primary--text"
-                                        @click.native.stop="
+                                        variant="text"
+                                        class="text-primary"
+                                        @click.stop="
                                             addCategory(category.id)
                                         "
                                         >Add sub-category</v-btn
@@ -81,6 +87,7 @@ import { mapState, mapActions } from 'pinia';
 import MergeDialog from './MergeDialog.vue';
 import CategoryName from './CategoryName.vue';
 import { useCategoryStore, actions } from '../../stores/categoryStore';
+import { VTreeview } from 'vuetify/labs/VTreeview'
 
 export default {
     data() {
@@ -126,6 +133,7 @@ export default {
     components: {
         CategoryName,
         MergeDialog,
+        VTreeview,
     },
 };
 </script>

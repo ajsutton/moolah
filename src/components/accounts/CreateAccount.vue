@@ -1,8 +1,8 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
-        <template #activator="{ on }">
-            <v-btn icon v-on="on">
-                <v-icon :title="title">{{ icon }}</v-icon>
+        <template #activator="{ props }">
+            <v-btn icon variant="flat" v-bind="props">
+                <v-icon :title="title" :icon="icon"></v-icon>
             </v-btn>
         </template>
         <v-card>
@@ -35,10 +35,10 @@
                             label="Account Type"
                             required
                             :items="[
-                                { text: 'Bank Account', value: 'bank' },
-                                { text: 'Credit Card', value: 'cc' },
-                                { text: 'Asset', value: 'asset' },
-                                { text: 'Investment', value: 'investment' },
+                                { title: 'Bank Account', value: 'bank' },
+                                { title: 'Credit Card', value: 'cc' },
+                                { title: 'Asset', value: 'asset' },
+                                { title: 'Investment', value: 'investment' },
                             ]"
                         ></v-select>
 
@@ -53,15 +53,15 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                        class="blue--text darken-1"
-                        text
-                        @click.native="dialog = false"
+                        class="text-primary"
+                        variant="text"
+                        @click="dialog = false"
                         >Close</v-btn
                     >
                     <v-btn
-                        class="blue--text darken-1"
-                        text
-                        @click.native="submit"
+                        class="text-primary"
+                        variant="text"
+                        @click="submit"
                         >{{ action }}</v-btn
                     >
                 </v-card-actions>
@@ -70,12 +70,15 @@
     </v-dialog>
 </template>
 
+<script setup>
+import IconAdd from '~icons/mdi/add'
+import IconEdit from '~icons/mdi/edit'
+</script>
+
 <script>
 import { mapActions } from 'pinia';
 import { actions, useAccountsStore } from '../../stores/accountsStore';
 import { rules } from '../validation';
-import { VForm, VCheckbox } from 'vuetify';
-import DatePickerField from '../util/DatePickerField.vue';
 import parseMoney from '../util/parseMoney';
 import formatMoney from '../util/formatMoney';
 
@@ -103,7 +106,7 @@ export default {
             return this.editing ? 'Edit Account' : 'Create Account';
         },
         icon() {
-            return this.editing ? 'edit' : 'add';
+            return this.editing ? IconEdit : IconAdd;
         },
         action() {
             return this.editing ? 'Save' : 'Create';
@@ -172,11 +175,6 @@ export default {
             actions.createAccount,
             actions.updateAccount,
         ]),
-    },
-    components: {
-        VForm,
-        DatePickerField,
-        VCheckbox,
     },
 };
 </script>

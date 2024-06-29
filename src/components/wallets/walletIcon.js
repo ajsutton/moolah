@@ -1,17 +1,23 @@
+import IconBookmarkOutline from '~icons/mdi/bookmarkOutline'
+import IconCreditCardOutline from '~icons/mdi/creditCardOutline'
+import IconHome from '~icons/mdi/home'
+import IconInsights from '~icons/mdi/chartTimelineVariantShimmer'
+import IconBank from '~icons/mdi/bank'
+
 export default function iconForType(type) {
     if (type === undefined) {
-        return 'bookmark_outline';
+        return IconBookmarkOutline;
     }
     switch (type) {
         case 'cc':
-            return 'mdi-credit-card-outline';
+            return IconCreditCardOutline;
         case 'asset':
-            return 'mdi-home';
+            return IconHome;
         case 'earmark':
-            return 'mdi-bookmark-outline';
+            return IconBookmarkOutline;
         case 'investment':
-            return 'insights';
+            return IconInsights;
         default:
-            return 'mdi-bank';
+            return IconBank;
     }
 }

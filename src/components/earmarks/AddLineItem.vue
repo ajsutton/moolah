@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="visible" max-width="400px" persistent>
-        <v-template #activator="{ on }">
-            <v-btn small fab color="primary" v-on="on"
+        <v-template #activator="{ on }"> 
+            <v-btn size="small" fab color="primary" v-on="on"
                 ><v-icon>add</v-icon></v-btn
             >
         </v-template>
@@ -26,8 +26,14 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="secondary" text @click.stop="close">Close</v-btn>
-                <v-btn color="primary" text :disabled="!valid" @click.stop="add"
+                <v-btn color="secondary" variant="text" @click.stop="close"
+                    >Close</v-btn
+                >
+                <v-btn
+                    color="primary"
+                    variant="text"
+                    :disabled="!valid"
+                    @click.stop="add"
                     >Add</v-btn
                 >
             </v-card-actions>

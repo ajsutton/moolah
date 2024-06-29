@@ -5,7 +5,7 @@
                 <div class="loading text-sm-center">
                     <p>
                         <img
-                            :src="require('../../assets/moolah.svg')"
+                            src="@/assets/moolah.svg"
                             width="310"
                             height="310"
                         />

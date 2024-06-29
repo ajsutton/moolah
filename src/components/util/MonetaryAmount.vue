@@ -27,11 +27,11 @@ export default {
     computed: {
         valueColor() {
             if (this.color !== undefined) {
-                return this.color + '--text';
+                return "text-" + this.color;
             }
             return this.value >= 0 !== this.invertColors
-                ? 'green--text'
-                : 'red--text';
+                ? 'text-green'
+                : 'text-red';
         },
         amount() {
             return formatMoney(this.value, this.omitZeroCents);

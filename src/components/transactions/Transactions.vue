@@ -1,11 +1,11 @@
 <template>
     <v-card>
-        <v-app-bar flat>
+        <v-toolbar flat>
             <v-toolbar-title>{{ title }}</v-toolbar-title>
             <v-spacer></v-spacer>
             <transaction-filters></transaction-filters>
             <slot name="buttons"></slot>
-        </v-app-bar>
+        </v-toolbar>
         <filter-notice></filter-notice>
         <v-alert v-model="error" type="error"
             >Failed to load transactions</v-alert
@@ -15,21 +15,18 @@
             v-if="loading"
             :indeterminate="true"
         ></v-progress-linear>
-        <v-list two-line>
-            <v-list-item-group
-                v-model="itemGroupSelectedTransaction"
-                color="primary"
+        <v-list lines="two" :selectable="true" :selected="itemGroupSelectedTransaction" color="primary">
+            <template
+                v-for="transaction in transactions"
+                :key="transaction.id"
             >
-                <template v-for="transaction in transactions">
-                    <transaction
-                        :key="transaction.id"
-                        :transaction="transaction"
-                        @selected="editTransaction"
-                    >
-                    </transaction>
-                    <v-divider></v-divider>
-                </template>
-            </v-list-item-group>
+            <transaction
+                    :transaction="transaction"
+                    @selected="editTransaction"
+                >
+                </transaction>
+                <v-divider></v-divider>
+            </template>
         </v-list>
         <div class="text-sm-center">
             <v-pagination
@@ -41,10 +38,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import Transaction from './Transaction.vue';
-import MonetaryAmount from '../util/MonetaryAmount.vue';
-import CreateAccount from '../accounts/CreateAccount.vue';
 import TransactionFilters from './TransactionFilters.vue';
 import FilterNotice from './FilterNotice.vue';
 import {
@@ -77,14 +72,14 @@ export default {
         },
         itemGroupSelectedTransaction: {
             get() {
-                return this.highlightedTransaction;
+                return [this.highlightedTransaction];
             },
             set(transaction) {
                 this.editTransaction(transaction);
             },
         },
-        ...mapGetters(useRootStore, ['selectedTransaction']),
-        ...mapGetters(useTransactionsStore, [
+        ...mapState(useRootStore, ['selectedTransaction']),
+        ...mapState(useTransactionsStore, [
             'hasNext',
             'hasPrevious',
             'numberOfPages',
@@ -122,9 +117,7 @@ export default {
     },
 
     components: {
-        MonetaryAmount,
         Transaction,
-        CreateAccount,
         TransactionFilters,
         FilterNotice,
     },
