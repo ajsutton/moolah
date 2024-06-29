@@ -36,14 +36,14 @@
                                     clearable
                                 ></v-text-field>
                             </v-col>
-                            <v-col sm="3" offset-sm="1" cols="12">
+                            <v-col sm="4" cols="12">
                                 <date-picker-field
                                     v-model="savingsStartDate"
                                     label="Start"
                                     :optional="true"
                                 ></date-picker-field>
                             </v-col>
-                            <v-col sm="3" offset-sm="1" cols="12">
+                            <v-col sm="4" cols="12">
                                 <date-picker-field
                                     v-model="savingsEndDate"
                                     label="End"

@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card class="mb-3">
-            <v-app-bar flat color="accent">
+            <v-toolbar flat color="accent">
                 <v-toolbar-title>{{ earmarkName }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <create-earmark :earmark="selectedEarmark"></create-earmark>
@@ -12,35 +12,39 @@
                         slider-color="primary"
                         align-tabs="center"
                     >
-                        <v-tab href="#overview">Overview</v-tab>
-                        <v-tab href="#breakdown">Spending Breakdown</v-tab>
+                        <v-tab value="overview">Overview</v-tab>
+                        <v-tab value="breakdown">Spending Breakdown</v-tab>
                     </v-tabs>
                 </template>
-            </v-app-bar>
-            <v-tabs-items v-model="selectedTab">
-                <v-tab-item value="overview">
+            </v-toolbar>
+            <v-tabs-window v-model="selectedTab">
+                <v-window-item value="overview">
                     <savings-goal-notice
                         v-if="selectedEarmark !== undefined"
                         :selected-account="selectedEarmark"
                     ></savings-goal-notice>
-                </v-tab-item>
-                <v-tab-item value="breakdown">
+                </v-window-item>
+                <v-window-item value="breakdown">
                     <spending-breakdown
                         :earmark="selectedEarmark"
                     ></spending-breakdown>
-                </v-tab-item>
-            </v-tabs-items>
+                </v-window-item>
+            </v-tabs-window>
         </v-card>
 
         <transactions :search-options="searchOptions" title="Transactions">
             <template v-slot:buttons>
                 <v-btn icon @click.stop="addTransaction">
-                    <v-icon>add</v-icon>
+                    <v-icon :icon="IconAdd"></v-icon>
                 </v-btn>
             </template>
         </transactions>
     </div>
 </template>
+
+<script setup>
+import IconAdd from '~icons/mdi/add';
+</script>
 
 <script>
 import { mapState, mapActions } from 'pinia';
