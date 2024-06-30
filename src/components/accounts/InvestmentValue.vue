@@ -1,10 +1,10 @@
 <template>
     <v-card class="mb-3">
-        <v-app-bar flat color="accent">
+        <v-toolbar flat>
             <v-toolbar-title>{{ account.name }}</v-toolbar-title>
             <v-spacer></v-spacer>
             <edit-investment-value></edit-investment-value>
-        </v-app-bar>
+        </v-toolbar>
         <v-container fluid>
             <v-row v-if="hasProfitLoss">
                 <v-col :cols="4">
@@ -48,18 +48,26 @@
                         :loading="loading"
                         class="actions-table"
                     >
-                        <template #item.value="{ item }">
+                        <template v-slot:item.value="{ item }">
                             <monetary-amount
                                 :value="item.value"
                             ></monetary-amount>
                         </template>
-                        <template #item.actions="{ item }">
-                            <edit-investment-value
-                                :input="item"
-                            ></edit-investment-value>
-                            <v-icon size="small" @click="deleteItem(item)">
-                                mdi-delete
-                            </v-icon>
+                        <template v-slot:item.actions="{ item }">
+                            <span class="text-no-wrap">
+                                <edit-investment-value
+                                    icon-density="compact"
+                                    icon-variant="flat"
+                                    :input="item"
+                                ></edit-investment-value>
+                                <v-btn icon variant="flat" density="compact"
+                                    ><v-icon
+                                        size="small"
+                                        @click="deleteItem(item)"
+                                        :icon="IconDelete"
+                                    ></v-icon
+                                ></v-btn>
+                            </span>
                         </template>
                     </v-data-table>
                 </v-col>
@@ -67,6 +75,11 @@
         </v-container>
     </v-card>
 </template>
+
+<script setup>
+import IconDelete from '~icons/mdi/delete';
+</script>
+
 <script>
 import { mapState, mapActions } from 'pinia';
 import {

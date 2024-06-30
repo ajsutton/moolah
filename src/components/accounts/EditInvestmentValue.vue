@@ -1,8 +1,13 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
         <template #activator="{ props }">
-            <v-btn icon v-bind="props">
-                <v-icon title="Set Investment Value">{{ icon }}</v-icon>
+            <v-btn
+                icon
+                :variant="iconVariant"
+                :density="iconDensity"
+                v-bind="props"
+            >
+                <v-icon title="Set Investment Value" :icon="icon"></v-icon>
             </v-btn>
         </template>
         <v-card>
@@ -59,6 +64,10 @@
         </v-card>
     </v-dialog>
 </template>
+<script setup>
+import IconAdd from '~icons/mdi/add';
+import IconEdit from '~icons/mdi/edit';
+</script>
 
 <script>
 import { mapActions } from 'pinia';
@@ -70,7 +79,7 @@ import formatMoney from '../util/formatMoney';
 import { useValuesStore, actions } from '../../stores/valuesStore';
 
 export default {
-    props: ['input'],
+    props: ['input', 'iconDensity', 'iconVariant'],
     data() {
         return {
             origDate: null,
@@ -89,7 +98,7 @@ export default {
     },
     computed: {
         icon() {
-            return this.editing ? 'edit' : 'add';
+            return this.editing ? IconEdit : IconAdd;
         },
         editing() {
             return !!this.origDate;

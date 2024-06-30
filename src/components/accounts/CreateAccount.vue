@@ -1,7 +1,12 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600">
         <template #activator="{ props }">
-            <v-btn icon variant="flat" v-bind="props">
+            <v-btn
+                icon
+                v-bind="props"
+                :variant="iconVariant"
+                :density="iconDensity"
+            >
                 <v-icon :title="title" :icon="icon"></v-icon>
             </v-btn>
         </template>
@@ -83,7 +88,7 @@ import parseMoney from '../util/parseMoney';
 import formatMoney from '../util/formatMoney';
 
 export default {
-    props: ['account'],
+    props: ['account', 'iconDensity', 'iconVariant'],
     data() {
         return {
             name: 'Unnamed account',
