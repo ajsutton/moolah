@@ -1,6 +1,6 @@
 <template>
     <v-card class="income-expense-table" height="">
-        <v-app-bar flat>
+        <v-toolbar flat>
             <v-toolbar-title class="text-body-2 text-grey"
                 >Monthly Income and Expense</v-toolbar-title
             >
@@ -12,52 +12,39 @@
                     style="min-width: 13em; margin-top: 16px"
                 ></v-switch>
             </v-toolbar-items>
-        </v-app-bar>
+        </v-toolbar>
         <v-data-table
             :headers="headers"
             :items="tableItems"
-            sort-by="end"
+            :sort-by="[{ key: 'end' }]"
             disable-sort
             :mobile-breakpoint="0"
             :descending="true"
             :loading="loading"
-            :footer-props="footerProps"
+            :items-per-page-options="[6, 12, 18, 24]"
+            items-per-page-text="Months per page"
             :items-per-page="12"
         >
-            <template #body="{ items }">
-                <tbody>
-                    <tr v-for="item in items" :key="item.name">
-                        <td>
-                            <v-row class="row-lg" column>
-                                <div>{{ monthsAgo(item) }}</div>
-                                <v-spacer></v-spacer>
-                                <div class="text-grey">
-                                    {{ monthName(item) }}
-                                </div>
-                            </v-row>
-                        </td>
-                        <td class="text-sm-right">
-                            <monetary-amount
-                                :value="item.income"
-                            ></monetary-amount>
-                        </td>
-                        <td class="text-sm-right">
-                            <monetary-amount
-                                :value="item.expense"
-                            ></monetary-amount>
-                        </td>
-                        <td class="text-sm-right">
-                            <monetary-amount
-                                :value="item.profit"
-                            ></monetary-amount>
-                        </td>
-                        <td class="text-sm-right">
-                            <monetary-amount
-                                :value="item.cumulativeSavings"
-                            ></monetary-amount>
-                        </td>
-                    </tr>
-                </tbody>
+            <template v-slot:item.end="{ item }">
+                <div>{{ monthsAgo(item) }}</div>
+                <v-spacer></v-spacer>
+                <div class="text-grey">
+                    {{ monthName(item) }}
+                </div>
+            </template>
+            <template v-slot:item.income="{ item }">
+                <monetary-amount :value="item.income"></monetary-amount>
+            </template>
+            <template v-slot:item.expense="{ item }">
+                <monetary-amount :value="item.expense"></monetary-amount>
+            </template>
+            <template v-slot:item.profit="{ item }">
+                <monetary-amount :value="item.profit"></monetary-amount>
+            </template>
+            <template v-slot:item.cumulativeSavings="{ item }">
+                <monetary-amount
+                    :value="item.cumulativeSavings"
+                ></monetary-amount>
             </template>
         </v-data-table>
     </v-card>
@@ -120,43 +107,39 @@ export default {
         return {
             headers: [
                 {
-                    text: 'Month',
-                    align: 'left',
+                    title: 'Month',
+                    align: 'start',
                     sortable: true,
                     value: 'end',
                 },
                 {
-                    text: 'Income',
-                    align: 'right',
+                    title: 'Income',
+                    align: 'end',
                     sortable: true,
                     value: 'income',
                     classes: 'hidden-md-and-down',
                 },
                 {
-                    text: 'Expense',
-                    align: 'right',
+                    title: 'Expense',
+                    align: 'end',
                     sortable: true,
                     value: 'expense',
                     classes: 'hidden-md-and-down',
                 },
                 {
-                    text: 'Savings',
-                    align: 'right',
+                    title: 'Savings',
+                    align: 'end',
                     sortable: true,
                     value: 'profit',
                 },
                 {
-                    text: 'Total Savings',
-                    align: 'right',
+                    title: 'Total Savings',
+                    align: 'end',
                     sortable: true,
                     value: 'cumulativeSavings',
                     classes: 'hidden-sm-and-down',
                 },
             ],
-            footerProps: {
-                'items-per-page-text': 'Months per page',
-                'items-per-page-options': [6, 12, 18, 24],
-            },
             breakdown: [],
             includeEarmarks: false,
             loading: true,

@@ -41,10 +41,10 @@ export default {
     data() {
         return {
             periodItems: [
-                { text: 'Days', value: 'DAY' },
-                { text: 'Weeks', value: 'WEEK' },
-                { text: 'Months', value: 'MONTH' },
-                { text: 'Years', value: 'YEAR' },
+                { title: 'Days', value: 'DAY' },
+                { title: 'Weeks', value: 'WEEK' },
+                { title: 'Months', value: 'MONTH' },
+                { title: 'Years', value: 'YEAR' },
             ],
             raw: {
                 recurPeriod: undefined,

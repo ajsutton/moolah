@@ -8,14 +8,14 @@
         <v-spacer></v-spacer>
         <v-toolbar-items>
             <v-select
+                density="comfortable"
                 v-model="previousMonths"
-                class="mt-4"
                 label="History"
                 :items="historyItems"
             ></v-select>
             <v-select
+                density="comfortable"
                 v-model="forecastMonths"
-                class="mt-4"
                 label="Forecast"
                 :items="forecastItems"
             ></v-select>
@@ -38,16 +38,16 @@ import { useScheduledTransactionsStore } from '../../stores/transactions/transac
 const maxTicks = width => Math.floor(width / 160);
 
 const items = nullLabel => [
-    { text: '1 Month', value: 1 },
-    { text: '3 Months', value: 3 },
-    { text: '6 Months', value: 6 },
-    { text: '9 Months', value: 9 },
-    { text: '1 Year', value: 12 },
-    { text: '2 Years', value: 24 },
-    { text: '3 Years', value: 36 },
-    { text: '4 Years', value: 48 },
-    { text: '5 Years', value: 60 },
-    { text: nullLabel, value: nullLabel },
+    { title: '1 Month', value: 1 },
+    { title: '3 Months', value: 3 },
+    { title: '6 Months', value: 6 },
+    { title: '9 Months', value: 9 },
+    { title: '1 Year', value: 12 },
+    { title: '2 Years', value: 24 },
+    { title: '3 Years', value: 36 },
+    { title: '4 Years', value: 48 },
+    { title: '5 Years', value: 60 },
+    { title: nullLabel, value: nullLabel },
 ];
 
 export default {

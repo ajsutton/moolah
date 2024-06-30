@@ -1,11 +1,11 @@
 <template>
     <v-card v-resize="handleResize">
-        <v-app-bar v-if="title != ''" flat class="bg-white">
+        <v-toolbar v-if="title != ''" flat class="bg-white">
             <v-toolbar-title class="text-body-2 text-grey">{{
                 title
             }}</v-toolbar-title>
             <slot></slot>
-        </v-app-bar>
+        </v-toolbar>
         <slot name="chart">
             <div ref="chart" class="chart"></div>
         </slot>
