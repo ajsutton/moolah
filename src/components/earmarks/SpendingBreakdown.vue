@@ -50,48 +50,17 @@
                                     v-if="category.total"
                                     :value="category.budgetSubtotal"
                                 ></monetary-amount>
-                                <v-edit-dialog
+                                <edit-amount
                                     v-if="
                                         !category.total &&
                                         (category.budget !== 0 ||
                                             category.balance !== 0)
                                     "
-                                    large
-                                    lazy
-                                    persistent
-                                    return-value.sync="getBudgetEditValue(category.id)"
-                                    @update:returnValue="
-                                        val => save(category.id, val)
+                                    :modelValue="category.budget"
+                                    @update:modelValue="
+                                        val => updateBudget(category.id, val)
                                     "
-                                >
-                                    <span>
-                                        <monetary-amount
-                                            :value="category.budget"
-                                        ></monetary-amount>
-                                        <v-icon size="small" class="edit-icon"
-                                            >edit</v-icon
-                                        >
-                                    </span>
-                                    <template v-slot:input>
-                                        <v-text-field
-                                            class="input"
-                                            name="amount"
-                                            label="Budget"
-                                            :model-value="
-                                                getBudgetEditValue(category.id)
-                                            "
-                                            prefix="$"
-                                            :rules="rules.amount"
-                                            @update:model-value="
-                                                val =>
-                                                    updateBudget(
-                                                        category.id,
-                                                        val
-                                                    )
-                                            "
-                                        ></v-text-field>
-                                    </template>
-                                </v-edit-dialog>
+                                ></edit-amount>
                             </td>
                             <td class="text-sm-right">
                                 <monetary-amount
@@ -166,10 +135,8 @@ import client from '../../api/client';
 import { buildCategoryBalanceTree } from './categoryBalances';
 import PieChart from '../charts/PieChart.vue';
 import debounce from 'debounce';
-import { rules } from '../validation.js';
 import AddLineItem from './AddLineItem.vue';
-import parseMoney from '../util/parseMoney';
-import formatMoney from '../util/formatMoney';
+import EditAmount from './EditAmount.vue';
 import { useCategoryStore } from '../../stores/categoryStore';
 import { useTransactionsStore } from '../../stores/transactions/transactionStore';
 
@@ -183,7 +150,6 @@ export default {
     data() {
         return {
             categoryData: {},
-            rules,
         };
     },
     computed: {
@@ -308,25 +274,10 @@ export default {
             );
             this.categoryData = categoryData;
         },
-        updateBudget(categoryId, value) {
-            this.categoryData[categoryId].editValue = parseMoney(value);
-        },
-        getBudgetEditValue(categoryId) {
-            const category = this.categoryData[categoryId];
-            if (category.editValue !== undefined) {
-                return category.editValue;
-            } else {
-                return formatMoney(category.budget, false, true);
-            }
-        },
-        addCategory(categoryId, budget) {
-            this.categoryData[categoryId] = { balance: 0, budget };
-        },
-        async save(categoryId, newBudget) {
+        async updateBudget(categoryId, value) {
             const category = this.categoryData[categoryId];
             const originalBudget = category.budget;
-            category.budget = parseMoney(newBudget);
-            category.editValue = undefined;
+            category.budget = value;
             try {
                 await client.setEarmarkBudget(
                     this.earmark.id,
@@ -338,35 +289,37 @@ export default {
                 category.budget = originalBudget;
             }
         },
+        addCategory(categoryId, budget) {
+            this.categoryData[categoryId] = { balance: 0, budget };
+        },
     },
     components: {
         MonetaryAmount,
         PieChart,
         AddLineItem,
+        EditAmount,
     },
 };
 </script>
 
 <style lang="scss">
 .spending-breakdown {
-    .v-menu__activator a {
-        width: 100%;
+    border-collapse: collapse;
+
+    td,
+    th {
+        padding: 4px 12px;
     }
 
     tfoot td,
     tfoot th {
-        padding: 0 24px;
+        padding-top: 10px;
         color: rgba(0, 0, 0, 0.54);
         font-weight: 500;
-        font-size: 12px;
     }
 
-    tfoot {
+    tfoot tr {
         border-top: rgba(0, 0, 0, 0.12) solid 3px;
-    }
-
-    .total {
-        font-style: italic !important;
     }
 
     .edit-icon {
