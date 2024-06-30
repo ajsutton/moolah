@@ -8,8 +8,11 @@
         <v-spacer></v-spacer>
         <v-toolbar-items>
             <v-select
+                min-width="120"
                 v-model="previousMonths"
-                class="mt-4"
+                variant="underlined"
+                class="mt-4 me-2"
+                density="comfortable"
                 label="History"
                 :items="historyItems"
             ></v-select>
@@ -58,16 +61,16 @@ export default {
             rootCategoryId: null,
             previousMonths: 6,
             historyItems: [
-                { text: '1 Month', value: 1 },
-                { text: '3 Months', value: 3 },
-                { text: '6 Months', value: 6 },
-                { text: '9 Months', value: 9 },
-                { text: '1 Year', value: 12 },
-                { text: '2 Years', value: 24 },
-                { text: '3 Years', value: 36 },
-                { text: '4 Years', value: 48 },
-                { text: '5 Years', value: 60 },
-                { text: 'All', value: 'All' },
+                { title: '1 Month', value: 1 },
+                { title: '3 Months', value: 3 },
+                { title: '6 Months', value: 6 },
+                { title: '9 Months', value: 9 },
+                { title: '1 Year', value: 12 },
+                { title: '2 Years', value: 24 },
+                { title: '3 Years', value: 36 },
+                { title: '4 Years', value: 48 },
+                { title: '5 Years', value: 60 },
+                { title: 'All', value: 'All' },
             ],
         };
     },

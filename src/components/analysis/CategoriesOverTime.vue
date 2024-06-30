@@ -7,14 +7,26 @@
     >
         <v-spacer></v-spacer>
 
-        <v-radio-group v-model="actualValues" inline class="mt-4">
-            <v-radio label="Percentage" :value="false"></v-radio>
-            <v-radio label="Actual" :value="true"></v-radio>
-        </v-radio-group>
         <v-toolbar-items>
             <v-select
+                min-width="120"
+                v-model="actualValues"
+                variant="underlined"
+                class="mt-4 me-2"
+                density="comfortable"
+                label="Values"
+                :items="[
+                    { title: 'Percentage', value: false },
+                    { title: 'Actual', value: true },
+                ]"
+            ></v-select>
+
+            <v-select
+                min-width="120"
                 v-model="previousMonths"
-                class="mt-4"
+                variant="underlined"
+                class="mt-4 me-2"
+                density="comfortable"
                 label="History"
                 :items="historyItems"
             ></v-select>

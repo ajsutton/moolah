@@ -1,9 +1,7 @@
 <template>
     <v-card v-resize="handleResize">
-        <v-toolbar v-if="title != ''" flat class="bg-white">
-            <v-toolbar-title class="text-body-2 text-grey">{{
-                title
-            }}</v-toolbar-title>
+        <v-toolbar v-if="title != ''">
+            <v-toolbar-title>{{ title }}</v-toolbar-title>
             <slot></slot>
         </v-toolbar>
         <slot name="chart">

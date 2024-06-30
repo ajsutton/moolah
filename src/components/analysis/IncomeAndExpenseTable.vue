@@ -1,16 +1,13 @@
 <template>
-    <v-card class="income-expense-table" height="">
-        <v-toolbar flat>
-            <v-toolbar-title class="text-body-2 text-grey"
-                >Monthly Income and Expense</v-toolbar-title
-            >
-            <v-spacer></v-spacer>
+    <v-card class="income-expense-table">
+        <v-toolbar>
+            <v-toolbar-title>Monthly Income & Expense</v-toolbar-title>
             <v-toolbar-items>
-                <v-switch
+                <v-checkbox
                     v-model="includeEarmarks"
                     label="Earmarked funds"
-                    style="min-width: 13em; margin-top: 16px"
-                ></v-switch>
+                    class="mt-2 me-4"
+                ></v-checkbox>
             </v-toolbar-items>
         </v-toolbar>
         <v-data-table

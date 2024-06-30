@@ -5,15 +5,20 @@
         class="networth-graph"
         @resize="handleResize"
     >
-        <v-spacer></v-spacer>
         <v-toolbar-items>
             <v-select
+                min-width="120"
+                variant="underlined"
+                class="mt-4 me-2"
                 density="comfortable"
                 v-model="previousMonths"
                 label="History"
                 :items="historyItems"
             ></v-select>
             <v-select
+                min-width="120"
+                variant="underlined"
+                class="mt-4 me-2"
                 density="comfortable"
                 v-model="forecastMonths"
                 label="Forecast"
@@ -37,7 +42,7 @@ import { useScheduledTransactionsStore } from '../../stores/transactions/transac
 
 const maxTicks = width => Math.floor(width / 160);
 
-const items = nullLabel => [
+const items = (nullLabel, nullValue) => [
     { title: '1 Month', value: 1 },
     { title: '3 Months', value: 3 },
     { title: '6 Months', value: 6 },
@@ -47,7 +52,7 @@ const items = nullLabel => [
     { title: '3 Years', value: 36 },
     { title: '4 Years', value: 48 },
     { title: '5 Years', value: 60 },
-    { title: nullLabel, value: nullLabel },
+    { title: nullLabel, value: nullValue },
 ];
 
 export default {
@@ -55,8 +60,8 @@ export default {
         return {
             dailyBalances: [],
             scheduledBalances: [],
-            historyItems: items('All'),
-            forecastItems: items('None'),
+            historyItems: items('All', 'All'),
+            forecastItems: items('None', 0),
             today: formatDate(new Date()),
             previousMonths: 12,
             forecastMonths: 1,
