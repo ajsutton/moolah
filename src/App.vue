@@ -105,13 +105,8 @@ export default {
                 this[mutations.showMainNav](value);
             },
         },
-        showRightNavPanel: {
-            get() {
-                return this.hasTransaction && this.showEditTransactionPanel;
-            },
-            set(value) {
-                this[mutations.showEditTransactionPanel](value);
-            },
+        showRightNavPanel() {
+            return this.hasTransaction && this.showEditTransactionPanel;
         },
         hasTransaction() {
             return this.selectedTransaction !== undefined && this.loggedIn;
@@ -124,7 +119,9 @@ export default {
     },
     methods: {
         toggleRightNav() {
-            this.showRightNavPanael = !this.showEditTransactionPanel;
+            this[mutations.showEditTransactionPanel](
+                !this.showEditTransactionPanel
+            );
         },
         ...mapActions(useCategoryStore, [categoryActions.loadCategories]),
         ...mapActions(useAccountsStore, {
