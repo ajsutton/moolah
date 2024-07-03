@@ -9,7 +9,7 @@
         "serve": "vite preview",
         "test": "vitest --no-watch",
         "test-watch": "vitest --watch",
-        "lint": "eslint --ext .js,.vue --ignore-path .gitignore src tests",
+        "lint": "eslint src tests",
         "prepare": "husky"
     },
     "dependencies": {
@@ -22,20 +22,20 @@
         "vuetify": "^3.5.0"
     },
     "devDependencies": {
+        "@eslint/compat": "^1.1.0",
         "@iconify-json/mdi": "^1.1.67",
         "@mdi/font": "^7.4.47",
         "@vitejs/plugin-vue": "^5.0.4",
         "chai": "^5.1.1",
-        "eslint": "^8.57.0",
-        "eslint-config-prettier": "^8.8.0",
+        "eslint": "^9.6.0",
+        "eslint-config-prettier": "^9.1.0",
         "eslint-config-semistandard": "^17.0.0",
         "eslint-config-standard": "^17.1.0",
         "eslint-plugin-import": "^2.29.1",
-        "eslint-plugin-n": "^16.6.2",
+        "eslint-plugin-n": "^17.9.0",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^6.1.1",
         "eslint-plugin-vue": "^9.22.0",
-        "eslint-plugin-vuetify": "^2.4.0",
         "husky": "^9.0.11",
         "lint-staged": "^15.2.7",
         "pinia": "^2.1.7",
