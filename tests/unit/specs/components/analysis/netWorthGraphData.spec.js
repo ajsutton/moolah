@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import extrapolateBalances from '../../../../../src/components/analysis/netWorthGraphData';
 import { assert } from 'chai';
 

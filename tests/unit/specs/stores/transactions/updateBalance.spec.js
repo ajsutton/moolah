@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import updateBalance from '../../../../../src/stores/transactions/updateBalance';
 import { assert } from 'chai';
 

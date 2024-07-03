@@ -1,3 +1,4 @@
+import { beforeEach, describe, it } from 'vitest';
 import accountBalanceAdjuster from '../../../../../src/stores/transactions/accountBalanceAdjuster';
 import { useAccountsStore } from '../../../../../src/stores/accountsStore';
 import { useEarmarksStore } from '../../../../../src/stores/earmarksStore';

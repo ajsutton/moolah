@@ -7,8 +7,8 @@
         "dev": "vite",
         "build": "vite build",
         "serve": "vite preview",
-        "test": "vitest --globals --no-watch",
-        "test-watch": "vitest --globals --watch",
+        "test": "vitest --no-watch",
+        "test-watch": "vitest --watch",
         "lint": "eslint --ext .js,.vue --ignore-path .gitignore src tests",
         "prepare": "husky"
     },

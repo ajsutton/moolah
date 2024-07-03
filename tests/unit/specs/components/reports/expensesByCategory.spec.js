@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { expenseByCategoryReportData } from '../../../../../src/components/reports/expenseByCategoryReportData';
 import { assert } from 'chai';
 

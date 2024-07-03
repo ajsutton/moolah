@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { assert } from 'chai';
 import { transactionTitle } from '../../../../../src/components/transactions/transactionTitle';
 
