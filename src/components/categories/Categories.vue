@@ -16,13 +16,12 @@
                     <v-col :cols="12" :sm="6" :md="3">
                         <v-treeview
                             activatable
-                            selection-type="independent"
-                            return-object
-                            selectable
                             :items="categories"
                             item-disabled="disabled"
                             item-title="name"
-                            v-model="selectedCategory"
+                            item-value="id"
+                            active-strategy="single-individual"
+                            v-model:activated="selectedCategory"
                             v-model:open="opened"
                         ></v-treeview>
                     </v-col>
