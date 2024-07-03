@@ -57,12 +57,12 @@ export const useRootStore = defineStore('root', {
                 transactionActions.loadTransactions
             ]({ account: null, scheduled: true });
         },
-        [transactionActions.updateTransaction](value) {
+        UPDATE_TRANSACTION(value) {
             this.selectedTransactionModule[
                 transactionActions.updateTransaction
             ](value);
         },
-        [transactionActions.deleteTransaction](value) {
+        DELETE_TRANSACTION(value) {
             this.selectedTransactionModule[
                 transactionActions.deleteTransaction
             ](value);

@@ -1,31 +1,42 @@
-import sinon from 'sinon';
+import { afterEach, beforeEach, describe, it, vi, expect } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { assert } from 'chai';
-import { actions, mutations } from '../../../../src/stores/accountsStore';
-import accountsStoreLoader from 'inject-loader!babel-loader!../../../../src/stores/accountsStore';
+import {
+    actions,
+    mutations,
+    useAccountsStore,
+} from '../../../../src/stores/accountsStore';
+import client from '@/api/client';
+
+vi.mock('@/api/client', () => {
+    const client = {
+        accounts: {
+            get: vi.fn(),
+            create: vi.fn(),
+            update: vi.fn(),
+        },
+    };
+    return { default: client };
+});
 
 describe('accountsStore', function () {
-    let client;
     let accountsStore;
     beforeEach(function () {
         setActivePinia(createPinia());
-        client = {
-            accounts: {
-                get: sinon.stub(),
-                create: sinon.stub(),
-                update: sinon.stub(),
-            },
-        };
-        accountsStore = accountsStoreLoader({
-            '../api/client': client,
-        }).useAccountsStore();
+        accountsStore = useAccountsStore();
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     describe('Actions', function () {
         it('should load accounts', async function () {
             const account1 = { name: 'Account1', type: 'bank', balance: 2300 };
             const expectedAccounts = [account1];
-            client.accounts.get.resolves({ accounts: expectedAccounts });
+            client.accounts.get.mockImplementationOnce(async () => {
+                return { accounts: expectedAccounts };
+            });
             await accountsStore[actions.loadAccounts]();
             assert.deepEqual(accountsStore.accounts, expectedAccounts);
         });
@@ -37,9 +48,12 @@ describe('accountsStore', function () {
                     type: 'cc',
                     balance: 123456,
                 };
-                client.accounts.create.resolves({
-                    id: 'assigned-id',
-                    ...newAccount,
+                client.accounts.create.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, newAccount);
+                    return {
+                        id: 'assigned-id',
+                        ...newAccount,
+                    };
                 });
                 await accountsStore[actions.createAccount](newAccount);
                 const accountWithId = Object.assign(
@@ -55,7 +69,10 @@ describe('accountsStore', function () {
                     type: 'cc',
                     balance: 123456,
                 };
-                client.accounts.create.rejects('Fetch failed');
+                client.accounts.create.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, newAccount);
+                    throw new Error('Fetch failed');
+                });
                 let err = null;
                 try {
                     await accountsStore[actions.createAccount](newAccount);
@@ -81,17 +98,18 @@ describe('accountsStore', function () {
                     type: 'cc',
                     position: 3,
                 };
-                client.accounts.update.resolves(modifiedAccount);
+
+                client.accounts.update.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, modifiedAccount);
+                    return modifiedAccount;
+                });
                 accountsStore.accounts = [originalAccount];
                 await accountsStore[actions.updateAccount]({
                     id: 'abc',
                     patch: modifiedAccount,
                 });
                 assert.deepEqual(accountsStore.account('abc'), modifiedAccount);
-                sinon.assert.calledWith(
-                    client.accounts.update,
-                    modifiedAccount
-                );
+                expect(client.accounts.update).toHaveBeenCalled(1);
             });
 
             it('should rollback account change if server rejects it', async function () {
@@ -108,7 +126,10 @@ describe('accountsStore', function () {
                     position: 3,
                 };
                 accountsStore.accounts = [originalAccount];
-                client.accounts.update.rejects('Fetch failed');
+                client.accounts.update.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, modifiedAccount);
+                    throw new Error('Fetch failed');
+                });
                 let err = null;
                 try {
                     await accountsStore[actions.updateAccount]({

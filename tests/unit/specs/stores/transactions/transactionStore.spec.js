@@ -1,8 +1,30 @@
-import sinon from 'sinon';
+import { afterEach, beforeEach, describe, it, vi, expect } from 'vitest';
 import format from 'date-fns/format';
 import { assert, config as chaiConfig } from 'chai';
-import transactionStoreLoader from 'inject-loader!babel-loader!../../../../../src/stores/transactions/transactionStore';
+import {
+    useTransactionsStore,
+    actions,
+    ensureAllFieldsPresent,
+    loadingStates,
+    mutations,
+} from '@/stores/transactions/transactionStore';
+import { useRootStore, actions as stateActions } from '@/stores/root';
+import {
+    useAccountsStore,
+    actions as accountActions,
+} from '@/stores/accountsStore';
 import { createPinia, setActivePinia } from 'pinia';
+import client from '@/api/client';
+
+vi.mock('@/api/client', () => {
+    const client = {
+        transactions: vi.fn(),
+        createTransaction: vi.fn(),
+        updateTransaction: vi.fn(),
+        deleteTransaction: vi.fn(),
+    };
+    return { default: client };
+});
 
 chaiConfig.truncateThreshold = 0;
 
@@ -15,38 +37,20 @@ const addIdLookup = state => {
 };
 
 describe('transactionStore', function () {
-    let client;
     let transactionsStore;
     let accountsStore;
-    let accountActions;
     let rootStore;
-    let stateActions;
-    let actions, ensureAllFieldsPresent, loadingStates, mutations;
     const expandFields = transactions =>
         transactions.map(ensureAllFieldsPresent);
     beforeEach(async function () {
         setActivePinia(createPinia());
-        client = {
-            transactions: sinon.stub(),
-            createTransaction: sinon.stub(),
-            updateTransaction: sinon.stub(),
-            deleteTransaction: sinon.stub(),
-        };
-        const transactionsModule = transactionStoreLoader({
-            '../../api/client': client,
-        });
-        transactionsStore = transactionsModule.useTransactionsStore();
-        actions = transactionsModule.actions;
-        ensureAllFieldsPresent = transactionsModule.ensureAllFieldsPresent;
-        loadingStates = transactionsModule.loadingStates;
-        mutations = transactionsModule.mutations;
-        const rootDefs = await require('../../../../../src/stores/root');
-        stateActions = rootDefs.actions;
-        rootStore = rootDefs.useRootStore();
-        const accountDefs =
-            await require('../../../../../src/stores/accountsStore');
-        accountsStore = accountDefs.useAccountsStore();
-        accountActions = accountDefs.actions;
+        transactionsStore = useTransactionsStore();
+        rootStore = useRootStore();
+        accountsStore = useAccountsStore();
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     describe('Getters', function () {
@@ -329,6 +333,8 @@ describe('transactionStore', function () {
                         ],
                         priorBalance: 50,
                     });
+                    accountsStore[accountActions.adjustBalance] = vi.fn();
+
                     transactionsStore[mutations.updateTransaction]({
                         id: 2,
                         patch: {
@@ -482,7 +488,7 @@ describe('transactionStore', function () {
         const txStoreSpies = {};
         beforeEach(function () {
             Object.values(mutations).forEach(key => {
-                txStoreSpies[key] = sinon.spy(transactionsStore, key, ['get']);
+                txStoreSpies[key] = vi.spyOn(transactionsStore, key);
             });
         });
         describe('loadTransactions', function () {
@@ -491,9 +497,10 @@ describe('transactionStore', function () {
                     transactions: [{ id: 3 }, { id: 4 }],
                     priorBalance: 12300,
                 };
-                client.transactions
-                    .withArgs({ accountId: 'account-1' })
-                    .resolves(response);
+                client.transactions.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, { accountId: 'account-1' });
+                    return response;
+                });
                 setupState({
                     transactions: [{ id: 1 }, { id: 2 }],
                     transactionsById: {},
@@ -503,15 +510,17 @@ describe('transactionStore', function () {
                     accountId: 'account-1',
                 });
 
-                txStoreSpies[mutations.setTransactions].get.calledWith({
+                expect(
+                    txStoreSpies[mutations.setTransactions]
+                ).toHaveBeenCalledWith({
                     transactions: [],
                     priorBalance: 0,
                     searchOptions: { accountId: 'account-1' },
                     loadingState: loadingStates.LOADING,
                 });
-                txStoreSpies[mutations.setTransactions].get.calledWith(
-                    response
-                );
+                expect(
+                    txStoreSpies[mutations.setTransactions]
+                ).toHaveBeenCalledWith(response);
             });
         });
 
@@ -538,34 +547,44 @@ describe('transactionStore', function () {
                     initialTransactionProperties,
                     { id: 'assigned-id' }
                 );
-                rootStore[stateActions.selectTransaction] = sinon.spy();
+                rootStore[stateActions.selectTransaction] = vi.fn();
                 accountsStore.accounts = [{ id: 'account-1' }];
             });
 
             it('should add new transaction and notify server', async function () {
-                client.createTransaction
-                    .withArgs(initialTransactionProperties)
-                    .resolves(serverTransaction);
+                client.createTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, initialTransactionProperties);
+                    return serverTransaction;
+                });
                 await transactionsStore[actions.addTransaction]();
-                txStoreSpies[mutations.addTransaction].get.calledWith(
-                    newTransaction
+                expect(
+                    txStoreSpies[mutations.addTransaction]
+                ).toHaveBeenCalledWith(
+                    ensureAllFieldsPresent(
+                        Object.assign({}, serverTransaction, { balance: 0 })
+                    )
                 );
-                txStoreSpies[mutations.updateTransaction].get.calledWith({
+                expect(
+                    txStoreSpies[mutations.updateTransaction]
+                ).toHaveBeenCalledWith({
                     id: 'new-transaction',
                     patch: serverTransaction,
                 });
-                sinon.assert.calledWith(
-                    client.createTransaction,
+                expect(client.createTransaction).toHaveBeenCalledWith(
                     initialTransactionProperties
                 );
-                sinon.assert.calledWith(
-                    rootStore[stateActions.selectTransaction],
-                    { id: serverTransaction.id, scheduled: false }
-                );
+                expect(
+                    rootStore[stateActions.selectTransaction]
+                ).toHaveBeenCalledWith({
+                    id: serverTransaction.id,
+                    scheduled: false,
+                });
             });
 
             it('should remove transaction again if create fails', async function () {
-                client.createTransaction.rejects('Invalid transaction');
+                client.createTransaction.mockImplementationOnce(async args => {
+                    throw new Error('Invalid transaction');
+                });
                 let err = null;
                 try {
                     await transactionsStore[actions.addTransaction](
@@ -575,13 +594,23 @@ describe('transactionStore', function () {
                     err = error;
                 }
                 assert.isNotNull(err);
-                txStoreSpies[mutations.addTransaction].get.calledWith(
-                    Object.assign({}, newTransaction)
+                expect(
+                    txStoreSpies[mutations.addTransaction]
+                ).toHaveBeenCalledWith(
+                    ensureAllFieldsPresent(
+                        Object.assign({}, newTransaction, { balance: 0 })
+                    )
                 );
-                txStoreSpies[mutations.removeTransaction].get.calledWith(
-                    Object.assign(newTransaction, {
-                        id: 'new-transaction',
-                    })
+                expect(
+                    txStoreSpies[mutations.removeTransaction]
+                ).toHaveBeenCalledWith(
+                    ensureAllFieldsPresent(
+                        Object.assign(
+                            { id: 'new-transaction' },
+                            newTransaction,
+                            { balance: 0 }
+                        )
+                    )
                 );
             });
         });
@@ -601,9 +630,10 @@ describe('transactionStore', function () {
                     transaction,
                     patch
                 );
-                client.updateTransaction
-                    .withArgs(modifiedTransaction)
-                    .resolves(modifiedTransaction);
+                client.updateTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, modifiedTransaction);
+                    return modifiedTransaction;
+                });
                 setupState(
                     addIdLookup({
                         transactions: [transaction],
@@ -615,7 +645,9 @@ describe('transactionStore', function () {
                     patch,
                 });
 
-                txStoreSpies[mutations.updateTransaction].get.calledWith({
+                expect(
+                    txStoreSpies[mutations.updateTransaction]
+                ).toHaveBeenCalledWith({
                     id: 1,
                     patch,
                 });
@@ -630,10 +662,14 @@ describe('transactionStore', function () {
                     date: '2016-07-13',
                 };
                 const patch = { payee: 'Payee2', notes: 'Notes' };
-                client.updateTransaction.rejects('Server says no');
+
+                client.updateTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, patch);
+                    throw new Error('Server says no');
+                });
                 setupState(
                     addIdLookup({
-                        transactions: [transaction],
+                        transactions: [Object.assign({}, transaction)],
                         priorBalance: 100,
                     })
                 );
@@ -647,11 +683,15 @@ describe('transactionStore', function () {
                     err = error;
                 }
                 assert.isNotNull(err);
-                txStoreSpies[mutations.updateTransaction].get.calledWith({
+                expect(
+                    txStoreSpies[mutations.updateTransaction]
+                ).toHaveBeenCalledWith({
                     id: 1,
                     patch,
                 });
-                txStoreSpies[mutations.updateTransaction].get.calledWith({
+                expect(
+                    txStoreSpies[mutations.updateTransaction]
+                ).toHaveBeenCalledWith({
                     id: 1,
                     patch: transaction,
                 });
@@ -673,24 +713,25 @@ describe('transactionStore', function () {
                     transaction,
                     patch
                 );
-                client.updateTransaction
-                    .withArgs(modifiedTransaction)
-                    .resolves(modifiedTransaction);
+
+                client.updateTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, modifiedTransaction);
+                    return modifiedTransaction;
+                });
                 setupState(
                     addIdLookup({
                         transactions: [transaction],
                         priorBalance: 100,
                     })
                 );
-                accountsStore[accountActions.adjustBalance] = sinon.spy();
+                accountsStore[accountActions.adjustBalance] = vi.fn();
                 await transactionsStore[actions.updateTransaction]({
                     id: 1,
                     patch,
                 });
-                sinon.assert.callCount(
-                    accountsStore[accountActions.adjustBalance],
-                    0
-                );
+                expect(
+                    accountsStore[accountActions.adjustBalance]
+                ).toHaveBeenCalledTimes(0);
             });
 
             [
@@ -819,34 +860,37 @@ describe('transactionStore', function () {
                         transaction,
                         patch
                     );
-                    client.updateTransaction
-                        .withArgs(modifiedTransaction)
-                        .resolves(modifiedTransaction);
+
+                    client.updateTransaction.mockImplementationOnce(
+                        async args => {
+                            return Object.assign({}, modifiedTransaction);
+                        }
+                    );
                     setupState(
                         addIdLookup({
-                            transactions: [transaction],
+                            transactions: [Object.assign({}, transaction)],
                             priorBalance: 100,
                         })
                     );
-                    accountsStore[accountActions.adjustBalance] = sinon.spy();
+                    accountsStore[accountActions.adjustBalance] = vi.fn();
                     await transactionsStore[actions.updateTransaction]({
                         id: 1,
                         patch,
                     });
-                    txStoreSpies[mutations.updateTransaction].get.calledWith({
+                    expect(
+                        txStoreSpies[mutations.updateTransaction]
+                    ).toHaveBeenCalledWith({
                         id: 1,
                         patch,
                     });
                     scenario.adjustBalance.forEach(param =>
-                        sinon.assert.calledWith(
-                            accountsStore[accountActions.adjustBalance],
-                            param
-                        )
+                        expect(
+                            accountsStore[accountActions.adjustBalance]
+                        ).toHaveBeenCalledWith(param)
                     );
-                    sinon.assert.callCount(
-                        accountsStore[accountActions.adjustBalance],
-                        scenario.adjustBalance.length
-                    );
+                    expect(
+                        accountsStore[accountActions.adjustBalance]
+                    ).toHaveBeenCalledTimes(scenario.adjustBalance.length);
                 });
             });
         });
@@ -860,7 +904,10 @@ describe('transactionStore', function () {
                     balance: 100,
                     date: '2016-07-13',
                 };
-                client.deleteTransaction.withArgs(transaction).resolves();
+
+                client.deleteTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, transaction);
+                });
                 setupState(
                     addIdLookup({
                         transactions: [transaction],
@@ -868,10 +915,12 @@ describe('transactionStore', function () {
                     })
                 );
                 await transactionsStore[actions.deleteTransaction](transaction);
-                txStoreSpies[mutations.removeTransaction].get.calledWith(
+                expect(
+                    txStoreSpies[mutations.removeTransaction]
+                ).toHaveBeenCalledWith(transaction);
+                expect(client.deleteTransaction).toHaveBeenCalledWith(
                     transaction
                 );
-                sinon.assert.calledWith(client.deleteTransaction, transaction);
             });
 
             it('should re-add transaction if server rejects deletion', async function () {
@@ -882,7 +931,10 @@ describe('transactionStore', function () {
                     balance: 100,
                     date: '2016-07-13',
                 };
-                client.deleteTransaction.withArgs(transaction).rejects();
+                client.deleteTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, transaction);
+                    throw new Error('Boom');
+                });
 
                 setupState(
                     addIdLookup({
@@ -899,12 +951,12 @@ describe('transactionStore', function () {
                     err = error;
                 }
                 assert.isNotNull(err);
-                txStoreSpies[mutations.removeTransaction].get.calledWith(
-                    transaction
-                );
-                txStoreSpies[mutations.addTransaction].get.calledWith(
-                    transaction
-                );
+                expect(
+                    txStoreSpies[mutations.removeTransaction]
+                ).toHaveBeenCalledWith(transaction);
+                expect(
+                    txStoreSpies[mutations.addTransaction]
+                ).toHaveBeenCalledWith(transaction);
             });
         });
 
@@ -919,27 +971,27 @@ describe('transactionStore', function () {
                     recurPeriod: 'ONCE',
                     accountId: 'account1',
                 };
-                client.deleteTransaction
-                    .withArgs(scheduledTransaction)
-                    .resolves();
+                client.deleteTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, scheduledTransaction);
+                });
                 setupState(
                     addIdLookup({
-                        transactions: [scheduledTransaction],
+                        transactions: [Object.assign({}, scheduledTransaction)],
                         priorBalance: 100,
                     })
                 );
+                accountsStore[accountActions.adjustBalance] = vi.fn();
                 await transactionsStore[actions.payTransaction](
                     scheduledTransaction
                 );
-                txStoreSpies[mutations.removeTransaction].get.calledWith(
-                    scheduledTransaction
-                );
+                expect(
+                    txStoreSpies[mutations.removeTransaction]
+                ).toHaveBeenCalledWith(scheduledTransaction);
 
-                sinon.assert.calledWith(
-                    client.deleteTransaction,
+                expect(client.deleteTransaction).toHaveBeenCalledWith(
                     scheduledTransaction
                 );
-                sinon.assert.calledWith(client.createTransaction, {
+                expect(client.createTransaction).toHaveBeenCalledWith({
                     amount: 10,
                     payee: 'Payee1',
                     date: '2016-07-13',
@@ -993,10 +1045,23 @@ describe('transactionStore', function () {
                         scheduledTransaction,
                         { date: params.nextScheduledDate }
                     );
-                    client.updateTransaction
-                        .withArgs(scheduledTransaction)
-                        .resolves(modifiedTransaction);
-                    client.createTransaction.resolves();
+                    client.updateTransaction.mockImplementationOnce(
+                        async args => {
+                            assert.deepEqual(args, scheduledTransaction);
+                            return modifiedTransaction;
+                        }
+                    );
+                    client.createTransaction.mockImplementationOnce(
+                        async args => {
+                            const newTx = Object.assign(
+                                {},
+                                modifiedTransaction
+                            );
+
+                            return newTx;
+                        }
+                    );
+                    accountsStore[accountActions.adjustBalance] = vi.fn();
 
                     setupState(
                         addIdLookup({
@@ -1007,16 +1072,17 @@ describe('transactionStore', function () {
                     await transactionsStore[actions.payTransaction](
                         scheduledTransaction
                     );
-                    txStoreSpies[mutations.updateTransaction].get.calledWith({
+                    expect(
+                        txStoreSpies[mutations.updateTransaction]
+                    ).toHaveBeenCalledWith({
                         id: scheduledTransaction.id,
                         patch: { date: params.nextScheduledDate },
                     });
 
-                    sinon.assert.calledWith(
-                        client.updateTransaction,
+                    expect(client.updateTransaction).toHaveBeenCalledWith(
                         modifiedTransaction
                     );
-                    sinon.assert.calledWith(client.createTransaction, {
+                    expect(client.createTransaction).toHaveBeenCalledWith({
                         amount: 10,
                         payee: 'Payee1',
                         date: params.scheduledDate,
@@ -1035,26 +1101,28 @@ describe('transactionStore', function () {
                     recurPeriod: 'ONCE',
                     accountId: 'account1',
                 };
-                client.deleteTransaction
-                    .withArgs(scheduledTransaction)
-                    .resolves();
+                client.deleteTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, scheduledTransaction);
+                });
                 setupState(
                     addIdLookup({
                         transactions: [scheduledTransaction],
                         priorBalance: 100,
                     })
                 );
-                accountsStore[accountActions.adjustBalance] = sinon.spy();
+                accountsStore[accountActions.adjustBalance] = vi.fn();
                 await transactionsStore[actions.payTransaction](
                     scheduledTransaction
                 );
-                txStoreSpies[mutations.removeTransaction].get.calledWith(
-                    scheduledTransaction
-                );
-                sinon.assert.calledWith(
-                    accountsStore[accountActions.adjustBalance],
-                    { id: 'account1', balance: scheduledTransaction.amount }
-                );
+                expect(
+                    txStoreSpies[mutations.removeTransaction]
+                ).toHaveBeenCalledWith(scheduledTransaction);
+                expect(
+                    accountsStore[accountActions.adjustBalance]
+                ).toHaveBeenCalledWith({
+                    id: 'account1',
+                    balance: scheduledTransaction.amount,
+                });
             });
 
             it('should update balance of both accounts when transaction is a transfer', async function () {
@@ -1069,30 +1137,34 @@ describe('transactionStore', function () {
                     type: 'transfer',
                     toAccountId: 'account2',
                 };
-                client.deleteTransaction
-                    .withArgs(scheduledTransaction)
-                    .resolves();
+                client.deleteTransaction.mockImplementationOnce(async args => {
+                    assert.deepEqual(args, scheduledTransaction);
+                });
                 setupState(
                     addIdLookup({
                         transactions: [scheduledTransaction],
                         priorBalance: 100,
                     })
                 );
-                accountsStore[accountActions.adjustBalance] = sinon.spy();
+                accountsStore[accountActions.adjustBalance] = vi.fn();
                 await transactionsStore[actions.payTransaction](
                     scheduledTransaction
                 );
-                txStoreSpies[mutations.removeTransaction].get.calledWith(
-                    scheduledTransaction
-                );
-                sinon.assert.calledWith(
-                    accountsStore[accountActions.adjustBalance],
-                    { id: 'account1', balance: scheduledTransaction.amount }
-                );
-                sinon.assert.calledWith(
-                    accountsStore[accountActions.adjustBalance],
-                    { id: 'account2', balance: -scheduledTransaction.amount }
-                );
+                expect(
+                    txStoreSpies[mutations.removeTransaction]
+                ).toHaveBeenCalledWith(scheduledTransaction);
+                expect(
+                    accountsStore[accountActions.adjustBalance]
+                ).toHaveBeenCalledWith({
+                    id: 'account1',
+                    balance: scheduledTransaction.amount,
+                });
+                expect(
+                    accountsStore[accountActions.adjustBalance]
+                ).toHaveBeenCalledWith({
+                    id: 'account2',
+                    balance: -scheduledTransaction.amount,
+                });
             });
         });
     });

@@ -1,23 +1,30 @@
-import sinon from 'sinon';
+import { afterEach, beforeEach, describe, it, vi, expect } from 'vitest';
 import { assert } from 'chai';
-import { mutations, actions } from '../../../../src/stores/categoryStore';
-import categoryStoreLoader from 'inject-loader!babel-loader!../../../../src/stores/categoryStore';
+import { mutations, actions, useCategoryStore } from '@/stores/categoryStore';
 import { createPinia, setActivePinia } from 'pinia';
+import client from '@/api/client';
+
+vi.mock('@/api/client', () => {
+    const client = {
+        categories: async function () {
+            return this.categoriesResponse;
+        },
+        createCategory: vi.fn(),
+        updateCategory: vi.fn(),
+    };
+    return { default: client };
+});
 
 describe('Category Store', function () {
     let nextId = 0;
-    let client;
     let categoryStore;
     beforeEach(function () {
         setActivePinia(createPinia());
-        client = {
-            categories: sinon.stub(),
-            createCategory: sinon.stub(),
-            updateCategory: sinon.stub(),
-        };
-        categoryStore = categoryStoreLoader({
-            '../api/client': client,
-        }).useCategoryStore();
+        categoryStore = useCategoryStore();
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     describe('Getters', function () {
@@ -272,7 +279,7 @@ describe('Category Store', function () {
                 const response = {
                     categories: [categoryA, categoryB, categoryC],
                 };
-                client.categories.resolves(response);
+                client.categoriesResponse = response;
                 createState();
                 await categoryStore[actions.loadCategories]();
                 assert.deepEqual(
@@ -286,9 +293,10 @@ describe('Category Store', function () {
             it('should create a new top level category', async function () {
                 const categoryA = makeCategory({ name: 'A' });
                 const categoryB = makeCategory({ name: 'B' });
-                client.createCategory
-                    .withArgs({ name: 'B' })
-                    .resolves(categoryB);
+                client.createCategory.mockImplementationOnce(async arg => {
+                    assert.deepEqual(arg, { name: 'B' });
+                    return categoryB;
+                });
                 createState(categoryA);
                 await categoryStore[actions.addCategory]({ name: 'B' });
 
@@ -304,9 +312,13 @@ describe('Category Store', function () {
                     name: 'B',
                     parentId: categoryA.id,
                 });
-                client.createCategory
-                    .withArgs({ name: 'B', parentId: categoryA.id })
-                    .resolves(categoryB);
+                client.createCategory.mockImplementationOnce(async arg => {
+                    assert.deepEqual(arg, {
+                        name: 'B',
+                        parentId: categoryA.id,
+                    });
+                    return categoryB;
+                });
                 createState(categoryA);
                 await categoryStore[actions.addCategory]({
                     name: 'B',
@@ -323,9 +335,13 @@ describe('Category Store', function () {
 
             it('should remove new category when server rejects creation', async function () {
                 const categoryA = makeCategory({ name: 'A' });
-                client.createCategory
-                    .withArgs({ name: 'B', parentId: categoryA.id })
-                    .rejects('Failed');
+                client.createCategory.mockImplementationOnce(async arg => {
+                    assert.deepEqual(arg, {
+                        name: 'B',
+                        parentId: categoryA.id,
+                    });
+                    throw new Error('Failed');
+                });
                 createState(Object.assign({}, categoryA));
                 let err = null;
                 try {
@@ -353,14 +369,17 @@ describe('Category Store', function () {
                     id: categoryA.id,
                     patch: { name: 'New Name' },
                 };
-                client.updateCategory.withArgs(modifiedA).resolves(modifiedA);
+                client.updateCategory.mockImplementationOnce(async arg => {
+                    assert.deepEqual(arg, modifiedA);
+                    return modifiedA;
+                });
                 createState(Object.assign({}, categoryA));
                 await categoryStore[actions.updateCategory](changes);
                 assert.deepEqual(
                     currentState(),
                     expectedState(makeCategory(modifiedA))
                 );
-                sinon.assert.calledWith(client.updateCategory, modifiedA);
+                expect(client.updateCategory).toHaveBeenCalledTimes(1);
             });
 
             it('should rollback changes when server rejects creation', async function () {
@@ -374,7 +393,10 @@ describe('Category Store', function () {
                     id: categoryA.id,
                     patch: { name: 'New Name' },
                 };
-                client.updateCategory.withArgs(modifiedA).rejects('Failed');
+                client.updateCategory.mockImplementationOnce(async arg => {
+                    assert.deepEqual(arg, modifiedA);
+                    throw new Error('Failed');
+                });
                 createState(categoryA);
                 let err = null;
                 try {
