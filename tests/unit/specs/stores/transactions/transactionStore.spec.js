@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, it, vi, expect } from 'vitest';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { assert, config as chaiConfig } from 'chai';
 import {
     useTransactionsStore,

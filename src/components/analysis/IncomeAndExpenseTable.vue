@@ -51,10 +51,12 @@
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import client from '../../api/client';
 import { monthAsIsoDate } from '../../api/apiFormats';
-import addMonths from 'date-fns/addMonths';
-import format from 'date-fns/format';
-import getMonth from 'date-fns/getMonth';
-import differenceInCalendarMonths from 'date-fns/differenceInCalendarMonths';
+import {
+    addMonths,
+    format,
+    getMonth,
+    differenceInCalendarMonths,
+} from 'date-fns';
 
 export default {
     components: {

@@ -45,7 +45,7 @@
 
 <script>
 import client from '../../api/client';
-import addMonths from 'date-fns/addMonths';
+import { addMonths } from 'date-fns';
 import { formatDate } from '../../api/apiFormats';
 import debounce from 'debounce';
 import { mapState } from 'pinia';

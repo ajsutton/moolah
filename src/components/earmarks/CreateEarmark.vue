@@ -91,7 +91,7 @@ import { mapActions } from 'pinia';
 import { useEarmarksStore, actions } from '../../stores/earmarksStore';
 import { rules } from '../validation';
 import DatePickerField from '../util/DatePickerField.vue';
-import isBefore from 'date-fns/isBefore';
+import { isBefore } from 'date-fns';
 import formatMoney from '../util/formatMoney';
 import parseMoney from '../util/parseMoney';
 import { parseDate } from '../../api/apiFormats';

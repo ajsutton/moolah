@@ -38,7 +38,7 @@
 import { mapState } from 'pinia';
 import client from '../../api/client';
 import { formatDate } from '../../api/apiFormats';
-import addMonths from 'date-fns/addMonths';
+import { addMonths } from 'date-fns';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import { expenseByCategoryReportData } from './expenseByCategoryReportData';
 import { useCategoryStore } from '../../stores/categoryStore';

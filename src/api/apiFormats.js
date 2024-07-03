@@ -1,5 +1,5 @@
-import dateFormat from 'date-fns/format';
-import getDaysInMonth from 'date-fns/getDaysInMonth';
+import { format as dateFormat } from 'date-fns';
+import { getDaysInMonth } from 'date-fns';
 
 export function parseDate(val) {
     if (val instanceof Date) {

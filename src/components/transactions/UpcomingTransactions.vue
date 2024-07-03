@@ -55,7 +55,7 @@ import {
     actions as stateActions,
     mutations as stateMutations,
 } from '../../stores/root';
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import { differenceInCalendarDays } from 'date-fns';
 import AddTransactionMixin from '../util/AddTransactionMixin';
 import { parseDate } from '../../api/apiFormats';
 import { useEarmarksStore } from '../../stores/earmarksStore';

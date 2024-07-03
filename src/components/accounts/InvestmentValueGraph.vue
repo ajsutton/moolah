@@ -8,10 +8,7 @@ import { mapState } from 'pinia';
 import GraphPanel from '../util/GraphPanel.vue';
 import formatMoney from '../util/formatMoney';
 import { formatDate } from '../../api/apiFormats';
-import addMonths from 'date-fns/addMonths';
-import addDays from 'date-fns/addDays';
-import isBefore from 'date-fns/isBefore';
-import parseISO from 'date-fns/parseISO';
+import { addMonths, addDays, isBefore, parseISO } from 'date-fns';
 import debounce from 'debounce';
 import { useValuesStore } from '../../stores/valuesStore';
 

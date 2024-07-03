@@ -1,6 +1,6 @@
 import { rootLevelId } from './rootLevelId';
 import { monthAsIsoDate } from '../../../api/apiFormats';
-import formatDate from 'date-fns/format';
+import { format as formatDate } from 'date-fns';
 
 export function categoriesOverTimeGraphData(
     expensesByCategory,

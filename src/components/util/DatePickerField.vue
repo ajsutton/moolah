@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import addDays from 'date-fns/addDays';
+import { addDays } from 'date-fns';
 import { formatDate, parseDate } from '../../api/apiFormats';
 
 export default {

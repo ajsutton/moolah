@@ -44,10 +44,7 @@
 import ExpensesByCategoryReport from './ExpensesByCategoryReport.vue';
 import DatePickerField from '../util/DatePickerField.vue';
 import { formatDate } from '../../api/apiFormats';
-import addMonths from 'date-fns/addMonths';
-import startOfMonth from 'date-fns/startOfMonth';
-import startOfQuarter from 'date-fns/startOfQuarter';
-import startOfYear from 'date-fns/startOfYear';
+import { addMonths, startOfMonth, startOfQuarter, startOfYear } from 'date-fns';
 
 function range(title, from, to) {
     return { title, value: { from: formatDate(from), to: formatDate(to) } };

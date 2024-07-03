@@ -92,8 +92,7 @@ import InvestmentValueGraph from './InvestmentValueGraph.vue';
 import ValuePanel from './ValuePanel.vue';
 import client from '../../api/client';
 import debounce from 'debounce';
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
-import parseISO from 'date-fns/parseISO';
+import { differenceInCalendarDays, parseISO } from 'date-fns';
 import { useTransactionsStore } from '../../stores/transactions/transactionStore';
 
 export default {

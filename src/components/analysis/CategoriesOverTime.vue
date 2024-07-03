@@ -38,7 +38,7 @@
 import c3 from 'c3';
 import client from '../../api/client';
 import formatMoney from '../util/formatMoney';
-import addMonths from 'date-fns/addMonths';
+import { addMonths } from 'date-fns';
 import { formatDate } from '../../api/apiFormats';
 import debounce from 'debounce';
 import { mapState } from 'pinia';

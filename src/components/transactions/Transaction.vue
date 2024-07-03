@@ -44,9 +44,7 @@
 import { mapState } from 'pinia';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import { parseDate } from '../../api/apiFormats';
-import formatDate from 'date-fns/format';
-import isBefore from 'date-fns/isBefore';
-import startOfDay from 'date-fns/startOfDay';
+import { format as formatDate, isBefore, startOfDay } from 'date-fns';
 import { transactionTitle } from './transactionTitle';
 import { useRootStore } from '../../stores/root';
 import { useAccountsStore } from '../../stores/accountsStore';

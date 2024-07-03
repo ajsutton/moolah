@@ -1,6 +1,8 @@
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
-import distanceInWords from 'date-fns/formatDistance';
-import startOfToday from 'date-fns/startOfToday';
+import {
+    differenceInCalendarDays,
+    formatDistance as distanceInWords,
+    startOfToday,
+} from 'date-fns';
 import { parseDate } from '../../api/apiFormats';
 
 export default {
