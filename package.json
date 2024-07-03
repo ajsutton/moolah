@@ -52,11 +52,6 @@
         "vitest": "^1.6.0",
         "vue-router": "^4.3.0"
     },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    },
     "lint-staged": {
         "*.js": [
             "yarn lint",
