@@ -14,7 +14,7 @@
             <v-form ref="form" v-model="valid" lazy-validation>
                 <v-card-title>{{ title }}</v-card-title>
                 <template v-if="errorMessage != null">
-                    <v-alert error :value="true">{{ errorMessage }}</v-alert>
+                    <v-alert type="error">{{ errorMessage }}</v-alert>
                 </template>
                 <v-card-text>
                     <v-container fluid>
