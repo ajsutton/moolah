@@ -28,11 +28,14 @@
         <v-list-item v-if="accounts.length > 0" no-action>
             <v-list-item-title>
                 {{ totalLabel }}
+            </v-list-item-title>
+
+            <template v-slot:append>
                 <monetary-amount
-                    class="float-right"
+                    class="wallet-balance"
                     :value="totalValue"
                 ></monetary-amount>
-            </v-list-item-title>
+            </template>
         </v-list-item>
     </v-list>
 </template>
