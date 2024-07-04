@@ -41,7 +41,7 @@
                 </template>
             </wallet-list>
 
-            <v-list density="compact" nav>
+            <v-list density="compact" nav slim>
                 <v-list-item to="/" exact>
                     <template v-slot:prepend>
                         <v-icon icon="mdi-trending-up"></v-icon>

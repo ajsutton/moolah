@@ -216,8 +216,8 @@ export default {
             get() {
                 return this.transaction.toAccountId;
             },
-            set(value) {
-                this.updateTransaction({
+            async set(value) {
+                await this.updateTransaction({
                     id: this.transaction.id,
                     patch: {
                         type: 'transfer',

@@ -1,5 +1,5 @@
 <template>
-    <v-list density="compact" nav>
+    <v-list density="compact" nav slim>
         <v-list-item>
             <v-list-header>{{ title }}</v-list-header>
             <template v-slot:append>

@@ -1,13 +1,17 @@
 <template>
     <v-list-item :to="accountLink">
-        <v-list-item-title>
+        <template v-slot:prepend>
             <v-icon :icon="walletIcon"></v-icon>
+        </template>
+        <v-list-item-title>
             {{ account.name }}
+        </v-list-item-title>
+        <template v-slot:append>
             <monetary-amount
-                class="float-right"
+                class="wallet-balance"
                 :value="balance"
             ></monetary-amount>
-        </v-list-item-title>
+        </template>
     </v-list-item>
 </template>
 
@@ -52,3 +56,9 @@ export default {
     },
 };
 </script>
+
+<style type="scss">
+.wallet-balance {
+    font-size: 0.8125rem;
+}
+</style>
