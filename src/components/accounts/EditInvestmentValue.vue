@@ -19,7 +19,7 @@
             >
                 <v-card-title>Set Investment Value</v-card-title>
                 <template v-if="errorMessage != null">
-                    <v-alert error :value="true">{{ errorMessage }}</v-alert>
+                    <v-alert type="error">{{ errorMessage }}</v-alert>
                 </template>
                 <v-card-text>
                     <v-container>
