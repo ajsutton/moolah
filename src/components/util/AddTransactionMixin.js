@@ -10,7 +10,7 @@ export default {
         };
         document.addEventListener('keydown', this.$keyListener);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.$keyListener !== undefined) {
             document.removeEventListener('keydown', this.$keyListener);
         }
