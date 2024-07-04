@@ -1,7 +1,7 @@
 <template>
     <v-list density="compact" nav slim>
         <v-list-item>
-            <v-list-header>{{ title }}</v-list-header>
+            <v-list-item-title>{{ title }}</v-list-item-title>
             <template v-slot:append>
                 <v-btn
                     v-if="hasHiddenWallets"
