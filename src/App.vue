@@ -30,7 +30,6 @@
         <v-navigation-drawer
             v-if="showRightNavPanel"
             floating
-            permanent
             location="right"
             disable-route-watcher
             disable-resize-watcher

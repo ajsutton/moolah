@@ -1,8 +1,8 @@
 <template>
     <v-navigation-drawer
         v-model="mainNavVisible"
+        floating
         theme="dark"
-        permanent
         width="300"
     >
         <template v-if="loggedIn">
