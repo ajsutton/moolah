@@ -44,11 +44,17 @@
 import ExpensesByCategoryReport from './ExpensesByCategoryReport.vue';
 import DatePickerField from '../util/DatePickerField.vue';
 import { formatDate } from '../../api/apiFormats';
+import { currentFY, previousFY } from '@/util/dates';
 import { addMonths, startOfMonth, startOfQuarter, startOfYear } from 'date-fns';
 
 function range(title, from, to) {
     return { title, value: { from: formatDate(from), to: formatDate(to) } };
 }
+
+function financialYear(title, year) {
+    return range(title, year.start, year.end);
+}
+
 export default {
     components: {
         ExpensesByCategoryReport,
@@ -60,6 +66,8 @@ export default {
             from: formatDate(addMonths(today, -6)),
             to: formatDate(new Date()),
             ranges: [
+                financialYear('This Financial Year', currentFY(today)),
+                financialYear('Last Financial Year', previousFY(today)),
                 range('Last month', addMonths(today, -1), today),
                 range('Last 3 months', addMonths(today, -3), today),
                 range('Last 6 months', addMonths(today, -6), today),
