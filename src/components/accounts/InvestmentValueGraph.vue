@@ -1,5 +1,14 @@
 <template>
     <graph-panel ref="chartPanel" title="" class="elevation-0"> </graph-panel>
+    <v-select
+        min-width="120"
+        variant="underlined"
+        class="mt-4 me-2"
+        density="comfortable"
+        v-model="previousMonths"
+        label="History"
+        :items="historyItems"
+    ></v-select>
 </template>
 
 <script>
@@ -28,6 +37,23 @@ export default {
             types: Array,
             required: true,
         },
+    },
+    data() {
+        return {
+            previousMonths: 6,
+            historyItems: [
+                { title: '1 Month', value: 1 },
+                { title: '3 Months', value: 3 },
+                { title: '6 Months', value: 6 },
+                { title: '9 Months', value: 9 },
+                { title: '1 Year', value: 12 },
+                { title: '2 Years', value: 24 },
+                { title: '3 Years', value: 36 },
+                { title: '4 Years', value: 48 },
+                { title: '5 Years', value: 60 },
+                { title: 'All', value: 'All' },
+            ],
+        };
     },
     computed: {
         graphData() {

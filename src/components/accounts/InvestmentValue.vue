@@ -19,7 +19,7 @@
                     <value-panel
                         class="text-center"
                         label="Invested Amount"
-                        value-color="gray"
+                        value-color="grey"
                         :value="account.balance"
                     ></value-panel>
                 </v-col>
