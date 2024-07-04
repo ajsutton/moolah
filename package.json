@@ -10,6 +10,7 @@
         "test": "vitest --no-watch",
         "test-watch": "vitest --watch",
         "lint": "eslint src tests",
+        "pretty": "prettier --write '**/*.js' '**/*.vue'",
         "prepare": "husky"
     },
     "dependencies": {
