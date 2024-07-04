@@ -40,7 +40,7 @@
                 </v-col>
                 <v-col :cols="12" :lg="4">
                     <v-data-table
-                        dense
+                        density="compact"
                         :headers="headers"
                         :items="values"
                         :items-per-page="5"
@@ -105,18 +105,18 @@ export default {
             selectedTab: 'table',
             headers: [
                 {
-                    text: 'Date',
+                    title: 'Date',
                     align: 'start',
                     sortable: false,
                     value: 'date',
                 },
                 {
-                    text: 'Value',
+                    title: 'Value',
                     align: 'end',
                     sortable: false,
                     value: 'value',
                 },
-                { text: '', align: 'end', value: 'actions', sortable: false },
+                { title: '', align: 'end', value: 'actions', sortable: false },
             ],
             options: {},
             balances: [],
