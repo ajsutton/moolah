@@ -228,7 +228,7 @@ export default {
             },
         },
         category: makeModelProperty(
-            'category',
+            'categoryId',
             value => value || '',
             value => (value === '' ? undefined : value)
         ),
