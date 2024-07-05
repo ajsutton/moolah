@@ -8,7 +8,7 @@ import { mapState } from 'pinia';
 import GraphPanel from '../util/GraphPanel.vue';
 import formatMoney from '../util/formatMoney';
 import { formatDate } from '../../api/apiFormats';
-import { addMonths, addDays, isBefore, parseISO } from 'date-fns';
+import { addMonths, addDays, isBefore, parseISO, isAfter } from 'date-fns';
 import debounce from 'debounce';
 import { useValuesStore } from '../../stores/valuesStore';
 
@@ -27,6 +27,10 @@ export default {
         balances: {
             types: Array,
             required: true,
+        },
+        previousMonths: {
+            types: [Number, String],
+            default: 'All',
         },
     },
     computed: {
@@ -51,20 +55,62 @@ export default {
         },
         dataPoints() {
             let data = {};
+            const update = (date, applyFn) => {
+                const item = data[date] || { date };
+                applyFn(item);
+                data[date] = item;
+            };
+            let startBalance = null;
+            let startValue = null;
+            const startDate =
+                this.previousMonths == 'All'
+                    ? null
+                    : addMonths(new Date(), -this.previousMonths);
             this.values.forEach(value => {
-                const item = data[value.date] || {
-                    date: value.date,
-                };
-                item.value = value.value;
-                data[value.date] = item;
+                if (startDate != null && isBefore(value.date, startDate)) {
+                    if (
+                        startValue == null ||
+                        isAfter(value.date, startValue.date)
+                    ) {
+                        startValue = value;
+                    }
+                    return;
+                }
+                update(value.date, item => (item.value = value.value));
             });
             this.balances.forEach(balance => {
-                const item = data[balance.date] || {
-                    date: balance.date,
-                };
-                item.balance = balance.balance;
-                data[balance.date] = item;
+                if (startDate != null && isBefore(balance.date, startDate)) {
+                    if (
+                        startBalance == null ||
+                        isAfter(balance.date, startBalance.date)
+                    ) {
+                        startBalance = balance;
+                    }
+                    return;
+                }
+                update(balance.date, item => (item.balance = balance.balance));
             });
+
+            if (startValue !== null) {
+                update(
+                    formatDate(startDate),
+                    item =>
+                        (item.value =
+                            item.value !== undefined
+                                ? item.value
+                                : startValue.value)
+                );
+            }
+            if (startBalance !== null) {
+                update(
+                    formatDate(startDate),
+                    item =>
+                        (item.balance =
+                            item.balance !== undefined
+                                ? item.balance
+                                : startBalance.balance)
+                );
+            }
             data = Object.values(data);
             data.sort((a, b) => {
                 return a.date < b.date ? -1 : 1;
@@ -111,6 +157,7 @@ export default {
     watch: {
         values: doUpdate,
         balances: doUpdate,
+        previousMonths: doUpdate,
     },
 
     async mounted() {

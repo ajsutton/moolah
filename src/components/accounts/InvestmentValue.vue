@@ -3,6 +3,16 @@
         <v-toolbar flat>
             <v-toolbar-title>{{ account.name }}</v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-select
+                min-width="120"
+                max-width="120"
+                variant="underlined"
+                class="mt-4 me-2"
+                density="comfortable"
+                v-model="previousMonths"
+                label="History"
+                :items="historyItems"
+            ></v-select>
             <edit-investment-value></edit-investment-value>
         </v-toolbar>
         <v-container fluid>
@@ -36,6 +46,7 @@
                     <investment-value-graph
                         :account="account"
                         :balances="balances"
+                        :previousMonths="previousMonths"
                     ></investment-value-graph>
                 </v-col>
                 <v-col :cols="12" :lg="4">
@@ -120,6 +131,19 @@ export default {
             ],
             options: {},
             balances: [],
+            previousMonths: 'All',
+            historyItems: [
+                { title: '1 Month', value: 1 },
+                { title: '3 Months', value: 3 },
+                { title: '6 Months', value: 6 },
+                { title: '9 Months', value: 9 },
+                { title: '1 Year', value: 12 },
+                { title: '2 Years', value: 24 },
+                { title: '3 Years', value: 36 },
+                { title: '4 Years', value: 48 },
+                { title: '5 Years', value: 60 },
+                { title: 'All', value: 'All' },
+            ],
         };
     },
 
