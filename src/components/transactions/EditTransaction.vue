@@ -115,6 +115,7 @@ export default {
                 note: undefined,
                 categoryId: undefined,
             },
+            senders: {},
             rules,
         };
     },
@@ -227,7 +228,7 @@ export default {
             },
         },
         category: makeModelProperty(
-            'categoryId',
+            'category',
             value => value || '',
             value => (value === '' ? undefined : value)
         ),

@@ -1,3 +1,4 @@
+import debounce from 'debounce';
 import { isValid } from '../validation';
 
 export function makeModelProperty(
@@ -18,20 +19,33 @@ export function makeModelProperty(
         },
         set(value) {
             this.raw[propertyName] = value;
-            if (isValid(value, this.rules[propertyName])) {
-                this.updateTransaction({
-                    id: this.transaction.id,
-                    patch: {
-                        [propertyName]: fromDisplay(value, this.transaction),
-                    },
-                });
+            if (this.senders[propertyName] == undefined) {
+                this.senders[propertyName] = debounce(async () => {
+                    const value = this.raw[propertyName];
+                    if (
+                        value !== undefined &&
+                        isValid(value, this.rules[propertyName])
+                    ) {
+                        await this.updateTransaction({
+                            id: this.transaction.id,
+                            patch: {
+                                [propertyName]: fromDisplay(
+                                    value,
+                                    this.transaction
+                                ),
+                            },
+                        });
+                        this.raw[propertyName] = undefined;
+                    }
+                }, 500);
             }
+            this.senders[propertyName]();
         },
     };
 }
 
 export function onBlur(property) {
-    if (isValid(this.raw[property], this.rules[property])) {
-        this.raw[property] = undefined;
+    if (this.senders[property] !== undefined) {
+        this.senders[property].flush();
     }
 }
