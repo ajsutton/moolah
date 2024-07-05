@@ -1,2 +1,3 @@
+yarn run pretty
+yarn run lint
 yarn test
-yarn run lint-staged
