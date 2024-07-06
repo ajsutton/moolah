@@ -38,7 +38,7 @@
                 :label="toAccountLabel"
                 :wallets="accounts"
                 v-model:value="toAccountId"
-                :exclude-account-id="accountId"
+                :exclude="accountId"
             ></wallet-selector>
         </template>
 

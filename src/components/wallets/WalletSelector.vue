@@ -6,22 +6,20 @@
         :clearable="clearable"
         item-title="name"
         item-value="id"
-        :item-props="true"
+        :item-props="false"
     >
         <template v-slot:item="{ props, item }">
             <v-list-item v-bind="props">
                 <template v-slot:prepend>
                     <v-list-item-action>
-                        <v-icon :icon="icon(props)"></v-icon>
+                        <v-icon :icon="icon(item.raw)"></v-icon>
                     </v-list-item-action>
                 </template>
-
-                <v-list-item-title>{{ item.name }}</v-list-item-title>
 
                 <template v-slot:append>
                     <v-list-item-action>
                         <monetary-amount
-                            :value="props.balance"
+                            :value="item.raw.balance"
                         ></monetary-amount>
                     </v-list-item-action>
                 </template>
