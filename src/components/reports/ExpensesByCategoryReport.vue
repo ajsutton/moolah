@@ -22,7 +22,19 @@
                     </td>
                 </tr>
                 <tr v-for="child in item.children" :key="child.categoryId">
-                    <td>{{ child.name }}</td>
+                    <td>
+                        <router-link
+                            :to="{
+                                path: '/transactions/',
+                                query: {
+                                    from,
+                                    to,
+                                    category: [child.categoryId],
+                                },
+                            }"
+                            >{{ child.name }}</router-link
+                        >
+                    </td>
                     <td class="text-right">
                         <monetary-amount
                             :value="child.totalExpenses"
