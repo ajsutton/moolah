@@ -73,7 +73,6 @@ export default {
             return extrapolateBalances(
                 this.dailyBalances,
                 this.scheduledBalances,
-                this.investmentValues,
                 this.today,
                 this.untilDate
             );
