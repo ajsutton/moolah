@@ -37,18 +37,23 @@ export default {
         graphData() {
             return {
                 type: 'line',
+                types: {
+                    profit: 'area',
+                },
                 json: this.dataPoints,
                 keys: {
                     x: 'date',
-                    value: ['value', 'balance'],
+                    value: ['value', 'balance', 'profit'],
                 },
                 names: {
                     value: 'Investment Value',
                     balance: 'Invested Amount',
+                    profit: 'Profit/Loss',
                 },
                 colors: {
                     value: '#2196F3',
                     balance: 'gray',
+                    profit: 'orange',
                 },
                 unload: true,
             };
@@ -117,6 +122,7 @@ export default {
             });
             let value;
             let balance;
+
             data.forEach(item => {
                 if (item.value !== undefined) {
                     value = item.value;
@@ -127,6 +133,9 @@ export default {
                     balance = item.balance;
                 } else {
                     item.balance = balance;
+                }
+                if (item.value !== undefined && item.balance !== undefined) {
+                    item.profit = item.value - item.balance;
                 }
             });
             return data;
@@ -205,12 +214,13 @@ export default {
                 grid: {
                     y: {
                         show: true,
+                        lines: [{ value: 0, class: 'grid0' }],
                     },
                     x: {},
                 },
                 padding: {
                     left: 100,
-                    right: 40,
+                    right: 100,
                     bottom: 10,
                 },
             };
@@ -226,3 +236,10 @@ export default {
     },
 };
 </script>
+
+<style lang="scss">
+.grid0 line {
+    stroke: black;
+    stroke-width: 1px;
+}
+</style>
