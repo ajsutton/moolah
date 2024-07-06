@@ -19,6 +19,7 @@
         "date-fns": "3.6.0",
         "debounce": "^2.1.0",
         "roboto-fontface": "*",
+        "sortablejs": "^1.15.2",
         "vue": "^3.4.0",
         "vuetify": "^3.5.0"
     },

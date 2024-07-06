@@ -17,12 +17,15 @@
             </template>
         </v-list-item>
 
-        <wallet-list-item
-            v-for="wallet in visibleWallets"
-            :key="wallet.id"
-            :account="wallet"
-            :base-url="baseUrl"
-        ></wallet-list-item>
+        <div v-sortable-list="onSorted">
+            <wallet-list-item
+                v-for="wallet in visibleWallets"
+                :key="wallet.id"
+                :account="wallet"
+                :base-url="baseUrl"
+                class="sortHandle"
+            ></wallet-list-item>
+        </div>
         <v-divider></v-divider>
 
         <v-list-item v-if="accounts.length > 0" no-action>
@@ -48,6 +51,7 @@ import IconVisibilityOff from '~icons/mdi/visibilityOff';
 <script>
 import MonetaryAmount from '../util/MonetaryAmount.vue';
 import WalletListItem from './WalletListItem.vue';
+import SortableList from '../util/SortableList';
 
 const hiddenFilter = wallet => !wallet.hidden || wallet.balance !== 0;
 
@@ -92,6 +96,22 @@ export default {
         hasHiddenWallets() {
             return !this.accounts.every(hiddenFilter);
         },
+    },
+    methods: {
+        onSorted({ oldIndex, newIndex }) {
+            const wallets = [...this.visibleWallets];
+            const moved = wallets.splice(oldIndex, 1)[0];
+            wallets.splice(newIndex, 0, moved);
+            if (!this.showHidden) {
+                wallets.push(
+                    ...this.accounts.filter(wallet => !hiddenFilter(wallet))
+                );
+            }
+            this.$emit('sorted', wallets);
+        },
+    },
+    directives: {
+        SortableList,
     },
 };
 </script>

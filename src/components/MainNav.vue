@@ -12,6 +12,7 @@
                 base-url="/account"
                 total-label="Current funds"
                 :total-value="currentAccountsBalance"
+                @sorted="accountsSorted"
             >
                 <template v-slot:titleAction>
                     <create-account></create-account>
@@ -23,6 +24,7 @@
                 base-url="/earmark"
                 total-label="Available funds"
                 :total-value="availableFunds"
+                @sorted="earmarksSorted"
             >
                 <template v-slot:titleAction>
                     <create-earmark theme="dark"></create-earmark>
@@ -35,6 +37,7 @@
                 base-url="/account"
                 total-label="Net worth"
                 :total-value="networth"
+                @sorted="accountsSorted"
             >
                 <template v-slot:titleAction>
                     <create-account dark></create-account>
@@ -79,12 +82,18 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import WalletList from './wallets/WalletList.vue';
 import CreateAccount from './accounts/CreateAccount.vue';
 import CreateEarmark from './earmarks/CreateEarmark.vue';
-import { useAccountsStore } from '../stores/accountsStore';
-import { useEarmarksStore } from '../stores/earmarksStore';
+import {
+    useAccountsStore,
+    actions as accountsActions,
+} from '../stores/accountsStore';
+import {
+    useEarmarksStore,
+    actions as earmarksActions,
+} from '../stores/earmarksStore';
 import { useRootStore } from '../stores/root';
 
 export default {
@@ -113,6 +122,32 @@ export default {
             'currentAccountsBalance',
             'noncurrentAccountsBalance',
         ]),
+    },
+    methods: {
+        async accountsSorted(newOrder) {
+            for (let i = 0; i < newOrder.length; i++) {
+                const acc = newOrder[i];
+                await this.updateAccount({
+                    id: acc.id,
+                    patch: { position: i },
+                });
+            }
+        },
+        async earmarksSorted(newOrder) {
+            for (let i = 0; i < newOrder.length; i++) {
+                const acc = newOrder[i];
+                await this.updateEarmark({
+                    id: acc.id,
+                    patch: { position: i },
+                });
+            }
+        },
+        ...mapActions(useAccountsStore, {
+            updateAccount: accountsActions.updateAccount,
+        }),
+        ...mapActions(useEarmarksStore, {
+            updateEarmark: earmarksActions.updateEarmark,
+        }),
     },
     components: {
         WalletList,
