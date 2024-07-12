@@ -15,6 +15,7 @@
 <script>
 import { mapState } from 'pinia';
 import { useTransactionsStore } from '../../stores/transactions/transactionStore';
+import { useRootStore } from '@/stores/root';
 
 export default {
     props: {
@@ -35,6 +36,7 @@ export default {
             const payeeToTx = {};
             this.transactions.forEach(tx => {
                 if (
+                    tx !== this.selectedTransaction &&
                     payeeToTx[tx.payee] === undefined &&
                     tx.payee !== '' &&
                     tx.payee !== undefined &&
@@ -46,6 +48,7 @@ export default {
             return Object.values(payeeToTx);
         },
         ...mapState(useTransactionsStore, ['transactions']),
+        ...mapState(useRootStore, ['selectedTransaction']),
     },
 
     methods: {
