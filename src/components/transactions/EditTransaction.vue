@@ -71,9 +71,15 @@
             <v-btn
                 v-if="!isOpeningBalance"
                 @click.prevent="deleteTransaction(transaction)"
+                variant="text"
+                color="red"
                 >Delete</v-btn
             >
-            <v-btn v-if="scheduled" @click.prevent="pay(transaction)"
+            <v-btn
+                v-if="scheduled"
+                @click.prevent="pay(transaction)"
+                variant="text"
+                color="primary"
                 >Pay</v-btn
             >
         </div>
