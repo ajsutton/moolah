@@ -80,6 +80,7 @@
                 @click.prevent="pay(transaction)"
                 variant="text"
                 color="primary"
+                class="ms-2"
                 >Pay</v-btn
             >
         </div>
