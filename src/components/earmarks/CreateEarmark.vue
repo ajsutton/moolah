@@ -1,11 +1,11 @@
 <template>
-    <v-dialog v-model="dialog" persistent max-width="600">
+    <v-dialog v-model="dialog" max-width="600">
         <template #activator="{ props }">
             <v-btn icon v-bind="props">
                 <v-icon :title="title" :icon="icon"></v-icon>
             </v-btn>
         </template>
-        <v-card>
+        <v-card theme="light">
             <v-form ref="form" v-model="valid" lazy-validation>
                 <v-card-title>{{ title }}</v-card-title>
                 <template v-if="errorMessage != null">

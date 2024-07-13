@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="visible" max-width="400px" persistent>
+    <v-dialog v-model="visible" max-width="400px">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn size="small" icon color="primary" v-bind="activatorProps"
                 ><v-icon :icon="IconAdd"></v-icon
