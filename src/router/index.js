@@ -17,6 +17,7 @@ function createTransactionProps(route) {
             from: route.query.from,
             to: route.query.to,
             category: route.query.category,
+            payee: route.query.payee,
             account: route.params.accountId,
             earmark: route.params.earmarkId,
             scheduled: false,

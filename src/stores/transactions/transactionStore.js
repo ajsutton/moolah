@@ -134,7 +134,9 @@ const options = {
                 state.searchOptions.from !== undefined ||
                 state.searchOptions.to !== undefined ||
                 (state.searchOptions.category !== undefined &&
-                    state.searchOptions.category.length > 0)
+                    state.searchOptions.category.length > 0) ||
+                (state.searchOptions.payee !== undefined &&
+                    state.searchOptions.payTransaction !== '')
             );
         },
         loading(state) {

@@ -20,6 +20,7 @@ export default {
                             from: undefined,
                             to: undefined,
                             category: undefined,
+                            payee: undefined,
                         },
                     });
                 }
@@ -50,6 +51,12 @@ export default {
                 } else {
                     message += ` in ${this.searchOptions.category.length} categories`;
                 }
+            }
+            if (
+                this.searchOptions.payee !== undefined &&
+                this.searchOptions.payee !== ''
+            ) {
+                message += ` with payee containing ${this.searchOptions.payee}`;
             }
             return message;
         },

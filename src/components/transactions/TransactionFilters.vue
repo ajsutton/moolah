@@ -42,6 +42,14 @@
                             ></category-selector>
                         </v-col>
                     </v-row>
+                    <v-row>
+                        <v-col cols="12">
+                            <v-text-field
+                                v-model="payee"
+                                label="Payee"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
                 </v-container>
             </v-card-text>
             <v-card-actions>
@@ -74,6 +82,7 @@ export default {
             from: undefined,
             to: undefined,
             categories: [],
+            payee: undefined,
             dialog: false,
         };
     },
@@ -94,6 +103,7 @@ export default {
             this.from = this.searchOptions.from;
             this.to = this.searchOptions.to;
             this.categories = this.searchOptions.category || [];
+            this.payee = this.searchOptions.payee;
         },
         close() {
             this.dialog = false;
@@ -106,6 +116,7 @@ export default {
                     from: this.from,
                     to: this.to,
                     category: this.categories,
+                    payee: this.payee,
                 },
             });
             this.dialog = false;
