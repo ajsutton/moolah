@@ -11,12 +11,7 @@
             </v-btn>
         </template>
         <v-card>
-            <v-form
-                ref="form"
-                v-model="valid"
-                lazy-validation
-                @submit.prevent="submit()"
-            >
+            <v-form ref="form" v-model="valid" @submit.prevent="submit()">
                 <v-card-title>Set Investment Value</v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert type="error">{{ errorMessage }}</v-alert>

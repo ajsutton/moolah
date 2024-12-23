@@ -11,7 +11,7 @@
             </v-btn>
         </template>
         <v-card theme="light">
-            <v-form ref="form" v-model="valid" lazy-validation>
+            <v-form ref="form" v-model="valid">
                 <v-card-title>{{ title }}</v-card-title>
                 <template v-if="errorMessage != null">
                     <v-alert type="error">{{ errorMessage }}</v-alert>
