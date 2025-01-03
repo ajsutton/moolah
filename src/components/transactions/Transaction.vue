@@ -1,7 +1,11 @@
 <template>
     <v-list-item :value="transaction" @click="editTransaction(transaction)">
-        <v-list-item-title>{{ transactionTitle }}</v-list-item-title>
-        <v-list-item-subtitle>{{ categoryName }}</v-list-item-subtitle>
+        <v-list-item-title class="ml-4">{{
+            transactionTitle
+        }}</v-list-item-title>
+        <v-list-item-subtitle class="ml-4">{{
+            categoryName
+        }}</v-list-item-subtitle>
 
         <template v-slot:prepend>
             <v-list-item-action>
