@@ -28,7 +28,7 @@ export default [
     },
     ...compat.extends(
         'semistandard',
-        'plugin:vue/vue3-essential',
+        'plugin:vue/essential',
         'eslint:recommended',
         'prettier'
     ),
