@@ -23,7 +23,7 @@ export function monthAsIsoDate(month, dayOfMonth = 1) {
     const strMonth = String(month);
     const yearPart = strMonth.substring(0, strMonth.length - 2);
     const monthPart = strMonth.substring(strMonth.length - 2);
-    const monthStart = parseDate(yearPart, monthPart - 1);
+    const monthStart = new Date(Date.UTC(yearPart, monthPart - 1));
     const daysInMonth = getDaysInMonth(monthStart);
     const dayPart = String(Math.min(dayOfMonth, daysInMonth)).padStart(2, '0');
     return parseDate(yearPart + '-' + monthPart + '-' + dayPart);

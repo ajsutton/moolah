@@ -59,9 +59,7 @@ import {
 } from 'date-fns';
 
 export default {
-    components: {
-        MonetaryAmount,
-    },
+    components: { MonetaryAmount },
 
     methods: {
         monthName(value) {
