@@ -43,6 +43,14 @@
                 </tr>
             </template>
         </tbody>
+        <tfoot>
+            <tr>
+                <th>Total Expenses</th>
+                <th class="text-right">
+                    <monetary-amount :value="totalExpenses"></monetary-amount>
+                </th>
+            </tr>
+        </tfoot>
     </v-table>
 </template>
 
@@ -77,6 +85,12 @@ export default {
                 this.expenseBreakdown,
                 this.categoriesById,
                 this.getCategoryName
+            );
+        },
+        totalExpenses() {
+            return this.reportData.reduce(
+                (prev, curr) => prev + curr.totalExpenses,
+                0
             );
         },
         ...mapState(useCategoryStore, ['categoriesById', 'getCategoryName']),
