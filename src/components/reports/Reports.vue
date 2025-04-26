@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            <div>Expenses by Category</div>
+            <div>Break Down by Category</div>
         </v-card-title>
         <v-form>
             <v-container fluid>
@@ -28,10 +28,21 @@
                 </v-row>
 
                 <v-row align-content="center">
-                    <v-col cols="12" lg="6" offset-lg="3">
+                    <v-col cols="12" lg="6">
+                        <h1>Income</h1>
                         <expenses-by-category-report
                             :from="from"
                             :to="to"
+                            transactionType="income"
+                        ></expenses-by-category-report>
+                    </v-col>
+
+                    <v-col cols="12" lg="6">
+                        <h1>Expenses</h1>
+                        <expenses-by-category-report
+                            :from="from"
+                            :to="to"
+                            transactionType="expense"
                         ></expenses-by-category-report>
                     </v-col>
                 </v-row>
@@ -63,7 +74,7 @@ export default {
     data() {
         const today = new Date();
         return {
-            from: formatDate(addMonths(today, -6)),
+            from: formatDate(addMonths(today, -12)),
             to: formatDate(new Date()),
             ranges: [
                 financialYear('This Financial Year', currentFY(today)),

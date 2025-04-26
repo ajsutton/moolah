@@ -45,7 +45,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th>Total Expenses</th>
+                <th>Total</th>
                 <th class="text-right">
                     <monetary-amount :value="totalExpenses"></monetary-amount>
                 </th>
@@ -60,13 +60,18 @@ import client from '../../api/client';
 import { formatDate } from '../../api/apiFormats';
 import { addMonths } from 'date-fns';
 import MonetaryAmount from '../util/MonetaryAmount.vue';
-import { expenseByCategoryReportData } from './expenseByCategoryReportData';
+import {
+    expenseByCategoryReportData,
+    sortByExpenses,
+    sortByIncome,
+} from './expenseByCategoryReportData';
 import { useCategoryStore } from '../../stores/categoryStore';
 
 export default {
     props: {
         from: { required: true },
         to: { required: true },
+        transactionType: { type: String, default: 'expense' },
     },
     data() {
         return {
@@ -84,7 +89,10 @@ export default {
             return expenseByCategoryReportData(
                 this.expenseBreakdown,
                 this.categoriesById,
-                this.getCategoryName
+                this.getCategoryName,
+                this.transactionType == 'expense'
+                    ? sortByExpenses
+                    : sortByIncome
             );
         },
         totalExpenses() {
@@ -111,7 +119,7 @@ export default {
             this.loading = true;
             try {
                 this.expenseBreakdown = await client.categoryBalances({
-                    transactionType: 'expense',
+                    transactionType: this.transactionType,
                     from: formatDate(this.from),
                     to: formatDate(this.to),
                 });

@@ -1,6 +1,6 @@
 import { rootLevelId } from '../analysis/categories/rootLevelId';
 
-const sortByExpenses = (a, b) => {
+export const sortByExpenses = (a, b) => {
     if (a.totalExpenses > b.totalExpenses) {
         return 1;
     } else if (a.totalExpenses == b.totalExpenses) {
@@ -10,10 +10,13 @@ const sortByExpenses = (a, b) => {
     }
 };
 
+export const sortByIncome = (a, b) => -1 * sortByExpenses(a, b);
+
 export function expenseByCategoryReportData(
     expenseBreakdown,
     categoriesById,
-    getCategoryName
+    getCategoryName,
+    sortBy
 ) {
     const roots = {};
     Object.entries(expenseBreakdown).forEach(([categoryId, totalExpenses]) => {
@@ -53,5 +56,5 @@ export function expenseByCategoryReportData(
                 children,
             };
         })
-        .sort(sortByExpenses);
+        .sort(sortBy || sortByExpenses);
 }
