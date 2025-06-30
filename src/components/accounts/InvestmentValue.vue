@@ -169,6 +169,9 @@ export default {
             if (this.balances.length == 0 || this.values.length == 0) {
                 return 0;
             }
+            if (this.account.balance == 0) {
+                return Infinity;
+            }
             const calculateFutureValue = function (rate, balances, finalDate) {
                 let prevBalance = balances[0].balance;
                 let val = prevBalance;
