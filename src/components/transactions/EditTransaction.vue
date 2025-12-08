@@ -1,6 +1,6 @@
 <template>
     <div class="pl-2 pr-2">
-        <p v-if="isEarmarkAccount" class="subheading">Earmark funds</p>
+        <p v-if="isEarmarkAccount" class="text-subtitle-1">Earmark funds</p>
         <auto-complete-payee
             v-else-if="!isOpeningBalance"
             ref="payee"

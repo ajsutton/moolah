@@ -22,7 +22,7 @@
                             autofocus
                         ></v-text-field>
 
-                        <div class="subheading mt-4">Savings goal</div>
+                        <div class="text-subtitle-1 mt-4">Savings goal</div>
 
                         <v-row>
                             <v-col sm="4" cols="12">
