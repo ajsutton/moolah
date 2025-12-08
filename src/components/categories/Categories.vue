@@ -84,7 +84,6 @@ import { mapState, mapActions } from 'pinia';
 import MergeDialog from './MergeDialog.vue';
 import CategoryName from './CategoryName.vue';
 import { useCategoryStore, actions } from '../../stores/categoryStore';
-import { VTreeview } from 'vuetify/labs/VTreeview';
 
 export default {
     data() {
@@ -130,7 +129,6 @@ export default {
     components: {
         CategoryName,
         MergeDialog,
-        VTreeview,
     },
 };
 </script>
