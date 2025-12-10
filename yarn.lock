@@ -767,9 +767,9 @@
     rfdc "^1.4.1"
 
 "@vue/language-core@^3.1.5":
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.1.7.tgz#6cac702d727a506dfa8691aaea5eb03142475359"
-  integrity sha512-xbJjFptmuTQD68a3/P70HDb+js61BxYvB3+/h5BflqRNV5dvwH1TZsSsTvMKwFx+QNQf0ndOvD3iih3fHXZYzQ==
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.1.8.tgz#997a0bfc6e5b13bb41e7579092a4a2826f2dc78d"
+  integrity sha512-PfwAW7BLopqaJbneChNL6cUOTL3GL+0l8paYP5shhgY5toBNidWnMXWM+qDwL7MC9+zDtzCF2enT8r6VPu64iw==
   dependencies:
     "@volar/language-core" "2.4.26"
     "@vue/compiler-dom" "^3.5.0"
@@ -2922,9 +2922,9 @@ safe-regex-test@^1.1.0:
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
 sass@^1.71.1:
-  version "1.95.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.95.0.tgz#3a3a4d4d954313ab50eaf16f6e2548a2f6ec0811"
-  integrity sha512-9QMjhLq+UkOg/4bb8Lt8A+hJZvY3t+9xeZMKSBtBEgxrXA3ed5Ts4NDreUkYgJP1BTmrscQE/xYhf7iShow6lw==
+  version "1.95.1"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.95.1.tgz#63116617ed86149c46c88e0c35e9c844703167f1"
+  integrity sha512-uPoDh5NIEZV4Dp5GBodkmNY9tSQfXY02pmCcUo+FR1P+x953HGkpw+vV28D4IqYB6f8webZtwoSaZaiPtpTeMg==
   dependencies:
     chokidar "^4.0.0"
     immutable "^5.0.2"
@@ -3475,9 +3475,9 @@ vue@^3.4.0:
     "@vue/shared" "3.5.25"
 
 vuetify@^3.5.0:
-  version "3.11.2"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.11.2.tgz#dd345af4cc4b4deaea525bb69904f51a7dcc7b9c"
-  integrity sha512-1lL0qN6JIdbx6xGYpo6dnx378EfC0t4EotPJdP4go8ThmIdRO3xLva1ALxhxi5lSYTht4R9OVk9miVnwVfDx3A==
+  version "3.11.3"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.11.3.tgz#b95cd9db1130a75eb8f708538195d47b0a200676"
+  integrity sha512-sZe/2f143cbqtJupkynOGOHxgn+YjRrXIj0atZlBECbOr4nZPCmSdukPSbudb0wU3fQpUjlaTGx0m4vIBPQqGQ==
 
 webpack-virtual-modules@^0.6.2:
   version "0.6.2"
