@@ -5,6 +5,8 @@ import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
 import vue from 'eslint-plugin-vue';
 import vuetify from 'eslint-plugin-vuetify';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,34 +19,39 @@ const compat = new FlatCompat({
 });
 
 export default [
-    {
-        files: ['**/*.ts', '**/*.tsx'],
-
-        // any additional configuration for these file types here
-    },
+    // Ignore patterns
     includeIgnoreFile(gitignorePath),
-    {
-        ignores: ['dist/**/*'],
-    },
-    ...compat.extends(
-        'semistandard',
-        'plugin:vue/essential',
-        'eslint:recommended',
-        'prettier'
-    ),
-    {
-        languageOptions: {},
+    { ignores: ['dist/**/*'] },
 
+    // JS recommended (replaces 'eslint:recommended')
+    js.configs.recommended,
+
+    // Vue flat config (replaces 'plugin:vue/essential' via compat)
+    ...vue.configs['flat/essential'],
+
+    // Vuetify flat config
+    ...vuetify.configs['flat/base'],
+
+    // Prettier (must come last to override formatting rules)
+    eslintConfigPrettier,
+
+    // Your overrides
+    {
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+            }
+        },
         rules: {
-            'import/no-duplicates': ['off'],
-            'import/no-webpack-loader-syntax': ['off'],
-            eqeqeq: ['off'],
-            'no-prototype-builtins': ['off'],
-            'no-new': ['off'],
-            'vue/multi-word-component-names': ['off'],
-            'vue/valid-v-slot': ['off'],
+            'semi': ['error', 'always'],
+            'import/no-duplicates': 'off',
+            'import/no-webpack-loader-syntax': 'off',
+            eqeqeq: 'off',
+            'no-prototype-builtins': 'off',
+            'no-new': 'off',
+            'vue/multi-word-component-names': 'off',
+            'vue/valid-v-slot': 'off',
+            'no-unused-vars': 'off',
         },
     },
-    ...vue.configs['flat/base'],
-    ...vuetify.configs['flat/base'],
 ];
