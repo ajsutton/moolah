@@ -8,3 +8,8 @@
   $body-font-family: ('Poppins', 'SF Pro Display', 'Segoe UI', Roboto, sans-serif),
   $heading-font-family: ('Poppins', 'SF Pro Display', 'Segoe UI', Roboto, sans-serif)
 );
+
+// Ensure background extends beyond viewport when content overflows
+html {
+  background: rgb(var(--v-theme-background));
+}
