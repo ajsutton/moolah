@@ -5,14 +5,14 @@
                 <div class="loading text-sm-center">
                     <p>
                         <img
-                            src="@/assets/moolah.svg"
-                            width="310"
-                            height="310"
+                            src="@/assets/logo-stacked-on-dark.png"
+                            width="200"
+                            height="200"
                         />
                     </p>
                     <v-progress-linear
                         :indeterminate="true"
-                        color="accent"
+                        color="#FFD56B"
                     ></v-progress-linear>
                 </div>
             </v-col>
@@ -22,7 +22,7 @@
 
 <style lang="scss">
 .loading-screen {
-    background-color: #1976d2;
+    background-color: #07102E;
 
     .flex {
         flex: 0 0 auto;
