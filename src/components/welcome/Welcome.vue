@@ -15,9 +15,7 @@
                 care of &mdash; so the rest of your life doesn't
                 have&nbsp;to&nbsp;be.
             </p>
-            <a href="/api/googleauth" class="hero-cta"
-                >Sign In to Get Started</a
-            >
+            <google-sign-in-button theme="dark" />
         </section>
 
         <section class="welcome-features">
@@ -75,9 +73,7 @@
         <section class="welcome-cta">
             <h2>Solid money. Chill&nbsp;vibes.</h2>
             <p class="cta-sub">Your money, your device, your rules.</p>
-            <a href="/api/googleauth" class="hero-cta"
-                >Sign In to Get Started</a
-            >
+            <google-sign-in-button theme="dark" />
         </section>
     </div>
 </template>
@@ -89,8 +85,13 @@ import IconCheckCircle from '~icons/mdi/checkCircle';
 </script>
 
 <script>
+import GoogleSignInButton from '../auth/GoogleSignInButton.vue';
+
 export default {
     name: 'welcome-hello',
+    components: {
+        GoogleSignInButton,
+    },
 };
 </script>
 
@@ -144,25 +145,6 @@ export default {
         max-width: 540px;
         line-height: 1.6;
         margin-bottom: 2.5rem;
-    }
-
-    .hero-cta {
-        display: inline-block;
-        padding: 0.75rem 2rem;
-        border-radius: 12px;
-        background: #1e64ee;
-        color: #fff;
-        font-weight: 600;
-        font-size: 1rem;
-        text-decoration: none;
-        transition:
-            background 0.25s,
-            transform 0.2s;
-
-        &:hover {
-            background: #3a7fff;
-            transform: translateY(-1px);
-        }
     }
 
     .text-accent-blue {
