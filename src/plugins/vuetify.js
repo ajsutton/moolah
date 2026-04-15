@@ -7,9 +7,9 @@ import { createVuetify } from 'vuetify';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 
 // Detect OS color scheme preference
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const darkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-export default createVuetify({
+const vuetify = createVuetify({
     icons: {
         defaultSet: 'mdi',
         aliases,
@@ -18,7 +18,7 @@ export default createVuetify({
         },
     },
     theme: {
-        defaultTheme: prefersDark ? 'dark' : 'light',
+        defaultTheme: darkMediaQuery.matches ? 'dark' : 'light',
         themes: {
             light: {
                 dark: false,
@@ -60,8 +60,8 @@ export default createVuetify({
             dark: {
                 dark: true,
                 colors: {
-                    background: '#02050F',
-                    surface: '#07102E',
+                    background: '#07102E',
+                    surface: '#0B1739',
                     'surface-bright': '#0A2370',
                     'surface-light': '#0A2370',
                     'surface-variant': '#AAB4C8',
@@ -97,3 +97,10 @@ export default createVuetify({
         },
     },
 });
+
+// Live-switch theme when OS preference changes
+darkMediaQuery.addEventListener('change', (e) => {
+    vuetify.theme.global.name.value = e.matches ? 'dark' : 'light';
+});
+
+export default vuetify;

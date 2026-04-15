@@ -64,13 +64,9 @@ export default {
     }
 
     // Make chart text adapt to light/dark theme
-    .c3 text,
-    .c3 .tick text {
-        fill: currentColor;
-    }
-
-    .c3-xgrid-line text {
-        fill: currentColor;
+    // C3 sets fill inline, so !important is needed
+    text {
+        fill: currentColor !important;
     }
 
     * {
