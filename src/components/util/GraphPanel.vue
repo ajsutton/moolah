@@ -63,6 +63,16 @@ export default {
         font-size: 11px;
     }
 
+    // Make chart text adapt to light/dark theme
+    .c3 text,
+    .c3 .tick text {
+        fill: currentColor;
+    }
+
+    .c3-xgrid-line text {
+        fill: currentColor;
+    }
+
     * {
         shape-rendering: geometricPrecision !important;
     }
@@ -77,7 +87,7 @@ export default {
 
     .c3-ygrid {
         stroke-dasharray: none;
-        stroke: #ddd;
+        stroke: rgba(128, 128, 128, 0.3);
     }
 }
 </style>

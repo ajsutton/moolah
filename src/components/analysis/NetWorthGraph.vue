@@ -287,9 +287,10 @@ export default {
         stroke: none;
     }
 
-    .zero-line {
-        color: black;
+    .zero-line line {
+        stroke: currentColor;
         stroke-width: 2px;
+        opacity: 0.4;
     }
 }
 </style>
