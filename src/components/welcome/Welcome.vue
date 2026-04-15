@@ -7,10 +7,8 @@
                 class="hero-icon"
             />
             <h1>
-                Your <span class="text-accent-blue">money</span>, rock&nbsp;<span
-                    class="text-accent-gold"
-                    >solid</span
-                >.
+                Your <span class="text-accent-blue">money</span>,
+                rock&nbsp;<span class="text-accent-gold">solid</span>.
             </h1>
             <p class="hero-sub">
                 Money stuff should be boring. Locked down, sorted out, taken
@@ -53,12 +51,12 @@
                     </div>
                     <div class="feature-card">
                         <div class="card-icon icon-gold">
-                            <v-icon :icon="IconLock" size="28" />
+                            <v-icon :icon="IconCheckCircle" size="28" />
                         </div>
-                        <h3>Private. Like, actually private.</h3>
+                        <h3>Simple. Refreshingly simple.</h3>
                         <p>
-                            Your data lives on your device. No accounts, no
-                            cloud servers, no one looking over your shoulder.
+                            Set it up, add your transactions, and get on with
+                            your life. No fuss, no complexity.
                         </p>
                     </div>
                 </div>
@@ -67,8 +65,8 @@
 
         <section class="welcome-quote">
             <p>
-                The boring money stuff &mdash;
-                <span class="text-accent-gold">locked&nbsp;down</span>.<br />
+                The boring money stuff?
+                <span class="text-accent-gold">Locked&nbsp;down</span>.<br />
                 The rest of your life?
                 <span class="text-accent-blue">Wide&nbsp;open</span>.
             </p>
@@ -86,8 +84,8 @@
 
 <script setup>
 import IconAccountBalance from '~icons/mdi/accountBalance';
-import IconLock from '~icons/mdi/lock';
 import IconChartLine from '~icons/mdi/chartLine';
+import IconCheckCircle from '~icons/mdi/checkCircle';
 </script>
 
 <script>

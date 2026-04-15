@@ -22,7 +22,7 @@
 
 <style lang="scss">
 .loading-screen {
-    background-color: #07102E;
+    background-color: #07102e;
 
     .flex {
         flex: 0 0 auto;
