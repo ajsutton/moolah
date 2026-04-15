@@ -2,8 +2,9 @@
     <v-navigation-drawer
         v-model="mainNavVisible"
         floating
-        theme="dark"
         width="300"
+        style="background-color: #0a2370"
+        theme="dark"
     >
         <template v-if="loggedIn">
             <wallet-list
