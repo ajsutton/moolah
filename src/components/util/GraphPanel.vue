@@ -60,7 +60,7 @@ export default {
 .chart {
     svg {
         font-family: inherit;
-        font-size: inherit;
+        font-size: 11px;
     }
 
     * {
