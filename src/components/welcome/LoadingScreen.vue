@@ -6,8 +6,7 @@
                     <p>
                         <img
                             src="@/assets/logo-stacked-on-dark.png"
-                            width="200"
-                            height="200"
+                            width="300"
                         />
                     </p>
                     <v-progress-linear

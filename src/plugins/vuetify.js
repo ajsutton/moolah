@@ -60,8 +60,8 @@ const vuetify = createVuetify({
             dark: {
                 dark: true,
                 colors: {
-                    background: '#07102E',
-                    surface: '#0B1739',
+                    background: '#050E27',
+                    surface: '#07102E',
                     'surface-bright': '#0A2370',
                     'surface-light': '#0A2370',
                     'surface-variant': '#AAB4C8',
@@ -99,7 +99,7 @@ const vuetify = createVuetify({
 });
 
 // Live-switch theme when OS preference changes
-darkMediaQuery.addEventListener('change', (e) => {
+darkMediaQuery.addEventListener('change', e => {
     vuetify.theme.global.name.value = e.matches ? 'dark' : 'light';
 });
 
