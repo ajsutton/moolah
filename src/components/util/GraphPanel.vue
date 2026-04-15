@@ -60,7 +60,13 @@ export default {
 .chart {
     svg {
         font-family: inherit;
-        font-size: inherit;
+        font-size: 11px;
+    }
+
+    // Make chart text adapt to light/dark theme
+    // C3 sets fill inline, so !important is needed
+    text {
+        fill: currentColor !important;
     }
 
     * {
@@ -77,7 +83,7 @@ export default {
 
     .c3-ygrid {
         stroke-dasharray: none;
-        stroke: #ddd;
+        stroke: rgba(128, 128, 128, 0.3);
     }
 }
 </style>

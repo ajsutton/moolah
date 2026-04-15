@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" max-width="600">
         <template #activator="{ props }">
-            <v-btn icon v-bind="props">
+            <v-btn icon variant="text" v-bind="props">
                 <v-icon :title="title" :icon="icon"></v-icon>
             </v-btn>
         </template>

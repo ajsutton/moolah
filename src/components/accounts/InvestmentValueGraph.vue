@@ -239,7 +239,8 @@ export default {
 
 <style lang="scss">
 .grid0 line {
-    stroke: black;
+    stroke: currentColor;
     stroke-width: 1px;
+    opacity: 0.4;
 }
 </style>

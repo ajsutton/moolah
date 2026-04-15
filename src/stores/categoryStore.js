@@ -81,6 +81,7 @@ export const useCategoryStore = defineStore('categories', {
         getCategoryName(state) {
             return categoryId => {
                 let category = state.categoriesById[categoryId];
+                if (!category) return '';
                 const names = [category.name];
                 while (category.parentId !== null) {
                     category = state.categoriesById[category.parentId];

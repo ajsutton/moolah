@@ -1,20 +1,25 @@
 <template>
     <v-app>
-        <v-app-bar v-if="!loading" class="bg-primary">
+        <v-app-bar v-if="!loading" style="background-color: #07102e" flat>
             <v-app-bar-nav-icon
                 v-if="loggedIn"
+                color="white"
                 @click.stop="mainNavVisible = !mainNavVisible"
             ></v-app-bar-nav-icon>
-            <v-toolbar-title
-                v-if="loggedIn"
-                class="hidden-sm-and-down text-white"
-                >Moolah</v-toolbar-title
-            >
+            <v-toolbar-title v-if="loggedIn" class="hidden-sm-and-down">
+                <img
+                    src="@/assets/logo-horizontal-on-dark.png"
+                    alt="moolah.rocks"
+                    height="28"
+                    style="vertical-align: middle"
+                />
+            </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
                 <v-btn
                     v-if="!loggedIn && !loading"
                     variant="text"
+                    color="white"
                     href="/api/googleauth"
                     >Sign In</v-btn
                 >
@@ -22,6 +27,7 @@
             </v-toolbar-items>
             <v-app-bar-nav-icon
                 v-if="loggedIn"
+                color="white"
                 :disabled="!hasTransaction"
                 @click.prevent="toggleRightNav"
             ></v-app-bar-nav-icon>
