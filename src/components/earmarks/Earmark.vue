@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card class="mb-3">
-            <v-toolbar flat color="accent">
+            <v-toolbar flat>
                 <v-toolbar-title>{{ earmarkName }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <create-earmark :earmark="selectedEarmark"></create-earmark>

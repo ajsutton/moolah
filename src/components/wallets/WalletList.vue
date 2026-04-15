@@ -6,7 +6,7 @@
                 <v-btn
                     v-if="hasHiddenWallets"
                     icon
-                    variant="flat"
+                    variant="text"
                     class="mx-1"
                     @click.prevent="showHidden = !showHidden"
                 >

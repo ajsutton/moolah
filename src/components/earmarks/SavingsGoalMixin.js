@@ -42,7 +42,7 @@ export default {
         },
         savingsColor() {
             if (this.savingsPercent < 100) {
-                return 'accent';
+                return 'primary';
             } else {
                 return 'success';
             }
@@ -185,7 +185,7 @@ export default {
         },
         timeColor() {
             if (this.timePercent < 100) {
-                return 'accent';
+                return 'primary';
             } else {
                 return 'error';
             }

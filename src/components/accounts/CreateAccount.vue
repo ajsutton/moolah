@@ -88,7 +88,11 @@ import parseMoney from '../util/parseMoney';
 import formatMoney from '../util/formatMoney';
 
 export default {
-    props: ['account', 'iconDensity', 'iconVariant'],
+    props: {
+        account: { type: Object, default: undefined },
+        iconDensity: { type: String, default: undefined },
+        iconVariant: { type: String, default: 'text' },
+    },
     data() {
         return {
             name: 'Unnamed account',
