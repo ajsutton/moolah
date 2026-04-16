@@ -16,7 +16,7 @@
                 <span class="text-h5">Show Transactions</span>
             </v-card-title>
             <v-card-text>
-                <v-container grid-list-md>
+                <v-container>
                     <v-row>
                         <v-col cols="12" sm="6">
                             <date-picker-field

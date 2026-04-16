@@ -53,7 +53,7 @@
         <v-main>
             <loading-screen v-if="loading"></loading-screen>
             <welcome v-else-if="!loggedIn"></welcome>
-            <v-container v-if="loggedIn" fluid grid-list-md>
+            <v-container v-if="loggedIn" fluid>
                 <router-view></router-view>
             </v-container>
         </v-main>

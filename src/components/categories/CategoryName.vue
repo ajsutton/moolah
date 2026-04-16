@@ -39,9 +39,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-.category-name.input-group--disabled .input-group__details:before {
-    background-image: none !important;
-}
-</style>

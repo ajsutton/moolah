@@ -13,10 +13,8 @@
         <v-data-table
             :headers="headers"
             :items="tableItems"
-            :sort-by="[{ key: 'end' }]"
-            disable-sort
+            :sort-by="[{ key: 'end', order: 'desc' }]"
             :mobile-breakpoint="0"
-            :descending="true"
             :loading="loading"
             :items-per-page-options="[6, 12, 18, 24]"
             items-per-page-text="Months per page"
@@ -106,35 +104,38 @@ export default {
                 {
                     title: 'Month',
                     align: 'start',
-                    sortable: true,
-                    value: 'end',
+                    sortable: false,
+                    key: 'end',
                 },
                 {
                     title: 'Income',
                     align: 'end',
-                    sortable: true,
-                    value: 'income',
-                    classes: 'hidden-md-and-down',
+                    sortable: false,
+                    key: 'income',
+                    cellProps: { class: 'hidden-md-and-down' },
+                    headerProps: { class: 'hidden-md-and-down' },
                 },
                 {
                     title: 'Expense',
                     align: 'end',
-                    sortable: true,
-                    value: 'expense',
-                    classes: 'hidden-md-and-down',
+                    sortable: false,
+                    key: 'expense',
+                    cellProps: { class: 'hidden-md-and-down' },
+                    headerProps: { class: 'hidden-md-and-down' },
                 },
                 {
                     title: 'Savings',
                     align: 'end',
-                    sortable: true,
-                    value: 'profit',
+                    sortable: false,
+                    key: 'profit',
                 },
                 {
                     title: 'Total Savings',
                     align: 'end',
-                    sortable: true,
-                    value: 'cumulativeSavings',
-                    classes: 'hidden-sm-and-down',
+                    sortable: false,
+                    key: 'cumulativeSavings',
+                    cellProps: { class: 'hidden-sm-and-down' },
+                    headerProps: { class: 'hidden-sm-and-down' },
                 },
             ],
             breakdown: [],
@@ -180,7 +181,7 @@ export default {
 
 <style lang="scss">
 .income-expense-table {
-    .datatable__actions__select {
+    .v-data-table-footer__items-per-page {
         display: none;
     }
 }

@@ -12,14 +12,14 @@
             <v-list-item v-bind="props">
                 <template v-slot:prepend>
                     <v-list-item-action>
-                        <v-icon :icon="icon(item.raw)"></v-icon>
+                        <v-icon :icon="icon(item)"></v-icon>
                     </v-list-item-action>
                 </template>
 
                 <template v-slot:append>
                     <v-list-item-action>
                         <monetary-amount
-                            :value="item.raw.balance"
+                            :value="item.balance"
                         ></monetary-amount>
                     </v-list-item-action>
                 </template>

@@ -28,7 +28,7 @@
         </div>
         <v-divider></v-divider>
 
-        <v-list-item v-if="accounts.length > 0" no-action>
+        <v-list-item v-if="accounts.length > 0">
             <v-list-item-title>
                 {{ totalLabel }}
             </v-list-item-title>
